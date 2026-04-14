@@ -44,7 +44,6 @@ export class ClaudeProvider extends LLMProvider {
     error?: string;
   }> {
     try {
-      const testMessages = [{ role: 'user' as const, content: 'Hello' }];
       const requestBody = {
         model: this.model,
         max_tokens: 1,
@@ -115,13 +114,30 @@ export class ClaudeProvider extends LLMProvider {
     return headers;
   }
 
+  private getMaxOutputTokens(): number {
+    if (
+      this.model.startsWith('claude-4') ||
+      this.model.startsWith('claude-sonnet-4') ||
+      this.model.startsWith('claude-opus-4')
+    ) {
+      return 16384;
+    }
+    if (
+      this.model.startsWith('claude-3-5') ||
+      this.model.startsWith('claude-3-7')
+    ) {
+      return 8192;
+    }
+    return 4096;
+  }
+
   protected formatRequest(messages: ChatMessage[], tools?: Tool[]): any {
     const systemText = this.extractSystemPrompt(messages);
     const claudeMessages = this.convertToAnthropicFormat(messages);
 
     const request: any = {
       model: this.model,
-      max_tokens: 16384,
+      max_tokens: this.getMaxOutputTokens(),
       temperature: 0.2,
       messages: claudeMessages,
     };
