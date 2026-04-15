@@ -516,26 +516,39 @@ export class MCPClientServiceImpl implements MCPClientService {
     // Remove serverId from tools when sending to LLM
     const llmTools: Tool[] = filteredTools.map(({ serverId, ...tool }) => tool);
 
-    const response = await this.llmProvider.sendMessage(messages, llmTools);
-    const replyMessage = response.choices[0].message;
-    this.logger.info(
-      `LLM response received with ${
-        replyMessage.tool_calls?.length || 0
-      } tool calls`,
-    );
-    const toolCalls = replyMessage.tool_calls || [];
+    const maxToolIterations = 8;
+    const allToolCalls: any[] = [];
+    const allToolResponses: any[] = [];
 
-    if (toolCalls.length > 0) {
-      const toolResponses = [];
+    for (let iteration = 0; iteration < maxToolIterations; iteration++) {
+      const response = await this.llmProvider.sendMessage(messages, llmTools);
+      const replyMessage = response.choices[0].message;
+      const toolCalls = replyMessage.tool_calls || [];
+
+      this.logger.info(
+        `LLM response received with ${toolCalls.length} tool calls (iteration ${
+          iteration + 1
+        })`,
+      );
+
+      if (toolCalls.length === 0) {
+        return {
+          reply: replyMessage.content || '',
+          toolCalls: allToolCalls,
+          toolResponses: allToolResponses,
+        };
+      }
 
       for (const toolCall of toolCalls) {
+        allToolCalls.push(toolCall);
+
         try {
           const toolResponse = await executeToolCall(
             toolCall,
             this.tools,
             this.mcpClients,
           );
-          toolResponses.push(toolResponse);
+          allToolResponses.push(toolResponse);
 
           messages.push({
             role: 'assistant',
@@ -564,7 +577,7 @@ export class MCPClientServiceImpl implements MCPClientService {
             serverId: 'error',
           };
 
-          toolResponses.push(errorResponse);
+          allToolResponses.push(errorResponse);
 
           messages.push({
             role: 'assistant',
@@ -579,20 +592,17 @@ export class MCPClientServiceImpl implements MCPClientService {
           });
         }
       }
-
-      const followUp = await this.llmProvider.sendMessage(messages);
-
-      return {
-        reply: followUp.choices[0].message.content || '',
-        toolCalls,
-        toolResponses,
-      };
     }
 
+    this.logger.warn(
+      `Reached maximum tool-call iterations (${maxToolIterations}) while processing MCP chat request`,
+    );
+
     return {
-      reply: replyMessage.content || '',
-      toolCalls: [],
-      toolResponses: [],
+      reply:
+        'I reached the maximum number of tool-calling steps for this request. Please try again with a more specific prompt.',
+      toolCalls: allToolCalls,
+      toolResponses: allToolResponses,
     };
   }
 
