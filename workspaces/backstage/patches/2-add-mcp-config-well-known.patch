@@ -1,0 +1,52 @@
+--- plugins/mcp-actions-backend/src/plugin.ts
++++ plugins/mcp-actions-backend/src/plugin.ts
+@@ -98,6 +98,49 @@
+             },
+           );
+         }
++
++        // MCP config discovery endpoint -- enables external AI tools
++        // (Claude Code, Codex CLI, etc.) to discover the MCP server URL
++        // and get ready-to-use configuration snippets.
++        // Does NOT expose the authentication token.
++        rootRouter.use(
++          '/.well-known/mcp-config',
++          async (_req, res) => {
++            const mcpBaseUrl =
++              await discovery.getExternalBaseUrl('mcp-actions');
++            const endpoint = `${mcpBaseUrl}/v1`;
++            res.json({
++              endpoint,
++              auth: {
++                type: 'bearer',
++                token_env_var: 'DEVPORTAL_MCP_TOKEN',
++                note: 'Obtain the token value from your platform team.',
++              },
++              snippets: {
++                claude_code: {
++                  description:
++                    'Add to .mcp.json at project root, then: export DEVPORTAL_MCP_TOKEN=<token>',
++                  config: {
++                    mcpServers: {
++                      devportal: {
++                        type: 'http',
++                        url: endpoint,
++                        headers: {
++                          Authorization: 'Bearer ${DEVPORTAL_MCP_TOKEN}',
++                        },
++                      },
++                    },
++                  },
++                },
++                codex_cli: {
++                  description:
++                    'Add to ~/.codex/config.toml, then: export DEVPORTAL_MCP_TOKEN=<token>',
++                  config: `[mcp_servers.devportal]\nurl = "${endpoint}"\nbearer_token_env_var = "DEVPORTAL_MCP_TOKEN"`,
++                },
++              },
++            });
++          },
++        );
+       },
+     });
+   },
