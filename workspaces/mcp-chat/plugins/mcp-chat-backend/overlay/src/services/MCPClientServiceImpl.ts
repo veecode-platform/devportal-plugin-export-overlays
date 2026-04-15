@@ -222,6 +222,7 @@ export class MCPClientServiceImpl implements MCPClientService {
 
       this.tools = allTools;
       this.connected = true;
+      this.logCriticalToolSchemas(this.tools);
 
       this.logger.info(
         `Discovered ${this.tools.length} tools from ${
@@ -386,6 +387,7 @@ export class MCPClientServiceImpl implements MCPClientService {
 
     this.tools = allTools;
     this.connected = true;
+    this.logCriticalToolSchemas(this.tools);
 
     const connectedServers = serverResults.filter(
       s => s.status.connected,
@@ -491,11 +493,25 @@ export class MCPClientServiceImpl implements MCPClientService {
   ): Promise<QueryResponse> {
     // Only add system message if one doesn't already exist
     const messages: ChatMessage[] = [...messagesInput];
+    const filteredTools =
+      enabledTools !== undefined && enabledTools !== null
+        ? this.tools.filter(tool => enabledTools.includes(tool.serverId))
+        : this.tools;
+    const runtimeInstruction = this.buildRuntimeToolInstruction(filteredTools);
+
     if (messages.length === 0 || messages[0].role !== 'system') {
       messages.unshift({
         role: 'system',
-        content: this.systemPrompt,
+        content: runtimeInstruction
+          ? `${this.systemPrompt}\n\n${runtimeInstruction}`
+          : this.systemPrompt,
       });
+    } else if (runtimeInstruction) {
+      messages[0] = {
+        ...messages[0],
+        role: 'system',
+        content: `${messages[0].content ?? ''}\n\n${runtimeInstruction}`,
+      };
     }
 
     // Check if using Responses API provider
@@ -508,11 +524,6 @@ export class MCPClientServiceImpl implements MCPClientService {
     // - If enabledTools is undefined/null: use all tools (default)
     // - If enabledTools is empty array []: use no tools (all disabled)
     // - If enabledTools has items: use only those tools
-    const filteredTools =
-      enabledTools !== undefined && enabledTools !== null
-        ? this.tools.filter(tool => enabledTools.includes(tool.serverId))
-        : this.tools;
-
     // Remove serverId from tools when sending to LLM
     const llmTools: Tool[] = filteredTools.map(({ serverId, ...tool }) => tool);
 
@@ -541,6 +552,44 @@ export class MCPClientServiceImpl implements MCPClientService {
 
       for (const toolCall of toolCalls) {
         allToolCalls.push(toolCall);
+        const parsedArguments = this.parseToolArguments(
+          toolCall.function.arguments,
+        );
+
+        if (this.isExecuteTemplateMissingValues(toolCall, parsedArguments)) {
+          const guidanceMessage =
+            this.buildExecuteTemplateMissingValuesGuidance(parsedArguments);
+
+          this.logger.warn(
+            `Blocked invalid execute-template call without values. Arguments: ${JSON.stringify(
+              parsedArguments,
+            )}`,
+          );
+
+          const errorResponse = {
+            id: toolCall.id,
+            name: toolCall.function.name,
+            arguments: parsedArguments,
+            result: guidanceMessage,
+            serverId: 'guardrail',
+          };
+
+          allToolResponses.push(errorResponse);
+
+          messages.push({
+            role: 'assistant',
+            content: null,
+            tool_calls: [toolCall],
+          });
+
+          messages.push({
+            role: 'tool',
+            content: guidanceMessage,
+            tool_call_id: toolCall.id,
+          });
+
+          continue;
+        }
 
         try {
           const toolResponse = await executeToolCall(
@@ -572,7 +621,7 @@ export class MCPClientServiceImpl implements MCPClientService {
           const errorResponse = {
             id: toolCall.id,
             name: toolCall.function.name,
-            arguments: JSON.parse(toolCall.function.arguments || '{}'),
+            arguments: parsedArguments,
             result: errorMessage,
             serverId: 'error',
           };
@@ -739,5 +788,95 @@ export class MCPClientServiceImpl implements MCPClientService {
       servers,
       timestamp: new Date().toISOString(),
     };
+  }
+
+  private buildRuntimeToolInstruction(tools: ServerTool[]): string | undefined {
+    const toolNames = new Set(tools.map(tool => tool.function.name));
+    if (
+      !toolNames.has('fetch-template-metadata') ||
+      !toolNames.has('execute-template')
+    ) {
+      return undefined;
+    }
+
+    return [
+      'For scaffolder workflows, always call fetch-template-metadata before execute-template.',
+      'When fetch-template-metadata returns exampleExecuteInput, use that object as the base payload for execute-template and replace only the example values with the user-provided values.',
+      'If exampleExecuteInput is not present, use templateRef + requiredParameters + parameterDetails + exampleValues from fetch-template-metadata to build execute-template.values.',
+      'Never call execute-template with only templateRef.',
+      'If execute-template fails because values are missing, retry immediately in the same turn with a populated values object instead of asking the user to restate the same information.',
+    ].join(' ');
+  }
+
+  private logCriticalToolSchemas(tools: ServerTool[]): void {
+    const executeTemplateTool = tools.find(
+      tool => tool.function.name === 'execute-template',
+    );
+    if (executeTemplateTool?.function.parameters) {
+      const parameters = executeTemplateTool.function.parameters as any;
+      this.logger.info(
+        `execute-template schema loaded with properties: ${Object.keys(
+          parameters.properties ?? {},
+        ).join(', ')}; required: ${JSON.stringify(parameters.required ?? [])}`,
+      );
+    }
+
+    const fetchTemplateTool = tools.find(
+      tool => tool.function.name === 'fetch-template-metadata',
+    );
+    if (fetchTemplateTool?.function.parameters) {
+      const parameters = fetchTemplateTool.function.parameters as any;
+      this.logger.info(
+        `fetch-template-metadata schema loaded with properties: ${Object.keys(
+          parameters.properties ?? {},
+        ).join(', ')}`,
+      );
+    }
+  }
+
+  private parseToolArguments(rawArguments?: string): Record<string, any> {
+    try {
+      return JSON.parse(rawArguments || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  private isExecuteTemplateMissingValues(
+    toolCall: any,
+    argumentsObject: Record<string, any>,
+  ): boolean {
+    if (toolCall.function.name !== 'execute-template') {
+      return false;
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(argumentsObject, 'values')) {
+      return true;
+    }
+
+    const values = argumentsObject.values;
+    return (
+      values === undefined ||
+      values === null ||
+      typeof values !== 'object' ||
+      Array.isArray(values)
+    );
+  }
+
+  private buildExecuteTemplateMissingValuesGuidance(
+    argumentsObject: Record<string, any>,
+  ): string {
+    const templateRef =
+      typeof argumentsObject.templateRef === 'string'
+        ? argumentsObject.templateRef
+        : 'the selected template';
+
+    return [
+      `Error executing tool 'execute-template': values is required.`,
+      `Retry execute-template for ${templateRef} with the same templateRef plus a values object.`,
+      'Use fetch-template-metadata output as the source of truth.',
+      'Preferred order: exampleExecuteInput -> requiredParameters + parameterDetails -> exampleValues.',
+      'Do not ask the user to repeat values that are already present in the conversation unless something is still missing.',
+    ].join(' ');
   }
 }
