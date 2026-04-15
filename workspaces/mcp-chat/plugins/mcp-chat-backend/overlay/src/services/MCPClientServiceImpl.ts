@@ -859,8 +859,7 @@ export class MCPClientServiceImpl implements MCPClientService {
       values === undefined ||
       values === null ||
       typeof values !== 'object' ||
-      Array.isArray(values) ||
-      Object.keys(values).length === 0
+      Array.isArray(values)
     );
   }
 
