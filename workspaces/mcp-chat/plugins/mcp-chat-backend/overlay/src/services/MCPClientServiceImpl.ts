@@ -507,10 +507,11 @@ export class MCPClientServiceImpl implements MCPClientService {
           : this.systemPrompt,
       });
     } else if (runtimeInstruction) {
-      messages.splice(1, 0, {
+      messages[0] = {
+        ...messages[0],
         role: 'system',
-        content: runtimeInstruction,
-      });
+        content: `${messages[0].content ?? ''}\n\n${runtimeInstruction}`,
+      };
     }
 
     // Check if using Responses API provider
@@ -858,7 +859,8 @@ export class MCPClientServiceImpl implements MCPClientService {
       values === undefined ||
       values === null ||
       typeof values !== 'object' ||
-      Array.isArray(values)
+      Array.isArray(values) ||
+      Object.keys(values).length === 0
     );
   }
 

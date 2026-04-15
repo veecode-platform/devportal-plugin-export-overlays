@@ -290,7 +290,11 @@ export async function fetchSoftwareTemplateMetadata(
     { credentials },
   );
 
-  const requestOptions = await getScaffolderRequestOptions(auth, credentials);
+  const requestOptions = await getScaffolderRequestOptions(
+    auth,
+    credentials,
+    logger,
+  );
 
   return {
     templates: await Promise.all(items.map(async template => {
@@ -302,6 +306,7 @@ export async function fetchSoftwareTemplateMetadata(
         templateRef,
         scaffolderClient,
         requestOptions,
+        logger,
       );
 
       return {
@@ -339,11 +344,13 @@ async function extractTemplateHints(
   templateRef: string,
   scaffolderClient?: ScaffolderClient,
   requestOptions?: { token: string },
+  logger?: LoggerService,
 ): Promise<TemplateHints> {
   const parameterSchema = await getTemplateParameterSchema(
     templateRef,
     scaffolderClient,
     requestOptions,
+    logger,
   );
 
   const sections = parameterSchema?.steps?.length
@@ -507,6 +514,7 @@ function buildExampleValue(detail: ParameterDetail): unknown {
 async function getScaffolderRequestOptions(
   auth: AuthService,
   credentials: any,
+  logger: LoggerService,
 ): Promise<{ token: string } | undefined> {
   try {
     const { token } = await auth.getPluginRequestToken({
@@ -515,7 +523,12 @@ async function getScaffolderRequestOptions(
     });
 
     return token ? { token } : undefined;
-  } catch {
+  } catch (error) {
+    logger.debug(
+      `fetch-template-metadata: falling back to catalog metadata because getPluginRequestToken failed: ${
+        error instanceof Error ? error.message : error
+      }`,
+    );
     return undefined;
   }
 }
@@ -524,6 +537,7 @@ async function getTemplateParameterSchema(
   templateRef: string,
   scaffolderClient?: ScaffolderClient,
   requestOptions?: { token: string },
+  logger?: LoggerService,
 ): Promise<TemplateParameterSchema | undefined> {
   if (!scaffolderClient) {
     return undefined;
@@ -534,7 +548,12 @@ async function getTemplateParameterSchema(
       templateRef,
       requestOptions,
     );
-  } catch {
+  } catch (error) {
+    logger?.debug(
+      `fetch-template-metadata: falling back to catalog metadata because getTemplateParameterSchema failed for ${templateRef}: ${
+        error instanceof Error ? error.message : error
+      }`,
+    );
     return undefined;
   }
 }
