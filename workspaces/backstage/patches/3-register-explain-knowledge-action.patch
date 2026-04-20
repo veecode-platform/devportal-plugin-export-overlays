@@ -1,0 +1,27 @@
+--- plugins/mcp-actions-backend/src/plugin.ts
++++ plugins/mcp-actions-backend/src/plugin.ts
+@@ -26,6 +26,7 @@
+   actionsRegistryServiceRef,
+   actionsServiceRef,
+ } from '@backstage/backend-plugin-api/alpha';
++import { createExplainAction } from './actions/createExplainAction';
+
+ /**
+  * mcpPlugin backend plugin
+@@ -55,6 +56,7 @@
+         rootRouter,
+         discovery,
+         config,
++        registry,
+       }) {
+         const mcpService = await McpService.create({
+           actions,
+@@ -79,6 +81,8 @@
+
+         httpRouter.use(router);
+
++        createExplainAction({ registry, logger });
++
+         if (
+           config.getOptionalBoolean(
+             'auth.experimentalDynamicClientRegistration.enabled',
