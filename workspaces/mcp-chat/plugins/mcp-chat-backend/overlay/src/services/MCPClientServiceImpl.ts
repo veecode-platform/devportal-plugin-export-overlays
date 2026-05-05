@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 import {
+  AuthService,
+  BackstageCredentials,
   LoggerService,
   RootConfigService,
 } from '@backstage/backend-plugin-api';
@@ -51,6 +53,7 @@ import {
 export type Options = {
   logger: LoggerService;
   config: RootConfigService;
+  auth: AuthService;
 };
 
 /**
@@ -62,6 +65,7 @@ export type Options = {
 export class MCPClientServiceImpl implements MCPClientService {
   private readonly logger: LoggerService;
   private readonly config: RootConfigService;
+  private readonly auth: AuthService;
   private llmProvider: LLMProvider;
   private readonly mcpClients: Map<string, Client> = new Map();
   private tools: ServerTool[] = [];
@@ -73,6 +77,7 @@ export class MCPClientServiceImpl implements MCPClientService {
   constructor(options: Options) {
     this.logger = options.logger;
     this.config = options.config;
+    this.auth = options.auth;
     this.llmProvider = this.initializeLLMProvider();
     this.mcpServers = this.initializeMCPServers();
     this.systemPrompt =
@@ -133,24 +138,12 @@ export class MCPClientServiceImpl implements MCPClientService {
 
       for (const serverConfig of urlBasedServers) {
         try {
-          const client = new Client({
-            name: `${serverConfig.name}-client`,
-            version: '1.0.0',
-          });
-
-          // Create transport for Streamable HTTP
-          const transportOptions: any = {};
-          if (serverConfig.headers) {
-            transportOptions.requestInit = {
-              headers: serverConfig.headers,
-            };
-          }
-          const transport = new StreamableHTTPClientTransport(
-            new URL(serverConfig.url!),
-            transportOptions,
+          const headers = await this.getDiscoveryHeadersForServer(serverConfig);
+          const client = await this.createStreamableHttpClient(
+            serverConfig,
+            headers,
           );
 
-          await client.connect(transport);
           this.mcpClients.set(serverConfig.id, client);
 
           // List tools from this server
@@ -251,33 +244,18 @@ export class MCPClientServiceImpl implements MCPClientService {
       };
 
       try {
-        const client = new Client({
-          name: `${serverConfig.name}-client`,
-          version: '1.0.0',
-        });
+        let client: Client;
 
-        let transport;
-
-        if (serverConfig.type === MCPServerType.STREAMABLE_HTTP) {
+        if (
+          serverConfig.type === MCPServerType.STREAMABLE_HTTP &&
+          serverConfig.url
+        ) {
           // Streamable HTTP connection
-          if (!serverConfig.url) {
-            throw new Error(
-              `Server config for '${serverConfig.name}' with streamable-http type must have a url`,
-            );
-          }
-
-          const transportOptions: any = {};
-
-          // Add headers if provided
-          if (serverConfig.headers) {
-            transportOptions.requestInit = {
-              headers: serverConfig.headers,
-            };
-          }
-
-          transport = new StreamableHTTPClientTransport(
-            new URL(serverConfig.url),
-            transportOptions,
+          const headers = await this.getDiscoveryHeadersForServer(serverConfig);
+          client = await this.createStreamableHttpClient(serverConfig, headers);
+        } else if (serverConfig.type === MCPServerType.STREAMABLE_HTTP) {
+          throw new Error(
+            `Server config for '${serverConfig.name}' with streamable-http type must have a url`,
           );
         } else {
           // STDIO connection (default)
@@ -317,7 +295,7 @@ export class MCPClientServiceImpl implements MCPClientService {
             );
           }
 
-          transport = new StdioClientTransport({
+          const transport = new StdioClientTransport({
             command,
             args,
             env: {
@@ -331,10 +309,14 @@ export class MCPClientServiceImpl implements MCPClientService {
               }),
             },
           });
-        }
 
-        // Connect the client with the appropriate transport
-        await client.connect(transport);
+          client = new Client({
+            name: `${serverConfig.name}-client`,
+            version: '1.0.0',
+          });
+          // Connect the client with the appropriate transport
+          await client.connect(transport);
+        }
 
         const toolsResult = await client.listTools();
 
@@ -435,19 +417,11 @@ export class MCPClientServiceImpl implements MCPClientService {
       for (const serverConfig of failedConfigs) {
         if (serverConfig.type !== MCPServerType.STREAMABLE_HTTP || !serverConfig.url) continue;
         try {
-          const client = new Client({
-            name: `${serverConfig.name}-client`,
-            version: '1.0.0',
-          });
-          const transportOptions: any = {};
-          if (serverConfig.headers) {
-            transportOptions.requestInit = { headers: serverConfig.headers };
-          }
-          const transport = new StreamableHTTPClientTransport(
-            new URL(serverConfig.url),
-            transportOptions,
+          const headers = await this.getDiscoveryHeadersForServer(serverConfig);
+          const client = await this.createStreamableHttpClient(
+            serverConfig,
+            headers,
           );
-          await client.connect(transport);
           const toolsResult = await client.listTools();
           const serverTools: ServerTool[] = toolsResult.tools.map(tool => ({
             type: 'function',
@@ -490,6 +464,7 @@ export class MCPClientServiceImpl implements MCPClientService {
   async processQuery(
     messagesInput: any[],
     enabledTools?: string[],
+    credentials?: BackstageCredentials,
   ): Promise<QueryResponse> {
     // Only add system message if one doesn't already exist
     const messages: ChatMessage[] = [...messagesInput];
@@ -517,6 +492,19 @@ export class MCPClientServiceImpl implements MCPClientService {
     // Check if using Responses API provider
     const providerConfig = getConfig(this.config);
     if (providerConfig.type === 'openai-responses') {
+      const enabledInternal = this.getEnabledInternalServerIds(enabledTools);
+      if (enabledInternal.length > 0) {
+        this.logger.error(
+          `openai-responses+internal MCP rejected: enabledInternal=[${enabledInternal.join(
+            ',',
+          )}]`,
+        );
+        throw new Error(
+          `openai-responses with internal MCP is temporarily disabled. enabledInternal=[${enabledInternal.join(
+            ',',
+          )}]. Use provider=openai or provider=claude. Follow-up: https://github.com/veecode-platform/devportal-distro/issues/44`,
+        );
+      }
       return this.processQueryWithResponsesApi(messages, enabledTools);
     }
 
@@ -527,132 +515,138 @@ export class MCPClientServiceImpl implements MCPClientService {
     // Remove serverId from tools when sending to LLM
     const llmTools: Tool[] = filteredTools.map(({ serverId, ...tool }) => tool);
 
-    const maxToolIterations = 8;
-    const allToolCalls: any[] = [];
-    const allToolResponses: any[] = [];
+    const { clients: runtimeClients, transientIds } =
+      await this.prepareRuntimeClientsForQuery(filteredTools, credentials);
+    try {
+      const maxToolIterations = 8;
+      const allToolCalls: any[] = [];
+      const allToolResponses: any[] = [];
 
-    for (let iteration = 0; iteration < maxToolIterations; iteration++) {
-      const response = await this.llmProvider.sendMessage(messages, llmTools);
-      const replyMessage = response.choices[0].message;
-      const toolCalls = replyMessage.tool_calls || [];
+      for (let iteration = 0; iteration < maxToolIterations; iteration++) {
+        const response = await this.llmProvider.sendMessage(messages, llmTools);
+        const replyMessage = response.choices[0].message;
+        const toolCalls = replyMessage.tool_calls || [];
 
-      this.logger.info(
-        `LLM response received with ${toolCalls.length} tool calls (iteration ${
-          iteration + 1
-        })`,
-      );
-
-      if (toolCalls.length === 0) {
-        return {
-          reply: replyMessage.content || '',
-          toolCalls: allToolCalls,
-          toolResponses: allToolResponses,
-        };
-      }
-
-      for (const toolCall of toolCalls) {
-        allToolCalls.push(toolCall);
-        const parsedArguments = this.parseToolArguments(
-          toolCall.function.arguments,
+        this.logger.info(
+          `LLM response received with ${toolCalls.length} tool calls (iteration ${
+            iteration + 1
+          })`,
         );
 
-        if (this.isExecuteTemplateMissingValues(toolCall, parsedArguments)) {
-          const guidanceMessage =
-            this.buildExecuteTemplateMissingValuesGuidance(parsedArguments);
-
-          this.logger.warn(
-            `Blocked invalid execute-template call without values. Arguments: ${JSON.stringify(
-              parsedArguments,
-            )}`,
-          );
-
-          const errorResponse = {
-            id: toolCall.id,
-            name: toolCall.function.name,
-            arguments: parsedArguments,
-            result: guidanceMessage,
-            serverId: 'guardrail',
+        if (toolCalls.length === 0) {
+          return {
+            reply: replyMessage.content || '',
+            toolCalls: allToolCalls,
+            toolResponses: allToolResponses,
           };
-
-          allToolResponses.push(errorResponse);
-
-          messages.push({
-            role: 'assistant',
-            content: null,
-            tool_calls: [toolCall],
-          });
-
-          messages.push({
-            role: 'tool',
-            content: guidanceMessage,
-            tool_call_id: toolCall.id,
-          });
-
-          continue;
         }
 
-        try {
-          const toolResponse = await executeToolCall(
-            toolCall,
-            this.tools,
-            this.mcpClients,
+        for (const toolCall of toolCalls) {
+          allToolCalls.push(toolCall);
+          const parsedArguments = this.parseToolArguments(
+            toolCall.function.arguments,
           );
-          allToolResponses.push(toolResponse);
 
-          messages.push({
-            role: 'assistant',
-            content: null,
-            tool_calls: [toolCall],
-          });
+          if (this.isExecuteTemplateMissingValues(toolCall, parsedArguments)) {
+            const guidanceMessage =
+              this.buildExecuteTemplateMissingValuesGuidance(parsedArguments);
 
-          messages.push({
-            role: 'tool',
-            content: toolResponse.result,
-            tool_call_id: toolCall.id,
-          });
-        } catch (error) {
-          const errorMessage = `Error executing tool '${
-            toolCall.function.name
-          }': ${error instanceof Error ? error.message : error}`;
+            this.logger.warn(
+              `Blocked invalid execute-template call without values. Arguments: ${JSON.stringify(
+                parsedArguments,
+              )}`,
+            );
 
-          this.logger.warn(errorMessage);
+            const errorResponse = {
+              id: toolCall.id,
+              name: toolCall.function.name,
+              arguments: parsedArguments,
+              result: guidanceMessage,
+              serverId: 'guardrail',
+            };
 
-          // Still add the tool call and error response to maintain conversation flow
-          const errorResponse = {
-            id: toolCall.id,
-            name: toolCall.function.name,
-            arguments: parsedArguments,
-            result: errorMessage,
-            serverId: 'error',
-          };
+            allToolResponses.push(errorResponse);
 
-          allToolResponses.push(errorResponse);
+            messages.push({
+              role: 'assistant',
+              content: null,
+              tool_calls: [toolCall],
+            });
 
-          messages.push({
-            role: 'assistant',
-            content: null,
-            tool_calls: [toolCall],
-          });
+            messages.push({
+              role: 'tool',
+              content: guidanceMessage,
+              tool_call_id: toolCall.id,
+            });
 
-          messages.push({
-            role: 'tool',
-            content: errorMessage,
-            tool_call_id: toolCall.id,
-          });
+            continue;
+          }
+
+          try {
+            const toolResponse = await executeToolCall(
+              toolCall,
+              filteredTools,
+              runtimeClients,
+            );
+            allToolResponses.push(toolResponse);
+
+            messages.push({
+              role: 'assistant',
+              content: null,
+              tool_calls: [toolCall],
+            });
+
+            messages.push({
+              role: 'tool',
+              content: toolResponse.result,
+              tool_call_id: toolCall.id,
+            });
+          } catch (error) {
+            const errorMessage = `Error executing tool '${
+              toolCall.function.name
+            }': ${error instanceof Error ? error.message : error}`;
+
+            this.logger.warn(errorMessage);
+
+            // Still add the tool call and error response to maintain conversation flow
+            const errorResponse = {
+              id: toolCall.id,
+              name: toolCall.function.name,
+              arguments: parsedArguments,
+              result: errorMessage,
+              serverId: 'error',
+            };
+
+            allToolResponses.push(errorResponse);
+
+            messages.push({
+              role: 'assistant',
+              content: null,
+              tool_calls: [toolCall],
+            });
+
+            messages.push({
+              role: 'tool',
+              content: errorMessage,
+              tool_call_id: toolCall.id,
+            });
+          }
         }
       }
+
+      this.logger.warn(
+        `Reached maximum tool-call iterations (${maxToolIterations}) while processing MCP chat request`,
+      );
+
+      return {
+        reply:
+          'I reached the maximum number of tool-calling steps for this request. Please try again with a more specific prompt.',
+        toolCalls: allToolCalls,
+        toolResponses: allToolResponses,
+      };
+    } finally {
+      await this.closeRuntimeClients(runtimeClients, transientIds);
     }
-
-    this.logger.warn(
-      `Reached maximum tool-call iterations (${maxToolIterations}) while processing MCP chat request`,
-    );
-
-    return {
-      reply:
-        'I reached the maximum number of tool-calling steps for this request. Please try again with a more specific prompt.',
-      toolCalls: allToolCalls,
-      toolResponses: allToolResponses,
-    };
   }
 
   /**
@@ -788,6 +782,225 @@ export class MCPClientServiceImpl implements MCPClientService {
       servers,
       timestamp: new Date().toISOString(),
     };
+  }
+
+  private getEnabledServerConfigs(
+    enabledTools?: string[],
+  ): MCPServerFullConfig[] {
+    return enabledTools !== undefined && enabledTools !== null
+      ? this.serverConfigs.filter(config => enabledTools.includes(config.id))
+      : this.serverConfigs;
+  }
+
+  private getEnabledInternalServerIds(enabledTools?: string[]): string[] {
+    return this.getEnabledServerConfigs(enabledTools)
+      .filter(config => this.isInternalMcpServer(config))
+      .map(config => config.id);
+  }
+
+  private isInternalMcpServer(serverConfig: MCPServerFullConfig): boolean {
+    if (!serverConfig.url) {
+      return false;
+    }
+
+    try {
+      return new URL(serverConfig.url).pathname.startsWith('/api/mcp-actions');
+    } catch {
+      return false;
+    }
+  }
+
+  private async createStreamableHttpClient(
+    serverConfig: MCPServerFullConfig,
+    headers?: Record<string, string>,
+  ): Promise<Client> {
+    if (!serverConfig.url) {
+      throw new Error(
+        `Server config for '${serverConfig.name}' with streamable-http type must have a url`,
+      );
+    }
+
+    const client = new Client({
+      name: `${serverConfig.name}-client`,
+      version: '1.0.0',
+    });
+
+    const transportOptions: any = {};
+    if (headers) {
+      transportOptions.requestInit = { headers };
+    }
+
+    const transport = new StreamableHTTPClientTransport(
+      new URL(serverConfig.url),
+      transportOptions,
+    );
+    await client.connect(transport);
+    return client;
+  }
+
+  private async getDiscoveryHeadersForServer(
+    serverConfig: MCPServerFullConfig,
+  ): Promise<Record<string, string> | undefined> {
+    if (!this.isInternalMcpServer(serverConfig)) {
+      return serverConfig.headers;
+    }
+
+    try {
+      const own = await this.auth.getOwnServiceCredentials();
+      const { token } = await this.auth.getPluginRequestToken({
+        onBehalfOf: own,
+        targetPluginId: 'mcp-actions',
+      });
+      return {
+        ...(serverConfig.headers ?? {}),
+        Authorization: this.toBearerToken(token),
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.warn(
+        `Failed to mint startup token for internal MCP server '${serverConfig.id}'. Continuing without tools for this server: ${message}`,
+      );
+      throw error;
+    }
+  }
+
+  private getUserRef(credentials?: BackstageCredentials): string {
+    if (!credentials || typeof credentials !== 'object') {
+      return 'unknown';
+    }
+    return (
+      (credentials as any).principal?.userEntityRef ??
+      (credentials as any).principal?.subject ??
+      'unknown'
+    );
+  }
+
+  private toBearerToken(token: string): string {
+    return token.toLowerCase().startsWith('bearer ') ? token : `Bearer ${token}`;
+  }
+
+  private async getRuntimeAuthorizationHeader(
+    serverId: string,
+    credentials?: BackstageCredentials,
+  ): Promise<string> {
+    if (!credentials) {
+      const err = `Missing request credentials for internal MCP server '${serverId}'`;
+      this.logger.error(
+        `failed to mint user token for ${serverId}, hard-failing request: ${err}`,
+      );
+      throw new Error(err);
+    }
+
+    const userRef = this.getUserRef(credentials);
+    this.logger.info(`minting on-behalf-of for user=${userRef}, server=${serverId}`);
+
+    try {
+      const authWithOptionalLimited = this.auth as AuthService & {
+        getLimitedUserToken?: (
+          credentials: BackstageCredentials,
+        ) => Promise<{ token: string } | string>;
+      };
+
+      let token: string | undefined;
+      if (typeof authWithOptionalLimited.getLimitedUserToken === 'function') {
+        const limitedToken = await authWithOptionalLimited.getLimitedUserToken(
+          credentials,
+        );
+        token =
+          typeof limitedToken === 'string'
+            ? limitedToken
+            : limitedToken?.token;
+      } else {
+        const pluginToken = await this.auth.getPluginRequestToken({
+          onBehalfOf: credentials,
+          targetPluginId: 'mcp-actions',
+        });
+        token = pluginToken.token;
+      }
+
+      if (!token) {
+        throw new Error('received empty token');
+      }
+
+      return this.toBearerToken(token);
+    } catch (error) {
+      const err = error instanceof Error ? error.message : String(error);
+      this.logger.error(
+        `failed to mint user token for ${serverId}, hard-failing request: ${err}`,
+      );
+      throw new Error(`Failed to mint per-user token for '${serverId}': ${err}`);
+    }
+  }
+
+  private async prepareRuntimeClientsForQuery(
+    filteredTools: ServerTool[],
+    credentials?: BackstageCredentials,
+  ): Promise<{ clients: Map<string, Client>; transientIds: string[] }> {
+    const clients = new Map(this.mcpClients);
+    const transientIds: string[] = [];
+    const enabledServerIds = Array.from(
+      new Set(filteredTools.map(tool => tool.serverId)),
+    );
+
+    for (const serverId of enabledServerIds) {
+      const serverConfig = this.serverConfigs.find(config => config.id === serverId);
+      if (
+        !serverConfig ||
+        serverConfig.type !== MCPServerType.STREAMABLE_HTTP ||
+        !serverConfig.url
+      ) {
+        continue;
+      }
+
+      if (!this.isInternalMcpServer(serverConfig)) {
+        this.logger.debug(`using static headers for external MCP server=${serverId}`);
+        continue;
+      }
+
+      const authorization = await this.getRuntimeAuthorizationHeader(
+        serverId,
+        credentials,
+      );
+      const runtimeHeaders = {
+        ...(serverConfig.headers ?? {}),
+        Authorization: authorization,
+      };
+      const runtimeClient = await this.createStreamableHttpClient(
+        serverConfig,
+        runtimeHeaders,
+      );
+      clients.set(serverId, runtimeClient);
+      transientIds.push(serverId);
+    }
+
+    return { clients, transientIds };
+  }
+
+  private async closeRuntimeClients(
+    runtimeClients: Map<string, Client>,
+    transientIds: string[],
+  ): Promise<void> {
+    for (const serverId of transientIds) {
+      const client = runtimeClients.get(serverId);
+      if (!client) {
+        continue;
+      }
+
+      try {
+        const maybeClose = (client as Client & {
+          close?: () => Promise<void> | void;
+        }).close;
+        if (typeof maybeClose === 'function') {
+          await maybeClose.call(client);
+        }
+      } catch (error) {
+        this.logger.debug(
+          `Failed to close runtime MCP client for '${serverId}': ${
+            error instanceof Error ? error.message : error
+          }`,
+        );
+      }
+    }
   }
 
   private buildRuntimeToolInstruction(tools: ServerTool[]): string | undefined {
