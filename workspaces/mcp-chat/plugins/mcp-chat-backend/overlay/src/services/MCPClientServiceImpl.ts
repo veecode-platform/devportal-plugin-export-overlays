@@ -53,7 +53,7 @@ import {
 export type Options = {
   logger: LoggerService;
   config: RootConfigService;
-  auth: AuthService;
+  auth?: AuthService;
 };
 
 /**
@@ -65,7 +65,7 @@ export type Options = {
 export class MCPClientServiceImpl implements MCPClientService {
   private readonly logger: LoggerService;
   private readonly config: RootConfigService;
-  private readonly auth: AuthService;
+  private readonly auth?: AuthService;
   private llmProvider: LLMProvider;
   private readonly mcpClients: Map<string, Client> = new Map();
   private tools: ServerTool[] = [];
@@ -845,6 +845,12 @@ export class MCPClientServiceImpl implements MCPClientService {
       return serverConfig.headers;
     }
 
+    if (!this.auth) {
+      throw new Error(
+        `Auth service is required for internal MCP server '${serverConfig.id}'`,
+      );
+    }
+
     try {
       const own = await this.auth.getOwnServiceCredentials();
       const { token } = await this.auth.getPluginRequestToken({
@@ -885,6 +891,14 @@ export class MCPClientServiceImpl implements MCPClientService {
   ): Promise<string> {
     if (!credentials) {
       const err = `Missing request credentials for internal MCP server '${serverId}'`;
+      this.logger.error(
+        `failed to mint user token for ${serverId}, hard-failing request: ${err}`,
+      );
+      throw new Error(err);
+    }
+
+    if (!this.auth) {
+      const err = `Auth service is not available for internal MCP server '${serverId}'`;
       this.logger.error(
         `failed to mint user token for ${serverId}, hard-failing request: ${err}`,
       );

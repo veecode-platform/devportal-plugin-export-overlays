@@ -13,67 +13,96 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import { LoggerService, HttpAuthService } from '@backstage/backend-plugin-api';
+import { HttpAuthService, LoggerService } from '@backstage/backend-plugin-api';
+import { InputError } from '@backstage/errors';
 import express from 'express';
 import Router from 'express-promise-router';
 import { MCPClientService } from './services/MCPClientService';
-import { ChatConversationStore } from './services/ChatConversationStore';
-import { SummarizationService } from './services/SummarizationService';
-import {
-  createStatusRoutes,
-  createChatRoutes,
-  createConversationRoutes,
-} from './routes';
+import { validateMessages } from './utils';
 
-export interface RouterOptions {
+export async function createRouter({
+  logger,
+  mcpClientService,
+  httpAuth,
+}: {
   logger: LoggerService;
   mcpClientService: MCPClientService;
-  conversationStore: ChatConversationStore;
-  httpAuth: HttpAuthService;
-  summarizationService: SummarizationService;
-}
-
-export async function createRouter(
-  options: RouterOptions,
-): Promise<express.Router> {
-  const {
-    logger,
-    mcpClientService,
-    conversationStore,
-    httpAuth,
-    summarizationService,
-  } = options;
-
+  httpAuth?: HttpAuthService;
+}): Promise<express.Router> {
   const router = Router();
   router.use(express.json());
 
-  router.use(
-    createStatusRoutes({
-      mcpClientService,
-      logger,
-    }),
-  );
+  router.get('/provider/status', async (_req, res) => {
+    logger.info('Route called: /provider/status');
+    const providerStatus = await mcpClientService.getProviderStatus();
+    return res.json(providerStatus);
+  });
 
-  router.use(
-    '/chat',
-    createChatRoutes({
-      mcpClientService,
-      conversationStore,
-      summarizationService,
-      httpAuth,
-      logger,
-    }),
-  );
+  router.get('/mcp/status', async (_req, res) => {
+    logger.info('Route called: /mcp/status');
+    const mcpServerStatus = await mcpClientService.getMCPServerStatus();
+    return res.json(mcpServerStatus);
+  });
 
-  router.use(
-    '/conversations',
-    createConversationRoutes({
-      store: conversationStore,
-      httpAuth,
-      logger,
-    }),
-  );
+  router.get('/tools', async (_req, res) => {
+    logger.info('Route called: /tools');
+
+    const availableTools = mcpClientService.getAvailableTools();
+
+    return res.json({
+      availableTools: availableTools,
+      toolCount: availableTools.length,
+      timestamp: new Date().toISOString(),
+    });
+  });
+
+  router.post('/chat', async (req, res) => {
+    const { messages, enabledTools } = req.body;
+
+    const validation = validateMessages(messages);
+    if (!validation.isValid) {
+      logger.warn(`Message validation failed: ${validation.error}`);
+      return res.status(400).json({ error: validation.error });
+    }
+
+    if (enabledTools && !Array.isArray(enabledTools)) {
+      throw new InputError('enabledTools must be an array');
+    }
+
+    if (
+      enabledTools &&
+      enabledTools.some((tool: any) => typeof tool !== 'string')
+    ) {
+      throw new InputError('All enabledTools must be strings');
+    }
+
+    const credentials = httpAuth
+      ? await httpAuth.credentials(req, {
+          allow: ['user'],
+          allowLimitedAccess: true,
+        })
+      : undefined;
+
+    const { reply, toolCalls, toolResponses } =
+      await mcpClientService.processQuery(messages, enabledTools, credentials);
+
+    if (toolCalls.length > 0) {
+      const toolsUsed = toolCalls.map(call => call.function.name);
+
+      return res.json({
+        role: 'assistant',
+        content: reply,
+        toolResponses,
+        toolsUsed,
+      });
+    }
+    return res.json({
+      role: 'assistant',
+      content: reply,
+      toolResponses: [],
+      toolsUsed: [],
+    });
+  });
 
   return router;
 }
