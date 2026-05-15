@@ -14,7 +14,6 @@
 # Removed (wrapped in devportal-distro):
 #   catalog: bitbucket-cloud, bitbucket-server
 #   scaffolder: bitbucket-cloud, bitbucket-server
-#   other: kubernetes (frontend)
 
 # --- Auth providers not in devportal-base ---
 plugins/auth-backend-module-atlassian-provider:
@@ -66,6 +65,7 @@ plugins/devtools:
 plugins/devtools-backend:
 plugins/example-todo-list:
 plugins/example-todo-list-backend:
+plugins/kubernetes:
 plugins/mcp-actions-backend:
 plugins/notifications-backend-module-email: --embed-package @backstage/plugin-notifications-node
 
