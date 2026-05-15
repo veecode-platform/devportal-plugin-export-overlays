@@ -1,0 +1,24 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: devportal-marketplace-backend
+  namespace: veecode
+  title: "DevPortal Marketplace Backend"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspace/marketplace
+  tags: []
+spec:
+  packageName: "devportal-marketplace-backend"
+  dynamicArtifact: oci://quay.io/veecode/marketplace:bs_1.49.4!devportal-marketplace-backend
+  version: 0.1.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.49.4
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - marketplace
