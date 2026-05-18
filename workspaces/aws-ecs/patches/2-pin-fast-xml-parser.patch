@@ -1,0 +1,10 @@
+--- package.json
++++ package.json
+@@ -45,7 +45,8 @@
+   },
+   "resolutions": {
+     "@types/react": "^18",
+-    "@types/react-dom": "^18"
++    "@types/react-dom": "^18",
++    "fast-xml-parser": "4.5.3"
+   },
