@@ -187,12 +187,12 @@ jobs:
       overlay-repo: ${{ needs.prepare.outputs.overlay-repo }}
       workspace-path: ${{ needs.prepare.outputs.workspace }}
       publish-container: true
-      image-repository-prefix: ${{ format('ghcr.io/{0}', github.repository) }}
+      image-repository-prefix: quay.io/veecode
       image-tag-prefix: ${{ format('pr_{0}__', needs.prepare.outputs.pr-number) }}
-      image-registry-user: ${{ github.actor }}
+      image-registry-user: veecode+ci
 
     secrets:
-      image-registry-password: ${{ secrets.GITHUB_TOKEN }}
+      image-registry-password: ${{ secrets.QUAY_TOKEN }}
 
     permissions:
       contents: write
