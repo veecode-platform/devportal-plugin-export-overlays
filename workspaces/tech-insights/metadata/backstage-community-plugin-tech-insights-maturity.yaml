@@ -16,11 +16,11 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-tech-insights-maturity'
-  dynamicArtifact: oci://quay.io/veecode/tech-insights:bs_1.48.4!backstage-community-plugin-tech-insights-maturity
-  version: 0.4.1
+  dynamicArtifact: oci://ghcr.io/veecode-platform/devportal-plugin-export-overlays/tech-insights:bs_1.49.4!backstage-community-plugin-tech-insights-maturity
+  version: 0.6.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.48.4
+    supportedVersions: 1.47.2
   author: VeeCode
   support: community
   lifecycle: active
