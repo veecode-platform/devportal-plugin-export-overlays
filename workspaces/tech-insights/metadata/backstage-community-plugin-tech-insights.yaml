@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-tech-insights'
-  dynamicArtifact: oci://ghcr.io/veecode-platform/devportal-plugin-export-overlays/tech-insights:bs_1.49.4!backstage-community-plugin-tech-insights
+  dynamicArtifact: oci://quay.io/veecode/tech-insights:bs_1.49.4!backstage-community-plugin-tech-insights
   version: 1.0.0
   backstage:
     role: frontend-plugin
