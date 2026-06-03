@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-argocd-backend"
-  dynamicArtifact: oci://quay.io/veecode/argocd:bs_1.48.4!backstage-community-plugin-argocd-backend
-  version: 1.0.2
+  dynamicArtifact: oci://quay.io/veecode/argocd:bs_1.49.4!backstage-community-plugin-argocd-backend
+  version: 1.4.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.48.4
-  author: VeeCode
+    supportedVersions: 1.49.4
+  author: Red Hat
   support: community
   lifecycle: active
   partOf:

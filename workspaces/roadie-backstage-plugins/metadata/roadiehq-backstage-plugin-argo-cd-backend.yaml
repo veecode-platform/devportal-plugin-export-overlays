@@ -16,11 +16,11 @@ metadata:
   tags: []
 spec:
   packageName: "@roadiehq/backstage-plugin-argo-cd-backend"
-  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.48.4!roadiehq-backstage-plugin-argo-cd-backend
-  version: 4.6.0
+  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.49.4!roadiehq-backstage-plugin-argo-cd-backend
+  version: 4.8.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.42.5
+    supportedVersions: 1.49.4
   author: Roadie
   support: community
   lifecycle: active
@@ -38,6 +38,3 @@ spec:
                 - name: argoInstance1
                   url: ${ARGOCD_INSTANCE1_URL}
                   token: ${ARGOCD_AUTH_TOKEN}
-                - name: argoInstance2
-                  url: ${ARGOCD_INSTANCE2_URL}
-                  token: ${ARGOCD_AUTH_TOKEN2}

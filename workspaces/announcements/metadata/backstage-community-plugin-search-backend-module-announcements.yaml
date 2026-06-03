@@ -3,26 +3,35 @@ kind: Package
 metadata:
   name: backstage-community-plugin-search-backend-module-announcements
   namespace: rhdh
-  title: "Search Backend Module Announcements"
+  title: Announcements Search Backend Module
   links:
-  - url: https://red.ht/rhdh
-    title: Homepage
-  - url: https://github.com/backstage/community-plugins/issues
-    title: Bugs
-  - title: Source Code
-    url: https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
   annotations:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
   tags: []
 spec:
-  packageName: '@backstage-community/plugin-search-backend-module-announcements'
-  dynamicArtifact: oci://quay.io/veecode/announcements:bs_1.48.4!backstage-community-plugin-search-backend-module-announcements
-  version: 0.10.0
+  packageName: "@backstage-community/plugin-search-backend-module-announcements"
+  dynamicArtifact: oci://quay.io/veecode/announcements:bs_1.49.4!backstage-community-plugin-search-backend-module-announcements
+  version: 0.16.0
   backstage:
-    role: backend-plugin-module
-    supportedVersions: 1.48.4
-  author: VeeCode
+    role: backend-plugin
+    supportedVersions: 1.49.4
+  author: Backstage Community
   support: community
   lifecycle: active
-  partOf:
-  - announcements
+  appConfigExamples:
+    - title: Optional collator schedule
+      content:
+        search:
+          collators:
+            announcements:
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  seconds: 30
+                timeout:
+                  minutes: 3

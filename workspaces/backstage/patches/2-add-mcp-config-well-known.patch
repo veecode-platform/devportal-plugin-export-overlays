@@ -1,6 +1,6 @@
 --- plugins/mcp-actions-backend/src/plugin.ts
 +++ plugins/mcp-actions-backend/src/plugin.ts
-@@ -98,6 +98,49 @@
+@@ -154,6 +154,49 @@
              },
            );
          }

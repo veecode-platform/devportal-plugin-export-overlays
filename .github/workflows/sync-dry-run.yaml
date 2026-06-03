@@ -1,0 +1,33 @@
+name: Sync Dry-Run (export, no publish)
+
+# Validation-only workflow used when syncing with upstream.
+# Runs the full export matrix for all active workspaces WITHOUT publishing any
+# container image (publish-container: false, no registry credentials passed).
+# Trigger manually from the Actions tab or via `gh workflow run`.
+
+on:
+  workflow_dispatch:
+    inputs:
+      workspace-path:
+        description: Optional single workspace to export (empty = all active workspaces)
+        type: string
+        required: false
+        default: ''
+      upload-project-on-error:
+        description: Upload the full project as an artifact on export error (troubleshooting)
+        type: boolean
+        required: false
+        default: true
+
+jobs:
+  dry-run-export:
+    name: Export workspaces (no publish)
+    uses: veecode-platform/devportal-plugin-export-utils/.github/workflows/export-workspaces-as-dynamic.yaml@main
+    with:
+      overlay-branch: ${{ github.ref_name }}
+      overlay-repo: ${{ github.repository }}
+      workspace-path: ${{ inputs.workspace-path }}
+      publish-container: false
+      upload-project-on-error: ${{ inputs.upload-project-on-error }}
+    permissions:
+      contents: read

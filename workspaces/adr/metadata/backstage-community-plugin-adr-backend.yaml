@@ -3,26 +3,24 @@ kind: Package
 metadata:
   name: backstage-community-plugin-adr-backend
   namespace: rhdh
-  title: "Adr Backend"
+  title: ADR Backend
   links:
-  - url: https://red.ht/rhdh
-    title: Homepage
-  - url: https://github.com/backstage/community-plugins/issues
-    title: Bugs
-  - title: Source Code
-    url: https://github.com/backstage/community-plugins/tree/main/workspaces/adr
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/adr
   annotations:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/adr
   tags: []
 spec:
-  packageName: '@backstage-community/plugin-adr-backend'
-  dynamicArtifact: oci://quay.io/veecode/adr:bs_1.48.4!backstage-community-plugin-adr-backend
-  version: 0.16.1
+  packageName: "@backstage-community/plugin-adr-backend"
+  dynamicArtifact: oci://quay.io/veecode/adr:bs_1.49.4!backstage-community-plugin-adr-backend
+  version: 0.20.1
   backstage:
     role: backend-plugin
-    supportedVersions: 1.48.4
-  author: VeeCode
+    supportedVersions: 1.49.4
+  author: Backstage Community
   support: community
   lifecycle: active
-  partOf:
-  - adr
+  appConfigNotRequired: true
+  appConfigExamples: []

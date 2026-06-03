@@ -2,29 +2,57 @@ name: Pull Request Actions
 on:
   issue_comment:
     types: [created, edited]
+  workflow_dispatch:
+    inputs:
+      pr-number:
+        description: PR number to act on
+        type: string
+        required: true
+      command-name:
+        description: Command to execute (publish, update-versions, update-commit, smoketest)
+        type: string
+        required: true
 
 jobs:  
   parse:
     runs-on: ubuntu-latest
     name: Parse PR Comment
     if: >
+      github.event_name == 'workflow_dispatch' || (
       github.triggering_actor != 'openshift-ci[bot]' &&
       github.triggering_actor != 'sonarqubecloud[bot]' &&
       github.event.issue.pull_request && (
       contains(github.event.comment.body, '/publish') ||
       contains(github.event.comment.body, '/update-versions') ||
       contains(github.event.comment.body, '/update-commit') ||
-      contains(github.event.comment.body, '/smoketest'))
+      contains(github.event.comment.body, '/smoketest')))
     
     outputs:
       command-name: ${{ steps.extract.outputs.command-name }}
       error-message: ${{ steps.extract.outputs.error-message }}
+      pr-number: ${{ steps.extract.outputs.pr-number }}
     steps:
       - name: Extract command from comment
         id: extract
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
+            if (context.eventName === 'workflow_dispatch') {
+              const commandName = '${{ inputs.command-name }}';
+              const allowed = new Set(['publish', 'update-versions', 'update-commit', 'smoketest']);
+              if (!allowed.has(commandName)) {
+                const errorMsg = `Invalid command: ${commandName}`;
+                core.setOutput('error-message', errorMsg);
+                core.setOutput('command-name', '');
+                core.setFailed(errorMsg);
+                return;
+              }
+              core.setOutput('command-name', commandName);
+              core.setOutput('error-message', '');
+              core.setOutput('pr-number', '${{ inputs.pr-number }}');
+              return;
+            }
+            core.setOutput('pr-number', String(context.issue.number));
             const raw = context.payload.comment?.body ?? '';
             const lines = String(raw)
               .split(/\r?\n/)
@@ -59,7 +87,7 @@ jobs:
       - parse
 
     concurrency:
-      group: add_error_comment-${{ github.ref_name }}-${{ github.event.issue.number }}
+      group: add_error_comment-${{ github.ref_name }}-${{ needs.parse.outputs.pr-number }}
       cancel-in-progress: false
 
     permissions:
@@ -69,15 +97,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add error comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           INPUT_ERROR_MESSAGE: ${{ needs.parse.outputs.error-message }}
+          INPUT_PR_NUMBER: ${{ needs.parse.outputs.pr-number }}
         with:
           script: |
             const errorMessage = core.getInput('error_message');
+            const prNumber = Number(core.getInput('pr_number'));
             const body = `**Error**: ${errorMessage}\n\nValid commands are:\n- \`/publish\` - Publish dynamic plugin images\n- \`/update-versions\` - Update versions from release branch\n- \`/update-commit\` - Update commit from automatic discovery\n- \`/smoketest\` - Run smoke tests`;
             await github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
@@ -90,7 +120,7 @@ jobs:
       - parse
 
     concurrency:
-      group: prepare-${{ github.ref_name }}-${{ github.event.issue.number }}
+      group: prepare-${{ github.ref_name }}-${{ needs.parse.outputs.pr-number }}
       cancel-in-progress: false
       
     if: needs.parse.outputs.command-name != ''
@@ -108,15 +138,17 @@ jobs:
     steps:
       - name: Get PR branch data
         id: get-branch
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           INPUT_COMMAND_NAME: ${{ needs.parse.outputs.command-name }}
+          INPUT_PR_NUMBER: ${{ needs.parse.outputs.pr-number }}
         with:
           script: |
+            const prNumber = Number(core.getInput('pr_number'));
             const currentPullRequest = await github.rest.pulls.get({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              pull_number: context.issue.number
+              pull_number: prNumber
             });
             const targetBranch = currentPullRequest.data.base.ref;
             core.setOutput('target-branch', targetBranch);
@@ -124,7 +156,6 @@ jobs:
             core.setOutput('overlay-branch', prBranch);
             const prRepo = currentPullRequest.data.head.repo.full_name;
             core.setOutput('overlay-repo', prRepo);
-            const prNumber = currentPullRequest.data.number;
             core.setOutput('pr-number', prNumber);
             const prCommit = currentPullRequest.data.head.sha;
             core.setOutput('overlay-commit', prCommit);
@@ -137,7 +168,7 @@ jobs:
               const prFiles = await github.rest.pulls.listFiles({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                pull_number: context.issue.number
+                pull_number: prNumber
               });
               const workspaces = [ ... new Set(prFiles.data
                 .map(f => f.filename.match(/^workspaces\/([^\/]+)\/.*/))
@@ -167,7 +198,7 @@ jobs:
               target_url: workflowRun.data.html_url,
               context: core.getInput('command_name')
             });
-            
+
   export:
     name: Publish PR Dynamic Plugin Images
     needs:
@@ -176,7 +207,7 @@ jobs:
       - checkPRUpToDate
 
     concurrency:
-      group: export-${{ github.ref_name }}-${{ github.event.issue.number }}
+      group: export-${{ github.ref_name }}-${{ needs.parse.outputs.pr-number }}
       cancel-in-progress: true
 
     if: needs.parse.outputs.command-name == 'publish' && needs.prepare.outputs.overlay-branch != '' && needs.prepare.outputs.workspace != ''
@@ -328,7 +359,7 @@ jobs:
             const success = jobs.data.jobs
               .filter(j => j.name.startsWith('Publish') || j.name.startsWith('export') || j.name.startsWith('Export') || j.name.startsWith('Check'))
               .every(j => j.conclusion === 'success');
-              
+
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -344,7 +375,7 @@ jobs:
               .every(j => j.conclusion === 'success');
 
             let body = `[Publish workflow](${workflowRun.data.html_url}) has completed with ${ publishSuccess ? 'success' : 'failure' }.`;
-            
+
             const publishedExports = core.getMultilineInput('published_exports');
             const failedExports = core.getMultilineInput('failed_exports');
             if (publishedExports.length + failedExports.length > 0) {
@@ -364,7 +395,7 @@ jobs:
                 });
               }
             }
-            
+
             const reportPath = 'backstage-compatibility-report.md';
             if (fs.existsSync(reportPath)) {
               const reportContent = fs.readFileSync(reportPath, 'utf8');
@@ -382,7 +413,7 @@ jobs:
               let metadataSection = '\n\n#### Metadata Validation\n';
               metadataSection += `❌ Found **${metadataValidationErrorCount}** validation error(s):\n\n`;
               metadataSection += '| File | Kind | Message |\n|------|------|---------|\n';
-              
+
               try {
                 const errors = JSON.parse(metadataValidationErrorsJson || '[]');
                 for (const error of errors) {
@@ -392,7 +423,7 @@ jobs:
               } catch (e) {
                 metadataSection += `| - | - | Failed to parse errors: ${metadataValidationErrorsJson} |\n`;
               }
-              
+
               body += metadataSection;
             }
 
@@ -418,55 +449,6 @@ jobs:
               repo: context.repo.repo,
               body: body
             })
-    
-  add_no_workspace_comment:
-    needs:
-      - parse
-      - prepare
-
-    concurrency:
-      group: add_no_workspace_comment-${{ github.ref_name }}-${{ github.event.issue.number }}
-      cancel-in-progress: false
-
-    permissions:
-      statuses: write
-      pull-requests: write
-
-    if: always() && needs.prepare.outputs.overlay-branch != '' && needs.prepare.outputs.workspace == ''
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Report skipped command
-        uses: actions/github-script@v7
-        env:
-          INPUT_OVERLAY_COMMIT: ${{ needs.prepare.outputs.overlay-commit }}
-          INPUT_COMMAND_NAME: ${{ needs.parse.outputs.command-name }}
-
-        with:
-          script: |
-            const workflowRun = await github.rest.actions.getWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: '${{ github.run_id }}'
-            });
-
-            await github.rest.repos.createCommitStatus({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              sha: core.getInput('overlay_commit'),
-              description: '${{ github.workflow }}',
-              state: 'success',
-              target_url: workflowRun.data.html_url,
-              context: core.getInput('command_name'),
-            });
-
-            const body = `[PR action (\`/${core.getInput('command_name')}\`)](${workflowRun.data.html_url}) cancelled: PR doesn't touch only 1 workspace.`;
-            await github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: body
-            })
 
   checkPRUpToDate:
     name: Checks whether the PR is up-to-date with versions.json
@@ -477,11 +459,11 @@ jobs:
     concurrency:
       group: checkPRUpToDate-${{ github.ref_name }}-${{ github.event.issue.number }}
       cancel-in-progress: false
-    
+
     permissions:
       statuses: write
       pull-requests: write
-  
+
     if: always() && needs.parse.outputs.command-name == 'publish' && needs.prepare.outputs.overlay-branch != '' && needs.prepare.outputs.workspace != ''
     runs-on: ubuntu-latest
     steps:
@@ -513,7 +495,7 @@ jobs:
               sourceFile.content,
               (Buffer.isEncoding(sourceFile.encoding) ? sourceFile.encoding : 'utf-8')
             ).toString('utf-8');
-    
+
             const prRepository = core.getInput('overlay_repo');
             const prBranch = core.getInput('overlay_branch');
             const owner = prRepository.split('/')[0];
@@ -532,7 +514,7 @@ jobs:
               targetFile.content,
               (Buffer.isEncoding(targetFile.encoding) ? targetFile.encoding : 'utf-8')
             ).toString('utf-8');
-      
+
             if (sourceContent !== targetContent) {
               core.setFailed(`PR not up-to-date with the release branch`);
               const body = `The \`versions.json\` file in your PR doesn't match the one in release branch ${releaseBranch}\nTry updating it by adding the \`/update-versions\` PR comment.`;
@@ -543,7 +525,92 @@ jobs:
                 body: body
               });
             }
-      
+
+  triggerSmokeTests:
+    name: Trigger Smoke Tests
+    needs:
+      - parse
+      - prepare
+      - export
+    if: >
+      always() &&
+      needs.prepare.outputs.workspace != '' &&
+      ((needs.parse.outputs.command-name == 'publish' && needs.export.result == 'success') ||
+       needs.parse.outputs.command-name == 'smoketest')
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Dispatch workspace smoke tests
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'workspace-tests.yaml',
+              ref: '${{ github.ref_name }}',
+              inputs: {
+                'workspace': '${{ needs.prepare.outputs.workspace }}',
+                'overlay-branch': '${{ needs.prepare.outputs.overlay-branch }}',
+                'overlay-repo': '${{ needs.prepare.outputs.overlay-repo }}',
+                'overlay-commit': '${{ needs.prepare.outputs.overlay-commit }}',
+                'pr-number': String(${{ needs.prepare.outputs.pr-number }}),
+                'target-branch': '${{ needs.prepare.outputs.target-branch }}',
+              },
+            });
+
+  add_no_workspace_comment:
+    needs:
+      - parse
+      - prepare
+
+    concurrency:
+      group: add_no_workspace_comment-${{ github.ref_name }}-${{ needs.parse.outputs.pr-number }}
+      cancel-in-progress: false
+
+    permissions:
+      statuses: write
+      pull-requests: write
+
+    if: always() && needs.prepare.outputs.overlay-branch != '' && needs.prepare.outputs.workspace == ''
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Report skipped command
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          INPUT_OVERLAY_COMMIT: ${{ needs.prepare.outputs.overlay-commit }}
+          INPUT_COMMAND_NAME: ${{ needs.parse.outputs.command-name }}
+          INPUT_PR_NUMBER: ${{ needs.prepare.outputs.pr-number }}
+
+        with:
+          script: |
+            const prNumber = Number(core.getInput('pr_number'));
+            const workflowRun = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: '${{ github.run_id }}'
+            });
+
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: core.getInput('overlay_commit'),
+              description: '${{ github.workflow }}',
+              state: 'success',
+              target_url: workflowRun.data.html_url,
+              context: core.getInput('command_name'),
+            });
+
+            const body = `[PR action (\`/${core.getInput('command_name')}\`)](${workflowRun.data.html_url}) cancelled: PR doesn't touch only 1 workspace.`;
+            await github.rest.issues.createComment({
+              issue_number: prNumber,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            })
+
   updatePRWithVersions:
     name: Update versions on PR from release branch
     needs:
@@ -551,18 +618,51 @@ jobs:
       - prepare
 
     concurrency:
-      group: updatePRWithVersions-${{ github.ref_name }}-${{ github.event.issue.number }}
+      group: updatePRWithVersions-${{ github.ref_name }}-${{ needs.parse.outputs.pr-number }}
       cancel-in-progress: true
     
     if: needs.parse.outputs.command-name == 'update-versions'
     uses: ./.github/workflows/update-prs-with-release-branch-commits.yaml
     with:
       force: true
-      pr: ${{ github.event.issue.number }}
+      pr: ${{ needs.prepare.outputs.pr-number }}
       release-branch: ${{ needs.prepare.outputs.target-branch }}
     permissions:
+      actions: write
       contents: write
       pull-requests: write
+      attestations: write
+      packages: write
+      id-token: write
+      statuses: write
+
+  updatePRWithCommit:
+    name: Update commit on PR from automatic discovery
+    needs:
+      - parse
+      - prepare
+
+    concurrency:
+      group: updatePRWithCommit-${{ github.ref_name }}-${{ needs.parse.outputs.pr-number }}
+      cancel-in-progress: true
+    
+    if: needs.parse.outputs.command-name == 'update-commit'
+    uses: ./.github/workflows/update-plugins-repo-refs.yaml
+    with:
+      single-branch: ${{ needs.prepare.outputs.target-branch }}
+      allow-workspace-addition: false
+      pr-to-update: ${{ needs.prepare.outputs.pr-number }}
+      workspace-path: ${{ needs.prepare.outputs.workspace }}
+
+    permissions:
+      actions: write
+      contents: write
+      pull-requests: write
+      issues: read
+      attestations: write
+      packages: write
+      id-token: write
+      statuses: write
 
   add_update_versions_completion_comment:
     needs:
@@ -571,7 +671,7 @@ jobs:
       - updatePRWithVersions
 
     concurrency:
-      group: add_update_versions_completion_comment-${{ github.ref_name }}-${{ github.event.issue.number }}
+      group: add_update_versions_completion_comment-${{ github.ref_name }}-${{ needs.parse.outputs.pr-number }}
       cancel-in-progress: false
     
     permissions:
@@ -582,13 +682,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Add completion comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          INPUT_OVERLAY_COMMIT: ${{ needs.prepare.outputs.overlay-commit }}
           INPUT_COMMAND_NAME: ${{ needs.parse.outputs.command-name }}
-
+          INPUT_PR_NUMBER: ${{ needs.prepare.outputs.pr-number }}
         with:
           script: |
+            const prNumber = Number(core.getInput('pr_number'));
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+            const overlayCommit = pr.data.head.sha;
             const workflowRun = await github.rest.actions.getWorkflowRun({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -607,43 +713,20 @@ jobs:
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: core.getInput('overlay_commit'),
+              sha: overlayCommit,
               description: '${{ github.workflow }}',
               state: success ? 'success' : 'failure',
               target_url: workflowRun.data.html_url,
               context: core.getInput('command_name'),
             });
 
-            let body = `[Update Versions workflow](${workflowRun.data.html_url}) has completed with ${ success ? 'success' : 'failure' }.`;
+            const body = `[Update Versions workflow](${workflowRun.data.html_url}) has completed with ${ success ? 'success' : 'failure' }.`;
             await github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body
             })    
-
-  updatePRWithCommit:
-    name: Update commit on PR from automatic discovery
-    needs:
-      - parse
-      - prepare
-
-    concurrency:
-      group: updatePRWithCommit-${{ github.ref_name }}-${{ github.event.issue.number }}
-      cancel-in-progress: true
-    
-    if: needs.parse.outputs.command-name == 'update-commit'
-    uses: ./.github/workflows/update-plugins-repo-refs.yaml
-    with:
-      single-branch: ${{ needs.prepare.outputs.target-branch }}
-      allow-workspace-addition: false
-      pr-to-update: ${{ needs.prepare.outputs.pr-number }}
-      workspace-path: ${{ needs.prepare.outputs.workspace }}
-
-    permissions:
-      contents: write
-      pull-requests: write
-      issues: read
 
   add_update_commit_completion_comment:
     needs:
@@ -652,24 +735,34 @@ jobs:
       - updatePRWithCommit
 
     concurrency:
-      group: add_update_commit_completion_comment-${{ github.ref_name }}-${{ github.event.issue.number }}
+      group: add_update_commit_completion_comment-${{ github.ref_name }}-${{ needs.parse.outputs.pr-number }}
       cancel-in-progress: false
     
     permissions:
       statuses: write
       pull-requests: write
 
-    if: always() && needs.parse.outputs.command-name == 'update-commit' && needs.prepare.outputs.overlay-branch != '' && needs.prepare.outputs.workspace != ''
+    if: | 
+      always() && 
+      needs.parse.outputs.command-name == 'update-commit' && 
+      needs.prepare.outputs.overlay-branch != '' && 
+      needs.prepare.outputs.workspace != ''
     runs-on: ubuntu-latest
     steps:
       - name: Add completion comment
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          INPUT_OVERLAY_COMMIT: ${{ needs.prepare.outputs.overlay-commit }}
           INPUT_COMMAND_NAME: ${{ needs.parse.outputs.command-name }}
-
+          INPUT_PR_NUMBER: ${{ needs.prepare.outputs.pr-number }}
         with:
           script: |
+            const prNumber = Number(core.getInput('pr_number'));
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: prNumber,
+            });
+            const overlayCommit = pr.data.head.sha;
             const workflowRun = await github.rest.actions.getWorkflowRun({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -688,16 +781,16 @@ jobs:
             await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              sha: core.getInput('overlay_commit'),
+              sha: overlayCommit,
               description: '${{ github.workflow }}',
               state: success ? 'success' : 'failure',
               target_url: workflowRun.data.html_url,
               context: core.getInput('command_name'),
             });
 
-            let body = `[Update Commit workflow](${workflowRun.data.html_url}) has completed with ${ success ? 'success' : 'failure' }.`;
+            const body = `[Update Commit workflow](${workflowRun.data.html_url}) has completed with ${ success ? 'success' : 'failure' }.`;
             await github.rest.issues.createComment({
-              issue_number: context.issue.number,
+              issue_number: prNumber,
               owner: context.repo.owner,
               repo: context.repo.repo,
               body: body

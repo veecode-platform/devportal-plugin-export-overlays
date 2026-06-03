@@ -14,13 +14,13 @@ metadata:
   tags: []
 spec:
   packageName: "apic-backstage"
-  dynamicArtifact: oci://quay.io/veecode/apiconnect:bs_1.45.3!apic-backstage
-  version: 1.0.0
+  dynamicArtifact: oci://quay.io/veecode/apiconnect:bs_1.49.4!apic-backstage
+  version: 1.0.3
   backstage:
     role: backend-plugin
-    supportedVersions: 1.45.3
+    supportedVersions: 1.49.4
   author: IBM
-  support: production
+  support: generally-available
   lifecycle: active
   partOf:
     - apic-backstage

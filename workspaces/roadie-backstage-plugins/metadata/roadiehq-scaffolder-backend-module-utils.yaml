@@ -17,14 +17,15 @@ metadata:
     - software-templates
 spec:
   packageName: "@roadiehq/scaffolder-backend-module-utils"
-  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.48.4!roadiehq-scaffolder-backend-module-utils
-  version: 4.1.1
+  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.49.4!roadiehq-scaffolder-backend-module-utils
+  version: 4.1.2
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.42.5
+    supportedVersions: 1.49.4
   author: Roadie
   support: community
   lifecycle: active
   partOf:
     - roadie-scaffolder-util-actions
+  appConfigNotRequired: true
   appConfigExamples: []

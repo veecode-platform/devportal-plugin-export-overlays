@@ -17,13 +17,20 @@ metadata:
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-extensions-backend"
   dynamicArtifact: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-extensions-backend-dynamic
-  version: 0.14.3
+  version: 0.17.1
   backstage:
     role: backend-plugin
-    supportedVersions: 1.45.3
+    supportedVersions: 1.49.4
   author: Red Hat
   support: tech-preview
   lifecycle: active
   partOf:
     - extensions
-  appConfigExamples: []
+  appConfigExamples:
+    - title: Installation export (disabled by default)
+      content:
+        extensions:
+          installation:
+            enabled: false
+            saveToSingleFile:
+              file: ${RHDH_EXTENSIONS_INSTALL_EXPORT_PATH}

@@ -14,11 +14,29 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-x2a"
-  dynamicArtifact: oci://quay.io/veecode/x2a:bs_1.45.3!red-hat-developer-hub-backstage-plugin-x2a
-  version: 1.0.2
+  dynamicArtifact: oci://quay.io/veecode/x2a:bs_1.49.4!red-hat-developer-hub-backstage-plugin-x2a
+  version: 1.2.2
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.45.3
+    supportedVersions: 1.49.4
   author: Red Hat
   support: community
   lifecycle: active
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            red-hat-developer-hub.backstage-plugin-x2a:
+              translationResources:
+                - importName: x2aPluginTranslations
+                  ref: x2aPluginTranslationRef
+              appIcons:
+                - name: x2aIcon
+                  importName: X2AIcon
+              dynamicRoutes:
+                - path: /x2a
+                  importName: X2APage
+                  menuItem:
+                    icon: x2aIcon
+                    text: X2A

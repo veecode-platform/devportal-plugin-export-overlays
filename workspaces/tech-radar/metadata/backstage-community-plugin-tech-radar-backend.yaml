@@ -17,11 +17,11 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-tech-radar-backend"
   dynamicArtifact: ./dynamic-plugins/dist/backstage-community-plugin-tech-radar-backend-dynamic
-  version: 1.12.0
+  version: 1.16.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.48.4
-  author: VeeCode
+    supportedVersions: 1.49.4
+  author: Red Hat
   support: generally-available
   lifecycle: active
   partOf:
