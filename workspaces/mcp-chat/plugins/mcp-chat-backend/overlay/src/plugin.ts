@@ -18,9 +18,18 @@ import {
   createBackendPlugin,
 } from '@backstage/backend-plugin-api';
 import { createRouter } from './router';
-import { MCPClientServiceImpl } from './services';
+import {
+  MCPClientServiceImpl,
+  ChatConversationStore,
+  SummarizationService,
+} from './services';
 import { validateConfig } from './utils';
 
+/**
+ * mcpChatPlugin backend plugin
+ *
+ * @public
+ */
 export const mcpChatPlugin = createBackendPlugin({
   pluginId: 'mcp-chat',
   register(env) {
@@ -29,21 +38,40 @@ export const mcpChatPlugin = createBackendPlugin({
         logger: coreServices.logger,
         config: coreServices.rootConfig,
         httpRouter: coreServices.httpRouter,
+        database: coreServices.database,
         httpAuth: coreServices.httpAuth,
         auth: coreServices.auth,
       },
-      async init({ logger, httpRouter, config, httpAuth, auth }) {
+      async init({ logger, httpRouter, config, database, httpAuth, auth }) {
         validateConfig(config);
+
+        // VeeCode: pass the auth service so MCPClientServiceImpl can mint
+        // plugin/service tokens for authenticated MCP server calls.
         const mcpClientService = new MCPClientServiceImpl({
           logger,
           config,
           auth,
         });
+
+        const conversationStore = await ChatConversationStore.create({
+          database,
+          logger,
+          config,
+        });
+
+        const summarizationService = new SummarizationService({
+          mcpClientService,
+          logger,
+          config,
+        });
+
         httpRouter.use(
           await createRouter({
             logger,
             mcpClientService,
+            conversationStore,
             httpAuth,
+            summarizationService,
           }),
         );
       },
