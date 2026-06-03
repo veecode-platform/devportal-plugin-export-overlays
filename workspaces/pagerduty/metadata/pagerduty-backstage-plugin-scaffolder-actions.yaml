@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@pagerduty/backstage-plugin-scaffolder-actions"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/pagerduty-backstage-plugin-scaffolder-actions:bs_1.49.4__0.2.9!pagerduty-backstage-plugin-scaffolder-actions
+  dynamicArtifact: oci://quay.io/veecode/pagerduty:bs_1.49.4!pagerduty-backstage-plugin-scaffolder-actions
   version: 0.2.9
   backstage:
     role: backend-plugin-module
