@@ -20,3 +20,15 @@ jobs:
       attestations: write
       packages: write
       id-token: write
+
+  dispatch-docs-update:
+    needs: export
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Trigger plugin catalog update in docs
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DOCS_DISPATCH_TOKEN }}
+          repository: veecode-platform/docs
+          event-type: plugin-catalog-update
