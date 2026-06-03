@@ -1,27 +1,27 @@
 --- plugins/mcp-actions-backend/src/plugin.ts
 +++ plugins/mcp-actions-backend/src/plugin.ts
-@@ -26,6 +26,7 @@
-   actionsRegistryServiceRef,
+@@ -27,6 +27,7 @@
    actionsServiceRef,
+   metricsServiceRef,
  } from '@backstage/backend-plugin-api/alpha';
 +import { createExplainAction } from './actions/createExplainAction';
-
+ import { parseServerConfigs } from './config';
+ 
  /**
-  * mcpPlugin backend plugin
-@@ -55,6 +56,7 @@
-         rootRouter,
+@@ -59,6 +60,7 @@
          discovery,
          config,
+         metrics,
 +        registry,
        }) {
-         const mcpService = await McpService.create({
-           actions,
-@@ -79,6 +81,8 @@
-
+         const serverConfigs = parseServerConfigs(config);
+         const namespacedToolNames = config.getOptionalBoolean(
+@@ -114,6 +116,8 @@
+ 
          httpRouter.use(router);
-
+ 
 +        createExplainAction({ registry, logger });
 +
-         if (
+         const oauthEnabled =
            config.getOptionalBoolean(
              'auth.experimentalDynamicClientRegistration.enabled',
