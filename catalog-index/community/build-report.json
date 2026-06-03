@@ -1,5 +1,7 @@
 {
-  "metadata": {},
+  "metadata": {
+    "catalog-index-image": "ghcr.io/redhat-developer/rhdh-plugin-export-overlays/plugin-catalog-index:1.11-bs_1.49.4-6558f80"
+  },
   "plugins": {},
   "summary": {
     "total": 0,
