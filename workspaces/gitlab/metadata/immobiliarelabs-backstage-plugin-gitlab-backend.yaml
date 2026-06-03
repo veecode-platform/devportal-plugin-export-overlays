@@ -17,11 +17,11 @@ metadata:
 spec:
   packageName: "@immobiliarelabs/backstage-plugin-gitlab-backend"
   dynamicArtifact: oci://quay.io/veecode/gitlab:bs_1.49.4!immobiliarelabs-backstage-plugin-gitlab-backend
-  version: 7.0.1
+  version: 6.13.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
-  author: Red Hat
+    supportedVersions: 1.42.5
+  author: VeeCode
   support: community
   lifecycle: active
   partOf:

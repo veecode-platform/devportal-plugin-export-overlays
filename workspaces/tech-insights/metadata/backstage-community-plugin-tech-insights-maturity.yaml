@@ -3,41 +3,26 @@ kind: Package
 metadata:
   name: backstage-community-plugin-tech-insights-maturity
   namespace: rhdh
-  title: Tech Insights Maturity
+  title: "Tech Insights Maturity"
   links:
-    - url: https://github.com/backstage/community-plugins/issues
-      title: Bugs
-    - title: Source Code
-      url: https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
+  - url: https://red.ht/rhdh
+    title: Homepage
+  - url: https://github.com/backstage/community-plugins/issues
+    title: Bugs
+  - title: Source Code
+    url: https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
   annotations:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
   tags: []
 spec:
-  packageName: "@backstage-community/plugin-tech-insights-maturity"
+  packageName: '@backstage-community/plugin-tech-insights-maturity'
   dynamicArtifact: oci://quay.io/veecode/tech-insights:bs_1.49.4!backstage-community-plugin-tech-insights-maturity
-  version: 0.6.5
+  version: 0.6.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
-  author: Backstage Community
+    supportedVersions: 1.47.2
+  author: VeeCode
   support: community
   lifecycle: active
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        dynamicPlugins:
-          frontend:
-            backstage-community.plugin-tech-insights-maturity:
-              dynamicRoutes:
-                - path: /tech-insights-maturity
-                  importName: MaturityPage
-                  menuItem:
-                    text: Maturity
-              mountPoints:
-                - mountPoint: entity.page.overview/cards
-                  importName: EntityMaturitySummaryCard
-                  config:
-                    layout:
-                      gridColumnEnd:
-                        md: span 6
-                        xs: span 12
+  partOf:
+  - tech-insights
