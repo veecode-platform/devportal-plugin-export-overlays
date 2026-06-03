@@ -17,10 +17,10 @@ metadata:
 spec:
   packageName: "@roadiehq/backstage-plugin-argo-cd"
   dynamicArtifact: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd
-  version: 2.12.2
+  version: 2.12.5
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.48.4
+    supportedVersions: 1.49.4
   author: Roadie
   support: community
   lifecycle: active

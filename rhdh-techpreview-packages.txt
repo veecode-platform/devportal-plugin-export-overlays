@@ -1,2 +1,0 @@
-# DevPortal tech preview packages
-# No mandatory packages — all workspaces are community/optional

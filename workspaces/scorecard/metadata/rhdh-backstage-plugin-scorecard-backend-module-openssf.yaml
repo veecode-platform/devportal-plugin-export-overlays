@@ -17,16 +17,15 @@ metadata:
     - analytics
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-scorecard-backend-module-openssf"
-  dynamicArtifact: oci://quay.io/veecode/scorecard:bs_1.45.3!red-hat-developer-hub-backstage-plugin-scorecard-backend-module-openssf
-  version: 0.1.5
+  dynamicArtifact: oci://quay.io/veecode/scorecard:bs_1.49.4!red-hat-developer-hub-backstage-plugin-scorecard-backend-module-openssf
+  version: 0.2.11
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.45.3
+    supportedVersions: 1.49.4
   author: Red Hat
   support: dev-preview
   lifecycle: active
   partOf:
     - scorecard
-  appConfigExamples:
-    - title: Default configuration
-      content: {}
+  appConfigNotRequired: true
+  appConfigExamples: []

@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@pagerduty/backstage-plugin-backend"
-  dynamicArtifact: oci://quay.io/veecode/pagerduty:bs_1.48.4!pagerduty-backstage-plugin-backend
-  version: 0.10.1
+  dynamicArtifact: oci://quay.io/veecode/pagerduty:bs_1.49.4!pagerduty-backstage-plugin-backend
+  version: 0.12.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.42.5
-  author: VeeCode
+    supportedVersions: 1.49.4
+  author: Red Hat
   support: community
   lifecycle: active
   partOf:

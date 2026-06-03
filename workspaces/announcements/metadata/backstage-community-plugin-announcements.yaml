@@ -3,26 +3,45 @@ kind: Package
 metadata:
   name: backstage-community-plugin-announcements
   namespace: rhdh
-  title: "Announcements"
+  title: Announcements
   links:
-  - url: https://red.ht/rhdh
-    title: Homepage
-  - url: https://github.com/backstage/community-plugins/issues
-    title: Bugs
-  - title: Source Code
-    url: https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
   annotations:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
   tags: []
 spec:
-  packageName: '@backstage-community/plugin-announcements'
-  dynamicArtifact: oci://quay.io/veecode/announcements:bs_1.48.4!backstage-community-plugin-announcements
-  version: 1.1.0
+  packageName: "@backstage-community/plugin-announcements"
+  dynamicArtifact: oci://quay.io/veecode/announcements:bs_1.49.4!backstage-community-plugin-announcements
+  version: 2.8.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.48.4
-  author: VeeCode
+    supportedVersions: 1.49.4
+  author: Backstage Community
   support: community
   lifecycle: active
-  partOf:
-  - announcements
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-announcements:
+              dynamicRoutes:
+                - path: /announcements
+                  importName: AnnouncementsPage
+                  menuItem:
+                    text: Announcements
+              mountPoints:
+                - mountPoint: home.page/cards
+                  importName: AnnouncementsCard
+                  config:
+                    layout:
+                      gridColumnEnd:
+                        md: span 6
+                        xs: span 12
+                    props:
+                      max: 5

@@ -1,8 +1,14 @@
-import { test, expect, request } from "@red-hat-developer-hub/e2e-test-utils/test";
-import { CustomAPIHelper } from "../../support/api/api-helper";
-import { GitHubEventsHelper } from "../../support/api/github-events";
+import { AuthApiHelper } from "@red-hat-developer-hub/e2e-test-utils/helpers";
+import {
+  expect,
+  request,
+  test,
+} from "@red-hat-developer-hub/e2e-test-utils/test";
 import { createHmac } from "node:crypto";
-import { RhdhAuthApiHack } from "../../support/api/rhdh-auth-api-hack";
+import { CatalogApiHelper } from "../../support/api/catalog-api-helper";
+import { GitHubEventsHelper } from "../../support/api/github-events";
+import { requireEnv } from "@red-hat-developer-hub/e2e-test-utils/utils";
+import { GitHubApiHelper } from "../../support/api/github-api-helper";
 
 test.describe("GitHub Events Module", () => {
   let githubEventsHelper: GitHubEventsHelper;
@@ -10,6 +16,8 @@ test.describe("GitHub Events Module", () => {
   let rhdhBaseUrl: string;
 
   test.beforeAll(async ({ rhdh }) => {
+    requireEnv("VAULT_GITHUB_APP_WEBHOOK_SECRET");
+
     await rhdh.configure({
       auth: "keycloak",
       appConfig: "tests/config/github-events/app-config-rhdh.yaml",
@@ -21,7 +29,7 @@ test.describe("GitHub Events Module", () => {
 
     githubEventsHelper = await GitHubEventsHelper.build(
       rhdh.rhdhUrl,
-      process.env.VAULT_GITHUB_APP_WEBHOOK_SECRET,
+      process.env.VAULT_GITHUB_APP_WEBHOOK_SECRET!,
     );
     rhdhBaseUrl = rhdh.rhdhUrl;
   });
@@ -44,7 +52,7 @@ test.describe("GitHub Events Module", () => {
       },
     });
 
-    const secret = process.env.VAULT_GITHUB_APP_WEBHOOK_SECRET;
+    const secret = process.env.VAULT_GITHUB_APP_WEBHOOK_SECRET!;
     const signature =
       "sha256=" +
       createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
@@ -69,7 +77,7 @@ test.describe("GitHub Events Module", () => {
     await context.dispose();
   });
 
-  test.describe("GitHub Discovery", () => {
+  test.describe.serial("GitHub Discovery", () => {
     const catalogRepoName = `janus-test-github-events-test-${Date.now()}`;
     const catalogRepoDetails = {
       name: catalogRepoName,
@@ -91,12 +99,11 @@ spec:
   lifecycle: unknown
   owner: user:default/janus-qe`;
 
-      await CustomAPIHelper.createGitHubRepoWithFile(
+      await GitHubApiHelper.createGitHubRepoWithFile(
         catalogRepoDetails.owner,
         catalogRepoDetails.name,
         "catalog-info.yaml",
         catalogInfoYamlContent,
-        process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
       );
 
       await githubEventsHelper.sendPushEvent(
@@ -109,6 +116,7 @@ spec:
           async () => {
             await page.reload();
             await uiHelper.openSidebar("Catalog");
+            await uiHelper.waitForLoad();
             await uiHelper.selectMuiBox("Kind", "Component");
             await uiHelper.searchInputPlaceholder(catalogRepoName);
             return await page
@@ -137,13 +145,12 @@ spec:
   type: other
   lifecycle: unknown
   owner: user:default/janus-qe`;
-      await CustomAPIHelper.updateFileInRepo(
+      await GitHubApiHelper.updateFileInRepo(
         catalogRepoDetails.owner,
         catalogRepoDetails.name,
         "catalog-info.yaml",
         updatedCatalogInfoYaml,
         "Update catalog-info.yaml description",
-        process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
       );
       await githubEventsHelper.sendPushEvent(
         `janus-qe/${catalogRepoName}`,
@@ -155,12 +162,13 @@ spec:
           async () => {
             await page.reload();
             await uiHelper.openSidebar("Catalog");
+            await uiHelper.waitForLoad();
             await uiHelper.selectMuiBox("Kind", "Component");
             await uiHelper.searchInputPlaceholder(catalogRepoName);
 
             await page.getByRole("link", { name: catalogRepoName }).click();
             // wait for page to load
-            await uiHelper.waitForLoad(5000);
+            await uiHelper.verifyHeading("description");
             return await page.getByText(updatedDescription).isVisible();
           },
           {
@@ -173,12 +181,11 @@ spec:
     });
 
     test("Deleting an entity from the catalog", async ({ page, uiHelper }) => {
-      await CustomAPIHelper.deleteFileInRepo(
+      await GitHubApiHelper.deleteFileInRepo(
         catalogRepoDetails.owner,
         catalogRepoDetails.name,
         "catalog-info.yaml",
         "Remove catalog-info.yaml",
-        process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
       );
       await githubEventsHelper.sendPushEvent(
         `janus-qe/${catalogRepoName}`,
@@ -190,6 +197,7 @@ spec:
           async () => {
             await page.reload();
             await uiHelper.openSidebar("Catalog");
+            await uiHelper.waitForLoad();
             await uiHelper.selectMuiBox("Kind", "Component");
             await uiHelper.searchInputPlaceholder(catalogRepoName);
             return await page
@@ -206,10 +214,9 @@ spec:
     });
 
     test.afterAll(async () => {
-      await CustomAPIHelper.deleteRepo(
+      await GitHubApiHelper.deleteGitHubRepo(
         catalogRepoDetails.owner,
         catalogRepoDetails.name,
-        process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
       );
     });
   });
@@ -220,11 +227,7 @@ spec:
       const teamName = "test-team-" + Date.now();
 
       test("Adding a new group", async ({ page, uiHelper }) => {
-        await CustomAPIHelper.createTeamInOrg(
-          "janus-qe",
-          teamName,
-          process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
-        );
+        await GitHubApiHelper.createTeamInOrg("janus-qe", teamName);
         await githubEventsHelper.sendTeamEvent("created", teamName, "janus-qe");
 
         await expect
@@ -232,6 +235,7 @@ spec:
             async () => {
               await page.reload();
               await uiHelper.openSidebar("Catalog");
+              await uiHelper.waitForLoad();
               await uiHelper.selectMuiBox("Kind", "Group");
               await uiHelper.searchInputPlaceholder(teamName);
               return await page
@@ -248,11 +252,7 @@ spec:
       });
 
       test("Deleting a group", async ({ page, uiHelper }) => {
-        await CustomAPIHelper.deleteTeamFromOrg(
-          "janus-qe",
-          teamName,
-          process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
-        );
+        await GitHubApiHelper.deleteTeamFromOrg("janus-qe", teamName);
 
         await githubEventsHelper.sendTeamEvent("deleted", teamName, "janus-qe");
 
@@ -261,6 +261,7 @@ spec:
             async () => {
               await page.reload();
               await uiHelper.openSidebar("Catalog");
+              await uiHelper.waitForLoad();
               await uiHelper.selectMuiBox("Kind", "Group");
               await uiHelper.searchInputPlaceholder(teamName);
               return await page
@@ -285,15 +286,18 @@ spec:
 
       test.beforeEach(async ({ page, uiHelper }) => {
         if (!staticToken) {
+          const authApiHelper = new AuthApiHelper(page);
           await page.goto(rhdhBaseUrl);
 
           // Wait for page to be ready and user to be logged in
           await uiHelper.waitForLoad();
           await page.locator("nav").first().waitFor({ state: "visible" });
-          
+
           // Wait for user settings or profile button to appear
           await page
-            .locator('button[data-testid="user-settings-menu"], [aria-label*="user"]')
+            .locator(
+              'button[data-testid="user-settings-menu"], [aria-label*="user"]',
+            )
             .first()
             .waitFor({ state: "visible", timeout: 10000 })
             .catch(() => {});
@@ -303,7 +307,7 @@ spec:
             .poll(
               async () => {
                 try {
-                  const token = await RhdhAuthApiHack.getToken(page);
+                  const token = await authApiHelper.getToken();
                   if (token && token.length > 0) {
                     staticToken = token;
                     return true;
@@ -314,7 +318,8 @@ spec:
                 }
               },
               {
-                message: "Token should be retrieved after session is established",
+                message:
+                  "Token should be retrieved after session is established",
                 timeout: 30000,
                 intervals: [2000],
               },
@@ -324,11 +329,7 @@ spec:
 
         teamName = "test-team-" + Date.now();
 
-        await CustomAPIHelper.createTeamInOrg(
-          "janus-qe",
-          teamName,
-          process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
-        );
+        await GitHubApiHelper.createTeamInOrg("janus-qe", teamName);
         teamCreated = true;
 
         await githubEventsHelper.sendTeamEvent("created", teamName, "janus-qe");
@@ -338,32 +339,22 @@ spec:
 
       test.afterEach(async () => {
         if (userAddedToTeam) {
-          await CustomAPIHelper.removeUserFromTeam(
+          await GitHubApiHelper.removeUserFromTeam(
             "janus-qe",
             teamName,
             "rhdh-qe",
-            process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
           );
           userAddedToTeam = false;
         }
 
         if (teamCreated) {
-          await CustomAPIHelper.deleteTeamFromOrg(
-            "janus-qe",
-            teamName,
-            process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
-          );
+          await GitHubApiHelper.deleteTeamFromOrg("janus-qe", teamName);
           teamCreated = false;
         }
       });
 
       test("Adding a user to a group", async ({ uiHelper }) => {
-        await CustomAPIHelper.addUserToTeam(
-          "janus-qe",
-          teamName,
-          "rhdh-qe",
-          process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
-        );
+        await GitHubApiHelper.addUserToTeam("janus-qe", teamName, "rhdh-qe");
         userAddedToTeam = true;
 
         await githubEventsHelper.sendMembershipEvent(
@@ -376,21 +367,24 @@ spec:
         await uiHelper.waitForLoad(10000);
 
         await expect
-          .poll(() => CustomAPIHelper.getGroupMembers(rhdhBaseUrl, staticToken, teamName), {
-            message: "User should be added to group",
-            timeout: 60000,
-            intervals: [3000],
-          })
+          .poll(
+            () =>
+              CatalogApiHelper.getGroupMembers(
+                rhdhBaseUrl,
+                staticToken,
+                teamName,
+              ),
+            {
+              message: "User should be added to group",
+              timeout: 60000,
+              intervals: [3000],
+            },
+          )
           .toContain("rhdh-qe");
       });
 
       test("Removing a user from a group", async ({ uiHelper }) => {
-        await CustomAPIHelper.addUserToTeam(
-          "janus-qe",
-          teamName,
-          "rhdh-qe",
-          process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
-        );
+        await GitHubApiHelper.addUserToTeam("janus-qe", teamName, "rhdh-qe");
         userAddedToTeam = true;
 
         await githubEventsHelper.sendMembershipEvent(
@@ -401,18 +395,25 @@ spec:
         );
 
         await expect
-          .poll(() => CustomAPIHelper.getGroupMembers(rhdhBaseUrl, staticToken, teamName), {
-            message: "User should be added to group before removal test",
-            timeout: 60000,
-            intervals: [3000],
-          })
+          .poll(
+            () =>
+              CatalogApiHelper.getGroupMembers(
+                rhdhBaseUrl,
+                staticToken,
+                teamName,
+              ),
+            {
+              message: "User should be added to group before removal test",
+              timeout: 60000,
+              intervals: [3000],
+            },
+          )
           .toContain("rhdh-qe");
 
-        await CustomAPIHelper.removeUserFromTeam(
+        await GitHubApiHelper.removeUserFromTeam(
           "janus-qe",
           teamName,
           "rhdh-qe",
-          process.env.VAULT_GH_RHDH_QE_USER_TOKEN,
         );
         userAddedToTeam = false;
 
@@ -426,11 +427,19 @@ spec:
         await uiHelper.waitForLoad(10000);
 
         await expect
-          .poll(() => CustomAPIHelper.getGroupMembers(rhdhBaseUrl, staticToken, teamName), {
-            message: "User should be removed from group",
-            timeout: 60000,
-            intervals: [3000],
-          })
+          .poll(
+            () =>
+              CatalogApiHelper.getGroupMembers(
+                rhdhBaseUrl,
+                staticToken,
+                teamName,
+              ),
+            {
+              message: "User should be removed from group",
+              timeout: 60000,
+              intervals: [3000],
+            },
+          )
           .not.toContain("rhdh-qe");
       });
     });

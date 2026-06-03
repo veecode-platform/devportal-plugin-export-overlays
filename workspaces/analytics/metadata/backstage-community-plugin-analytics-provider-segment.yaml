@@ -17,12 +17,12 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-analytics-provider-segment"
   dynamicArtifact: ./dynamic-plugins/dist/backstage-community-plugin-analytics-provider-segment
-  version: 1.22.2
+  version: 1.27.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.48.4
-  author: VeeCode
-  support: production
+    supportedVersions: 1.49.4
+  author: Red Hat
+  support: generally-available
   lifecycle: active
   partOf:
     - analytics-provider-segment

@@ -5,29 +5,29 @@ metadata:
   namespace: rhdh
   title: Lighthouse Backend
   links:
-  - url: https://red.ht/rhdh
-    title: Homepage
-  - url: https://github.com/backstage/community-plugins/issues
-    title: Bugs
-  - title: Source Code
-    url: https://github.com/backstage/community-plugins/tree/main/workspaces/lighthouse/plugins/lighthouse-backend
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/lighthouse/plugins/lighthouse-backend
   annotations:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/lighthouse/plugins/lighthouse-backend
   tags: []
 spec:
   packageName: '@backstage-community/plugin-lighthouse-backend'
-  dynamicArtifact: oci://quay.io/veecode/lighthouse:bs_1.48.4!backstage-community-plugin-lighthouse-backend
-  version: 0.17.0
+  dynamicArtifact: oci://quay.io/veecode/lighthouse:bs_1.49.4!backstage-community-plugin-lighthouse-backend
+  version: 0.21.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.48.4
+    supportedVersions: 1.49.4
   author: Backstage Community
   support: community
   lifecycle: active
   partOf:
-  - lighthouse
+    - lighthouse
   appConfigExamples:
-  - title: Default configuration
-    content:
-      lighthouse:
-        baseUrl: "http://localhost:4008"
+    - title: Default configuration
+      content:
+        lighthouse:
+          baseUrl: "http://localhost:4008"

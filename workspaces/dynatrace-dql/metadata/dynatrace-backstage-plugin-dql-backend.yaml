@@ -16,13 +16,13 @@ metadata:
   tags: []
 spec:
   packageName: "@dynatrace/backstage-plugin-dql-backend"
-  dynamicArtifact: oci://quay.io/veecode/dynatrace-dql:bs_1.45.3!dynatrace-backstage-plugin-dql-backend
-  version: 2.3.0
+  dynamicArtifact: oci://quay.io/veecode/dynatrace-dql:bs_1.49.4!dynatrace-backstage-plugin-dql-backend
+  version: 2.7.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.45.3
+    supportedVersions: 1.49.4
   author: Dynatrace
-  support: production
+  support: generally-available
   lifecycle: active
   partOf:
     - dynatrace-commercial
