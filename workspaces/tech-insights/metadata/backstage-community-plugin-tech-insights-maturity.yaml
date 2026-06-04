@@ -5,19 +5,19 @@ metadata:
   namespace: rhdh
   title: "Tech Insights Maturity"
   links:
-  - url: https://red.ht/rhdh
-    title: Homepage
-  - url: https://github.com/backstage/community-plugins/issues
-    title: Bugs
-  - title: Source Code
-    url: https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
   annotations:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
   tags: []
 spec:
   packageName: '@backstage-community/plugin-tech-insights-maturity'
   dynamicArtifact: oci://quay.io/veecode/tech-insights:bs_1.49.4!backstage-community-plugin-tech-insights-maturity
-  version: 0.6.0
+  version: 0.6.5
   backstage:
     role: frontend-plugin
     supportedVersions: 1.47.2
@@ -25,4 +25,4 @@ spec:
   support: community
   lifecycle: active
   partOf:
-  - tech-insights
+    - tech-insights
