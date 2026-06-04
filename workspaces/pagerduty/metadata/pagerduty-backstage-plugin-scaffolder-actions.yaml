@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: "@pagerduty/backstage-plugin-scaffolder-actions"
   dynamicArtifact: oci://quay.io/veecode/pagerduty:bs_1.49.4!pagerduty-backstage-plugin-scaffolder-actions
-  version: 0.2.9
+  version: 0.3.0
   backstage:
     role: backend-plugin-module
     supportedVersions: 1.49.4
