@@ -12,13 +12,12 @@ metadata:
     - title: Source Code
       url: https://github.com/backstage/community-plugins/tree/main/workspaces/roadie-backstage-plugins
   annotations:
-    backstage.io/source-location: url
-      https://github.com/backstage/community-plugins/tree/main/workspaces/roadie-backstage-plugins
+    backstage.io/source-location: url https://github.com/backstage/community-plugins/tree/main/workspaces/roadie-backstage-plugins
   tags: []
 spec:
   packageName: "@roadiehq/backstage-plugin-argo-cd"
   dynamicArtifact: ./dynamic-plugins/dist/roadiehq-backstage-plugin-argo-cd
-  version: 2.12.2
+  version: 2.12.5
   backstage:
     role: frontend-plugin
     supportedVersions: 1.45.3

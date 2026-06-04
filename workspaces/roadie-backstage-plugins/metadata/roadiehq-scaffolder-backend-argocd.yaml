@@ -12,13 +12,12 @@ metadata:
     - title: Source Code
       url: https://github.com/backstage/community-plugins/tree/main/workspaces/roadie-backstage-plugins
   annotations:
-    backstage.io/source-location: url
-      https://github.com/backstage/community-plugins/tree/main/workspaces/roadie-backstage-plugins
+    backstage.io/source-location: url https://github.com/backstage/community-plugins/tree/main/workspaces/roadie-backstage-plugins
   tags:
     - software-templates
 spec:
   packageName: "@roadiehq/scaffolder-backend-argocd"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/roadiehq-scaffolder-backend-argocd:bs_1.45.3__1.8.1!roadiehq-scaffolder-backend-argocd
+  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/roadiehq-scaffolder-backend-argocd:bs_1.49.4__1.8.1!roadiehq-scaffolder-backend-argocd
   version: 1.8.1
   backstage:
     role: backend-plugin-module
