@@ -22,3 +22,20 @@ spec:
   lifecycle: active
   partOf:
     - github-workflows
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.backstage-plugin-github-workflows:
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityGithubWorkflowsCard
+                  config:
+                    layout:
+                      gridRowStart:
+                        lg: "4"
+                      gridColumnStart:
+                        lg: "1"
+                      gridColumnEnd:
+                        lg: "span 6"
