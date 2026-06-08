@@ -1,0 +1,2 @@
+plugins/github-workflows: --embed-package @veecode-platform/github-workflows-common
+plugins/github-workflow-backend: --embed-package @veecode-platform/github-workflows-common

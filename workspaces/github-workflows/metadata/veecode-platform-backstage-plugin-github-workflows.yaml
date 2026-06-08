@@ -1,0 +1,24 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-backstage-plugin-github-workflows
+  namespace: veecode
+  title: "GitHub Workflows"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/github-workflows
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-github-workflows"
+  dynamicArtifact: oci://quay.io/veecode/github-workflows:bs_1.49.4!veecode-platform-backstage-plugin-github-workflows
+  version: 1.3.7
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.4
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - github-workflows
