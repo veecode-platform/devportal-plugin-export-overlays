@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras"
   dynamicArtifact: oci://quay.io/veecode/mcp-integrations:bs_1.49.4!red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras
-  version: 0.4.0
+  version: 0.4.2
   backstage:
     role: backend-plugin
     supportedVersions: 1.48.3
