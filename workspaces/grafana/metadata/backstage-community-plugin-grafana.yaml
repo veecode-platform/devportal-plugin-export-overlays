@@ -1,0 +1,51 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-grafana
+  namespace: rhdh
+  title: Grafana
+  links:
+    - url: https://github.com/backstage/community-plugins/tree/main/workspaces/grafana
+      title: Source Code
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/grafana
+  tags:
+    - grafana
+    - monitoring
+    - observability
+spec:
+  packageName: "@backstage-community/plugin-grafana"
+  dynamicArtifact: oci://quay.io/veecode/grafana:bs_1.49.4!backstage-community-plugin-grafana
+  version: 0.17.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.4
+  support: community
+  lifecycle: active
+  partOf:
+    - grafana
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-grafana:
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityGrafanaDashboardsCard
+                  config:
+                    layout:
+                      gridColumnEnd: span 12
+                    if:
+                      allOf:
+                        - hasAnnotation: grafana/overview-dashboard
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityGrafanaAlertsCard
+                  config:
+                    layout:
+                      gridColumnEnd: span 12
+                    if:
+                      allOf:
+                        - hasAnnotation: grafana/alert-label-selector
