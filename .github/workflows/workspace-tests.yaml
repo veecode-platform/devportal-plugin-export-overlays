@@ -39,7 +39,14 @@ jobs:
       target-branch: ${{ inputs.target-branch }}
     steps:
       - name: Download published-exports artifact for this PR
+        # The artifact only exists when a /publish has run for this PR. A bare
+        # /smoketest (no publish) or a publish whose parent run has not yet
+        # concluded "success" when this job queries will have no matching
+        # artifact. Do not hard-fail in that case: downstream jobs treat an
+        # empty published-exports as "no runnable plugins" and self-skip with a
+        # clear status, which is the correct outcome here.
         if: inputs.workspace != '' && inputs.pr-number != ''
+        continue-on-error: true
         uses: dawidd6/action-download-artifact@b6e2e70617bc3265edd6dab6c906732b2f1ae151 # v21
         with:
           name: published-exports-pr-${{ inputs.pr-number }}
@@ -48,7 +55,7 @@ jobs:
           workflow_search: true
           search_artifacts: true
           allow_forks: true
-          if_no_artifact_found: fail
+          if_no_artifact_found: warn
 
       - name: Read published exports
         id: meta
@@ -194,11 +201,13 @@ jobs:
           echo "plugins:" > "$OUT_FILE"
 
           # For each published export, extract plugin name and read its metadata
-          # Expected export format: ghcr.io/<repo_path>/<plugin_name>:<tag>
+          # Expected export format: <registry>/<repo_path>/<plugin_name>:<tag>
+          # where <registry> is ghcr.io (RHDH) or quay.io (VeeCode).
           for export in $PUBLISHED_EXPORTS; do
-            if [[ "$export" =~ ^ghcr\.io/(.+):([^[:space:]]+)$ ]]; then
-              IMAGE_PATH_AND_PLUGIN="${BASH_REMATCH[1]}"   # <repo_path>/<plugin_name>
-              NEW_TAG="${BASH_REMATCH[2]}"                 # <tag>
+            if [[ "$export" =~ ^(ghcr\.io|quay\.io)/(.+):([^[:space:]]+)$ ]]; then
+              REGISTRY="${BASH_REMATCH[1]}"                # <registry>
+              IMAGE_PATH_AND_PLUGIN="${BASH_REMATCH[2]}"   # <repo_path>/<plugin_name>
+              NEW_TAG="${BASH_REMATCH[3]}"                 # <tag>
               PLUGIN_NAME="${IMAGE_PATH_AND_PLUGIN##*/}"
               METADATA_FILE="${META_MAP[$PLUGIN_NAME]}"
               if [ -z "$METADATA_FILE" ]; then
@@ -259,7 +268,7 @@ jobs:
               # If no ENVs in config, continue regardless of env file existence
 
               STRIPPED=$(echo "$PACKAGE_NAME" | sed 's|^@||; s|/|-|')
-              echo "- package: \"oci://ghcr.io/${IMAGE_PATH_AND_PLUGIN}:${NEW_TAG}!${STRIPPED}\"" >> "$OUT_FILE"
+              echo "- package: \"oci://${REGISTRY}/${IMAGE_PATH_AND_PLUGIN}:${NEW_TAG}!${STRIPPED}\"" >> "$OUT_FILE"
               echo "  disabled: false" >> "$OUT_FILE"
               if [ -n "$CONFIG_CONTENT" ]; then
                 echo "  pluginConfig:" >> "$OUT_FILE"
