@@ -40,18 +40,23 @@ jobs:
     steps:
       - name: Download published-exports artifact for this PR
         # The artifact only exists when a /publish has run for this PR. A bare
-        # /smoketest (no publish) or a publish whose parent run has not yet
-        # concluded "success" when this job queries will have no matching
-        # artifact. Do not hard-fail in that case: downstream jobs treat an
-        # empty published-exports as "no runnable plugins" and self-skip with a
-        # clear status, which is the correct outcome here.
+        # /smoketest (no publish) will have no matching artifact, so do not
+        # hard-fail: downstream jobs treat an empty published-exports as
+        # "no runnable plugins" and self-skip with a clear status.
+        #
+        # workflow_conclusion is "completed" (not "success") on purpose: the
+        # publish run dispatches this smoke from a parallel job, and other
+        # publish jobs (e.g. the completion-comment) can make the parent run
+        # conclude "failure" while the published-exports artifact is still
+        # valid. The artifact is only ever staged on a successful export, so
+        # matching any completed publish run is safe and avoids missing it.
         if: inputs.workspace != '' && inputs.pr-number != ''
         continue-on-error: true
         uses: dawidd6/action-download-artifact@b6e2e70617bc3265edd6dab6c906732b2f1ae151 # v21
         with:
           name: published-exports-pr-${{ inputs.pr-number }}
           workflow: pr-actions.yaml
-          workflow_conclusion: success
+          workflow_conclusion: completed
           workflow_search: true
           search_artifacts: true
           allow_forks: true
@@ -301,6 +306,12 @@ jobs:
           echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: Upload smoke test artifacts
+        # Only upload when there is something to run. With no published exports
+        # (e.g. a bare /smoketest, or the artifact was unreachable) the build
+        # step exits early without writing the smoke-tests directory, so an
+        # unconditional upload with if-no-files-found: error would fail the job
+        # and break the clean "no runnable plugins" self-skip path downstream.
+        if: steps.build-dynamic-plugins.outputs.has-runnable-plugins == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: smoke-test-artifacts
