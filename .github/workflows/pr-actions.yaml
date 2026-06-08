@@ -224,6 +224,12 @@ jobs:
 
     secrets:
       image-registry-password: ${{ secrets.QUAY_TOKEN }}
+      # Make the PR plugin images public so the smoke-test RHDH container can
+      # pull them anonymously (the smoke run workflow only logs in to ghcr.io
+      # and receives no quay credentials). Without this, images stay private
+      # and the now-running smoke would fail on registry auth, not on a real
+      # plugin boot problem.
+      quay-api-token: ${{ secrets.QUAY_API_TOKEN }}
 
     permissions:
       contents: write
