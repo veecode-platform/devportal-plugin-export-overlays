@@ -1,0 +1,42 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: roadiehq-backstage-plugin-iframe
+  namespace: rhdh
+  title: iFrame
+  links:
+    - url: https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-iframe
+      title: Source Code
+    - url: https://github.com/RoadieHQ/roadie-backstage-plugins/issues
+      title: Bugs
+  annotations:
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-iframe
+  tags:
+    - iframe
+    - embed
+spec:
+  packageName: "@roadiehq/backstage-plugin-iframe"
+  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.49.4!roadiehq-backstage-plugin-iframe
+  version: 1.6.1
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.44.2
+  support: community
+  lifecycle: active
+  partOf:
+    - roadie-backstage-plugins
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            roadiehq.backstage-plugin-iframe:
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: IFrameContent
+                  config:
+                    layout:
+                      gridColumnEnd: span 12
+                    if:
+                      allOf:
+                        - hasAnnotation: iframe/src
