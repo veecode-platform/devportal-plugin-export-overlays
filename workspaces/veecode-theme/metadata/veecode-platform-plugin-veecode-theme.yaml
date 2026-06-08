@@ -22,3 +22,4 @@ spec:
   lifecycle: active
   partOf:
     - veecode-theme
+# smoke-test trigger: touch one workspace to validate fix/smoke-tests-quay-support (do not merge)
