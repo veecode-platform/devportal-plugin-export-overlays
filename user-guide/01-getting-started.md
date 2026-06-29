@@ -288,6 +288,15 @@ To re-run smoke tests manually:
 /smoketest
 ```
 
+Use this to override the RHDH container image with a PR tag from `quay.io/rhdh-community/rhdh`:
+
+```
+/smoketest pr-4929-90eff067
+```
+
+`/smoketest <tag>` resolves to `quay.io/rhdh-community/rhdh:<tag>`.
+Allowed tags include `pr-4907`, `pr-4929-90eff067`, `next`, `next-1.10-244a2755`, and `next-8a0d43e7`.
+
 Plugin-specific configuration is extracted from `spec.appConfigExamples[0].content` in each plugin's metadata file and placed under `pluginConfig` in the generated config. The optional workspace-level `app-config.test.yaml` is for test-only or shared workspace settings. If a plugin's config references environment variables (e.g., `${API_TOKEN}`), provide them in `workspaces/<ws>/smoke-tests/test.env`.
 
 ### Manual Testing
@@ -298,7 +307,7 @@ Use the OCI references from the bot's comment to test in your own Backstage inst
 # dynamic-plugins.yaml
 plugins:
   - package: oci://ghcr.io/redhat-developer/rhdh-plugin-your-plugin:pr_123__1.0.0
-    disabled: false
+    enabled: true
 ```
 
 ---

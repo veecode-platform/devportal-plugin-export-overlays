@@ -21,6 +21,8 @@ metadata:
       url: https://docs.redhat.com/en/documentation/red_hat_developer_hub/latest/html/customizing_red_hat_developer_hub/customizing-the-home-page
     - title: Source Code
       url: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/homepage
+    - title: Red Hat Developer Hub Life Cycle Support Policy
+      url: https://access.redhat.com/support/policy/updates/developerhub
 spec:
   author: Red Hat
   support:
@@ -77,7 +79,7 @@ spec:
       plugins:
         # Frontend plugin
         - package: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-dynamic-home-page
-          disabled: false
+          enabled: true
           pluginConfig:
             dynamicPlugins:
               frontend:
@@ -236,7 +238,7 @@ spec:
                       ref: homepageTranslationRef
         # Backend plugin
         - package: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-homepage-backend:bs_1.49.4__0.1.0!red-hat-developer-hub-backstage-plugin-homepage-backend
-          disabled: false
+          enabled: true
           pluginConfig:
             homepage:
               defaultWidgets:

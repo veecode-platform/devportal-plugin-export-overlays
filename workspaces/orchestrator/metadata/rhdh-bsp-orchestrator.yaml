@@ -19,7 +19,7 @@ spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-orchestrator'
 
   dynamicArtifact: "oci://quay.io/veecode/orchestrator:bs_1.49.4!red-hat-developer-hub-backstage-plugin-orchestrator"
-  version: 5.7.12
+  version: 5.7.13
   backstage:
     role: frontend-plugin
     supportedVersions: 1.49.4
@@ -48,6 +48,10 @@ spec:
                     text: Orchestrator
                     textKey: menuItem.orchestrator
                   path: /orchestrator
+              menuItems:
+                orchestrator:
+                  parent: default.admin
+                  icon: orchestratorIcon
               entityTabs:
                 - path: /workflows
                   title: Workflows

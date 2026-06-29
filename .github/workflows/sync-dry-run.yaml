@@ -29,5 +29,14 @@ jobs:
       workspace-path: ${{ inputs.workspace-path }}
       publish-container: false
       upload-project-on-error: ${{ inputs.upload-project-on-error }}
+    # The called reusable workflow chain (export-workspaces-as-dynamic ->
+    # export-dynamic) statically declares these job-level permissions. A reusable
+    # workflow cannot be granted MORE than its caller, and GitHub validates the
+    # whole chain at startup — granting less here yields an instant startup_failure
+    # before any job runs. We still publish nothing: publish-container is false and
+    # no registry secrets are passed, so the elevated token is granted but unused.
     permissions:
-      contents: read
+      contents: write
+      packages: write
+      attestations: write
+      id-token: write
