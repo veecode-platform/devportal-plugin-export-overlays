@@ -16,10 +16,10 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-todo"
   dynamicArtifact: oci://quay.io/veecode/todo:bs_1.49.4!backstage-community-plugin-todo
-  version: 0.18.0
+  version: 0.22.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.52.0
   author: Backstage Community
   support: community
   lifecycle: active

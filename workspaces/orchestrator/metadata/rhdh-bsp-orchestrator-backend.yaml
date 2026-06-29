@@ -18,7 +18,7 @@ metadata:
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-orchestrator-backend"
   dynamicArtifact: "oci://quay.io/veecode/orchestrator:bs_1.49.4!red-hat-developer-hub-backstage-plugin-orchestrator-backend"
-  version: 8.9.4
+  version: 8.9.5
   backstage:
     role: backend-plugin
     supportedVersions: 1.49.4
