@@ -48,7 +48,7 @@ jobs:
             });
 
             for (const run of runs.data.workflow_runs) {
-              if (context.payload.commits.some(c => c.id === run.head_sha)) {
+              if ((context.payload.commits ?? []).some(c => c.id === run.head_sha)) {
                 core.info(`Skipping run ${run.id} for commit ${run.head_sha}, it's part of the push`);
                 continue;
               }
