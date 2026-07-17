@@ -15,7 +15,7 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-npm-backend"
   dynamicArtifact: oci://quay.io/veecode/npm:bs_1.49.4!backstage-community-plugin-npm-backend
-  version: 1.20.0
+  version: 1.22.0
   backstage:
     role: backend-plugin
     supportedVersions: 1.49.4
