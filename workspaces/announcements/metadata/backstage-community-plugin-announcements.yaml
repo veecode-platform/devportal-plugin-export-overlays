@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-announcements"
   dynamicArtifact: oci://quay.io/veecode/announcements:bs_1.49.4!backstage-community-plugin-announcements
-  version: 2.11.0
+  version: 2.11.1
   backstage:
     role: frontend-plugin
     supportedVersions: 1.52.0
