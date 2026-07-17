@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-github-deployments"
   dynamicArtifact: oci://quay.io/veecode/github:bs_1.49.4!backstage-community-plugin-github-deployments
-  version: 0.18.0
+  version: 1.2.0
   backstage:
     role: frontend-plugin
     supportedVersions: 1.49.4
