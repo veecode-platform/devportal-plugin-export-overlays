@@ -17,7 +17,7 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage/plugin-scaffolder-backend-module-gerrit"
-  dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.49.4!backstage-plugin-scaffolder-backend-module-gerrit
+  dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.53.0!backstage-plugin-scaffolder-backend-module-gerrit
   version: 0.2.19
   backstage:
     role: backend-plugin-module

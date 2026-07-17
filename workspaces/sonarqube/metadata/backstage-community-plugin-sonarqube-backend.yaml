@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-sonarqube-backend"
-  dynamicArtifact: oci://quay.io/veecode/sonarqube:bs_1.49.4!backstage-community-plugin-sonarqube-backend
+  dynamicArtifact: oci://quay.io/veecode/sonarqube:bs_1.53.0!backstage-community-plugin-sonarqube-backend
   version: 1.1.1
   backstage:
     role: backend-plugin

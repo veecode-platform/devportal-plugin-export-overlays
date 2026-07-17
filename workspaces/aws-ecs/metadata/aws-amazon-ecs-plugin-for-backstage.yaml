@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@aws/amazon-ecs-plugin-for-backstage"
-  dynamicArtifact: oci://quay.io/veecode/aws-ecs:bs_1.49.4!aws-amazon-ecs-plugin-for-backstage
+  dynamicArtifact: oci://quay.io/veecode/aws-ecs:bs_1.53.0!aws-amazon-ecs-plugin-for-backstage
   version: 0.6.0
   backstage:
     role: frontend-plugin
