@@ -28,7 +28,13 @@ spec:
     - backstage-catalog-cards
   appConfigExamples:
     - title: Default configuration
+      # Verificado em runtime (drydock, 2026-07-17): o plugin lê `integrations.gitlab`
+      # (array) via getConfigArray e o boot MORRE se a chave não existir
+      # ("Missing required config value at 'integrations.gitlab'"). O example anterior
+      # (`gitlab: {host, token}`) tinha shape errado e não satisfazia o gate.
       content:
-        gitlab:
-          host: ${GITLAB_HOST}
-          token: ${GITLAB_TOKEN}
+        integrations:
+          gitlab:
+            - host: gitlab.com
+              apiBaseUrl: https://gitlab.com/api/v4
+              token: ${GITLAB_TOKEN}

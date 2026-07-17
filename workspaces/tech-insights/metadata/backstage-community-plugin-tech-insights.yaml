@@ -26,3 +26,22 @@ spec:
   lifecycle: active
   partOf:
   - tech-insights
+  appConfigExamples:
+    - title: Default configuration
+      # Verificado em runtime (drydock, 2026-07-17) contra veecode/devportal:2.2.1:
+      # EntityTechInsightsScorecardContent monta e renderiza na tab dedicada
+      # (export confirmado no bundle; requer o backend + módulo jsonfc habilitados).
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-tech-insights:
+              entityTabs:
+                - path: /scorecard
+                  title: Scorecard
+                  mountPoint: entity.page.scorecard
+              mountPoints:
+                - mountPoint: entity.page.scorecard/cards
+                  importName: EntityTechInsightsScorecardContent
+                  config:
+                    layout:
+                      gridColumn: "1 / -1"
