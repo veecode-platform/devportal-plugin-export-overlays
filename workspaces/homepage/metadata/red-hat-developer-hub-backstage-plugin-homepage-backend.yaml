@@ -31,12 +31,37 @@ spec:
       content:
         homepage:
           defaultWidgets:
-            - id: rhdh-onboarding-section
-              props:
-                title: Onboarding section
-            - id: rhdh-entity-section
-              props:
-                title: Entity section
-            - id: rhdh-template-section
-              props:
-                title: Template section
+            # Each leaf node needs both `id` (stable identifier) and `ref`
+            # (the widget the frontend renders). Refs and layout mirror the
+            # upstream defaults for these three sections:
+            # https://github.com/redhat-developer/rhdh-plugins/blob/main/workspaces/homepage/app-config.yaml
+            - id: onboarding
+              ref: rhdh-onboarding-section
+              tags: [public]
+              layout:
+                xl: { w: 12, h: 6 }
+                lg: { w: 12, h: 6 }
+                md: { w: 12, h: 7 }
+                sm: { w: 12, h: 8 }
+                xs: { w: 12, h: 9 }
+                xxs: { w: 12, h: 14 }
+            - id: entity-list
+              ref: rhdh-entity-section
+              tags: [general]
+              layout:
+                xl: { w: 12, h: 7 }
+                lg: { w: 12, h: 7 }
+                md: { w: 12, h: 8 }
+                sm: { w: 12, h: 9 }
+                xs: { w: 12, h: 11 }
+                xxs: { w: 12, h: 15 }
+            - id: template-list
+              ref: rhdh-template-section
+              tags: [developer]
+              layout:
+                xl: { w: 12, h: 5 }
+                lg: { w: 12, h: 5 }
+                md: { w: 12, h: 5 }
+                sm: { w: 12, h: 5 }
+                xs: { w: 12, h: 7.5 }
+                xxs: { w: 12, h: 13.5 }
