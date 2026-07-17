@@ -8,8 +8,7 @@ metadata:
     - url: https://red.ht/rhdh
       title: Homepage
     - url: https://issues.redhat.com/browse/RHDHBUGS
-      title: "Report issues here. Note: Customers of Red Hat Developer Hub should
-        raise a Red Hat support case instead."
+      title: "Report issues here. Note: Customers of Red Hat Developer Hub should raise a Red Hat support case instead."
     - title: Source Code
       url: https://github.com/backstage/backstage/tree/master/plugins/events-backend-module-gitlab
   annotations:
@@ -18,7 +17,7 @@ metadata:
 spec:
   packageName: "@backstage/plugin-events-backend-module-gitlab"
   dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.49.4!backstage-plugin-events-backend-module-gitlab
-  version: 0.3.10
+  version: 0.3.14
   backstage:
     role: backend-plugin-module
     supportedVersions: 1.49.4
