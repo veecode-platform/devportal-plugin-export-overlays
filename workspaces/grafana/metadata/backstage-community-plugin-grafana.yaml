@@ -49,3 +49,6 @@ spec:
                     if:
                       allOf:
                         - hasAnnotation: grafana/alert-label-selector
+        app:
+          grafana:
+            domain: ${GRAFANA_DOMAIN}
