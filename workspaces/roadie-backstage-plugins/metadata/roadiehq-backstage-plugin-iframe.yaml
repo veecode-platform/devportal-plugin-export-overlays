@@ -27,16 +27,30 @@ spec:
     - roadie-backstage-plugins
   appConfigExamples:
     - title: Default configuration
+      # Verificado em runtime (drydock, 2026-07-17) contra veecode/devportal:2.2.1:
+      # - "IFrameContent" não é um export do plugin (DynamicRoot: "PluginRoot.IFrameContent
+      #   not found, ignoring mountPoint") — no-op silencioso.
+      # - "EntityIFrameContent" é routable extension e não recebe props ("No src field provided").
+      # - EntityIFrameCard é component extension, aceita props — funciona annotation-driven.
       content:
         dynamicPlugins:
           frontend:
             roadiehq.backstage-plugin-iframe:
+              entityTabs:
+                - path: /iframe
+                  title: IFrame
+                  mountPoint: entity.page.iframe
               mountPoints:
-                - mountPoint: entity.page.overview/cards
-                  importName: IFrameContent
+                - mountPoint: entity.page.iframe/cards
+                  importName: EntityIFrameCard
                   config:
                     layout:
-                      gridColumnEnd: span 12
+                      gridColumn: "1 / -1"
+                    props:
+                      srcFromAnnotation: iframe/src
                     if:
                       allOf:
                         - hasAnnotation: iframe/src
+        iframe:
+          allowlist:
+            - backstage.io
