@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-notifications-backend-module-email"
-  dynamicArtifact: ./dynamic-plugins/dist/backstage-plugin-notifications-backend-module-email-dynamic
+  dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.49.4!backstage-plugin-notifications-backend-module-email
   version: 0.3.19
   backstage:
     role: backend-plugin-module
