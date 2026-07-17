@@ -18,7 +18,7 @@ metadata:
 spec:
   packageName: '@backstage-community/plugin-mcp-chat'
   dynamicArtifact: oci://quay.io/veecode/mcp-chat:bs_1.49.4!backstage-community-plugin-mcp-chat
-  version: 0.6.0
+  version: 0.7.1
   author: Backstage Community
   support: community
   lifecycle: experimental
