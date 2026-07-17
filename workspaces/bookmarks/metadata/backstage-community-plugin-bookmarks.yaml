@@ -15,7 +15,7 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-bookmarks"
   dynamicArtifact: oci://quay.io/veecode/bookmarks:bs_1.49.4!backstage-community-plugin-bookmarks
-  version: 0.9.0
+  version: 0.12.0
   backstage:
     role: frontend-plugin
     supportedVersions: 1.49.4
