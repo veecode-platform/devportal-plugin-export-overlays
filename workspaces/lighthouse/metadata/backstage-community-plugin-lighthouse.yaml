@@ -53,3 +53,8 @@ spec:
                     if:
                       allOf:
                         - isLighthouseAvailable
+        # The frontend's configSchema requires lighthouse.baseUrl (verified
+        # against the bs_1.53.0 bundle's dist-scalprum/configSchema.json);
+        # without it the whole 'app' plugin fails startup schema validation.
+        lighthouse:
+          baseUrl: ${LIGHTHOUSE_URL}
