@@ -1,27 +1,27 @@
 --- plugins/mcp-actions-backend/src/plugin.ts
 +++ plugins/mcp-actions-backend/src/plugin.ts
 @@ -27,6 +27,7 @@
-   actionsServiceRef,
    metricsServiceRef,
+   tracingServiceRef,
  } from '@backstage/backend-plugin-api/alpha';
 +import { createExplainAction } from './actions/createExplainAction';
  import { parseServerConfigs } from './config';
  
  /**
-@@ -59,6 +60,7 @@
-         discovery,
+@@ -61,6 +62,7 @@
          config,
          metrics,
+         tracing,
 +        registry,
        }) {
          const serverConfigs = parseServerConfigs(config);
          const namespacedToolNames = config.getOptionalBoolean(
-@@ -114,6 +116,8 @@
+@@ -116,6 +118,8 @@
  
          httpRouter.use(router);
  
 +        createExplainAction({ registry, logger });
 +
-         const oauthEnabled =
-           config.getOptionalBoolean(
-             'auth.experimentalDynamicClientRegistration.enabled',
+         const cimdConfigPath = config.has('auth.clientIdMetadataDocuments')
+           ? 'auth.clientIdMetadataDocuments'
+           : 'auth.experimentalClientIdMetadataDocuments';
