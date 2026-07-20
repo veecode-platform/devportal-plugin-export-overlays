@@ -15,7 +15,7 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-adr"
   dynamicArtifact: oci://quay.io/veecode/adr:bs_1.49.4!backstage-community-plugin-adr
-  version: 0.26.0
+  version: 0.27.0
   backstage:
     role: frontend-plugin
     supportedVersions: 1.52.0
