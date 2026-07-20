@@ -25,4 +25,11 @@ spec:
   backstage:
     role: backend-plugin
     supportedVersions: 1.49.4
-  appConfigExamples: []
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        mcpChat:
+          providers:
+            - id: openai
+              token: ${MCP_CHAT_OPENAI_API_KEY}
+              model: gpt-4o-mini

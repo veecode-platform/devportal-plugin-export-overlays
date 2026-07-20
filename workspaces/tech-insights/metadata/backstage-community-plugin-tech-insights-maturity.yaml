@@ -26,3 +26,12 @@ spec:
   lifecycle: active
   partOf:
   - tech-insights
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-tech-insights-maturity:
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityMaturitySummaryCard

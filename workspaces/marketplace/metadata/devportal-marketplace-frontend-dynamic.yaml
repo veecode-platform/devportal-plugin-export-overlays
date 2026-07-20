@@ -22,3 +22,22 @@ spec:
   lifecycle: active
   partOf:
     - marketplace
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            devportal.marketplace-frontend:
+              appIcons:
+                - name: pluginsIcon
+                  importName: PluginsIcon
+              dynamicRoutes:
+                - path: /marketplace
+                  importName: DynamicExtensionsPluginRouter
+                  menuItem:
+                    icon: pluginsIcon
+                    text: Marketplace
+              menuItems:
+                marketplace:
+                  title: Marketplace
+                  icon: pluginsIcon

@@ -26,3 +26,13 @@ spec:
   lifecycle: active
   partOf:
   - tech-insights
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        techInsights:
+          factRetrievers:
+            entityOwnershipFactRetriever:
+              cadence: '0 */6 * * *'
+              lifecycle:
+                timeToLive:
+                  weeks: 2

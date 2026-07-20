@@ -22,3 +22,16 @@ spec:
   lifecycle: active
   partOf:
     - marketplace
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            devportal.pending-changes:
+              mountPoints:
+                - mountPoint: global.header/component
+                  importName: PendingChangesButton
+                  config:
+                    priority: 55
+                    props:
+                      pollingIntervalMs: 30000

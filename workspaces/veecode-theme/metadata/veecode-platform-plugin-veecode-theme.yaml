@@ -22,3 +22,18 @@ spec:
   lifecycle: active
   partOf:
     - veecode-theme
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.plugin-veecode-theme:
+              themes:
+                - id: light
+                  title: VeeCode Light
+                  variant: light
+                  importName: VeecodeLightThemeProvider
+                - id: dark
+                  title: VeeCode Dark
+                  variant: dark
+                  importName: VeecodeDarkThemeProvider

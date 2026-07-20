@@ -22,3 +22,5 @@ spec:
   lifecycle: active
   partOf:
     - marketplace
+  appConfigNotRequired: true
+  appConfigExamples: []

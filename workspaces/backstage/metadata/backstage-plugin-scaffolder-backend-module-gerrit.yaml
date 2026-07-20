@@ -27,4 +27,12 @@ spec:
   lifecycle: active
   partOf:
     - gerrit-scaffolder-actions
-  appConfigExamples: []
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        integrations:
+          gerrit:
+            - host: ${GERRIT_HOST}
+              gitilesBaseUrl: ${GERRIT_GITILES_BASE_URL}
+              username: ${GERRIT_USERNAME}
+              password: ${GERRIT_PASSWORD}
