@@ -58,5 +58,4 @@ spec:
 
   packages:
     - rhdh-bsp-extensions
-    - rhdh-bsp-extensions-backend
     - rhdh-bsp-ctlg-backend-mod-extensions
