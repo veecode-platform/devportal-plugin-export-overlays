@@ -68,6 +68,27 @@ On a PR, comment:
 | `run-workspace-smoke-tests.yaml` | After publish | Verifies plugins load in RHDH container |
 | `check-backstage-compatibility.yaml` | Push + PRs | Gates release branch creation on compatibility |
 | `sync-user-guide-to-wiki.yaml` | Weekly + manual | Syncs `user-guide/` to GitHub Wiki with placeholder injection |
+| `promote-catalog-index-latest.yaml` | Manual + human approval | The ONLY path that moves `plugin-catalog-index:latest` (see "Publish vs. promote" below) |
+
+### Publish vs. promote (`:latest`) — read before touching publish workflows
+
+**Publishing is automatic and versioned; promotion is manual and human-approved. Never mix the two.**
+
+- Every push to `main` (or a release branch) touching `workspaces/**`, `catalog-entities/**` or
+  `versions.json` auto-publishes **versioned artifacts only**: plugin bundles and
+  `plugin-catalog-index:bs_<version>` / `bs_<version>_<timestamp>`. This is the staging channel —
+  it is safe precisely because nothing consumes those tags implicitly.
+- `plugin-catalog-index:latest` is a **production pointer**: deployed instances (SaaS included)
+  resolve it live. It moves ONLY via `promote-catalog-index-latest.yaml` (manual dispatch, gated by
+  the `catalog-latest-promotion` GitHub Environment, which requires human approval and records
+  before/after digests in the run summary).
+- **Never re-add a `:latest` tag/push to any automatic workflow.** The historical incident this
+  prevents: `versions.json` on `main` moved to a new Backstage line before that line was validated;
+  the only thing that kept every `:latest` consumer from being silently repointed was that the
+  export step happened to be failing. Do not rely on luck twice.
+- The same rule applies to the DevPortal platform image in `devportal-platform`: prerelease tags
+  (`2.x.y-rc.N`) publish freely; `veecode/devportal:latest` moves only on stable release tags,
+  which are a deliberate human act.
 
 ### Triggering Workflows Manually
 

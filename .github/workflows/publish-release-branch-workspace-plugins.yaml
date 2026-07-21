@@ -136,16 +136,20 @@ jobs:
           QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
           BS_VERSION: ${{ steps.versions.outputs.backstage }}
           TIMESTAMP: ${{ steps.versions.outputs.timestamp }}
+        # Versioned tags ONLY. The mutable `:latest` tag is a production
+        # pointer consumed by deployed instances; it is promoted exclusively
+        # by the human-approved promote-catalog-index-latest.yaml workflow.
+        # Never re-add it here — an automatic retag from a branch whose
+        # versions.json has moved would repoint every :latest consumer at an
+        # unvalidated line (see CLAUDE.md § "Publish vs. promote").
         run: |
           podman login -u veecode+ci -p "$QUAY_TOKEN" quay.io
           IMAGE="quay.io/veecode/plugin-catalog-index"
           podman tag plugin-catalog-index "$IMAGE:bs_${BS_VERSION}"
           podman tag plugin-catalog-index "$IMAGE:bs_${BS_VERSION}_${TIMESTAMP}"
-          podman tag plugin-catalog-index "$IMAGE:latest"
           podman push "$IMAGE:bs_${BS_VERSION}"
           podman push "$IMAGE:bs_${BS_VERSION}_${TIMESTAMP}"
-          podman push "$IMAGE:latest"
-          echo "Published $IMAGE with tags: bs_${BS_VERSION}, bs_${BS_VERSION}_${TIMESTAMP}, latest"
+          echo "Published $IMAGE with tags: bs_${BS_VERSION}, bs_${BS_VERSION}_${TIMESTAMP} (:latest is promotion-only)"
 
       - name: Set Quay repository to public
         env:
