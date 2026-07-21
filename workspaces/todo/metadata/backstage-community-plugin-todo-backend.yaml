@@ -15,7 +15,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-todo-backend"
-  dynamicArtifact: oci://quay.io/veecode/todo:bs_1.49.4!backstage-community-plugin-todo-backend
+  dynamicArtifact: oci://quay.io/veecode/todo:bs_1.53.0!backstage-community-plugin-todo-backend
   version: 0.23.0
   backstage:
     role: backend-plugin

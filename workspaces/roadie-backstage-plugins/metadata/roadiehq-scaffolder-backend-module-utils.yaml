@@ -17,7 +17,7 @@ metadata:
     - software-templates
 spec:
   packageName: "@roadiehq/scaffolder-backend-module-utils"
-  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.49.4!roadiehq-scaffolder-backend-module-utils
+  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.53.0!roadiehq-scaffolder-backend-module-utils
   version: 4.1.2
   backstage:
     role: backend-plugin-module

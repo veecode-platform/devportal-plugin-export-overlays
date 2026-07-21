@@ -16,7 +16,7 @@ metadata:
     - embed
 spec:
   packageName: "@roadiehq/backstage-plugin-iframe"
-  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.49.4!roadiehq-backstage-plugin-iframe
+  dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.53.0!roadiehq-backstage-plugin-iframe
   version: 1.6.1
   backstage:
     role: frontend-plugin

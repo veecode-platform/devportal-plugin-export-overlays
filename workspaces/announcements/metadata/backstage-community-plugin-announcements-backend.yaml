@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-announcements-backend"
-  dynamicArtifact: oci://quay.io/veecode/announcements:bs_1.49.4!backstage-community-plugin-announcements-backend
+  dynamicArtifact: oci://quay.io/veecode/announcements:bs_1.53.0!backstage-community-plugin-announcements-backend
   version: 0.26.0
   backstage:
     role: backend-plugin
