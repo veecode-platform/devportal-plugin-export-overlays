@@ -5,10 +5,6 @@ on:
     branches:
       - main
       - 'release-*'
-    paths:
-      - 'workspaces/**/metadata/**'
-      - 'scripts/validate-app-config-examples.py'
-      - '.github/workflows/validate-app-config-examples.yaml'
   workflow_dispatch:
 
 concurrency:

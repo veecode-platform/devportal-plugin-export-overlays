@@ -294,8 +294,8 @@ class TestGetOutputRegistryReference:
 # Fixed known images for testing
 GHCR_KNOWN_REF = "ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-community-plugin-scaffolder-backend-module-quay:bs_1.49.4__2.18.0"
 
-QUAY_KNOWN_REF = "quay.io/rhdh/red-hat-developer-hub-backstage-plugin-scaffolder-backend-module-orchestrator:1.11--1.5.4"
-QUAY_KNOWN_DIGEST = "sha256:e8cb33e40f6f846adaf5e0446049d5a2a5e93a2a12cf8b610e3e0e346f98005c"
+QUAY_KNOWN_DIGEST = "sha256:29b63f1cc2e9d62237f0a3af4618d936fed97ffd1a985e0eded5caa5f8a344a7"
+QUAY_KNOWN_REF = f"quay.io/rhdh/red-hat-developer-hub-backstage-plugin-scaffolder-backend-module-orchestrator@{QUAY_KNOWN_DIGEST}"
 
 
 class TestFetchImageMetadata:

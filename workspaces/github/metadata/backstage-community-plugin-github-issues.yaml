@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-github-issues"
-  dynamicArtifact: oci://quay.io/veecode/github:bs_1.49.4!backstage-community-plugin-github-issues
+  dynamicArtifact: oci://quay.io/veecode/github:bs_1.53.0!backstage-community-plugin-github-issues
   version: 0.21.0
   backstage:
     role: frontend-plugin

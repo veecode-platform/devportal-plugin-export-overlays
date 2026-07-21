@@ -17,7 +17,7 @@ metadata:
     - mcp
 spec:
   packageName: '@backstage-community/plugin-mcp-chat-backend'
-  dynamicArtifact: oci://quay.io/veecode/mcp-chat:bs_1.49.4!backstage-community-plugin-mcp-chat-backend
+  dynamicArtifact: oci://quay.io/veecode/mcp-chat:bs_1.53.0!backstage-community-plugin-mcp-chat-backend
   version: 0.8.0
   author: Backstage Community
   support: community
@@ -25,4 +25,11 @@ spec:
   backstage:
     role: backend-plugin
     supportedVersions: 1.49.4
-  appConfigExamples: []
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        mcpChat:
+          providers:
+            - id: openai
+              token: ${MCP_CHAT_OPENAI_API_KEY}
+              model: gpt-4o-mini

@@ -12,7 +12,7 @@ metadata:
   tags: []
 spec:
   packageName: "devportal-pending-changes-dynamic"
-  dynamicArtifact: oci://quay.io/veecode/marketplace:bs_1.49.4!devportal-pending-changes-dynamic
+  dynamicArtifact: oci://quay.io/veecode/marketplace:bs_1.53.0!devportal-pending-changes-dynamic
   version: 0.1.0
   backstage:
     role: frontend-plugin
@@ -22,3 +22,16 @@ spec:
   lifecycle: active
   partOf:
     - marketplace
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            devportal.pending-changes:
+              mountPoints:
+                - mountPoint: global.header/component
+                  importName: PendingChangesButton
+                  config:
+                    priority: 55
+                    props:
+                      pollingIntervalMs: 30000
