@@ -1,5 +1,6 @@
-# Pruned: plugins already static in devportal-base or wrapped in devportal-distro
-# are excluded. Only plugins NOT available in the base/distro are exported here.
+# Curated allowlist: plugins already static in devportal-base or wrapped in
+# devportal-distro are excluded. Upstream additions are not enrolled
+# automatically; each new package needs a separate adoption decision.
 #
 # Removed (static in devportal-base):
 #   auth: github, gitlab, google, microsoft, oidc, gcp-iap, oauth2-proxy
@@ -14,6 +15,10 @@
 # Removed (wrapped in devportal-distro):
 #   catalog: bitbucket-cloud, bitbucket-server
 #   scaffolder: bitbucket-cloud, bitbucket-server
+#
+# Removed while moving the source from 1.49.4 to 1.53.0:
+#   scaffolder-backend-module-bitbucket: path no longer exists upstream
+#   example-todo-list/backend: private internal examples, not product plugins
 
 # --- Auth providers not in devportal-base ---
 plugins/auth-backend-module-atlassian-provider:
@@ -36,7 +41,6 @@ plugins/catalog-backend-module-puppetdb:
 plugins/catalog-backend-module-unprocessed:
 
 # --- Scaffolder modules not in devportal-base/distro ---
-plugins/scaffolder-backend-module-bitbucket:
 plugins/scaffolder-backend-module-confluence-to-markdown:
 plugins/scaffolder-backend-module-cookiecutter:
 plugins/scaffolder-backend-module-gcp:
@@ -63,8 +67,6 @@ plugins/events-backend-module-gitlab:
 plugins/config-schema:
 plugins/devtools:
 plugins/devtools-backend:
-plugins/example-todo-list:
-plugins/example-todo-list-backend:
 plugins/kubernetes:
 plugins/mcp-actions-backend:
 plugins/notifications-backend-module-email: --embed-package @backstage/plugin-notifications-node

@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: "@backstage/plugin-notifications-backend-module-email"
   dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.53.0!backstage-plugin-notifications-backend-module-email
-  version: 0.3.19
+  version: 0.3.23
   backstage:
     role: backend-plugin-module
     supportedVersions: 1.48.4
