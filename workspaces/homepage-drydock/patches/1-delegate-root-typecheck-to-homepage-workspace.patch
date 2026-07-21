@@ -1,0 +1,14 @@
+diff --git a/package.json b/package.json
+index 2ba0a785..9b7afa67 100644
+--- a/package.json
++++ b/package.json
+@@ -10,7 +10,8 @@
+     "create-workspace": "rhdh-repo-tools workspace create",
+     "postinstall": "husky",
+     "prettier:check": "prettier --check .",
+-    "prettier:fix": "prettier --write ."
++    "prettier:fix": "prettier --write .",
++    "tsc": "cd workspaces/homepage && yarn install --immutable --mode=skip-build && yarn tsc"
+   },
+   "type": "module",
+   "packageManager": "yarn@4.12.0",

@@ -1,0 +1,6 @@
+{
+  "repo": "https://github.com/redhat-developer/rhdh-plugins",
+  "repo-ref": "9bccbda34881e86d00cb6fa9146c8ddde41d0dfc",
+  "repo-flat": true,
+  "repo-backstage-version": "1.49.3"
+}
