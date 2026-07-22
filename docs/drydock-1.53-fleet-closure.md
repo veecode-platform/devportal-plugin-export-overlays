@@ -56,14 +56,20 @@ Extensions product decision. It contains no `fix-metadata`, `creds-needed`, or
 Extensions vitrine; removing it from export or accepting it as an explicit
 fleet exception remains a release-owner decision.
 
-## Compatibility workflow signal
+## Compatibility badge recovery
 
 The final landing's
 [compatibility run 29887669152](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29887669152)
-is red only in `update-badge`: `actions/checkout` cannot find the repository's
-`metadata` branch. The `prepare-required-plugins` and actual `check / Check`
-jobs both passed. This is CI badge hygiene, not a plugin compatibility failure;
-no workflow was changed as part of this closure.
+was red only in `update-badge`: `actions/checkout` could not find the
+repository's `metadata` branch. The `prepare-required-plugins` and actual
+`check / Check` jobs both passed.
+
+The branch is the workflow's intended bot-owned data store and exists in the
+upstream repository, but had never been initialized in this fork. It was
+bootstrapped from the upstream branch without changing any workflow. Manual
+[run 29889680947](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29889680947)
+then completed all three jobs successfully and refreshed the fork's badge data
+at `811c8507` to 0 incompatible workspaces, 0 mandatory.
 
 ## Release boundary
 
