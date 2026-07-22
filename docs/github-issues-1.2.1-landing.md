@@ -78,7 +78,7 @@ change when this record is updated.
 - [x] Publish the final immutable workspace from PR #151.
 - [x] Resolve its OCI digest and run a fresh exact-digest probe on RC1.
 - [x] Record the final provenance here and in Drydock.
-- [ ] Merge the Drydock evidence PR.
+- [x] Merge the Drydock evidence PR — #12 merged as `b0a38b071d6d3942710c4c02801a16cc6ff3c6dd`.
 - [ ] Merge landing PR #150.
 - [ ] Close PR #151 without merging.
 - [ ] Verify the stable `bs_1.53.0` artifact on RC1, then run the full fleet matrix.
