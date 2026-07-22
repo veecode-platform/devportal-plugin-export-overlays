@@ -1,4 +1,5 @@
 plugins/github-actions:
+plugins/github-issues:
 plugins/github-pull-requests-board:
 plugins/github-deployments:
 plugins/github-discussions:
