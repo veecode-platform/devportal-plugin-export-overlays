@@ -85,8 +85,9 @@ change when this record is updated.
 | Stable digest | `sha256:53a4ce420597b82ab1377b069842f459d0dc8e7857374282f7a6cc5e332dd74b` |
 | Main publisher | [run 29884038683](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29884038683) — 45/45 jobs PASS |
 | Exact stable RC1 proof | [`rc1-stable`](https://github.com/veecode-platform/veecode-drydock/tree/main/poc/runtime-repair-specimen/evidence/rc1-stable) — `PROVEN`, `R2-PASS-CONFIRMED` |
-| Final full fleet | [Drydock run 29884693095](https://github.com/veecode-platform/veecode-drydock/actions/runs/29884693095) — workflow PASS, GitHub Issues `R2-PASS-CONFIRMED`, fleet `R2-CRASH` count 0 |
-| Durable fleet evidence | [`evidence/fleet/29884693095`](https://github.com/veecode-platform/veecode-drydock/tree/main/evidence/fleet/29884693095) |
+| Post-landing full fleet | [Drydock run 29884693095](https://github.com/veecode-platform/veecode-drydock/actions/runs/29884693095) — workflow PASS, GitHub Issues `R2-PASS-CONFIRMED`, fleet `R2-CRASH` count 0 |
+| Hardened final fleet | [Drydock run 29888094741](https://github.com/veecode-platform/veecode-drydock/actions/runs/29888094741) — 96 packages, zero crash, zero boot failure, one known install incompatibility |
+| Durable final evidence | [`evidence/fleet/29888094741`](https://github.com/veecode-platform/veecode-drydock/tree/main/evidence/fleet/29888094741) and [`docs/drydock-1.53-fleet-closure.md`](./drydock-1.53-fleet-closure.md) |
 
 ## Required landing sequence
 
