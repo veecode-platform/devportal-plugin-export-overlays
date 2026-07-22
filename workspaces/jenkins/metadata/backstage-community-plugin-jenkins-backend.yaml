@@ -30,8 +30,6 @@ spec:
     - title: Default configuration
       content:
         jenkins:
-          instances:
-            - name: default
-              baseUrl: ${JENKINS_URL}
-              username: ${JENKINS_USERNAME}
-              apiKey: ${JENKINS_TOKEN}
+          baseUrl: ${JENKINS_URL}
+          username: ${JENKINS_USERNAME}
+          apiKey: ${JENKINS_TOKEN}
