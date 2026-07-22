@@ -14,18 +14,10 @@ keeps that change isolated.
 
 The source pin and package version were selected by the Drydock runtime-repair
 flow. The permanent workspace was then retargeted explicitly to Backstage
-1.53. PR #151 published this exact workspace tree in isolation so its bytes
-could be tested before PR #150 changes the shared `github` workspace. The RC1
-controlled A/B changed `R2-CRASH` to `R2-PASS-CONFIRMED` with the platform,
-configuration, entity and probe profile held constant:
-
-- landing PR: <https://github.com/veecode-platform/devportal-plugin-export-overlays/pull/150>
-- evidence-only PR (never merge): <https://github.com/veecode-platform/devportal-plugin-export-overlays/pull/151>
-- exact RC1 evidence: <https://github.com/veecode-platform/veecode-drydock/tree/main/poc/runtime-repair-specimen/evidence/rc1-landing>
-- candidate publish: <https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29879152656>
-- candidate smoke: <https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29879430566>
-- source commit: `7504e2ecf184a9d8ff450f6801fafb9422c78da6`
-- 1.53-retargeted candidate: `sha256:9b657a162c7cc2d2cf5f3326a3a8082138169a1e293b1043a68704ce4c2ac5d2`
+1.53. Release-specific publish, smoke, digest and runtime provenance lives in
+the [landing record](../../docs/github-issues-1.2.1-landing.md). Keeping that
+evidence outside this directory prevents an evidence refresh from changing the
+workspace tree and therefore the artifact being proven.
 
 ## Build seam
 
