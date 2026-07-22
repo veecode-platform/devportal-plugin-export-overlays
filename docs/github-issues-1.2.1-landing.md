@@ -34,8 +34,7 @@ release evidence is completed.
 The first Backstage 1.53 candidate established the runtime repair. A subsequent
 candidate synchronized E2E ownership into the isolated workspace and repeated
 all required checks. These are retained as review iterations; the final
-immutable candidate will be recorded below after the stable workspace text is
-published once more.
+immutable candidate is recorded below.
 
 | Iteration | Candidate digest | Publish | Smoke | RC1 runtime proof |
 | --- | --- | --- | --- | --- |
@@ -45,35 +44,43 @@ published once more.
 The synchronized iteration also passed [E2E Code Quality run
 29881768077](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29881768077),
 [appConfigExamples run
-29881768059](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29881768059),
-and the additional [full OCP E2E run
-29882448189](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882448189).
+29881768059](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29881768059).
+
+An optional full OCP E2E was requested but did not execute. The [PR Actions
+run 29882448234](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882448234)
+was skipped, while [Fullsend run
+29882448189](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882448189)
+only routed the comment and skipped every execution agent. It receives no
+evidence credit and is not a documented gate for this landing.
 
 ## Final candidate
 
-This section is completed only after the final candidate publish and exact RC1
-probe. Until then, the iterations above are evidence of progress, not authority
-to promote or merge the evidence-only PR.
+Volatile provenance was removed from the workspace before this publication.
+The Git tree below is therefore identical in PRs #150 and #151 and does not
+change when this record is updated.
 
 | Field | Value |
 | --- | --- |
-| Candidate commit | Pending final publish |
-| Workspace Git tree | Pending final publish |
-| OCI digest | Pending final publish |
-| Publish run | Pending final publish |
-| Smoke run | Pending final publish |
-| E2E Code Quality run | Pending final publish |
-| appConfigExamples run | Pending final publish |
-| RC1 controlled A/B | Pending exact-digest probe |
+| Landing commit | `ba6eea18fb7ec32efebcf562d7f1cba1837f9a8b` |
+| Candidate commit | `3acd505247ef7ee3458da5d405ab32a45717886e` |
+| Workspace Git tree | `8f60a0f886fb0345ee7e6a2b2026526b849d44d1` |
+| OCI digest | `sha256:ba835e4eb4d353b3a5aef6433d20b07c0068352c3d45ea18ff41e93f85f8724c` |
+| Publish run | [29882709210](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882709210) — PASS |
+| Smoke run | [29882937217](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882937217) — PASS |
+| Candidate E2E Code Quality | [29882699252](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882699252) — PASS |
+| Candidate appConfigExamples | [29882699183](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882699183) — PASS |
+| Landing E2E Code Quality | [29882676532](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882676532) — PASS |
+| Landing appConfigExamples | [29882676570](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882676570) — PASS |
+| RC1 controlled A/B | [Drydock PR #12](https://github.com/veecode-platform/veecode-drydock/pull/12), [`rc1-landing-final`](https://github.com/veecode-platform/veecode-drydock/tree/main/poc/runtime-repair-specimen/evidence/rc1-landing-final) — `PROVEN`, `R2-CRASH` to `R2-PASS-CONFIRMED` |
 
 ## Required landing sequence
 
-1. Publish the final immutable workspace from PR #151.
-2. Resolve its OCI digest and run a fresh exact-digest probe on RC1.
-3. Record the final provenance here and in Drydock.
-4. Merge the Drydock evidence PR.
-5. Merge landing PR #150.
-6. Close PR #151 without merging.
-7. Verify the stable `bs_1.53.0` artifact on RC1, then run the full fleet matrix.
+- [x] Publish the final immutable workspace from PR #151.
+- [x] Resolve its OCI digest and run a fresh exact-digest probe on RC1.
+- [x] Record the final provenance here and in Drydock.
+- [ ] Merge the Drydock evidence PR.
+- [ ] Merge landing PR #150.
+- [ ] Close PR #151 without merging.
+- [ ] Verify the stable `bs_1.53.0` artifact on RC1, then run the full fleet matrix.
 
 No step in this record authorizes changing or promoting `:latest`.
