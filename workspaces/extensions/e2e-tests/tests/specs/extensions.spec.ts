@@ -29,7 +29,6 @@ test.describe("Admin > Extensions", () => {
       auth: "keycloak",
       disableWrappers: [
         "red-hat-developer-hub-backstage-plugin-extensions",
-        "red-hat-developer-hub-backstage-plugin-extensions-backend-dynamic",
         "red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions-dynamic",
       ],
     });

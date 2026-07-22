@@ -52,9 +52,24 @@ as `23731ffef2e9b347bb0fb4817143c89e812ac70a`.
 
 The remaining worklist contains eight evidence-coverage items and the one
 Extensions product decision. It contains no `fix-metadata`, `creds-needed`, or
-`repair-runtime` item. The Extensions backend is already absent from the
-Extensions vitrine; removing it from export or accepting it as an explicit
-fleet exception remains a release-owner decision.
+`repair-runtime` item.
+
+### Extensions backend — release-owner decision (2026-07-22)
+
+The release owner chose to **remove `rhdh-bsp-extensions-backend` from the
+export** rather than accept it as a standing fleet exception. It was already
+absent from the Extensions vitrine (PR #147); this PR removes the two source
+inputs that still built and published it: the `plugins/extensions-backend`
+target in `workspaces/extensions/plugins-list.yaml` and its
+`workspaces/extensions/metadata/rhdh-bsp-extensions-backend.yaml` Package
+entity. The sibling `rhdh-bsp-extensions` frontend and
+`rhdh-bsp-ctlg-backend-mod-extensions` catalog module are intentionally kept.
+
+Once this lands, the next versioned `bs_1.53.0` publish no longer carries the
+backend, so the fleet's sole `R0-FAIL-INSTALL` is superseded by removal. The
+hardened run 29888094741 above stays the immutable record of the pre-removal
+96-package measurement; the other 95 verdicts are unaffected, so the fleet is
+not re-run.
 
 ## Compatibility badge recovery
 
