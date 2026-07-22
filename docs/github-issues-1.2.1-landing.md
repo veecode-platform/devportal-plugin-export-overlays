@@ -7,13 +7,16 @@ workspace, pinned to upstream `1.2.1`, and explicitly targeted to Backstage
 `1.53`. The change repairs the catalog-entity crash without advancing the five
 unrelated plugins that remain in `workspaces/github`.
 
-The candidate is published from an evidence-only PR and exercised against
-`veecode/devportal:2.3.0-rc.1` before the permanent landing PR is merged.
+The candidate was published from an evidence-only PR and exercised against
+`veecode/devportal:2.3.0-rc.1` before the permanent landing. PR #150 is now
+merged, PR #151 is closed without merge, and the exact stable `bs_1.53.0`
+digest passed a focused RC1 proof and was remeasured in the final full-fleet
+matrix.
 
 ## Change boundary
 
 - Landing PR: <https://github.com/veecode-platform/devportal-plugin-export-overlays/pull/150>
-- Evidence-only PR: <https://github.com/veecode-platform/devportal-plugin-export-overlays/pull/151> — close without merge
+- Evidence-only PR: <https://github.com/veecode-platform/devportal-plugin-export-overlays/pull/151> — closed without merge
 - Upstream source: `backstage/community-plugins@7504e2ecf184a9d8ff450f6801fafb9422c78da6`
 - Exported package: `@backstage-community/plugin-github-issues@1.2.1`
 - Target platform: Backstage `1.53`
@@ -62,6 +65,7 @@ change when this record is updated.
 | Field | Value |
 | --- | --- |
 | Landing commit | `ba6eea18fb7ec32efebcf562d7f1cba1837f9a8b` |
+| Landing PR merge commit | `03b8ca0d694c7c9854346e0bc803550df8bb8981` |
 | Candidate commit | `3acd505247ef7ee3458da5d405ab32a45717886e` |
 | Workspace Git tree | `8f60a0f886fb0345ee7e6a2b2026526b849d44d1` |
 | OCI digest | `sha256:ba835e4eb4d353b3a5aef6433d20b07c0068352c3d45ea18ff41e93f85f8724c` |
@@ -73,14 +77,26 @@ change when this record is updated.
 | Landing appConfigExamples | [29882676570](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29882676570) — PASS |
 | RC1 controlled A/B | [Drydock PR #12](https://github.com/veecode-platform/veecode-drydock/pull/12), [`rc1-landing-final`](https://github.com/veecode-platform/veecode-drydock/tree/main/poc/runtime-repair-specimen/evidence/rc1-landing-final) — `PROVEN`, `R2-CRASH` to `R2-PASS-CONFIRMED` |
 
+## Stable and fleet closure
+
+| Field | Value |
+| --- | --- |
+| Stable artifact | `oci://quay.io/veecode/github-issues:bs_1.53.0!backstage-community-plugin-github-issues` |
+| Stable digest | `sha256:53a4ce420597b82ab1377b069842f459d0dc8e7857374282f7a6cc5e332dd74b` |
+| Main publisher | [run 29884038683](https://github.com/veecode-platform/devportal-plugin-export-overlays/actions/runs/29884038683) — 45/45 jobs PASS |
+| Exact stable RC1 proof | [`rc1-stable`](https://github.com/veecode-platform/veecode-drydock/tree/main/poc/runtime-repair-specimen/evidence/rc1-stable) — `PROVEN`, `R2-PASS-CONFIRMED` |
+| Final full fleet | [Drydock run 29884693095](https://github.com/veecode-platform/veecode-drydock/actions/runs/29884693095) — workflow PASS, GitHub Issues `R2-PASS-CONFIRMED`, fleet `R2-CRASH` count 0 |
+| Durable fleet evidence | [`evidence/fleet/29884693095`](https://github.com/veecode-platform/veecode-drydock/tree/main/evidence/fleet/29884693095) |
+
 ## Required landing sequence
 
 - [x] Publish the final immutable workspace from PR #151.
 - [x] Resolve its OCI digest and run a fresh exact-digest probe on RC1.
 - [x] Record the final provenance here and in Drydock.
 - [x] Merge the Drydock evidence PR — #12 merged as `b0a38b071d6d3942710c4c02801a16cc6ff3c6dd`.
-- [ ] Merge landing PR #150.
-- [ ] Close PR #151 without merging.
-- [ ] Verify the stable `bs_1.53.0` artifact on RC1, then run the full fleet matrix.
+- [x] Merge landing PR #150 — merged as `03b8ca0d694c7c9854346e0bc803550df8bb8981`.
+- [x] Close PR #151 without merging.
+- [x] Verify the exact stable `bs_1.53.0` digest on RC1.
+- [x] Run the final full fleet matrix after the stable publisher settled.
 
 No step in this record authorizes changing or promoting `:latest`.
