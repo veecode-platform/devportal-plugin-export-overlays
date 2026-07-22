@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: '@backstage-community/plugin-lighthouse'
   dynamicArtifact: oci://quay.io/veecode/lighthouse:bs_1.53.0!backstage-community-plugin-lighthouse
-  version: 0.24.0
+  version: 0.25.0
   backstage:
     role: frontend-plugin
     supportedVersions: 1.52.0
