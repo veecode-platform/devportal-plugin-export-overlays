@@ -27,6 +27,10 @@ spec:
   appConfigExamples:
     - title: Default configuration
       content:
+        integrations:
+          github:
+            - host: github.com
+              token: ${GITHUB_TOKEN}
         search:
           collators:
             githubDiscussions:
