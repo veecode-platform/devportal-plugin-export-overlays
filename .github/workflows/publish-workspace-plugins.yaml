@@ -7,6 +7,11 @@ on:
         type: string
         default: ''
         required: false
+      workspace-path:
+        description: "limit to one workspace, e.g. workspaces/veecode-theme (empty = whole fleet)"
+        type: string
+        default: ''
+        required: false
   push:
     branches:
       - 'main'
@@ -23,6 +28,7 @@ jobs:
     # the push path, so the fallback keeps the main publish byte-identical.
     with:
       rc-tag-suffix: ${{ inputs.rc-tag-suffix || '' }}
+      workspace-path: ${{ inputs.workspace-path || '' }}
     secrets:
       QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
       QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}

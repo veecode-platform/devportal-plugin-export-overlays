@@ -2,6 +2,16 @@ name: Publish RHDH Release Dynamic Plugin Images
 on:
   workflow_call:
     inputs:
+      workspace-path:
+        description: >-
+          Limit the export to a single workspace (e.g. 'workspaces/veecode-theme').
+          Empty exports the whole fleet, which is the only correct default for a real
+          publish. A one-workspace run exists to make an RC dispatch cheap enough to
+          test: a full fleet export is 71 workspaces.
+        type: string
+        default: ''
+        required: false
+
       rc-tag-suffix:
         description: >-
           Release-candidate suffix for the bundle tag, e.g. '-rc.abc1234'. When set,
@@ -100,6 +110,7 @@ jobs:
       # rc-tag-suffix, which is applied inside the gate instead of replacing it.
       image-tag-prefix: ${{ '' }}
       rc-tag-suffix: ${{ inputs.rc-tag-suffix }}
+      workspace-path: ${{ inputs.workspace-path }}
       image-registry-user: veecode+ci
       bundle-workspace: true
 
