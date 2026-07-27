@@ -125,6 +125,13 @@ jobs:
       id-token: write
 
   publish-catalog-index:
+    # NEVER on a release-candidate publish. This job derives its tag from
+    # versions.json, so it pushes the RELEASE tag bs_<version> — and it did so
+    # from a throwaway branch during the first RC dispatch (2026-07-27), moving
+    # the very tag the Factory's final gate checks for coherence. Nothing needs
+    # it during a candidate pass: catalog coherence is asserted only by the
+    # final gate, which runs on merged code and therefore on the push path.
+    if: inputs.rc-tag-suffix == ''
     runs-on: ubuntu-latest
     name: Publish Catalog Index
     needs:

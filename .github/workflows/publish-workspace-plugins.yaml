@@ -39,9 +39,13 @@ jobs:
       id-token: write
 
   dispatch-docs-update:
+    # Not on a release-candidate publish. A candidate is internal evidence for the
+    # Factory's gate; telling the docs repo its plugin catalog changed is an
+    # outward announcement about a release that has not happened. The first RC
+    # dispatch (2026-07-27) fired this from a throwaway branch.
     needs: export
     runs-on: ubuntu-latest
-    if: success()
+    if: success() && (inputs.rc-tag-suffix || '') == ''
     steps:
       - name: Trigger plugin catalog update in docs
         uses: peter-evans/repository-dispatch@v3
