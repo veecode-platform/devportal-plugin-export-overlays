@@ -1,6 +1,12 @@
 name: Publish DevPortal Dynamic Plugin Images
 on:
   workflow_dispatch:
+    inputs:
+      rc-tag-suffix:
+        description: "RC suffix for the bundle tag, e.g. -rc.abc1234 (empty = publish the release tag, as the main path does)"
+        type: string
+        default: ''
+        required: false
   push:
     branches:
       - 'main'
@@ -12,6 +18,11 @@ on:
 jobs:
   export:
     uses: veecode-platform/devportal-plugin-export-overlays/.github/workflows/publish-release-branch-workspace-plugins.yaml@main
+    # Dispatching this workflow against a bump branch with an rc-tag-suffix is how
+    # a release candidate reaches Quay without merging first. `inputs` is null on
+    # the push path, so the fallback keeps the main publish byte-identical.
+    with:
+      rc-tag-suffix: ${{ inputs.rc-tag-suffix || '' }}
     secrets:
       QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
       QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
