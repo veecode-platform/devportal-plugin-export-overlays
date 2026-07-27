@@ -1,6 +1,18 @@
 name: Publish RHDH Release Dynamic Plugin Images 
 on:
   workflow_call:
+    inputs:
+      rc-tag-suffix:
+        description: >-
+          Release-candidate suffix for the bundle tag, e.g. '-rc.abc1234'. When set,
+          compatible workspaces publish bs_<version><suffix> instead of bs_<version>,
+          so a bump run can prove the fleet from its own branch BEFORE anything merges
+          — which is the whole reason the Drydock phase machine existed (ADR-0009).
+          The suffix is applied inside the compatibility check, so incompatible
+          workspaces still fall back to next__ and never claim a version they lack.
+        type: string
+        default: ''
+        required: false
     secrets:
       QUAY_TOKEN:
         description: Quay.io robot account token for pushing OCI images
@@ -81,8 +93,13 @@ jobs:
       publish-container: true
       image-repository-prefix: quay.io/veecode
       last-publish-commit: ${{ needs.prepare.outputs.last-published-commit }}
-      # use empty prefix so that we will prepend bs_1.yy.z__ instead of next__
+      # Empty prefix means "let export-utils compute bs_1.yy.z__ per workspace,
+      # gated on compatibility". Never hardcode a prefix here: it overrides that
+      # computation for EVERY workspace, so an incompatible one would publish a
+      # bs_ tag asserting support it does not have. RC tags go through
+      # rc-tag-suffix, which is applied inside the gate instead of replacing it.
       image-tag-prefix: ${{ '' }}
+      rc-tag-suffix: ${{ inputs.rc-tag-suffix }}
       image-registry-user: veecode+ci
       bundle-workspace: true
 
