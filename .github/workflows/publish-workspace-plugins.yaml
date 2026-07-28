@@ -21,7 +21,28 @@ on:
       - 'versions.json'
 
 jobs:
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'push'
+        with:
+          fetch-depth: 0
+      - id: check
+        if: github.event_name == 'push'
+        run: |
+          trailers=$(git log --format='%(trailers:key=Drydock-Effect,valueonly)' \
+            ${{ github.event.before }}..${{ github.sha }})
+          if [[ -n "$trailers" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Push carries Drydock-Effect trailer — bundles and catalog index are promoted by retag, not rebuild"
+          fi
+
   export:
+    needs: [guard]
+    if: needs.guard.outputs.skip != 'true'
     uses: veecode-platform/devportal-plugin-export-overlays/.github/workflows/publish-release-branch-workspace-plugins.yaml@main
     # Dispatching this workflow against a bump branch with an rc-tag-suffix is how
     # a release candidate reaches Quay without merging first. `inputs` is null on
