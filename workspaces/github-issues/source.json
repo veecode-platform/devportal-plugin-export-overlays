@@ -1,6 +1,1 @@
-{
-  "repo": "https://github.com/backstage/community-plugins",
-  "repo-ref": "7504e2ecf184a9d8ff450f6801fafb9422c78da6",
-  "repo-flat": true,
-  "repo-backstage-version": "1.52.0"
-}
+{"repo":"https://github.com/backstage/community-plugins","repo-ref":"921508578f1a88eaa545937b51c0fe326b5841d8","repo-flat":false,"repo-backstage-version":"1.53.0"}
