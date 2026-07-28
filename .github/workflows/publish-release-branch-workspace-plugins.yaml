@@ -144,13 +144,24 @@ jobs:
       id-token: write
 
   publish-catalog-index:
-    # NEVER on a release-candidate publish. This job derives its tag from
-    # versions.json, so it pushes the RELEASE tag bs_<version> — and it did so
-    # from a throwaway branch during the first RC dispatch (2026-07-27), moving
-    # the very tag the Factory's final gate checks for coherence. Nothing needs
-    # it during a candidate pass: catalog coherence is asserted only by the
-    # final gate, which runs on merged code and therefore on the push path.
-    if: inputs.rc-tag-suffix == ''
+    # Runs on a candidate pass too, under the CANDIDATE tag.
+    #
+    # It used to be skipped outright, and the reason recorded here was the tag, not
+    # the artifact: this job derived its name from versions.json alone, so on a
+    # candidate branch it pushed the RELEASE tag `bs_<version>` — the very tag the
+    # Factory's final gate checks for coherence. It did exactly that from a throwaway
+    # branch during the first RC dispatch (2026-07-27).
+    #
+    # Skipping was the wrong cure for that. A platform image bakes
+    # `plugin-catalog-index:bs_<version>` at build time and the fetch is build-fatal,
+    # so with no candidate index the first image on any new Backstage version could
+    # not be built at all — and that image is what the run verifies against. The
+    # 1.54.0-next.0 run hit it: `plugin-catalog-index:bs_1.54.0-next.0` had zero tags.
+    #
+    # Honouring `rc-tag-suffix` fixes the tag without giving up the artifact, exactly
+    # as the bundle export already does. `bs_<version>` stays untouched until a real
+    # release publishes it, and a candidate index is coherent by construction: it is
+    # assembled from `catalog-entities/` at the very commit under test.
     runs-on: ubuntu-latest
     name: Publish Catalog Index
     needs:
@@ -190,6 +201,7 @@ jobs:
           QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
           BS_VERSION: ${{ steps.versions.outputs.backstage }}
           TIMESTAMP: ${{ steps.versions.outputs.timestamp }}
+          RC_TAG_SUFFIX: ${{ inputs.rc-tag-suffix }}
         # Versioned tags ONLY. The mutable `:latest` tag is a production
         # pointer consumed by deployed instances; it is promoted exclusively
         # by the human-approved promote-catalog-index-latest.yaml workflow.
@@ -199,6 +211,25 @@ jobs:
         run: |
           podman login -u veecode+ci -p "$QUAY_TOKEN" quay.io
           IMAGE="quay.io/veecode/plugin-catalog-index"
+
+          # A candidate pass publishes ONE tag: bs_<version>-rc.<sha>.
+          #
+          # It must never write `bs_<version>` — that is the tag the Factory's final
+          # gate checks for coherence, and moving it before anything is accepted is the
+          # mistake that got this whole job disabled for candidates.
+          #
+          # No timestamped companion either. The timestamp exists to keep an audit
+          # trail of successive publishes under one mutable release tag; a candidate tag
+          # already names its exact commit, so a second copy would only be garbage with
+          # a 14-day expiry.
+          if [ -n "${RC_TAG_SUFFIX}" ]; then
+            RC_TAG="bs_${BS_VERSION}${RC_TAG_SUFFIX}"
+            podman tag plugin-catalog-index "$IMAGE:${RC_TAG}"
+            podman push "$IMAGE:${RC_TAG}"
+            echo "Published $IMAGE:${RC_TAG} (candidate — bs_${BS_VERSION} untouched)"
+            exit 0
+          fi
+
           podman tag plugin-catalog-index "$IMAGE:bs_${BS_VERSION}"
           podman tag plugin-catalog-index "$IMAGE:bs_${BS_VERSION}_${TIMESTAMP}"
           podman push "$IMAGE:bs_${BS_VERSION}"
