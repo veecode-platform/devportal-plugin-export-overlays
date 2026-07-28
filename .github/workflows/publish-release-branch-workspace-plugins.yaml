@@ -43,11 +43,30 @@ jobs:
       last-published-commit: ${{ steps.get-last-published-commit.outputs.last-published-commit }}
 
     steps:
+      # A RELEASE CANDIDATE always publishes the whole fleet.
+      #
+      # Skipping unchanged workspaces is an optimisation for the main branch, where
+      # the bundle tag is stable (`bs_<version>`) and a workspace that did not change
+      # already has its bundle under that tag. A candidate tag is derived from the
+      # COMMIT (`bs_<version>-rc.<sha>`), so it is a brand-new tag every time — and a
+      # skipped workspace simply has no bundle under it.
+      #
+      # Drydock resolves every declared fleet member at one tag and hashes the set, so
+      # a partial candidate is not a smaller candidate: it is an unresolvable one. The
+      # 1.54.0-next.0 run hit this the moment its branch gained a second commit —
+      # `bs_…-rc.15a69df` held 44 workspaces, `bs_…-rc.7a599c5a` held 1, and the run
+      # blocked on PUBLISH_FAILED with the publish workflow green. Every repair round
+      # would do the same, because repair moves HEAD by design.
+      #
+      # Forcing it here rather than adding an input: there is no case where a
+      # candidate wants a partial fleet, so leaving it to the caller only leaves room
+      # to get it wrong.
       - name: Get last published commit
         id: get-last-published-commit
+        if: inputs.rc-tag-suffix == ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          INPUT_RELEASE_BRANCH: ${{ github.ref_name }}      
+          INPUT_RELEASE_BRANCH: ${{ github.ref_name }}
         with:
           script: |
             core.info(`Getting latest commit on branch ${core.getInput('release_branch')}`);
