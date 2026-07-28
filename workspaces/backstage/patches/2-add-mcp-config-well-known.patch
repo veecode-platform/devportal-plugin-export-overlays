@@ -1,8 +1,8 @@
 --- plugins/mcp-actions-backend/src/plugin.ts
 +++ plugins/mcp-actions-backend/src/plugin.ts
-@@ -154,6 +154,49 @@
-             },
-           );
+@@ -172,6 +172,49 @@
+             );
+           }
          }
 +
 +        // MCP config discovery endpoint -- enables external AI tools
