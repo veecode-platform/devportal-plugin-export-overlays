@@ -12,7 +12,7 @@
  import { bucketBoundaries, McpServerOperationAttributes } from '../metrics';
  import { FilterRule, McpServerConfig } from '../config';
  
-+const version = '0.2.1-next.0'
++const version = '0.1.11'
 +
  function safeStringify(value: unknown): string {
    try {
