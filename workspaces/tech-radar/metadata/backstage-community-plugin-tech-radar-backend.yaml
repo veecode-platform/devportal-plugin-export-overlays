@@ -30,5 +30,4 @@ spec:
     - title: Default configuration
       content:
         techRadar:
-          url:
-            - ${TECH_RADAR_DATA_URL}
+          url: ${TECH_RADAR_DATA_URL}
