@@ -13,6 +13,29 @@ metadata:
 spec:
   packageName: "@veecode-platform/backstage-plugin-github-workflows"
   dynamicArtifact: oci://quay.io/veecode/github-workflows:bs_1.54.0-next.0!veecode-platform-backstage-plugin-github-workflows
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-github-workflows
+      featureId: github-workflows.workflows-cards
+      provenance:
+        sources:
+          - path: workspaces/github-workflows/plugins/github-workflows/src/alpha.ts
+            lines: 27-32
+          - path: workspaces/github-workflows/plugins/github-workflows/src/alpha/entityCards.tsx
+            lines: 24-31
+          - path: workspaces/github-workflows/plugins/github-workflows/src/hooks/useGithubWorkflows.ts
+            lines: 4-5
+          - path: workspaces/github-workflows/plugins/github-workflows/src/components/GitubWorkflowsContent/GithubWorkflowsContent.tsx
+            lines: 132-135
+          - path: workspaces/github-workflows/plugins/github-workflows/src/components/GitubWorkflowsContent/WorkFlowsCards/WorkFlowsCards.tsx
+            lines: 38-44
+      assertions:
+        - type: text
+          value: Workflows
   version: 1.3.7
   backstage:
     role: frontend-plugin
