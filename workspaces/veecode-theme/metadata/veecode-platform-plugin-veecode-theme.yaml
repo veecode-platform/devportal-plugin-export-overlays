@@ -28,9 +28,20 @@ spec:
           selector: body
           name: data-theme-mode
           value: light
+          themeId: veecode-light
+        - type: attribute
+          selector: body
+          name: data-theme-mode
+          value: dark
+          themeId: veecode-dark
         - type: css-var
           name: --bui-bg-solid
           value: "#00857a"
+          themeId: veecode-light
+        - type: css-var
+          name: --bui-bg-solid
+          value: "#2ec8b6"
+          themeId: veecode-dark
   version: 0.1.0
   backstage:
     role: frontend-plugin
