@@ -13,6 +13,24 @@ metadata:
 spec:
   packageName: "veecode-platform-plugin-veecode-theme"
   dynamicArtifact: oci://quay.io/veecode/veecode-theme:bs_1.54.0-next.0!veecode-platform-plugin-veecode-theme
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      kind: theme
+      themeIds:
+        - veecode-light
+        - veecode-dark
+      assertions:
+        - type: attribute
+          selector: body
+          name: data-theme-mode
+          value: light
+        - type: css-var
+          name: --bui-bg-solid
+          value: "#00857a"
   version: 0.1.0
   backstage:
     role: frontend-plugin
