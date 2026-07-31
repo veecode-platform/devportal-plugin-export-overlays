@@ -17,6 +17,35 @@ metadata:
 spec:
   packageName: "@roadiehq/backstage-plugin-datadog"
   dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.54.0-next.0!roadiehq-backstage-plugin-datadog
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-roadie-backstage-plugins
+      featureId: datadog.datadog-graph
+      probe:
+        kind: Component
+        annotations:
+          datadoghq.com/graph-token: drydock/probe
+      provenance:
+        sources:
+          - path: plugins/frontend/backstage-plugin-datadog/src/alpha.ts
+            lines: 13-21
+          - path: plugins/frontend/backstage-plugin-datadog/src/alpha/entityCards.tsx
+            lines: 7-14
+          - path: plugins/frontend/backstage-plugin-datadog/src/components/GraphWidget.tsx
+            lines: 1-99
+          - path: plugins/frontend/backstage-plugin-datadog/src/components/GraphWidget.tsx
+            lines: 62-62
+          - path: plugins/frontend/backstage-plugin-datadog/src/plugin.ts
+            lines: 18-25
+          - path: plugins/frontend/backstage-plugin-datadog/src/components/useDatadogAppData.ts
+            lines: 20-20
+      assertions:
+        - type: text
+          value: Datadog Graph
   version: 2.7.2
   backstage:
     role: frontend-plugin

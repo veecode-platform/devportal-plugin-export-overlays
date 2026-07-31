@@ -17,6 +17,37 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-github-deployments"
   dynamicArtifact: oci://quay.io/veecode/github:bs_1.54.0-next.0!backstage-community-plugin-github-deployments
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-github
+      featureId: github-deployments.overview
+      probe:
+        kind: Component
+        annotations:
+          github.com/project-slug: backstage/backstage
+      provenance:
+        sources:
+          - path: workspaces/github/plugins/github-deployments/src/alpha.ts
+            lines: 27-33
+          - path: workspaces/github/plugins/github-deployments/src/alpha/entityCards.tsx
+            lines: 21-30
+          - path: workspaces/github/plugins/github-deployments/src/components/GithubDeploymentsCard.tsx
+            lines: 1-112
+          - path: workspaces/github/plugins/github-deployments/src/components/GithubDeploymentsTable/GithubDeploymentsTable.tsx
+            lines: 43-43
+          - path: workspaces/github/plugins/github-deployments/src/Router.tsx
+            lines: 23-24
+          - path: workspaces/github/plugins/github-deployments/src/Router.tsx
+            lines: 20-20
+          - path: workspaces/github/plugins/github-deployments/src/alpha/entityCards.test.tsx
+            lines: 34-34
+      assertions:
+        - type: text
+          value: GitHub Deployments
   version: 0.18.0
   backstage:
     role: frontend-plugin
