@@ -17,6 +17,84 @@ metadata:
 spec:
   packageName: "@roadiehq/backstage-plugin-argo-cd"
   dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.54.0-next.0!roadiehq-backstage-plugin-argo-cd
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-roadie-backstage-plugins
+      featureId: argocd.overviewCard
+      probe:
+        kind: Component
+        annotations:
+          argocd/app-name: __nfs_annotation_present__
+      provenance:
+        sources:
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/alpha/plugin.tsx
+            lines: 15-24
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/alpha/entityCards.tsx
+            lines: 6-15
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/components/ArgoCDDetailsCard.tsx
+            lines: 1-385
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/components/ArgoCDDetailsCard.tsx
+            lines: 262-262
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/conditions.ts
+            lines: 8-11
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/components/useArgoCDAppData.ts
+            lines: 19-19
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/alpha/pages.tsx
+            lines: 11-22
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/Router.tsx
+            lines: 1-33
+          - path: plugins/frontend/backstage-plugin-argo-cd/src/components/ArgoCDHistoryCard.tsx
+            lines: 142-142
+        annotationDecisions:
+          - argocd/app-name: assertion
+          - argocd/app-name: assertion
+        annotationRestrictions:
+          - type: mutually-exclusive
+            keys:
+              - argocd/app-name
+              - argocd/app-selector
+              - argocd/project-name
+            chosen: argocd/app-name
+            reason: o hook lança quando app-name coexiste com app-selector/project-name; app-name é o caminho de anotação mais simples
+          - type: mutually-exclusive
+            keys:
+              - argocd/app-name
+              - argocd/app-selector
+              - argocd/project-name
+            chosen: argocd/app-name
+            reason: o hook lança quando app-name coexiste com app-selector/project-name; app-name é o caminho de anotação mais simples
+      assertions:
+        - type: text
+          value: ArgoCD overview
+          proofLevel: content
+      secondary:
+        name: ArgoCdPage
+        featureId: argocd.ArgoCdPage
+        probe:
+          kind: Component
+          annotations:
+            argocd/app-name: __nfs_annotation_present__
+        assertions:
+          - type: text
+            value: ArgoCD history
+            proofLevel: content
+        provenance:
+          sources:
+            - path: plugins/frontend/backstage-plugin-argo-cd/src/alpha/pages.tsx
+              lines: 11-22
+            - path: plugins/frontend/backstage-plugin-argo-cd/src/Router.tsx
+              lines: 1-33
+            - path: plugins/frontend/backstage-plugin-argo-cd/src/components/ArgoCDHistoryCard.tsx
+              lines: 142-142
+            - path: plugins/frontend/backstage-plugin-argo-cd/src/conditions.ts
+              lines: 8-11
+            - path: plugins/frontend/backstage-plugin-argo-cd/src/components/useArgoCDAppData.ts
+              lines: 19-19
+        surfacePath: /argocd
   version: 2.12.5
   backstage:
     role: frontend-plugin

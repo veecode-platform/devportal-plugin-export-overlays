@@ -13,6 +13,49 @@ metadata:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/npm
   tags: []
 spec:
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-npm
+      featureId: npm.EntityNpmInfoCard
+      probe:
+        kind: Component
+        annotations:
+          npm/package: '@backstage/catalog-model'
+      provenance:
+        sources:
+          - path: workspaces/npm/plugins/npm/src/alpha.tsx
+            lines: 116-124
+          - path: workspaces/npm/plugins/npm/src/alpha.tsx
+            lines: 63-72
+          - path: workspaces/npm/plugins/npm/src/components/EntityNpmInfoCard.tsx
+            lines: 1-251
+          - path: workspaces/npm/plugins/npm/src/components/EntityNpmInfoCard.tsx
+            lines: 139-139
+          - path: workspaces/npm/plugins/npm-common/src/utils.ts
+            lines: 26-28
+          - path: workspaces/npm/plugins/npm-common/src/annotations.ts
+            lines: 20-20
+        siblingPackages:
+          - type: workspace-package
+            packageName: '@backstage-community/plugin-npm-common'
+            packageRoot: /home/gio/drydock-rescue/author-source-cache/0feedcc8b7acb57f4a67/workspaces/npm/plugins/npm-common
+            subpath: .
+            entrypoint: src/index.ts
+        annotationDecisions:
+          - npm/package: hint
+        decidedBy: hint
+      assertions:
+        - type: text
+          value: NPM package @backstage/catalog-model
+          proofLevel: mount
+    hints:
+      surface: EntityNpmInfoCard
+      annotations:
+        npm/package: '@backstage/catalog-model'
   packageName: "@backstage-community/plugin-npm"
   dynamicArtifact: oci://quay.io/veecode/npm:bs_1.54.0-next.0!backstage-community-plugin-npm
   version: 1.20.0

@@ -17,6 +17,75 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-sonarqube"
   dynamicArtifact: oci://quay.io/veecode/sonarqube:bs_1.54.0-next.0!backstage-community-plugin-sonarqube
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-sonarqube
+      featureId: sonarqube.card
+      probe:
+        kind: Component
+        annotations:
+          sonarqube.org/project-key: __nfs_annotation_present__
+      provenance:
+        sources:
+          - path: workspaces/sonarqube/plugins/sonarqube/src/alpha/plugin.tsx
+            lines: 24-27
+          - path: workspaces/sonarqube/plugins/sonarqube/src/alpha/entityCard.tsx
+            lines: 23-32
+          - path: workspaces/sonarqube/plugins/sonarqube/src/components/SonarQubeCard/SonarQubeCard.tsx
+            lines: 1-214
+          - path: workspaces/sonarqube/plugins/sonarqube/src/components/SonarQubeCard/SonarQubeCard.tsx
+            lines: 93-93
+          - path: workspaces/sonarqube/plugins/sonarqube-react/src/components/isSonarQubeAvailable.ts
+            lines: 23-24
+          - path: workspaces/sonarqube/plugins/sonarqube-react/src/components/isSonarQubeAvailable.ts
+            lines: 20-20
+          - path: workspaces/sonarqube/plugins/sonarqube/src/alpha/entityContent.tsx
+            lines: 22-33
+          - path: workspaces/sonarqube/plugins/sonarqube/src/components/SonarQubeContentPage/SonarQubeContentPage.tsx
+            lines: 1-61
+          - path: workspaces/sonarqube/plugins/sonarqube/src/components/SonarQubeContentPage/SonarQubeContentPage.tsx
+            lines: 48-48
+        siblingPackages:
+          - type: workspace-package
+            packageName: '@backstage-community/plugin-sonarqube-react'
+            packageRoot: /home/gio/drydock-rescue/author-source-cache/e4d30877720e5b3d9c4b/workspaces/sonarqube/plugins/sonarqube-react
+            subpath: .
+            entrypoint: ./src/index.ts
+        annotationDecisions:
+          - sonarqube.org/project-key: assertion
+          - sonarqube.org/project-key: assertion
+      assertions:
+        - type: text
+          value: Code Quality
+          proofLevel: mount
+      secondary:
+        name: entity
+        featureId: sonarqube.entity
+        probe:
+          kind: Component
+          annotations:
+            sonarqube.org/project-key: __nfs_annotation_present__
+        assertions:
+          - type: text
+            value: SonarQube Dashboard
+            proofLevel: content
+        provenance:
+          sources:
+            - path: workspaces/sonarqube/plugins/sonarqube/src/alpha/entityContent.tsx
+              lines: 22-33
+            - path: workspaces/sonarqube/plugins/sonarqube/src/components/SonarQubeContentPage/SonarQubeContentPage.tsx
+              lines: 1-61
+            - path: workspaces/sonarqube/plugins/sonarqube/src/components/SonarQubeContentPage/SonarQubeContentPage.tsx
+              lines: 48-48
+            - path: workspaces/sonarqube/plugins/sonarqube-react/src/components/isSonarQubeAvailable.ts
+              lines: 23-24
+            - path: workspaces/sonarqube/plugins/sonarqube-react/src/components/isSonarQubeAvailable.ts
+              lines: 20-20
+        surfacePath: /sonarqube
   version: 1.1.0
   backstage:
     role: frontend-plugin

@@ -15,6 +15,58 @@ metadata:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/nexus-repository-manager
   tags: []
 spec:
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-nexus-repository-manager
+      featureId: nexus-repository-manager
+      probe:
+        kind: Component
+        annotations:
+          nexus-repository-manager/docker.image-name: cypress/base
+      provenance:
+        sources:
+          - path: workspaces/nexus-repository-manager/plugins/nexus-repository-manager/src/alpha/plugin.ts
+            lines: 26-33
+          - path: workspaces/nexus-repository-manager/plugins/nexus-repository-manager/src/alpha/entityContents.tsx
+            lines: 13-28
+          - path: workspaces/nexus-repository-manager/plugins/nexus-repository-manager/src/components/NexusRepositoryManager/NexusRepositoryManager.tsx
+            lines: 1-91
+          - path: workspaces/nexus-repository-manager/plugins/nexus-repository-manager/src/components/ArtifactTable/ArtifactTable.tsx
+            lines: 152-152
+          - path: workspaces/nexus-repository-manager/plugins/nexus-repository-manager/src/alpha/entityContents.tsx
+            lines: 15-15
+        nameSource: default
+        annotationDecisions:
+          - nexus-repository-manager/docker.image-name: hint
+        annotationAlternatives:
+          - keys:
+              - nexus-repository-manager/docker.image-name
+              - nexus-repository-manager/docker.image-tag
+              - nexus-repository-manager/docker.layer-id
+              - nexus-repository-manager/docker.content-digest
+            chosen: nexus-repository-manager/docker.image-name
+            reason: 'FilterPredicate.$any: hint do operador escolhe uma annotation; as demais ficam na proveniência'
+        annotationRestrictions:
+          - type: any
+            keys:
+              - nexus-repository-manager/docker.image-name
+              - nexus-repository-manager/docker.image-tag
+              - nexus-repository-manager/docker.layer-id
+              - nexus-repository-manager/docker.content-digest
+            chosen: nexus-repository-manager/docker.image-name
+            reason: 'FilterPredicate.$any: hint do operador escolhe uma annotation; as demais ficam na proveniência'
+      assertions:
+        - type: text
+          value: No data was added yet,
+          proofLevel: content
+      surfacePath: /build-artifacts
+    hints:
+      annotations:
+        nexus-repository-manager/docker.image-name: cypress/base
   packageName: "@backstage-community/plugin-nexus-repository-manager"
   dynamicArtifact: oci://quay.io/veecode/nexus-repository-manager:bs_1.54.0-next.0!backstage-community-plugin-nexus-repository-manager
   version: 1.23.2

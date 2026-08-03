@@ -17,6 +17,51 @@ metadata:
 spec:
   packageName: "@roadiehq/backstage-plugin-github-insights"
   dynamicArtifact: oci://quay.io/veecode/roadie-backstage-plugins:bs_1.54.0-next.0!roadiehq-backstage-plugin-github-insights
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-roadie-backstage-plugins
+      featureId: code-insights
+      probe:
+        kind: Component
+        annotations:
+          github.com/project-slug: __nfs_annotation_present__
+          backstage.io/source-location: __nfs_annotation_present__
+      provenance:
+        sources:
+          - path: plugins/frontend/backstage-plugin-github-insights/src/alpha.tsx
+            lines: 112-124
+          - path: plugins/frontend/backstage-plugin-github-insights/src/alpha.tsx
+            lines: 42-50
+          - path: plugins/frontend/backstage-plugin-github-insights/src/components/InsightsPage/InsightsPage.tsx
+            lines: 1-65
+          - path: plugins/frontend/backstage-plugin-github-insights/src/components/Widgets/ContributorsCard/ContributorsCard.tsx
+            lines: 69-69
+          - path: plugins/frontend/backstage-plugin-github-insights/src/components/utils/isGithubInsightsAvailable.ts
+            lines: 21-22
+          - path: plugins/frontend/backstage-plugin-github-insights/src/components/utils/isGithubInsightsAvailable.ts
+            lines: 19-19
+          - path: plugins/frontend/backstage-plugin-github-insights/src/components/utils/githubUtils.ts
+            lines: 1-1
+        nameSource: default
+        annotationDecisions:
+          - github.com/project-slug: assertion
+            backstage.io/source-location: assertion
+        annotationRestrictions:
+          - type: follow-up-annotation
+            chosen: backstage.io/source-location
+            keys:
+              - backstage.io/source-location
+              - backstage.io/managed-by-location
+            reason: parseLocationRef é chamado pelo hook de integração SCM; source-location é o caminho preferido e managed-by-location fica como fallback
+      assertions:
+        - type: text
+          value: Contributors
+          proofLevel: content
+      surfacePath: /github-insights
   version: 3.5.0
   backstage:
     role: frontend-plugin
