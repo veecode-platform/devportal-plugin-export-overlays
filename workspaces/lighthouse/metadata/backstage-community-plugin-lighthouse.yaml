@@ -17,6 +17,37 @@ metadata:
 spec:
   packageName: '@backstage-community/plugin-lighthouse'
   dynamicArtifact: oci://quay.io/veecode/lighthouse:bs_1.54.0-next.0!backstage-community-plugin-lighthouse
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-lighthouse
+      featureId: lighthouse.lighthouse
+      probe:
+        kind: Component
+        annotations:
+          lighthouse.com/website-url: https://backstage.io
+      provenance:
+        sources:
+          - path: workspaces/lighthouse/plugins/lighthouse/src/alpha/plugin.ts
+            lines: 27-35
+          - path: workspaces/lighthouse/plugins/lighthouse/src/alpha/extensions.tsx
+            lines: 57-66
+          - path: workspaces/lighthouse/plugins/lighthouse/src/components/Cards/LastLighthouseAuditCard.tsx
+            lines: 1-129
+          - path: workspaces/lighthouse/plugins/lighthouse/src/components/Cards/LastLighthouseAuditCard.tsx
+            lines: 125-125
+          - path: workspaces/lighthouse/plugins/lighthouse/src/Router.tsx
+            lines: 30-36
+          - path: workspaces/lighthouse/plugins/lighthouse/constants.ts
+            lines: 16-16
+          - path: workspaces/lighthouse/plugins/lighthouse/dev/index.tsx
+            lines: 37-37
+      assertions:
+        - type: text
+          value: Lighthouse Audit
   version: 0.24.0
   backstage:
     role: frontend-plugin
@@ -54,7 +85,10 @@ spec:
                       allOf:
                         - isLighthouseAvailable
         # The frontend's configSchema requires lighthouse.baseUrl (verified
-        # against the bs_1.53.0 bundle's dist-scalprum/configSchema.json);
+        # against the bs_1.54.0-next.0 bundle's dist-scalprum/configSchema.json);
         # without it the whole 'app' plugin fails startup schema validation.
+        # This value must match the companion lighthouse-backend's example
+        # verbatim: the dynamic-plugins installer aborts if the same config
+        # key is defined differently across plugins.
         lighthouse:
-          baseUrl: ${LIGHTHOUSE_URL}
+          baseUrl: "http://localhost:4008"

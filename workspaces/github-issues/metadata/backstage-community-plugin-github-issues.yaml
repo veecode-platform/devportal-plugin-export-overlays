@@ -17,6 +17,35 @@ metadata:
 spec:
   packageName: '@backstage-community/plugin-github-issues'
   dynamicArtifact: oci://quay.io/veecode/github-issues:bs_1.54.0-next.0!backstage-community-plugin-github-issues
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-github-issues
+      featureId: github-issues.overview
+      probe:
+        kind: Component
+        annotations:
+          github.com/project-slug: backstage/backstage
+      provenance:
+        sources:
+          - path: workspaces/github/plugins/github-issues/src/alpha.ts
+            lines: 28-38
+          - path: workspaces/github/plugins/github-issues/src/alpha/entityCards.tsx
+            lines: 21-28
+          - path: workspaces/github/plugins/github-issues/src/components/GithubIssues/GithubIssues.tsx
+            lines: 1-90
+          - path: workspaces/github/plugins/github-issues/src/components/GithubIssues/IssuesList/IssuesList.tsx
+            lines: 156-156
+          - path: workspaces/github/plugins/github-issues/src/hooks/useEntityGithubRepositories.ts
+            lines: 27-27
+          - path: workspaces/github/plugins/github-issues/dev/index.tsx
+            lines: 53-53
+      assertions:
+        - type: text
+          value: Hurray! No Issues 🚀
   version: 1.2.1
   backstage:
     role: frontend-plugin

@@ -21,6 +21,11 @@ spec:
     composition:
       route: /catalog/default/component/probe-github-workflows
       featureId: github-workflows.workflows-cards
+      probe:
+        kind: Component
+        annotations:
+          github.com/project-slug: backstage/backstage
+          github.com/workflows: main.yml
       provenance:
         sources:
           - path: workspaces/github-workflows/plugins/github-workflows/src/alpha.ts

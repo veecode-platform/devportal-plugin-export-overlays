@@ -17,6 +17,37 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-github-actions"
   dynamicArtifact: oci://quay.io/veecode/github:bs_1.54.0-next.0!backstage-community-plugin-github-actions
+  nfs:
+    entrypoint: ./alpha
+    exposedModules:
+      - .
+      - alpha
+    composition:
+      route: /catalog/default/component/probe-github
+      featureId: github-actions.recent-workflow-runs
+      probe:
+        kind: Component
+        annotations:
+          github.com/project-slug: backstage/backstage
+      provenance:
+        sources:
+          - path: workspaces/github/plugins/github-actions/src/alpha.ts
+            lines: 30-42
+          - path: workspaces/github/plugins/github-actions/src/alpha/entityCards.tsx
+            lines: 79-102
+          - path: workspaces/github/plugins/github-actions/src/components/Cards/RecentWorkflowRunsCard.tsx
+            lines: 1-142
+          - path: workspaces/github/plugins/github-actions/src/components/Cards/RecentWorkflowRunsCard.tsx
+            lines: 79-79
+          - path: workspaces/github/plugins/github-actions/src/components/Router.tsx
+            lines: 31-61
+          - path: workspaces/github/plugins/github-actions/src/components/getProjectNameFromEntity.ts
+            lines: 20-20
+          - path: workspaces/github/plugins/github-actions/dev/index.tsx
+            lines: 34-34
+      assertions:
+        - type: text
+          value: Recent Workflow Runs
   version: 0.22.0
   backstage:
     role: frontend-plugin
