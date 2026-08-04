@@ -16,11 +16,11 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-catalog-backend-module-extensions"
-  dynamicArtifact: oci://quay.io/veecode/extensions:bs_1.54.0-next.0!red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions
+  dynamicArtifact: oci://quay.io/veecode/extensions:bs_1.53.0!red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions
   version: 0.17.1
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.53.0
   author: Red Hat
   support: tech-preview
   lifecycle: active
