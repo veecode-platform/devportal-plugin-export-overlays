@@ -14,12 +14,12 @@ metadata:
     backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/todo
   tags: []
 spec:
-  dynamicArtifact: oci://quay.io/veecode/todo:bs_1.54.0-next.0!backstage-community-plugin-todo-backend
+  dynamicArtifact: oci://quay.io/veecode/todo:bs_1.53.0!backstage-community-plugin-todo-backend
   packageName: "@backstage-community/plugin-todo-backend"
   version: 0.23.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.53.0
   author: Backstage Community
   support: community
   lifecycle: active
