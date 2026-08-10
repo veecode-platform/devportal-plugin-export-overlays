@@ -1,0 +1,10 @@
+# Deliberate stub, not a real default plugin list.
+#
+# The RHDH 1.10 installer (install-dynamic-plugins.py) unconditionally requires a
+# `dynamic-plugins.default.yaml` at the root of any image referenced by
+# CATALOG_INDEX_IMAGE — if it's missing, catalog-entities extraction hard-fails
+# before it even looks for catalog-entities/. This file exists ONLY to satisfy
+# that existence check. It intentionally installs nothing: plugin enablement is
+# the operator's job, done in the deployment's own dynamic-plugins.yaml via
+# `includes:`. See devportal-planning docs/milestones/M3.md, Q9/Q10.
+plugins: []
