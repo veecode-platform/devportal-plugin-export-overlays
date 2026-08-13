@@ -14,7 +14,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-tech-insights-maturity"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-community-plugin-tech-insights-maturity:bs_1.49.4__0.6.5
+  dynamicArtifact: oci://quay.io/veecode/tech-insights:bs_1.52.0!backstage-community-plugin-tech-insights-maturity
   version: 0.6.5
   backstage:
     role: frontend-plugin

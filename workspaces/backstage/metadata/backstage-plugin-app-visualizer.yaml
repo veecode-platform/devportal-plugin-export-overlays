@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-app-visualizer"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-plugin-app-visualizer:bs_1.52.0__0.2.5
+  dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.52.0!backstage-plugin-app-visualizer
   version: 0.2.5
   backstage:
     role: frontend-plugin

@@ -14,7 +14,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-adr-backend"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-community-plugin-adr-backend:bs_1.52.0__0.23.0
+  dynamicArtifact: oci://quay.io/veecode/adr:bs_1.52.0!backstage-community-plugin-adr-backend
   version: 0.23.0
   backstage:
     role: backend-plugin

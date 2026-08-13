@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-app-auth"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-app-auth:bs_1.52.0__0.1.1
+  dynamicArtifact: oci://quay.io/veecode/app-defaults:bs_1.52.0!red-hat-developer-hub-backstage-plugin-app-auth
   version: 0.1.1
   backstage:
     role: frontend-plugin

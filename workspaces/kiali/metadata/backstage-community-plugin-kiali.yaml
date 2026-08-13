@@ -17,7 +17,7 @@ metadata:
     - software-catalog
 spec:
   packageName: "@backstage-community/plugin-kiali"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-community-plugin-kiali:bs_1.52.0__1.51.1
+  dynamicArtifact: oci://quay.io/veecode/kiali:bs_1.52.0!backstage-community-plugin-kiali
   version: 1.51.1
   backstage:
     role: frontend-plugin

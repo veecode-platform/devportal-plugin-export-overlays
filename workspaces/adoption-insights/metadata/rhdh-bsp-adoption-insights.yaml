@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-adoption-insights'
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-adoption-insights:bs_1.52.0__0.9.1
+  dynamicArtifact: oci://quay.io/veecode/adoption-insights:bs_1.52.0!red-hat-developer-hub-backstage-plugin-adoption-insights
   version: 0.9.1
   backstage:
     role: frontend-plugin

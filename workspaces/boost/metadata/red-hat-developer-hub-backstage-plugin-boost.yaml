@@ -17,7 +17,7 @@ metadata:
     - ai
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-boost"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-boost:bs_1.52.0__0.4.0
+  dynamicArtifact: oci://quay.io/veecode/boost:bs_1.52.0!red-hat-developer-hub-backstage-plugin-boost
   version: 0.4.0
   backstage:
     role: frontend-plugin

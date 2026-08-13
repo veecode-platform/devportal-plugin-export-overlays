@@ -17,7 +17,7 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage-community/plugin-scaffolder-backend-module-azure-devops"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-community-plugin-scaffolder-backend-module-azure-devops:bs_1.52.0__0.25.0
+  dynamicArtifact: oci://quay.io/veecode/azure-devops:bs_1.52.0!backstage-community-plugin-scaffolder-backend-module-azure-devops
   version: 0.25.0
   backstage:
     role: backend-plugin-module

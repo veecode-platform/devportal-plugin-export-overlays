@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-lighthouse-backend'
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-community-plugin-lighthouse-backend:bs_1.52.0__0.25.0
+  dynamicArtifact: oci://quay.io/veecode/lighthouse:bs_1.52.0!backstage-community-plugin-lighthouse-backend
   version: 0.25.0
   backstage:
     role: backend-plugin

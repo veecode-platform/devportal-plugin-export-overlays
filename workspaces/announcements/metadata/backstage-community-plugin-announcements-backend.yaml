@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-announcements-backend"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-community-plugin-announcements-backend:bs_1.52.0__0.26.0
+  dynamicArtifact: oci://quay.io/veecode/announcements:bs_1.52.0!backstage-community-plugin-announcements-backend
   version: 0.26.0
   backstage:
     role: backend-plugin

@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-catalog-backend-module-ai-model-server"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/red-hat-developer-hub-backstage-plugin-catalog-backend-module-ai-model-server:bs_1.52.0__0.2.0
+  dynamicArtifact: oci://quay.io/veecode/ai-integrations:bs_1.52.0!red-hat-developer-hub-backstage-plugin-catalog-backend-module-ai-model-server
   version: 0.2.0
   backstage:
     role: backend-plugin-module
