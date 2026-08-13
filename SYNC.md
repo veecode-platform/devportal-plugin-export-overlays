@@ -48,6 +48,13 @@ git checkout -b align/upstream-<sha> upstream/main   # new base = upstream, unto
 #    (new workspaces: KEEP public-ecosystem, DISABLE Red-Hat-specific)
 # 5. Run the retarget script:
 #    python3 scripts/fork-retarget-metadata.py
+# 6. Re-apply the curated export scope (the re-baseline base carries UPSTREAM's
+#    full lists — the fork's curated scope must be re-applied, or the fleet
+#    publishes 101 backstage entries at ~1h instead of ~6 min):
+#    - restore workspaces/backstage/plugins-list.yaml from main (PR #166: 5 of
+#      101 enabled; manifest §4b.4)
+#    - verify: bash scripts/verify-backstage-curation.sh  (must PASS)
+#    The verify-curation workflow enforces the same check on PR/push.
 #    python3 scripts/fork-retarget-metadata.py --check   # must be clean
 # 6. Resolve the judgement files (manifest §7) one by one
 git push origin align/upstream-<sha>

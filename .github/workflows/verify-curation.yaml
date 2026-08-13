@@ -1,0 +1,27 @@
+name: Verify backstage export-scope curation
+
+# Fork-owned guard (see scripts/verify-backstage-curation.sh). The curated
+# workspaces/backstage/plugins-list.yaml keeps the backstage export at ~6 min
+# instead of ~1h (101 upstream entries). Re-baselines and bulk edits have
+# silently restored the full list; this check fails loudly when that happens.
+
+on:
+  pull_request:
+    paths:
+      - 'workspaces/backstage/**'
+      - 'scripts/verify-backstage-curation.sh'
+      - '.github/workflows/verify-curation.yaml'
+  push:
+    branches:
+      - main
+      - 'align/**'
+  workflow_dispatch:
+
+jobs:
+  verify-curation:
+    name: Backstage plugins-list is curated
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Run curation guard
+        run: bash scripts/verify-backstage-curation.sh
