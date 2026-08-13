@@ -1,0 +1,181 @@
+/*
+ * Copyright 2025 VeeCode.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ */
+
+/**
+ * Static corpus for the `explain(concept)` MCP tool.
+ *
+ * Content is inlined as string constants because `@backstage/plugin-mcp-actions-backend`
+ * publishes only the compiled `dist/` directory (see `package.json#files`); shipping
+ * raw `.md` assets would require additional build surgery.
+ *
+ * To edit a concept card, edit the corresponding array below. Each entry is one line
+ * of markdown; lines are joined with `\n` at module load time.
+ */
+
+export const ROUTER_MD = [
+  '# MCP Knowledge Layer — Router',
+  '',
+  'This content is the system-level prompt for the `explain(concept)` MCP tool. The tool returns it (or relevant sections of it) alongside the concept card so the LLM has both voice guidance and content.',
+  '',
+  '## Contract',
+  '',
+  '### Tool signature',
+  '',
+  '`explain(concept: string)` — the tool takes a single string argument and returns markdown content.',
+  '',
+  '### Tool behavior (plugin side)',
+  '',
+  '| `concept` received | Tool returns |',
+  '|---|---|',
+  '| `scaffolder` \\| `template` \\| `catalog` \\| `plugin` | This router content **plus** the matching card |',
+  '| `""` or omitted | This router content only (no card) |',
+  '| any other string | This router content only, and the response is flagged as unrecognized |',
+  '',
+  'The tool does **not** perform natural-language understanding. It is a pure dispatcher over canonical concept strings.',
+  '',
+  '### Client responsibility (LLM side)',
+  '',
+  'The LLM client is the one that turns a free-form user question into a `concept` argument (or decides not to call the tool). Expected normalization:',
+  '',
+  '| User question shape | LLM should call | Then |',
+  '|---|---|---|',
+  '| Asks clearly about one of the 4 concepts | `explain(\'<concept>\')` | Answer using the card |',
+  '| Asks the meta-question ("what is Backstage?") | `explain(\'\')` | Answer using the platform framing from this router |',
+  '| Is ambiguous ("how do I configure?") | `explain(\'\')` | Ask the user to pick one of the 4 concepts |',
+  '| Is out of scope (e.g. TechDocs internals, product comparison) | `explain(\'\')` (or skip the tool) | Say honestly that v0 covers only the 4 concepts; point to `docs.platform.vee.codes` |',
+  '| Contains a false premise (e.g. "how does scaffolder use K8s?") | `explain(\'<best-fit concept>\')` | Correct the premise first, then answer using the card |',
+  '',
+  'If the LLM is uncertain, calling `explain(\'\')` is safe — it returns this router content and lets the LLM route the answer from there.',
+  '',
+  '## Role',
+  '',
+  'You are the **DevPortal Knowledge Layer**. Your job is to explain four core concepts — `scaffolder`, `template`, `catalog`, `plugin` — to DevPortal users in a way that accelerates their mental model.',
+  '',
+  '## Voice',
+  '',
+  '- Concrete-first. Lead with what the thing **is** and what it **does**, not with caveats.',
+  '- One topic per answer. Do not dump everything.',
+  '- No unexplained jargon. If a term the user didn\'t use appears (e.g. "IDP", "SDLC", "declarative"), either unpack it or drop it.',
+  '- No invented APIs, commands, file paths, or examples. If the corpus doesn\'t cover a detail, say so and point to `docs.platform.vee.codes`.',
+  '',
+  '## Concept map',
+  '',
+  '| `concept` argument | Covers |',
+  '|---|---|',
+  '| `scaffolder` | Plugin that executes templates; actions (fetch/publish/register); how projects get generated |',
+  '| `template` | Declarative `template.yaml`; parameters, steps, how templates are consumed by the scaffolder |',
+  '| `catalog` | Entity registry (Component/System/API/Resource/...); `catalog-info.yaml`; software graph |',
+  '| `plugin` | Frontend vs backend plugins; dynamic plugin registration; `app-config.yaml` |',
+  '',
+  '### Platform framing',
+  '',
+  '> **Backstage** is an open-source platform for building developer portals. It centralizes services, APIs, documentation, and tooling so engineering teams can discover, manage, and create software in one place. **DevPortal** is VeeCode\'s distribution of Backstage — same core, plus dynamic plugin delivery, opinionated defaults, and supported integrations.',
+  '',
+  '## Examples — target shape of a good response',
+  '',
+  'Use these as the template for tone, length, and structure.',
+  '',
+  '### Example 1 — False premise',
+  '**User:** "How does the scaffolder use Kubernetes to generate projects?"',
+  '',
+  '**Good response:**',
+  '> The scaffolder doesn\'t use Kubernetes to generate projects. It\'s a Backstage plugin that executes templates — at runtime it runs a sequence of actions (e.g. `fetch:template`, `publish:github`, `catalog:register`) to produce artifacts like new repos and catalog entries. Kubernetes isn\'t part of that flow.',
+  '>',
+  '> If you want the full picture of how generation actually works, ask me about `scaffolder` or `template`, or see `docs.platform.vee.codes`.',
+  '',
+  '### Example 2 — Meta-question',
+  '**User:** "What is this Backstage thing?"',
+  '',
+  '**Good response:**',
+  '> Backstage is an open-source platform for building developer portals. It centralizes services, APIs, documentation, and tooling so engineering teams can discover, manage, and create software in one place. DevPortal is VeeCode\'s distribution of Backstage — same core, plus dynamic plugin delivery, opinionated defaults, and supported integrations.',
+  '>',
+  '> Want to dig into a specific piece? I can explain `scaffolder`, `template`, `catalog`, or `plugin`.',
+  '',
+  '### Example 3 — Ambiguous question',
+  '**User:** "How do I configure it?"',
+  '',
+  '**Good response:**',
+  '> "Configure" maps to different things here. Which of these did you mean?',
+  '> - **Plugin** — where plugin config goes in `app-config.yaml`, frontend vs. backend registration',
+  '> - **Template** — how template parameters and steps are declared in `template.yaml`',
+  '> - **Catalog** — how entities are configured via `catalog-info.yaml`',
+  '> - **Scaffolder** — how scaffolder actions are wired through plugins',
+  '',
+  '### Example 4 — Partial / sharpening',
+  '**User:** "Does the scaffolder need a plugin?"',
+  '',
+  '**Good response:**',
+  '> The scaffolder **is** a plugin — a built-in one that ships with Backstage. What it can do at the edges depends on additional plugins that register custom actions (e.g. a plugin providing a `publish:gitlab` action). So: the scaffolder itself is always there; extra capabilities come from extra plugins.',
+  '',
+  '## Before responding, check',
+  '',
+  '- [ ] The response does not invent APIs, commands, or file paths not in the cards.',
+  '- [ ] `scaffolder` and `template` are not treated as synonyms.',
+  '- [ ] Any jargon is either unpacked or removed.',
+  '- [ ] False premises, if any, are corrected explicitly rather than silently.',
+  '- [ ] The response ends with a pointer to `docs.platform.vee.codes` when the user is likely to want deeper detail.',
+].join('\n');
+
+export const SCAFFOLDER_MD = [
+  '# Scaffolder',
+  '',
+  'The **scaffolder** is a built-in Backstage plugin that executes templates to produce concrete software artifacts — typically new repositories, service skeletons, or catalog entries. When a user fills out a template form in the DevPortal, the scaffolder is what takes the inputs and turns them into a real result: a new Git repository with starter code, a registered component in the catalog, and any downstream side effects declared by the template.',
+  '',
+  'At runtime, the scaffolder orchestrates a sequence of **actions** declared in the template. Common built-in actions include `fetch:template` (pull and render the skeleton from a template source), `publish:github` (create the target repository and push the files), and `catalog:register` (register the new entity so it appears in the software graph). Actions are themselves provided by plugins: adding a new action means shipping a plugin that registers it with the scaffolder.',
+  '',
+  'The scaffolder does not generate code on its own. It is a runtime executor that composes actions over a declarative template, passing data forward between steps. Without a template to consume, it has nothing to run; without actions registered by plugins, a template has nothing to execute. Template and scaffolder are two halves of the same flow: the template is the recipe, the scaffolder is the cook.',
+  '',
+  'Deep dive: https://docs.platform.vee.codes — search for "scaffolder".',
+].join('\n');
+
+export const TEMPLATE_MD = [
+  '# Template',
+  '',
+  'A **template** is a declarative definition — written in YAML, usually in a file named `template.yaml` — that describes how to produce a concrete artifact. The template itself does not execute; it is interpreted by the scaffolder, which runs the steps the template declares.',
+  '',
+  'Every template has three main parts. **Metadata** identifies and presents the template (name, description, tags, owner). **Parameters** declare what the user fills in — repository name, component owner, target environment — and are rendered as a form in the DevPortal UI. **Steps** list the actions the scaffolder will execute in order (e.g. `fetch:template` to pull a skeleton, `publish:github` to create the repo, `catalog:register` to register the new entity). Steps pass data forward, often templated with values from the parameters or outputs of earlier steps.',
+  '',
+  'A template is not the generated project. It is the recipe for one. Running the same template with different parameters produces different outputs. Templates live in the catalog as `Template` entities, so they can be discovered and owned like any other catalog entity — and so the DevPortal UI can list them on the "Create" page. Versioning is not a catalog feature: like any other Backstage artifact, the authoritative version of a template lives in source control (the `template.yaml` file and whatever repo/branch/tag points at it).',
+  '',
+  'Deep dive: https://docs.platform.vee.codes — search for "template".',
+].join('\n');
+
+export const CATALOG_MD = [
+  '# Catalog',
+  '',
+  'The **catalog** is the software inventory at the heart of Backstage/DevPortal. It is a registry of **entities** — each entity represents a real thing in your software landscape: a service (`Component`), a product or domain (`System`), an `API`, a dependency like a database or queue (`Resource`), a `Location` pointing to where other entities are defined, a `User`, a `Group`, or a reusable `Template`. Relationships between entities form the **software graph** — which service owns which API, which team owns which system, which resource a component depends on.',
+  '',
+  'Entities are registered by discovering `catalog-info.yaml` files, usually stored next to the code they describe. A minimal `catalog-info.yaml` declares `apiVersion`, `kind`, `metadata.name`, and a `spec` block with kind-specific fields (e.g. `spec.type`, `spec.owner`, `spec.system`). The catalog ingests these files, validates them against the entity schema, and materializes both the entities and the relationships between them.',
+  '',
+  'The catalog is not a package registry — it does not store artifacts, versions, or binaries like npm or Maven. It is a descriptive graph of what exists, who owns it, and how pieces connect. Tools built on top of the catalog — the scaffolder (to register new entities), TechDocs (to find documentation sources), the DevPortal UI (for navigation and ownership views) — use it as a source of truth.',
+  '',
+  'Deep dive: https://docs.platform.vee.codes — search for "catalog".',
+].join('\n');
+
+export const PLUGIN_MD = [
+  '# Plugin',
+  '',
+  'In Backstage, a **plugin** is a modular piece of functionality that extends the portal. Plugins come in two shapes that matter when you add one. **Frontend plugins** contribute UI — pages, widgets, cards on the entity view — and are consumed by the portal\'s React app. **Backend plugins** contribute APIs, integrations, or runtime capabilities (catalog ingestion, scaffolder actions, TechDocs builders) and run inside the backend process. A feature often ships as a pair: a backend plugin exposing an API plus a frontend plugin rendering it.',
+  '',
+  'In a traditional Backstage setup, adding a plugin means installing the package, wiring it into the frontend or backend entry point in code, and configuring it via `app-config.yaml`. DevPortal replaces the code-wiring step with **dynamic plugins** — the base image loads plugins at startup without a rebuild. How you actually add one depends on the deployment:',
+  '',
+  '- **Self-hosted / distro operator:** reference the plugin in the distro\'s `dynamic-plugins.yaml`, supply configuration in `app-config.yaml`, restart.',
+  '- **SaaS / managed instance:** plugins are provisioned through the management layer (the customer-portal) — you request or select the plugin there rather than editing YAML directly.',
+  '',
+  'In either case the frontend/backend distinction still applies: a paired plugin usually needs both halves registered. Configuration still lives in `app-config.yaml`, and the plugin\'s own docs should tell you which keys it reads. When a plugin doesn\'t show up, the first two checks are: is it registered on the right side (frontend, backend, or both), and is its configuration block present in `app-config.yaml`?',
+  '',
+  'Plugins are where almost all portal behavior comes from. The `scaffolder` is itself a plugin; the `catalog` is a plugin; custom scaffolder actions and new entity kinds are added by plugins. If you are looking for "how does X work in Backstage", the answer very often starts with "there is a plugin for that".',
+  '',
+  'Deep dive: https://docs.platform.vee.codes — search for "plugins" or "dynamic plugins".',
+].join('\n');
+
+export const CARDS: Record<string, string> = {
+  scaffolder: SCAFFOLDER_MD,
+  template: TEMPLATE_MD,
+  catalog: CATALOG_MD,
+  plugin: PLUGIN_MD,
+};

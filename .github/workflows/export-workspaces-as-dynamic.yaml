@@ -5,6 +5,9 @@ on:
       image-registry-password:
         description: Password to be used to push to container image registry
         required: false
+      quay-api-token:
+        description: Quay.io OAuth token for API operations (setting repo visibility to public)
+        required: false
 
     inputs:
       image-registry-user:
@@ -59,9 +62,21 @@ on:
         description: Optional commit ID of the last successful publishing of plugin container images
         type: string
         required: false
-  
+
+      bundle-workspace:
+        description: Bundle all exported plugins into a single OCI image per workspace instead of one image per plugin
+        type: boolean
+        required: false
+        default: false
+
   workflow_dispatch:
     inputs:
+      image-registry-user:
+        description: User name to be used to push to container image registry
+        type: string
+        required: false
+        default: 'veecode+ci'
+
       node-version:
         description: node-version to execute the export
         type: string
@@ -106,19 +121,25 @@ on:
         description: Repository prefix of the dynamic plugin container images
         type: string
         required: false
-  
+
       last-publish-commit:
         description: Optional commit ID of the last successful publishing of plugin container images
         type: string
         required: false
-  
+
+      bundle-workspace:
+        description: Bundle all exported plugins into a single OCI image per workspace instead of one image per plugin
+        type: boolean
+        required: false
+        default: false
+
 concurrency:
   group: ${{ github.workflow_ref }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   export:
-    uses: redhat-developer/rhdh-plugin-export-utils/.github/workflows/export-workspaces-as-dynamic.yaml@main
+    uses: veecode-platform/devportal-plugin-export-utils/.github/workflows/export-workspaces-as-dynamic.yaml@main
     with:
       node-version: ${{ inputs.node-version }}
       janus-cli-version: ${{ inputs.janus-cli-version }}
@@ -128,10 +149,12 @@ jobs:
       workspace-path: ${{ inputs.workspace-path }}
       publish-container: ${{ inputs.publish-container }}
       image-repository-prefix: ${{ inputs.image-repository-prefix }}
-      image-registry-user: ${{ inputs.image-registry-user || github.actor }}
+      image-registry-user: ${{ inputs.image-registry-user || 'veecode+ci' }}
+      bundle-workspace: ${{ inputs.bundle-workspace }}
       
     secrets:
-      image-registry-password: ${{ secrets.image-registry-password || secrets.GITHUB_TOKEN }}
+      image-registry-password: ${{ secrets.image-registry-password || secrets.QUAY_TOKEN || secrets.GITHUB_TOKEN }}
+      quay-api-token: ${{ secrets.quay-api-token || secrets.QUAY_API_TOKEN }}
 
     permissions:
       contents: write

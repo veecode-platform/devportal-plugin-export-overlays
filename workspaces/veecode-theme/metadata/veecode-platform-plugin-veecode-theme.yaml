@@ -1,0 +1,39 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-plugin-veecode-theme
+  namespace: veecode
+  title: "VeeCode Theme"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspace/veecode-theme
+  tags: []
+spec:
+  packageName: "veecode-platform-plugin-veecode-theme"
+  dynamicArtifact: oci://quay.io/veecode/veecode-theme:bs_1.54.0-next.0!veecode-platform-plugin-veecode-theme
+  version: 0.1.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.4
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - veecode-theme
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.plugin-veecode-theme:
+              themes:
+                - id: light
+                  title: VeeCode Light
+                  variant: light
+                  importName: VeecodeLightThemeProvider
+                - id: dark
+                  title: VeeCode Dark
+                  variant: dark
+                  importName: VeecodeDarkThemeProvider

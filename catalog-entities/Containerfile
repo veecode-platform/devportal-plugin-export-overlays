@@ -1,0 +1,33 @@
+# Dual layout, on purpose — two independent consumers read this image differently:
+#
+#   - 2.x (devportal-platform Dockerfile / entrypoint.sh) resolves ONLY
+#     `manifest.layers[0]` and extracts it with `tar --strip-components=1`, so
+#     `extensions/` must sit at that layer's tar root. A bare re-root under
+#     `catalog-entities/` was tried and proven to double-nest and silently
+#     empty the 2.x marketplace.
+#   - The RHDH 1.10 installer (install-dynamic-plugins.py) merges EVERY layer
+#     in the manifest into one extraction dir and uses a fixed-path lookup
+#     for `catalog-entities/extensions/` (falling back to
+#     `catalog-entities/marketplace/`), ignoring a sibling root-level
+#     `extensions/`.
+#
+# Both copies MUST land in the same single layer. This image is built with
+# `FROM scratch` and no squash step, so splitting the copies below across
+# multiple COPY instructions would put `extensions/` in layer 0 and the rest
+# in later layers that 2.x's `layers[0]`-only read would never see — an
+# invisible coupling to a contract that lives only in devportal-platform, not
+# here. The `assets` stage collects everything; the single `COPY --from=assets`
+# below is what guarantees one layer. Do not "simplify" this back to a single
+# root-only COPY, and do not split it into several COPY instructions in the
+# final stage — see devportal-planning docs/milestones/M3.md, Front 2 (Q10).
+FROM scratch AS assets
+COPY extensions/ /extensions/
+COPY extensions/ /catalog-entities/extensions/
+# Stub required by the RHDH 1.10 installer: it hard-fails catalog-entities
+# extraction if this file is missing from the image, regardless of whether
+# anything references it via `includes:`. It deliberately installs nothing —
+# plugin enablement stays in the operator's own dynamic-plugins.yaml.
+COPY dynamic-plugins.default.yaml /dynamic-plugins.default.yaml
+
+FROM scratch
+COPY --from=assets / /

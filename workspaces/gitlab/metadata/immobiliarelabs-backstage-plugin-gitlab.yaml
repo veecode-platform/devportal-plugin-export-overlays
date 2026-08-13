@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@immobiliarelabs/backstage-plugin-gitlab"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/immobiliarelabs-backstage-plugin-gitlab:bs_1.49.4__7.0.1
-  version: 7.0.1
+  dynamicArtifact: oci://quay.io/veecode/gitlab:bs_1.52.0!immobiliarelabs-backstage-plugin-gitlab
+  version: 7.0.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
-  author: Red Hat
+    supportedVersions: 1.48.3
+  author: VeeCode
   support: community
   lifecycle: active
   partOf:

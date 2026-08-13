@@ -1,0 +1,1109 @@
+/*
+ * Copyright 2025 The Backstage Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import {
+  AuthService,
+  BackstageCredentials,
+  LoggerService,
+  RootConfigService,
+} from '@backstage/backend-plugin-api';
+import { Client } from '@modelcontextprotocol/sdk/client/index.js';
+import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
+import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
+import * as path from 'path';
+import {
+  ProviderFactory,
+  getProviderConfig as getConfig,
+  getProviderInfo,
+} from '../providers/provider-factory';
+import { executeToolCall, findNpxPath, loadServerConfigs } from '../utils';
+import { LLMProvider } from '../providers/base-provider';
+import { OpenAIResponsesProvider } from '../providers/openai-responses-provider';
+import { MCPClientService } from './MCPClientService';
+import {
+  ChatMessage,
+  Tool,
+  MCPServer,
+  MCPServerStatusData,
+  ProviderStatusData,
+  QueryResponse,
+  ServerTool,
+  MCPServerType,
+  MCPServerFullConfig,
+  ResponsesApiMcpCall,
+} from '../types';
+
+/**
+ * Options for creating an MCPClientServiceImpl instance.
+ *
+ * @public
+ */
+export type Options = {
+  logger: LoggerService;
+  config: RootConfigService;
+  auth?: AuthService;
+};
+
+/**
+ * Implementation of the MCP Client Service.
+ * Provides full MCP integration with LLM providers.
+ *
+ * @public
+ */
+export class MCPClientServiceImpl implements MCPClientService {
+  private readonly logger: LoggerService;
+  private readonly config: RootConfigService;
+  private readonly auth?: AuthService;
+  private llmProvider: LLMProvider;
+  private readonly mcpClients: Map<string, Client> = new Map();
+  private tools: ServerTool[] = [];
+  private connected = false;
+  private mcpServers: Promise<MCPServer[]> | null = null;
+  private readonly systemPrompt: string;
+  private serverConfigs: MCPServerFullConfig[] = [];
+
+  constructor(options: Options) {
+    this.logger = options.logger;
+    this.config = options.config;
+    this.auth = options.auth;
+    this.llmProvider = this.initializeLLMProvider();
+    this.mcpServers = this.initializeMCPServers();
+    this.systemPrompt =
+      this.config.getOptionalString('mcpChat.systemPrompt') ||
+      "You are a helpful assistant. When using tools, provide a clear, readable summary of the results rather than showing raw data. Focus on answering the user's question with the information gathered.";
+  }
+
+  private initializeLLMProvider(): LLMProvider {
+    try {
+      const providerConfig = getConfig(this.config);
+      const llmProvider = ProviderFactory.createProvider(providerConfig);
+      this.logger.info(
+        `Using LLM Provider: ${providerConfig.type}, Model: ${providerConfig.model}`,
+      );
+      return llmProvider;
+    } catch (error) {
+      this.logger.error('Failed to initialize LLM provider:', error);
+      throw error;
+    }
+  }
+
+  async initializeMCPServers(): Promise<MCPServer[]> {
+    // If initialization is already in progress or completed, return the same promise
+    if (this.mcpServers) {
+      return this.mcpServers;
+    }
+
+    this.mcpServers = this.mcpServerInit();
+    return this.mcpServers;
+  }
+
+  private async mcpServerInit(): Promise<MCPServer[]> {
+    if (this.connected) {
+      // Return current status if already connected
+      return this.mcpServers ? await this.mcpServers : [];
+    }
+
+    const allTools: ServerTool[] = [];
+    const serverResults: MCPServer[] = [];
+    const serverConfigs = loadServerConfigs(this.config);
+
+    // Store server configs for Responses API provider
+    this.serverConfigs = serverConfigs;
+
+    // Check if using Responses API provider - initialize local MCP for tool discovery
+    const providerConfig = getConfig(this.config);
+    if (providerConfig.type === 'openai-responses') {
+      this.logger.info(
+        'Using OpenAI Responses API - initializing local MCP for tool discovery',
+      );
+
+      // Note: We don't set MCP configs on provider here - they will be set per-request
+      // in processQueryWithResponsesApi() with only the enabled servers
+
+      // Initialize local MCP clients ONLY for tool discovery
+      // Filter to only URL-based servers (Responses API requirement)
+      const urlBasedServers = serverConfigs.filter(config => config.url);
+
+      for (const serverConfig of urlBasedServers) {
+        try {
+          const headers = await this.getDiscoveryHeadersForServer(serverConfig);
+          const client = await this.createStreamableHttpClient(
+            serverConfig,
+            headers,
+          );
+
+          this.mcpClients.set(serverConfig.id, client);
+
+          // List tools from this server
+          const { tools } = await client.listTools();
+
+          const serverTools: ServerTool[] = tools.map(tool => ({
+            type: 'function',
+            function: {
+              name: tool.name,
+              description: tool.description || '',
+              parameters: tool.inputSchema,
+            },
+            serverId: serverConfig.id,
+          }));
+
+          allTools.push(...serverTools);
+
+          serverResults.push({
+            id: serverConfig.id,
+            name: serverConfig.name,
+            type: serverConfig.type,
+            url: serverConfig.url,
+            status: {
+              valid: true,
+              connected: true,
+            },
+          });
+
+          this.logger.info(
+            `Connected to ${serverConfig.name}: ${serverTools.length} tools`,
+          );
+        } catch (error) {
+          this.logger.warn(
+            `Failed to connect to ${serverConfig.name}: ${
+              error instanceof Error ? error.message : error
+            }`,
+          );
+          serverResults.push({
+            id: serverConfig.id,
+            name: serverConfig.name,
+            type: serverConfig.type,
+            url: serverConfig.url,
+            status: {
+              valid: true,
+              connected: false,
+              error: error instanceof Error ? error.message : String(error),
+            },
+          });
+        }
+      }
+
+      // Add status for STDIO servers (not supported by Responses API)
+      const stdioServers = serverConfigs.filter(config => !config.url);
+      for (const serverConfig of stdioServers) {
+        serverResults.push({
+          id: serverConfig.id,
+          name: serverConfig.name,
+          type: serverConfig.type,
+          npxCommand: serverConfig.npxCommand,
+          scriptPath: serverConfig.scriptPath,
+          args: serverConfig.args,
+          status: {
+            valid: false,
+            connected: false,
+            error: 'Responses API only supports URL-based MCP servers',
+          },
+        });
+      }
+
+      this.tools = allTools;
+      this.connected = true;
+      this.logCriticalToolSchemas(this.tools);
+
+      this.logger.info(
+        `Discovered ${this.tools.length} tools from ${
+          serverResults.filter(s => s.status.connected).length
+        } connected servers`,
+      );
+
+      return serverResults;
+    }
+
+    for (const serverConfig of serverConfigs) {
+      const isValid = !!(
+        serverConfig?.url ||
+        serverConfig?.npxCommand ||
+        serverConfig?.scriptPath
+      );
+
+      const baseServerConfig = {
+        id: serverConfig.id,
+        name: serverConfig.name,
+        type: serverConfig.type,
+        url: serverConfig?.url,
+        npxCommand: serverConfig?.npxCommand,
+        scriptPath: serverConfig?.scriptPath,
+        args: serverConfig?.args,
+      };
+
+      try {
+        let client: Client;
+
+        if (
+          serverConfig.type === MCPServerType.STREAMABLE_HTTP &&
+          serverConfig.url
+        ) {
+          // Streamable HTTP connection
+          const headers = await this.getDiscoveryHeadersForServer(serverConfig);
+          client = await this.createStreamableHttpClient(serverConfig, headers);
+        } else if (serverConfig.type === MCPServerType.STREAMABLE_HTTP) {
+          throw new Error(
+            `Server config for '${serverConfig.name}' with streamable-http type must have a url`,
+          );
+        } else {
+          // STDIO connection (default)
+          let command: string;
+          let args: string[];
+
+          if (serverConfig.npxCommand) {
+            // Use npm command - find npx executable
+            try {
+              command = await findNpxPath();
+              args = [
+                '-y',
+                serverConfig.npxCommand,
+                ...(serverConfig.args || []),
+              ];
+            } catch (error) {
+              throw new Error(
+                `Failed to find npx for server '${serverConfig.name}': ${
+                  error instanceof Error ? error.message : error
+                }. Please ensure Node.js is properly installed with npx available.`,
+              );
+            }
+          } else if (serverConfig.scriptPath) {
+            // Use script path
+            const isPythonScript = serverConfig.scriptPath.endsWith('.py');
+            const isWindows = process.platform === 'win32';
+
+            if (isPythonScript) {
+              command = isWindows ? 'python' : 'python3';
+            } else {
+              command = process.execPath;
+            }
+            args = [serverConfig.scriptPath, ...(serverConfig.args || [])];
+          } else {
+            throw new Error(
+              `Server config for '${serverConfig.name}' must have either scriptPath, npxCommand, or url`,
+            );
+          }
+
+          const transport = new StdioClientTransport({
+            command,
+            args,
+            env: {
+              ...process.env, // Inherit current environment
+              ...serverConfig.env, // Add config-specific env vars
+              // Ensure node is in PATH when using npx
+              ...(serverConfig.npxCommand && {
+                PATH: `${path.dirname(process.execPath)}:${
+                  process.env.PATH || ''
+                }`,
+              }),
+            },
+          });
+
+          client = new Client({
+            name: `${serverConfig.name}-client`,
+            version: '1.0.0',
+          });
+          // Connect the client with the appropriate transport
+          await client.connect(transport);
+        }
+
+        const toolsResult = await client.listTools();
+
+        const serverTools: ServerTool[] = toolsResult.tools.map(tool => ({
+          type: 'function',
+          function: {
+            name: tool.name,
+            description: tool.description ?? '', // Ensure string
+            parameters: tool.inputSchema,
+          },
+          serverId: serverConfig.id, // Track which server this tool belongs to
+        }));
+
+        allTools.push(...serverTools);
+        this.mcpClients.set(serverConfig.id, client);
+
+        // Record successful connection
+        serverResults.push({
+          ...baseServerConfig,
+          status: {
+            valid: isValid,
+            connected: true,
+          },
+        });
+
+        this.logger.info(
+          `MCP Server '${serverConfig.name}' connected via ${
+            serverConfig.type
+          } with tools: ${serverTools.map(t => t.function.name).join(', ')}`,
+        );
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : String(error);
+
+        // Record failed connection
+        serverResults.push({
+          ...baseServerConfig,
+          status: {
+            valid: isValid,
+            connected: false,
+            error: errorMessage,
+          },
+        });
+
+        this.logger.warn(
+          `Failed to connect to MCP server '${serverConfig.name}': ${errorMessage}`,
+        );
+      }
+    }
+
+    this.tools = allTools;
+    this.connected = true;
+    this.logCriticalToolSchemas(this.tools);
+
+    const connectedServers = serverResults.filter(
+      s => s.status.connected,
+    ).length;
+    const totalServers = serverConfigs.length;
+    const failedServers = serverResults.filter(s => !s.status.connected);
+
+    if (failedServers.length > 0) {
+      this.logger.info(
+        `MCP initialization completed: ${connectedServers}/${totalServers} servers connected successfully. Failed servers: ${failedServers
+          .map(s => s.name)
+          .join(', ')}`,
+      );
+      this.scheduleRetry(serverConfigs, serverResults, 0);
+    } else {
+      this.logger.info(
+        `All MCP servers connected successfully. Total tools: ${this.tools.length}`,
+      );
+    }
+
+    return serverResults;
+  }
+
+  private scheduleRetry(
+    serverConfigs: MCPServerFullConfig[],
+    serverResults: MCPServer[],
+    attempt: number,
+  ): void {
+    const maxRetries = 10;
+    if (attempt >= maxRetries) {
+      this.logger.warn(`MCP retry: giving up after ${maxRetries} attempts`);
+      return;
+    }
+    const delay = Math.min(5000 * Math.pow(2, attempt), 60000);
+    this.logger.info(
+      `MCP retry: attempt ${attempt + 1}/${maxRetries} in ${delay / 1000}s`,
+    );
+    setTimeout(async () => {
+      const failedConfigs = serverConfigs.filter(cfg => {
+        const result = serverResults.find(r => r.id === cfg.id);
+        return result && !result.status.connected;
+      });
+      if (failedConfigs.length === 0) return;
+
+      for (const serverConfig of failedConfigs) {
+        if (serverConfig.type !== MCPServerType.STREAMABLE_HTTP || !serverConfig.url) continue;
+        try {
+          const headers = await this.getDiscoveryHeadersForServer(serverConfig);
+          const client = await this.createStreamableHttpClient(
+            serverConfig,
+            headers,
+          );
+          const toolsResult = await client.listTools();
+          const serverTools: ServerTool[] = toolsResult.tools.map(tool => ({
+            type: 'function',
+            function: {
+              name: tool.name,
+              description: tool.description ?? '',
+              parameters: tool.inputSchema,
+            },
+            serverId: serverConfig.id,
+          }));
+          this.tools.push(...serverTools);
+          this.mcpClients.set(serverConfig.id, client);
+          const result = serverResults.find(r => r.id === serverConfig.id);
+          if (result) {
+            result.status.connected = true;
+            result.status.error = undefined;
+          }
+          this.logger.info(
+            `MCP retry: reconnected to '${serverConfig.name}' with ${serverTools.length} tools`,
+          );
+        } catch (error) {
+          this.logger.warn(
+            `MCP retry: still failing for '${serverConfig.name}': ${
+              error instanceof Error ? error.message : error
+            }`,
+          );
+        }
+      }
+      const stillFailed = serverResults.filter(s => !s.status.connected);
+      if (stillFailed.length > 0) {
+        this.scheduleRetry(serverConfigs, serverResults, attempt + 1);
+      } else {
+        this.logger.info(
+          `MCP retry: all servers connected. Total tools: ${this.tools.length}`,
+        );
+      }
+    }, delay);
+  }
+
+  async processQuery(
+    messagesInput: any[],
+    enabledTools?: string[],
+    credentials?: BackstageCredentials,
+  ): Promise<QueryResponse> {
+    // Only add system message if one doesn't already exist
+    const messages: ChatMessage[] = [...messagesInput];
+    const filteredTools =
+      enabledTools !== undefined && enabledTools !== null
+        ? this.tools.filter(tool => enabledTools.includes(tool.serverId))
+        : this.tools;
+    const runtimeInstruction = this.buildRuntimeToolInstruction(filteredTools);
+
+    if (messages.length === 0 || messages[0].role !== 'system') {
+      messages.unshift({
+        role: 'system',
+        content: runtimeInstruction
+          ? `${this.systemPrompt}\n\n${runtimeInstruction}`
+          : this.systemPrompt,
+      });
+    } else if (runtimeInstruction) {
+      messages[0] = {
+        ...messages[0],
+        role: 'system',
+        content: `${messages[0].content ?? ''}\n\n${runtimeInstruction}`,
+      };
+    }
+
+    // Check if using Responses API provider
+    const providerConfig = getConfig(this.config);
+    if (providerConfig.type === 'openai-responses') {
+      const enabledInternal = this.getEnabledInternalServerIds(enabledTools);
+      if (enabledInternal.length > 0) {
+        this.logger.error(
+          `openai-responses+internal MCP rejected: enabledInternal=[${enabledInternal.join(
+            ',',
+          )}]`,
+        );
+        throw new Error(
+          `openai-responses with internal MCP is temporarily disabled. enabledInternal=[${enabledInternal.join(
+            ',',
+          )}]. Use provider=openai or provider=claude. Follow-up: https://github.com/veecode-platform/devportal-distro/issues/44`,
+        );
+      }
+      return this.processQueryWithResponsesApi(messages, enabledTools);
+    }
+
+    // Filter tools based on enabled servers
+    // - If enabledTools is undefined/null: use all tools (default)
+    // - If enabledTools is empty array []: use no tools (all disabled)
+    // - If enabledTools has items: use only those tools
+    // Remove serverId from tools when sending to LLM
+    const llmTools: Tool[] = filteredTools.map(({ serverId, ...tool }) => tool);
+
+    const { clients: runtimeClients, transientIds } =
+      await this.prepareRuntimeClientsForQuery(filteredTools, credentials);
+    try {
+      const maxToolIterations = 8;
+      const allToolCalls: any[] = [];
+      const allToolResponses: any[] = [];
+
+      for (let iteration = 0; iteration < maxToolIterations; iteration++) {
+        const response = await this.llmProvider.sendMessage(messages, llmTools);
+        const replyMessage = response.choices[0].message;
+        const toolCalls = replyMessage.tool_calls || [];
+
+        this.logger.info(
+          `LLM response received with ${toolCalls.length} tool calls (iteration ${
+            iteration + 1
+          })`,
+        );
+
+        if (toolCalls.length === 0) {
+          return {
+            reply: replyMessage.content || '',
+            toolCalls: allToolCalls,
+            toolResponses: allToolResponses,
+          };
+        }
+
+        for (const toolCall of toolCalls) {
+          allToolCalls.push(toolCall);
+          const parsedArguments = this.parseToolArguments(
+            toolCall.function.arguments,
+          );
+
+          if (this.isExecuteTemplateMissingValues(toolCall, parsedArguments)) {
+            const guidanceMessage =
+              this.buildExecuteTemplateMissingValuesGuidance(parsedArguments);
+
+            this.logger.warn(
+              `Blocked invalid execute-template call without values. Arguments: ${JSON.stringify(
+                parsedArguments,
+              )}`,
+            );
+
+            const errorResponse = {
+              id: toolCall.id,
+              name: toolCall.function.name,
+              arguments: parsedArguments,
+              result: guidanceMessage,
+              serverId: 'guardrail',
+            };
+
+            allToolResponses.push(errorResponse);
+
+            messages.push({
+              role: 'assistant',
+              content: null,
+              tool_calls: [toolCall],
+            });
+
+            messages.push({
+              role: 'tool',
+              content: guidanceMessage,
+              tool_call_id: toolCall.id,
+            });
+
+            continue;
+          }
+
+          try {
+            const toolResponse = await executeToolCall(
+              toolCall,
+              filteredTools,
+              runtimeClients,
+            );
+            allToolResponses.push(toolResponse);
+
+            messages.push({
+              role: 'assistant',
+              content: null,
+              tool_calls: [toolCall],
+            });
+
+            messages.push({
+              role: 'tool',
+              content: toolResponse.result,
+              tool_call_id: toolCall.id,
+            });
+          } catch (error) {
+            const errorMessage = `Error executing tool '${
+              toolCall.function.name
+            }': ${error instanceof Error ? error.message : error}`;
+
+            this.logger.warn(errorMessage);
+
+            // Still add the tool call and error response to maintain conversation flow
+            const errorResponse = {
+              id: toolCall.id,
+              name: toolCall.function.name,
+              arguments: parsedArguments,
+              result: errorMessage,
+              serverId: 'error',
+            };
+
+            allToolResponses.push(errorResponse);
+
+            messages.push({
+              role: 'assistant',
+              content: null,
+              tool_calls: [toolCall],
+            });
+
+            messages.push({
+              role: 'tool',
+              content: errorMessage,
+              tool_call_id: toolCall.id,
+            });
+          }
+        }
+      }
+
+      this.logger.warn(
+        `Reached maximum tool-call iterations (${maxToolIterations}) while processing MCP chat request`,
+      );
+
+      return {
+        reply:
+          'I reached the maximum number of tool-calling steps for this request. Please try again with a more specific prompt.',
+        toolCalls: allToolCalls,
+        toolResponses: allToolResponses,
+      };
+    } finally {
+      await this.closeRuntimeClients(runtimeClients, transientIds);
+    }
+  }
+
+  /**
+   * Process query using OpenAI Responses API
+   * The API handles tool discovery and execution internally
+   */
+  private async processQueryWithResponsesApi(
+    messages: ChatMessage[],
+    enabledTools?: string[],
+  ): Promise<QueryResponse> {
+    // Filter server configs based on enabled tools
+    // - If enabledTools is undefined/null: use all servers (default)
+    // - If enabledTools is empty array []: use no servers (all disabled)
+    // - If enabledTools has items: use only those servers
+    const enabledServerConfigs =
+      enabledTools !== undefined && enabledTools !== null
+        ? this.serverConfigs.filter(config => enabledTools.includes(config.id))
+        : this.serverConfigs;
+
+    // Set the filtered configs on the provider
+    if (this.llmProvider instanceof OpenAIResponsesProvider) {
+      this.llmProvider.setMcpServerConfigs(enabledServerConfigs);
+    }
+
+    // Send message - the provider handles MCP tool configuration internally
+    const response = await this.llmProvider.sendMessage(messages);
+    const replyMessage = response.choices[0].message;
+
+    // Extract tool calls and responses from the Responses API output
+    const toolCalls = replyMessage.tool_calls || [];
+    const toolResponses: any[] = [];
+
+    // Get the raw output from the provider to extract tool execution details
+    if (this.llmProvider instanceof OpenAIResponsesProvider) {
+      const output = this.llmProvider.getLastResponseOutput();
+      if (output) {
+        for (const event of output) {
+          if (event.type === 'mcp_call') {
+            const mcpCall = event as ResponsesApiMcpCall;
+            // Build tool response in the format expected by the UI
+            toolResponses.push({
+              id: mcpCall.id,
+              name: mcpCall.name,
+              arguments: JSON.parse(mcpCall.arguments || '{}'),
+              result: mcpCall.error || mcpCall.output,
+              serverId: mcpCall.server_label,
+              error: mcpCall.error,
+            });
+          }
+        }
+      }
+    }
+
+    this.logger.info(
+      `Responses API completed with ${toolCalls.length} tool calls`,
+    );
+
+    return {
+      reply: replyMessage.content || '',
+      toolCalls,
+      toolResponses,
+    };
+  }
+
+  getAvailableTools(): ServerTool[] {
+    return this.tools;
+  }
+
+  async getProviderStatus(): Promise<ProviderStatusData> {
+    try {
+      const info = getProviderInfo(this.config);
+      const status = await this.llmProvider.testConnection();
+
+      // Structure for future multi-provider support
+      const providers = [
+        {
+          id: info.provider,
+          model: info.model,
+          baseUrl: info.baseURL,
+          connection: {
+            connected: status.connected,
+            models: status.models || [],
+            error: status.error,
+          },
+        },
+      ];
+
+      const summary = {
+        totalProviders: providers.length,
+        healthyProviders: providers.filter(
+          p => p.connection?.connected === true,
+        ).length,
+      };
+
+      return {
+        providers,
+        summary,
+        timestamp: new Date().toISOString(),
+      };
+    } catch (error) {
+      this.logger.warn(
+        `Failed to test provider connection: ${
+          error instanceof Error ? error.message : error
+        }`,
+      );
+      return {
+        providers: [],
+        summary: {
+          totalProviders: 0,
+          healthyProviders: 0,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        },
+        timestamp: new Date().toISOString(),
+      };
+    }
+  }
+
+  async getMCPServerStatus(): Promise<MCPServerStatusData> {
+    if (!this.mcpServers) {
+      return {
+        total: 0,
+        valid: 0,
+        active: 0,
+        servers: [],
+        timestamp: new Date().toISOString(),
+      };
+    }
+    const servers = await this.mcpServers;
+    return {
+      total: servers.length,
+      valid: servers.filter(s => s.status.valid).length,
+      active: servers.filter(s => s.status.connected).length,
+      servers,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  private getEnabledServerConfigs(
+    enabledTools?: string[],
+  ): MCPServerFullConfig[] {
+    return enabledTools !== undefined && enabledTools !== null
+      ? this.serverConfigs.filter(config => enabledTools.includes(config.id))
+      : this.serverConfigs;
+  }
+
+  private getEnabledInternalServerIds(enabledTools?: string[]): string[] {
+    return this.getEnabledServerConfigs(enabledTools)
+      .filter(config => this.isInternalMcpServer(config))
+      .map(config => config.id);
+  }
+
+  private isInternalMcpServer(serverConfig: MCPServerFullConfig): boolean {
+    if (!serverConfig.url) {
+      return false;
+    }
+
+    try {
+      return new URL(serverConfig.url).pathname.startsWith('/api/mcp-actions');
+    } catch {
+      return false;
+    }
+  }
+
+  private async createStreamableHttpClient(
+    serverConfig: MCPServerFullConfig,
+    headers?: Record<string, string>,
+  ): Promise<Client> {
+    if (!serverConfig.url) {
+      throw new Error(
+        `Server config for '${serverConfig.name}' with streamable-http type must have a url`,
+      );
+    }
+
+    const client = new Client({
+      name: `${serverConfig.name}-client`,
+      version: '1.0.0',
+    });
+
+    const transportOptions: any = {};
+    if (headers) {
+      transportOptions.requestInit = { headers };
+    }
+
+    const transport = new StreamableHTTPClientTransport(
+      new URL(serverConfig.url),
+      transportOptions,
+    );
+    await client.connect(transport);
+    return client;
+  }
+
+  private async getDiscoveryHeadersForServer(
+    serverConfig: MCPServerFullConfig,
+  ): Promise<Record<string, string> | undefined> {
+    if (!this.isInternalMcpServer(serverConfig)) {
+      return serverConfig.headers;
+    }
+
+    if (!this.auth) {
+      throw new Error(
+        `Auth service is required for internal MCP server '${serverConfig.id}'`,
+      );
+    }
+
+    try {
+      const own = await this.auth.getOwnServiceCredentials();
+      const { token } = await this.auth.getPluginRequestToken({
+        onBehalfOf: own,
+        targetPluginId: 'mcp-actions',
+      });
+      return {
+        ...(serverConfig.headers ?? {}),
+        Authorization: this.toBearerToken(token),
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      this.logger.warn(
+        `Failed to mint startup token for internal MCP server '${serverConfig.id}'. Continuing without tools for this server: ${message}`,
+      );
+      throw error;
+    }
+  }
+
+  private getUserRef(credentials?: BackstageCredentials): string {
+    if (!credentials || typeof credentials !== 'object') {
+      return 'unknown';
+    }
+    return (
+      (credentials as any).principal?.userEntityRef ??
+      (credentials as any).principal?.subject ??
+      'unknown'
+    );
+  }
+
+  private toBearerToken(token: string): string {
+    return token.toLowerCase().startsWith('bearer ') ? token : `Bearer ${token}`;
+  }
+
+  private async getRuntimeAuthorizationHeader(
+    serverId: string,
+    credentials?: BackstageCredentials,
+  ): Promise<string> {
+    if (!credentials) {
+      const err = `Missing request credentials for internal MCP server '${serverId}'`;
+      this.logger.error(
+        `failed to mint user token for ${serverId}, hard-failing request: ${err}`,
+      );
+      throw new Error(err);
+    }
+
+    if (!this.auth) {
+      const err = `Auth service is not available for internal MCP server '${serverId}'`;
+      this.logger.error(
+        `failed to mint user token for ${serverId}, hard-failing request: ${err}`,
+      );
+      throw new Error(err);
+    }
+
+    const userRef = this.getUserRef(credentials);
+    this.logger.info(`minting on-behalf-of for user=${userRef}, server=${serverId}`);
+
+    try {
+      const authWithOptionalLimited = this.auth as AuthService & {
+        getLimitedUserToken?: (
+          credentials: BackstageCredentials,
+        ) => Promise<{ token: string } | string>;
+      };
+
+      let token: string | undefined;
+      if (typeof authWithOptionalLimited.getLimitedUserToken === 'function') {
+        const limitedToken = await authWithOptionalLimited.getLimitedUserToken(
+          credentials,
+        );
+        token =
+          typeof limitedToken === 'string'
+            ? limitedToken
+            : limitedToken?.token;
+      } else {
+        const pluginToken = await this.auth.getPluginRequestToken({
+          onBehalfOf: credentials,
+          targetPluginId: 'mcp-actions',
+        });
+        token = pluginToken.token;
+      }
+
+      if (!token) {
+        throw new Error('received empty token');
+      }
+
+      return this.toBearerToken(token);
+    } catch (error) {
+      const err = error instanceof Error ? error.message : String(error);
+      this.logger.error(
+        `failed to mint user token for ${serverId}, hard-failing request: ${err}`,
+      );
+      throw new Error(`Failed to mint per-user token for '${serverId}': ${err}`);
+    }
+  }
+
+  private async prepareRuntimeClientsForQuery(
+    filteredTools: ServerTool[],
+    credentials?: BackstageCredentials,
+  ): Promise<{ clients: Map<string, Client>; transientIds: string[] }> {
+    const clients = new Map(this.mcpClients);
+    const transientIds: string[] = [];
+    const enabledServerIds = Array.from(
+      new Set(filteredTools.map(tool => tool.serverId)),
+    );
+
+    for (const serverId of enabledServerIds) {
+      const serverConfig = this.serverConfigs.find(config => config.id === serverId);
+      if (
+        !serverConfig ||
+        serverConfig.type !== MCPServerType.STREAMABLE_HTTP ||
+        !serverConfig.url
+      ) {
+        continue;
+      }
+
+      if (!this.isInternalMcpServer(serverConfig)) {
+        this.logger.debug(`using static headers for external MCP server=${serverId}`);
+        continue;
+      }
+
+      const authorization = await this.getRuntimeAuthorizationHeader(
+        serverId,
+        credentials,
+      );
+      const runtimeHeaders = {
+        ...(serverConfig.headers ?? {}),
+        Authorization: authorization,
+      };
+      const runtimeClient = await this.createStreamableHttpClient(
+        serverConfig,
+        runtimeHeaders,
+      );
+      clients.set(serverId, runtimeClient);
+      transientIds.push(serverId);
+    }
+
+    return { clients, transientIds };
+  }
+
+  private async closeRuntimeClients(
+    runtimeClients: Map<string, Client>,
+    transientIds: string[],
+  ): Promise<void> {
+    for (const serverId of transientIds) {
+      const client = runtimeClients.get(serverId);
+      if (!client) {
+        continue;
+      }
+
+      try {
+        const maybeClose = (client as Client & {
+          close?: () => Promise<void> | void;
+        }).close;
+        if (typeof maybeClose === 'function') {
+          await maybeClose.call(client);
+        }
+      } catch (error) {
+        this.logger.debug(
+          `Failed to close runtime MCP client for '${serverId}': ${
+            error instanceof Error ? error.message : error
+          }`,
+        );
+      }
+    }
+  }
+
+  private buildRuntimeToolInstruction(tools: ServerTool[]): string | undefined {
+    const toolNames = new Set(tools.map(tool => tool.function.name));
+    if (
+      !toolNames.has('fetch-template-metadata') ||
+      !toolNames.has('execute-template')
+    ) {
+      return undefined;
+    }
+
+    return [
+      'For scaffolder workflows, always call fetch-template-metadata before execute-template.',
+      'When fetch-template-metadata returns exampleExecuteInput, use that object as the base payload for execute-template and replace only the example values with the user-provided values.',
+      'If exampleExecuteInput is not present, use templateRef + requiredParameters + parameterDetails + exampleValues from fetch-template-metadata to build execute-template.values.',
+      'Never call execute-template with only templateRef.',
+      'If execute-template fails because values are missing, retry immediately in the same turn with a populated values object instead of asking the user to restate the same information.',
+    ].join(' ');
+  }
+
+  private logCriticalToolSchemas(tools: ServerTool[]): void {
+    const executeTemplateTool = tools.find(
+      tool => tool.function.name === 'execute-template',
+    );
+    if (executeTemplateTool?.function.parameters) {
+      const parameters = executeTemplateTool.function.parameters as any;
+      this.logger.info(
+        `execute-template schema loaded with properties: ${Object.keys(
+          parameters.properties ?? {},
+        ).join(', ')}; required: ${JSON.stringify(parameters.required ?? [])}`,
+      );
+    }
+
+    const fetchTemplateTool = tools.find(
+      tool => tool.function.name === 'fetch-template-metadata',
+    );
+    if (fetchTemplateTool?.function.parameters) {
+      const parameters = fetchTemplateTool.function.parameters as any;
+      this.logger.info(
+        `fetch-template-metadata schema loaded with properties: ${Object.keys(
+          parameters.properties ?? {},
+        ).join(', ')}`,
+      );
+    }
+  }
+
+  private parseToolArguments(rawArguments?: string): Record<string, any> {
+    try {
+      return JSON.parse(rawArguments || '{}');
+    } catch {
+      return {};
+    }
+  }
+
+  private isExecuteTemplateMissingValues(
+    toolCall: any,
+    argumentsObject: Record<string, any>,
+  ): boolean {
+    if (toolCall.function.name !== 'execute-template') {
+      return false;
+    }
+
+    if (!Object.prototype.hasOwnProperty.call(argumentsObject, 'values')) {
+      return true;
+    }
+
+    const values = argumentsObject.values;
+    return (
+      values === undefined ||
+      values === null ||
+      typeof values !== 'object' ||
+      Array.isArray(values)
+    );
+  }
+
+  private buildExecuteTemplateMissingValuesGuidance(
+    argumentsObject: Record<string, any>,
+  ): string {
+    const templateRef =
+      typeof argumentsObject.templateRef === 'string'
+        ? argumentsObject.templateRef
+        : 'the selected template';
+
+    return [
+      `Error executing tool 'execute-template': values is required.`,
+      `Retry execute-template for ${templateRef} with the same templateRef plus a values object.`,
+      'Use fetch-template-metadata output as the source of truth.',
+      'Preferred order: exampleExecuteInput -> requiredParameters + parameterDetails -> exampleValues.',
+      'Do not ask the user to repeat values that are already present in the conversation unless something is still missing.',
+    ].join(' ');
+  }
+}

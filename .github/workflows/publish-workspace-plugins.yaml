@@ -1,15 +1,76 @@
-name: Publish RHDH Release Dynamic Plugin Images
+name: Publish DevPortal Dynamic Plugin Images
 on:
+  workflow_dispatch:
+    inputs:
+      rc-tag-suffix:
+        description: "RC suffix for the bundle tag, e.g. -rc.abc1234 (empty = publish the release tag, as the main path does)"
+        type: string
+        default: ''
+        required: false
+      workspace-path:
+        description: "limit to one workspace, e.g. workspaces/veecode-theme (empty = whole fleet)"
+        type: string
+        default: ''
+        required: false
   push:
     branches:
-      - 'release-**'
       - 'main'
+    paths:
+      - 'workspaces/**'
+      - 'catalog-entities/**'
+      - 'versions.json'
 
 jobs:
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      skip: ${{ steps.check.outputs.skip || 'false' }}
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'push'
+        with:
+          fetch-depth: 0
+      - id: check
+        if: github.event_name == 'push'
+        run: |
+          trailers=$(git log --format='%(trailers:key=Drydock-Effect,valueonly)' \
+            ${{ github.event.before }}..${{ github.sha }})
+          if [[ -n "$trailers" ]]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Push carries Drydock-Effect trailer — bundles and catalog index are promoted by retag, not rebuild"
+          fi
+
   export:
-    uses: redhat-developer/rhdh-plugin-export-overlays/.github/workflows/publish-release-branch-workspace-plugins.yaml@main
+    needs: [guard]
+    if: needs.guard.outputs.skip != 'true'
+    uses: veecode-platform/devportal-plugin-export-overlays/.github/workflows/publish-release-branch-workspace-plugins.yaml@main
+    # Dispatching this workflow against a bump branch with an rc-tag-suffix is how
+    # a release candidate reaches Quay without merging first. `inputs` is null on
+    # the push path, so the fallback keeps the main publish byte-identical.
+    with:
+      rc-tag-suffix: ${{ inputs.rc-tag-suffix || '' }}
+      workspace-path: ${{ inputs.workspace-path || '' }}
+    secrets:
+      QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
+      QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
     permissions:
       contents: write
       attestations: write
       packages: write
       id-token: write
+
+  dispatch-docs-update:
+    # Not on a release-candidate publish. A candidate is internal evidence for the
+    # Factory's gate; telling the docs repo its plugin catalog changed is an
+    # outward announcement about a release that has not happened. The first RC
+    # dispatch (2026-07-27) fired this from a throwaway branch.
+    needs: export
+    runs-on: ubuntu-latest
+    if: success() && (inputs.rc-tag-suffix || '') == ''
+    steps:
+      - name: Trigger plugin catalog update in docs
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DOCS_DISPATCH_TOKEN }}
+          repository: veecode-platform/docs
+          event-type: plugin-catalog-update

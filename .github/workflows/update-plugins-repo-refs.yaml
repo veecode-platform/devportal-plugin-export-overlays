@@ -105,8 +105,7 @@ on:
         default: false
   
   schedule:
-    - cron: '0 12 * * *'
-    - cron: '0 19 * * *'
+    - cron: '0 22 * * 1-5'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ inputs.pr-to-update }}
@@ -150,6 +149,35 @@ jobs:
             else
               EXCLUDE_WORKSPACES=""
             fi
+
+            # An UN-ADOPTED workspace excludes itself.
+            #
+            # Un-adoption means removing a workspace's plugins-list.yaml — ours are
+            # parked as plugins-list.yaml.disabled — while keeping source.json,
+            # metadata/ and patches/ so re-adoption stays cheap. The update job cannot
+            # act on such a workspace: there are no exported refs to update, and
+            # because this cron passes allow-workspace-addition: true it would treat
+            # the workspace as new and open a PR to re-ADD what we deliberately
+            # parked. Today it does neither — it throws `pluginsList.yaml is not
+            # found`, so 29 legs fail against 105 green ones on every weekday run
+            # since 2026-06-16, and nobody reads a scheduled run that is always red.
+            #
+            # DERIVED, not listed. The presence of plugins-list.yaml IS the adoption
+            # state; a parallel roster in workspace-discovery-exclude would drift the
+            # first time someone re-adopts, and it would make re-adoption two steps
+            # instead of one.
+            #
+            # workspace-discovery-exclude keeps its own job, which is the opposite one:
+            # it names workspaces that must never be ADDED (its entries have no
+            # directory here at all). This block only skips ones we have and parked.
+            for dir in workspaces/*/; do
+              [[ -d "${dir}" ]] || continue
+              workspace="$(basename "${dir}")"
+              if [[ ! -f "${dir}plugins-list.yaml" ]]; then
+                EXCLUDE_WORKSPACES="${EXCLUDE_WORKSPACES}^${workspace}\$ "
+              fi
+            done
+
             echo "Workspace exclude patterns: ${EXCLUDE_WORKSPACES}"
             echo "EXCLUDE_WORKSPACES=${EXCLUDE_WORKSPACES}" >> $GITHUB_OUTPUT
 
@@ -179,7 +207,7 @@ jobs:
     name: Update Branches
     needs: prepare
     if: github.event_name != 'schedule'
-    uses: redhat-developer/rhdh-plugin-export-utils/.github/workflows/update-plugins-repo-refs.yaml@main
+    uses: veecode-platform/devportal-plugin-export-utils/.github/workflows/update-plugins-repo-refs.yaml@main
     with:
       regexps: ${{ needs.prepare.outputs.regexps }}
       exclude-workspaces: ${{ needs.prepare.outputs.exclude-workspaces }}
@@ -201,7 +229,7 @@ jobs:
     needs: prepare
     if: >-
       (github.event_name == 'schedule')
-    uses: redhat-developer/rhdh-plugin-export-utils/.github/workflows/update-plugins-repo-refs.yaml@main
+    uses: veecode-platform/devportal-plugin-export-utils/.github/workflows/update-plugins-repo-refs.yaml@main
     with:
       regexps: ${{ needs.prepare.outputs.regexps }}
       exclude-workspaces: ${{ needs.prepare.outputs.exclude-workspaces }}

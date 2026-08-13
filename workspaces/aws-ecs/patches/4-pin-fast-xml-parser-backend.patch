@@ -1,0 +1,12 @@
+--- plugins/ecs/backend/package.json
++++ plugins/ecs/backend/package.json
+@@ -64,6 +64,9 @@
+     "msw": "^1.0.0",
+     "supertest": "^6.2.4"
+   },
++  "resolutions": {
++    "fast-xml-parser": "4.5.3"
++  },
+   "files": [
+     "dist"
+   ]
