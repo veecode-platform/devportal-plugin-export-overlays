@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: "@backstage/plugin-events-backend-module-gitlab"
   dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.52.0!backstage-plugin-events-backend-module-gitlab
-  version: 0.3.15-next.0
+  version: 0.3.13
   backstage:
     role: backend-plugin-module
     supportedVersions: 1.49.4
