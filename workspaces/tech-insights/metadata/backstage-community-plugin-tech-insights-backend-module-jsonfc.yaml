@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: '@backstage-community/plugin-tech-insights-backend-module-jsonfc'
   dynamicArtifact: oci://quay.io/veecode/tech-insights:bs_1.52.0!backstage-community-plugin-tech-insights-backend-module-jsonfc
-  version: 0.7.0
+  version: 0.7.2
   backstage:
     role: backend-plugin-module
     supportedVersions: 1.47.2
