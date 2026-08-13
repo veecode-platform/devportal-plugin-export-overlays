@@ -1,2 +1,0 @@
-plugins/bulk-import:
-plugins/bulk-import-backend: --embed-package @red-hat-developer-hub/backstage-plugin-orchestrator-common

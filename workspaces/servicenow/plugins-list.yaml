@@ -1,2 +1,0 @@
-plugins/servicenow:
-plugins/servicenow-backend: --embed-package @backstage-community/plugin-servicenow-common
