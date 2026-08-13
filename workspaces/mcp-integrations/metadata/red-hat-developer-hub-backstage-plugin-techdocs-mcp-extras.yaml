@@ -1,7 +1,7 @@
 apiVersion: extensions.backstage.io/v1alpha1
 kind: Package
 metadata:
-  name: red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras
+  name: red-hat-developer-hub-plugin-techdocs-mcp-extras
   namespace: rhdh
   title: "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras"
   links:
@@ -17,10 +17,10 @@ metadata:
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras"
   dynamicArtifact: oci://quay.io/veecode/mcp-integrations:bs_1.52.0!red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras
-  version: 0.2.3
+  version: 0.2.4
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.48.3
   author: Red Hat
   support: dev-preview
   lifecycle: active
@@ -32,6 +32,4 @@ spec:
         backend:
           actions:
             pluginSources:
-              - 'scaffolder-mcp-extras'
-              - 'software-catalog-mcp-extras'
               - 'techdocs-mcp-extras'

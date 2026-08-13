@@ -17,10 +17,10 @@ metadata:
 spec:
   packageName: "@backstage/plugin-events-backend-module-gitlab"
   dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.52.0!backstage-plugin-events-backend-module-gitlab
-  version: 0.3.13
+  version: 0.3.15-next.0
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.52.0
+    supportedVersions: 1.49.4
   author: Red Hat
   support: tech-preview
   lifecycle: active
@@ -32,4 +32,4 @@ spec:
         events:
           modules:
             gitlab:
-              webhookSecret: ${GITLAB_WEBHOOK_SECRET}
+              webhookSecret: ${VAULT_GITLAB_WEBHOOK_SECRET}
