@@ -16,12 +16,12 @@
          tracing,
          auditor,
        }) {
-@@ -123,6 +125,8 @@
+@@ -126,6 +128,8 @@
  
          httpRouter.use(router);
  
 +        createExplainAction({ registry, logger });
 +
-         const cimdConfigPath = config.has('auth.clientIdMetadataDocuments')
-           ? 'auth.clientIdMetadataDocuments'
-           : 'auth.experimentalClientIdMetadataDocuments';
+         const oauthEnabled =
+           config.getOptionalBoolean(
+             'auth.experimentalDynamicClientRegistration.enabled',
