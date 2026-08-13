@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Docker-free, in-process smoke harness for RHDH dynamic backend plugins: install via the published install-dynamic-plugins CLI, then boot with startTestBackend — no container, no cluster.",
+  "description": "Docker-free, in-process smoke harness for RHDH dynamic backend plugins: install via the published install-dynamic-plugins CLI, then boot with startTestBackend \u2014 no container, no cluster.",
   "engines": {
     "node": ">=24",
     "yarn": ">=4"
@@ -27,7 +27,8 @@
     "@backstage/backend-test-utils": "1.11.4",
     "@backstage/plugin-scaffolder-backend": "3.3.0",
     "@backstage/plugin-search-backend": "2.1.3",
-    "yaml": "2.9.0"
+    "yaml": "2.9.0",
+    "@backstage/plugin-catalog-backend": "3.8.0"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

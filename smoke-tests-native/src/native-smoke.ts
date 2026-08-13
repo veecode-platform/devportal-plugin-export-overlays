@@ -52,6 +52,7 @@ import { createRequire } from "node:module";
 import { startTestBackend, mockServices } from "@backstage/backend-test-utils";
 import scaffolderPlugin from "@backstage/plugin-scaffolder-backend";
 import searchPlugin from "@backstage/plugin-search-backend";
+import catalogPlugin from "@backstage/plugin-catalog-backend";
 import type { JsonObject } from "@backstage/types";
 import {
   discoverPlugins,
@@ -120,11 +121,15 @@ const CLI_BIN = join(
 // `@backstage/plugin-search-backend-node/alpha` import has nothing to resolve against —
 // so a whole class of community backend modules reported a load error that said nothing
 // about the plugin.
-// catalogPlugin is intentionally NOT here: @backstage/plugin-catalog-backend does not boot
-// cleanly in this minimal standalone harness yet (needs more service wiring than RHDH's
-// full e2e env provides), so the dep is left out until RHIDP-16017 closes that gap.
-// Catalog-extending modules are boot-excluded in plugin-sweep-excludes.txt meanwhile.
-const coreFeatures = [scaffolderPlugin, searchPlugin];
+// catalogPlugin (fork addition, WS-EXPORT phase 4): boots the catalog core so
+// modules attaching to catalogProcessingExtensionPoint are actually exercised.
+// Upstream omits it (RHIDP-16017) and instead boot-excludes catalog modules in
+// plugin-sweep-excludes.txt — which also hides the GitLab crash class
+// ('Cannot read properties of undefined (reading 'id')', RHDH plugin-sanity
+// signature for a plugin loaded without its host). If the catalog core does not
+// boot cleanly in the minimal harness, remove this dep again and re-add the
+// catalog modules to plugin-sweep-excludes.txt: do not ship a red gate.
+const coreFeatures = [scaffolderPlugin, searchPlugin, catalogPlugin];
 
 // execFileSync (args array, no shell) so workspace names / OCI refs can never be
 // interpolated into a shell command as this grows beyond a single fixed plugin.
