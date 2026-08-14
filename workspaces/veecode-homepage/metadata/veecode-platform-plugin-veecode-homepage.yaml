@@ -16,7 +16,7 @@ metadata:
     backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/veecode-homepage
   tags: []
 spec:
-  packageName: "veecode-platform-plugin-veecode-homepage"
+  packageName: "@veecode-platform/plugin-veecode-homepage"
   dynamicArtifact: oci://quay.io/veecode/veecode-homepage:bs_1.54.0-next.0!veecode-platform-plugin-veecode-homepage
   version: 1.0.2
   appConfigExamples:
