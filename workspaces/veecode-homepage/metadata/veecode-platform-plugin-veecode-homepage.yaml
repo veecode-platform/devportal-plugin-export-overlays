@@ -1,0 +1,49 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  # VeeCode product home page — Package only, intentionally NO Plugin
+  # catalog entity and NOT listed in catalog-entities/extensions/plugins/all.yaml.
+  # It must NOT appear in the client marketplace: it is the product's own home
+  # surface, not an installable extension. Same pattern as veecode-theme and
+  # vertigo-theme.
+  name: veecode-platform-plugin-veecode-homepage
+  namespace: veecode
+  title: "VeeCode Homepage"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/veecode-homepage
+  tags: []
+spec:
+  packageName: "veecode-platform-plugin-veecode-homepage"
+  dynamicArtifact: oci://quay.io/veecode/veecode-homepage:bs_1.54.0-next.0!veecode-platform-plugin-veecode-homepage
+  version: 1.0.2
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.plugin-veecode-homepage:
+              dynamicRoutes:
+                - path: /
+                  importName: VeecodeHomepagePage
+                  config:
+                    props:
+                      width: 1500
+                      height: 800
+              # Visit recorder. The v3 shell mounts no VisitListener of its
+              # own — it only consumes this mount point — so without this
+              # entry visitsApi.save() is never called and the
+              # "Recently/Top visited" cards stay empty.
+              mountPoints:
+                - mountPoint: application/listener
+                  importName: VisitListener
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.2
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - veecode-homepage
