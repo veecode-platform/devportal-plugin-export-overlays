@@ -17,7 +17,7 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/plugin-veecode-homepage"
-  dynamicArtifact: oci://quay.io/veecode/veecode-homepage:bs_1.54.0-next.0!veecode-platform-plugin-veecode-homepage
+  dynamicArtifact: oci://quay.io/veecode/veecode-homepage:bs_1.52.0!veecode-platform-plugin-veecode-homepage
   version: 1.0.2
   appConfigExamples:
     - title: Default configuration
@@ -41,7 +41,7 @@ spec:
                   importName: VisitListener
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.2
+    supportedVersions: 1.52.0
   author: VeeCode
   support: community
   lifecycle: active
