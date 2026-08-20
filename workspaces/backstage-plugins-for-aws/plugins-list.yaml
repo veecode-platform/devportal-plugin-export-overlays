@@ -4,6 +4,7 @@ plugins/codebuild/frontend:
 plugins/codebuild/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/aws-core-plugin-for-backstage-node
 plugins/codepipeline/frontend:
 plugins/codepipeline/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/aws-core-plugin-for-backstage-node
+plugins/core/catalog-aws-s3: --embed-package @backstage/plugin-catalog-backend-module-aws
 #plugins/core/catalog-config:
 #plugins/core/scaffolder-actions:
 #plugins/cost-insights/backend:
