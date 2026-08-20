@@ -2,6 +2,25 @@
 
 The **plugin catalog index** is the collection of community and supported plugins of this repository. It contains all the metadata, OCI image references, and default configuration needed for RHDH to discover and load dynamic plugins. This page explains how the catalog index is built, what it contains, and where it is published.
 
+> **⚠️ This fork does NOT use the pipeline described below.** This page documents
+> **upstream RHDH's** index-generation pipeline (`generate-catalog-index.yaml` +
+> `bootstrapPluginBuilds.py` / `generatePluginBuildInfo.py` / `generateCatalogIndex.py`),
+> which was **deliberately not carried into this fork**. It was evaluated for
+> re-adoption on 2026-08-20 and rejected: upstream's scripts are keyed on a
+> packaging model — **one OCI image per npm plugin package**, with `bs_X__Y` /
+> `X--Y` tag formats — while this fork publishes **one OCI image per workspace**
+> (multiple plugins per image, selected via `!selector`, `bs_<version>` tags).
+> Adopting them would mean either restructuring the fork's OCI publishing or
+> maintaining a permanently-diverged copy of ~4,270 lines of upstream scripts
+> (~43 upstream commits/quarter on those files). Instead, this fork's index is
+> produced by `scripts/assemble-catalog-index.sh` + `scripts/generate-dpdy-index.sh`
+> (~183 lines, written against this fork's own metadata shape) in the
+> `publish-catalog-index` job of `publish-release-branch-workspace-plugins.yaml`.
+> The *standard* (index image + `dynamic-plugins.default.yaml` + `{{inherit}}` +
+> `CATALOG_INDEX_IMAGE`) is fully honored — only the generator differs. See
+> devportal-planning ADR-006. **Decision marked for future revisit** if the fork's
+> packaging model or upstream's input assumptions converge.
+
 ---
 
 ## Overview

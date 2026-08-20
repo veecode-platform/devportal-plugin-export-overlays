@@ -191,6 +191,36 @@ jobs:
             exit 1
           fi
 
+          # dynamic-plugins.default.yaml (Option D step 1): the generator
+          # must have replaced the committed stub with a real, digest-pinned
+          # index in the working tree.
+          DPDY=catalog-entities/dynamic-plugins.default.yaml
+          if [ ! -f "$DPDY" ]; then
+            echo "ERROR: $DPDY is missing"
+            exit 1
+          fi
+
+          PACKAGE_COUNT=$(grep -c '^\s*- package:' "$DPDY" || true)
+          echo "Found $PACKAGE_COUNT package entries in $DPDY"
+          if [ "$PACKAGE_COUNT" -lt 1 ]; then
+            echo "ERROR: expected at least 1 '- package:' entry in $DPDY, got $PACKAGE_COUNT"
+            exit 1
+          fi
+
+          BAD_REFS=$(grep '^\s*- package:' "$DPDY" | grep -vcE 'oci://[^"[:space:]]+@sha256:[0-9a-f]{64}!' || true)
+          if [ "$BAD_REFS" -ne 0 ]; then
+            echo "ERROR: $BAD_REFS package entries are not digest-pinned oci refs (expected oci://<image>@sha256:<64 hex>!<selector>)"
+            grep '^\s*- package:' "$DPDY" | grep -vE 'oci://[^"[:space:]]+@sha256:[0-9a-f]{64}!' || true
+            exit 1
+          fi
+
+          DISABLED_COUNT=$(grep -c '^\s*disabled: true\s*$' "$DPDY" || true)
+          echo "Found $DISABLED_COUNT 'disabled: true' entries"
+          if [ "$DISABLED_COUNT" -ne "$PACKAGE_COUNT" ]; then
+            echo "ERROR: disabled:true count ($DISABLED_COUNT) does not match package count ($PACKAGE_COUNT)"
+            exit 1
+          fi
+
       - name: Build OCI image
         run: |
           cd catalog-entities
