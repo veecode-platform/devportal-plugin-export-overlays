@@ -18,7 +18,7 @@ metadata:
 spec:
   packageName: "@aws/aws-codepipeline-plugin-for-backstage-backend"
   dynamicArtifact: oci://quay.io/veecode/backstage-plugins-for-aws:bs_1.52.0!aws-aws-codepipeline-plugin-for-backstage-backend
-  version: 0.10.0
+  version: 0.10.1
   backstage:
     role: backend-plugin
     supportedVersions: 1.48.4
