@@ -16,8 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-mcp-actions-backend"
-  dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.54.0-next.0!backstage-plugin-mcp-actions-backend
-  version: 0.2.1-next.0
+  dynamicArtifact: oci://quay.io/veecode/backstage:bs_1.52.0!backstage-plugin-mcp-actions-backend
+  version: 0.1.14
   backstage:
     role: backend-plugin
     supportedVersions: 1.49.4

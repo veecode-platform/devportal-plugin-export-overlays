@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-homepage-backend"
-  dynamicArtifact: oci://quay.io/veecode/homepage:bs_1.54.0-next.0!red-hat-developer-hub-backstage-plugin-homepage-backend
+  dynamicArtifact: oci://quay.io/veecode/homepage:bs_1.52.0!red-hat-developer-hub-backstage-plugin-homepage-backend
   version: 0.1.1
   backstage:
     role: backend-plugin
