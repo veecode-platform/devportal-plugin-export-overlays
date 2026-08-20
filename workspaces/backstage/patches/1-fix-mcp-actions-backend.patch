@@ -1,18 +1,18 @@
 --- plugins/mcp-actions-backend/src/services/McpService.ts
 +++ plugins/mcp-actions-backend/src/services/McpService.ts
-@@ -34,7 +34,6 @@
+@@ -32,7 +32,6 @@ import {
    MetricsService,
    TracingService,
  } from '@backstage/backend-plugin-api/alpha';
 -import { version } from '@backstage/plugin-mcp-actions-backend/package.json';
- import { NotFoundError, toError } from '@backstage/errors';
+ import { NotFoundError } from '@backstage/errors';
  import { performance } from 'node:perf_hooks';
  
-@@ -81,6 +80,8 @@
+@@ -79,6 +78,8 @@ function baggageAttributes(
    return attrs;
  }
  
-+const version = '0.1.11'
++const version = '0.1.14'
 +
  export class McpService {
    private readonly actions: ActionsService;
