@@ -4,25 +4,6 @@ plugins/codebuild/frontend:
 plugins/codebuild/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/aws-core-plugin-for-backstage-node
 plugins/codepipeline/frontend:
 plugins/codepipeline/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/aws-core-plugin-for-backstage-node
-# The trailing --shared-package NEGATION is load-bearing (gotcha
-# plugin-dinamico-rhdh-peer-nao-empacotado, fixed 2026-08-13, REGRESSED on the
-# 2026-08-20 migration to this fleet and took staging down): the CLI's
-# -common/-node auto-embed is family-scoped, so @backstage/plugin-kubernetes-common
-# (cross-family hard dep of the AWS module's AwsEKSClusterProcessor) is demoted
-# to a peer the host does NOT provide — the bundle installs fine and dies at
-# load with MODULE_NOT_FOUND. Export flags are part of the artifact's contract:
-# never port this line without them. Form notes, both empirically bitten:
-# (a) NO quotes anywhere — export-utils' run_cli splits args by plain
-#     IFS=space with no shell-quote parsing, so quotes become literal
-#     characters and the CLI silently ignores the argument (PR #190 shipped
-#     the bundle without the dep again exactly this way);
-# (b) a SECOND --embed-package, not the --shared-package '!' negation — the
-#     negation form trips rhdh-cli 1.11.2's private-dependency validator
-#     (the negated package's own @backstage deps land as private while being
-#     shared) and exits 1; embedding demotes them to peers the host provides.
-#     Validated 2026-08-20 by a local export on the exact source commit:
-#     exit 0 and plugin-kubernetes-common present in dist-dynamic/node_modules.
-plugins/core/catalog-aws-s3: --embed-package @backstage/plugin-catalog-backend-module-aws --embed-package @backstage/plugin-kubernetes-common
 #plugins/core/catalog-config:
 #plugins/core/scaffolder-actions:
 #plugins/cost-insights/backend:
