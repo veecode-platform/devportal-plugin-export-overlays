@@ -48,8 +48,25 @@ echo "Generating dynamic-plugins.default.yaml from workspaces/*/metadata..."
 # failed exactly on such a ref (quay 401 on a never-fleet-published image).
 # The DPDY declares canonical versions for what the fleet actually
 # publishes, nothing else.
+# FACE-OWNED images are excluded: the VeeCode product face ships baked into
+# the devportal-core image (dynamic-plugins.veecode.yaml) and that file is
+# the canonical version source for its own plugins (devportal-planning
+# ADR-005/ADR-006 — "face out of the index"). Both the baked face file and
+# this DPDY are installer *includes* (level 0), and the npm installer treats
+# a same-level duplicate plugin key as a fatal InstallException at merge
+# time regardless of disabled state — so any face key repeated here would
+# CrashLoop every consumer that wires CATALOG_INDEX_IMAGE + this DPDY into
+# its includes. If the face ever gains a new OCI-delivered image, add it
+# here in the same release that changes the face file.
+FACE_OWNED_IMAGES=(
+  "quay.io/veecode/marketplace"
+  "quay.io/veecode/veecode-homepage"
+  "quay.io/veecode/veecode-theme"
+)
+
 raw_refs=()
 declare -A skipped_disabled=()
+declare -A skipped_face=()
 for metadata_file in "$REPO_ROOT"/workspaces/*/metadata/*.yaml; do
   [ -f "$metadata_file" ] || continue
   workspace_dir="$(dirname "$(dirname "$metadata_file")")"
@@ -65,7 +82,23 @@ for metadata_file in "$REPO_ROOT"/workspaces/*/metadata/*.yaml; do
   value="$(printf '%s' "$value" | sed -E 's/^"(.*)"$/\1/; s/^'"'"'(.*)'"'"'$/\1/')"
 
   case "$value" in
-    oci://*) raw_refs+=("$value") ;;
+    oci://*)
+      ref_image="${value#oci://}"
+      ref_image="${ref_image%%!*}"
+      ref_image="${ref_image%%[@:]*}"
+      is_face=false
+      for face_image in "${FACE_OWNED_IMAGES[@]}"; do
+        if [ "$ref_image" = "$face_image" ]; then
+          is_face=true
+          break
+        fi
+      done
+      if [ "$is_face" = true ]; then
+        skipped_face["$ref_image"]=1
+      else
+        raw_refs+=("$value")
+      fi
+      ;;
     *) ;; # non-OCI (npm-style dynamic-plugins/dist path) — nothing to pin here
   esac
 done
@@ -147,4 +180,7 @@ mapfile -t sorted_entries < <(printf '%s\n' "${output_entries[@]}" | sort)
 echo "Generated dynamic-plugins.default.yaml: ${#sorted_entries[@]} entries, ${unique_images} unique images resolved"
 if [ "${#skipped_disabled[@]}" -gt 0 ]; then
   echo "Skipped ${#skipped_disabled[@]} DISABLED workspace(s) (no plugins-list.yaml, never fleet-published): $(printf '%s ' "${!skipped_disabled[@]}" | sed 's/ $//')"
+fi
+if [ "${#skipped_face[@]}" -gt 0 ]; then
+  echo "Skipped ${#skipped_face[@]} FACE-OWNED image(s) (canonical lives in the baked face file, ADR-005/006): $(printf '%s ' "${!skipped_face[@]}" | sed 's/ $//')"
 fi
