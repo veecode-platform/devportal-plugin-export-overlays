@@ -66,7 +66,7 @@ jobs:
             fi
             case "$state" in
               missing)
-                echo "- ❌ MISSING-REPO: \`veecode/$repo\` (metadata is stale)" >> "$GITHUB_STEP_SUMMARY"
+                { echo "- ❌ MISSING-REPO: \`veecode/$repo\` (metadata is stale)" >> "$GITHUB_STEP_SUMMARY"; echo "- ❌ MISSING-REPO: \`veecode/$repo\` (metadata is stale)"; }
                 missing_repo=$((missing_repo+1)); continue ;;
               private)
                 private_found=$((private_found+1))
@@ -76,13 +76,13 @@ jobs:
                     -d '{"visibility":"public"}' \
                     "https://quay.io/api/v1/repository/veecode/$repo/changevisibility")
                   if [ "$code" = "200" ]; then
-                    echo "- 🔓 FLIPPED to public: \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"
+                    { echo "- 🔓 FLIPPED to public: \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- 🔓 FLIPPED to public: \`veecode/$repo\`"; }
                     flipped=$((flipped+1))
                   else
-                    echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"
+                    { echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`"; }
                   fi
                 else
-                  echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"
+                  { echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`"; }
                 fi ;;
               public) ok=$((ok+1)) ;;
             esac
@@ -93,7 +93,7 @@ jobs:
                 "https://quay.io/api/v1/repository/veecode/$repo/tag/?specificTag=$tag&onlyActiveTags=true" \
                 | grep -c '"name"') || true
               if [ "$tcode" -eq 0 ]; then
-                echo "- ❌ MISSING-TAG: \`veecode/$repo:$tag\` (metadata is stale)" >> "$GITHUB_STEP_SUMMARY"
+                { echo "- ❌ MISSING-TAG: \`veecode/$repo:$tag\` (metadata is stale)" >> "$GITHUB_STEP_SUMMARY"; echo "- ❌ MISSING-TAG: \`veecode/$repo:$tag\` (metadata is stale)"; }
                 missing_tag=$((missing_tag+1))
               fi
             done
