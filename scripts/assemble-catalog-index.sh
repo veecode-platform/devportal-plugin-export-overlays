@@ -1,8 +1,11 @@
 #!/bin/bash
 #
 # Assembles the complete catalog index by copying Package entity YAMLs
-# from workspaces/*/metadata/ into catalog-entities/extensions/packages/
-# and generating the all.yaml Location manifest.
+# from workspaces/*/metadata/ into catalog-entities/extensions/packages/,
+# generating the all.yaml Location manifest, and (Option D step 1)
+# regenerating catalog-entities/dynamic-plugins.default.yaml with a real,
+# digest-pinned index — see scripts/generate-dpdy-index.sh. That file stays
+# a committed stub in git; this only overwrites it in the working tree.
 #
 set -euo pipefail
 
@@ -45,4 +48,11 @@ done
 
 total=$(grep -c '^\s*-' "$PACKAGES_DIR/all.yaml")
 echo "Generated all.yaml with $total package entries"
+
+# Regenerate dynamic-plugins.default.yaml with real, digest-pinned entries
+# (Option D step 1). Requires network + skopeo; that's guaranteed in CI but
+# not for local dry-runs, hence the separate script's --no-digest escape
+# hatch (not used here).
+bash "$REPO_ROOT/scripts/generate-dpdy-index.sh"
+
 echo "Catalog index assembly complete."

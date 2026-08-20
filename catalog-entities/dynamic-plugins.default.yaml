@@ -1,10 +1,18 @@
-# Deliberate stub, not a real default plugin list.
+# Deliberate stub, not a real default plugin list — this is what ships when
+# nobody runs the generator.
 #
 # The RHDH 1.10 installer (install-dynamic-plugins.py) unconditionally requires a
 # `dynamic-plugins.default.yaml` at the root of any image referenced by
 # CATALOG_INDEX_IMAGE — if it's missing, catalog-entities extraction hard-fails
-# before it even looks for catalog-entities/. This file exists ONLY to satisfy
-# that existence check. It intentionally installs nothing: plugin enablement is
-# the operator's job, done in the deployment's own dynamic-plugins.yaml via
-# `includes:`. See devportal-planning docs/milestones/M3.md, Q9/Q10.
+# before it even looks for catalog-entities/. This file exists to satisfy
+# that existence check even outside CI. See devportal-planning
+# docs/milestones/M3.md, Q9/Q10.
+#
+# Since Option D step 1, `scripts/assemble-catalog-index.sh` overwrites this
+# file in the *working tree* with a real, digest-pinned index generated from
+# workspaces/*/metadata/*.yaml (see scripts/generate-dpdy-index.sh) before the
+# catalog index image is built. That generated content is never committed —
+# this stub is what stays in git. Plugin enablement is still the operator's
+# job, done in the deployment's own dynamic-plugins.yaml via `includes:`;
+# every generated entry carries `disabled: true` for exactly that reason.
 plugins: []
