@@ -41,9 +41,22 @@ echo "Generating dynamic-plugins.default.yaml from workspaces/*/metadata..."
 
 # Collect one dynamicArtifact value per metadata file, oci:// ones only,
 # stripping optional surrounding quotes.
+#
+# DISABLED workspaces (no plugins-list.yaml) are skipped entirely: the fleet
+# never exports them, so their metadata refs point at images/tags that may
+# not exist or be reachable — the first real generation run (2026-08-20)
+# failed exactly on such a ref (quay 401 on a never-fleet-published image).
+# The DPDY declares canonical versions for what the fleet actually
+# publishes, nothing else.
 raw_refs=()
+declare -A skipped_disabled=()
 for metadata_file in "$REPO_ROOT"/workspaces/*/metadata/*.yaml; do
   [ -f "$metadata_file" ] || continue
+  workspace_dir="$(dirname "$(dirname "$metadata_file")")"
+  if [ ! -f "$workspace_dir/plugins-list.yaml" ]; then
+    skipped_disabled["$(basename "$workspace_dir")"]=1
+    continue
+  fi
   line="$(grep -m1 -E '^\s*dynamicArtifact:' "$metadata_file" || true)"
   [ -n "$line" ] || continue
 
@@ -132,3 +145,6 @@ mapfile -t sorted_entries < <(printf '%s\n' "${output_entries[@]}" | sort)
 } > "$OUTPUT"
 
 echo "Generated dynamic-plugins.default.yaml: ${#sorted_entries[@]} entries, ${unique_images} unique images resolved"
+if [ "${#skipped_disabled[@]}" -gt 0 ]; then
+  echo "Skipped ${#skipped_disabled[@]} DISABLED workspace(s) (no plugins-list.yaml, never fleet-published): $(printf '%s ' "${!skipped_disabled[@]}" | sed 's/ $//')"
+fi
