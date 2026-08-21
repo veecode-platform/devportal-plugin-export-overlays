@@ -1,6 +1,6 @@
 --- plugins/mcp-actions-backend/src/plugin.ts
 +++ plugins/mcp-actions-backend/src/plugin.ts
-@@ -28,6 +28,7 @@
+@@ -27,6 +27,7 @@
    metricsServiceRef,
    tracingServiceRef,
  } from '@backstage/backend-plugin-api/alpha';
@@ -14,8 +14,8 @@
          metrics,
 +        registry,
          tracing,
+         auditor,
        }) {
-         const serverConfigs = parseServerConfigs(config);
 @@ -126,6 +128,8 @@
  
          httpRouter.use(router);
