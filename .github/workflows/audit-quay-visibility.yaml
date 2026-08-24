@@ -19,7 +19,6 @@
 # That feature defaults to off, so a MISSING-REPO there is expected right now, not a
 # sign of stale metadata — see the section below for the distinct wording.
 name: Audit Quay visibility (metadata-referenced images)
-name: Audit Quay visibility (metadata-referenced images)
 
 on:
   workflow_dispatch:
