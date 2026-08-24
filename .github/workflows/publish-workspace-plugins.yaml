@@ -12,6 +12,11 @@ on:
         type: string
         default: ''
         required: false
+      also-publish-plugins:
+        description: "Phase 1 dual publish (ADR-008): also push each plugin as its own image (default = off). Manual dispatch only for now — see the export job for why push doesn't get this yet."
+        type: boolean
+        default: false
+        required: false
   push:
     branches:
       - 'main'
@@ -50,6 +55,12 @@ jobs:
     with:
       rc-tag-suffix: ${{ inputs.rc-tag-suffix || '' }}
       workspace-path: ${{ inputs.workspace-path || '' }}
+      # Phase 1 rollout: flip to true after the RC validation (ADR-008). A manual
+      # workflow_dispatch can already opt in (same RC-first pattern as rc-tag-suffix
+      # above); the push path — a real release — always gets the hardcoded false
+      # until that validation is done, which is why this isn't a plain
+      # `inputs.also-publish-plugins || false`.
+      also-publish-plugins: ${{ github.event_name == 'workflow_dispatch' && inputs.also-publish-plugins || false }}
     secrets:
       QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
       QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}

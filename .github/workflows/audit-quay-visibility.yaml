@@ -13,6 +13,12 @@
 #   - repo exists + private  -> flipped to public (unless dry-run)
 #   - repo does not exist    -> reported as MISSING-REPO (metadata is stale)
 #   - repo public, tag absent-> reported as MISSING-TAG (metadata is stale)
+#
+# Also audits the per-plugin repos from Phase 1 dual publish (ADR-008,
+# quay.io/veecode/<plugin-name>, wired in publish-release-branch-workspace-plugins.yaml).
+# That feature defaults to off, so a MISSING-REPO there is expected right now, not a
+# sign of stale metadata — see the section below for the distinct wording.
+name: Audit Quay visibility (metadata-referenced images)
 name: Audit Quay visibility (metadata-referenced images)
 
 on:
@@ -102,4 +108,61 @@ jobs:
           {
             echo ""
             echo "**Totals:** public-ok=$ok, private=$private_found (flipped=$flipped), missing-repo=$missing_repo, missing-tag=$missing_tag, dry-run=$DRY_RUN"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          # Per-plugin repos (Phase 1 dual publish, ADR-008): quay.io/veecode/<plugin-name>.
+          # Derived the same way publish-release-branch-workspace-plugins.yaml does it —
+          # the text after `!` in dynamicArtifact, restricted to workspaces with an
+          # active (non .disabled) plugins-list.yaml, i.e. the ones the fleet actually
+          # publishes. Visibility only, no tag check: unlike the bundle refs above, the
+          # per-plugin tag (bs_<backstage>__<pluginVersion>) isn't tracked in refs.txt.
+          for ws in workspaces/*/; do
+            ws="${ws%/}"
+            [ -f "$ws/plugins-list.yaml" ] || continue
+            grep -h 'dynamicArtifact:.*oci://quay.io/veecode/' "$ws"/metadata/*.yaml 2>/dev/null | sed 's|.*!||' || true
+          done | sort -u > /tmp/plugin-repos.txt
+
+          plugin_missing_repo=0; plugin_flipped=0; plugin_private_found=0; plugin_ok=0
+          {
+            echo ""
+            echo "## Per-plugin visibility audit ($(wc -l < /tmp/plugin-repos.txt) plugin repos, Phase 1 dual publish — default off)"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          for repo in $(cat /tmp/plugin-repos.txt); do
+            body=$(curl -s -H "$AUTH" "https://quay.io/api/v1/repository/veecode/$repo")
+            if echo "$body" | grep -q '"is_public": *true'; then
+              state=public
+            elif echo "$body" | grep -q '"is_public": *false'; then
+              state=private
+            else
+              state=missing
+            fi
+            case "$state" in
+              missing)
+                { echo "- ⚪ MISSING-REPO: \`veecode/$repo\` (not published yet, or dual publish is off — expected while ADR-008 is default-off)" >> "$GITHUB_STEP_SUMMARY"; echo "- ⚪ MISSING-REPO: \`veecode/$repo\` (dual publish likely off, not stale)"; }
+                plugin_missing_repo=$((plugin_missing_repo+1)); continue ;;
+              private)
+                plugin_private_found=$((plugin_private_found+1))
+                if [ "$DRY_RUN" = "false" ]; then
+                  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+                    -H "$AUTH" -H "Content-Type: application/json" \
+                    -d '{"visibility":"public"}' \
+                    "https://quay.io/api/v1/repository/veecode/$repo/changevisibility")
+                  if [ "$code" = "200" ]; then
+                    { echo "- 🔓 FLIPPED to public: \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- 🔓 FLIPPED to public: \`veecode/$repo\`"; }
+                    plugin_flipped=$((plugin_flipped+1))
+                  else
+                    { echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`"; }
+                  fi
+                else
+                  { echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`"; }
+                fi ;;
+              public) plugin_ok=$((plugin_ok+1)) ;;
+            esac
+          done
+
+          {
+            echo ""
+            echo "**Per-plugin totals:** public-ok=$plugin_ok, private=$plugin_private_found (flipped=$plugin_flipped), missing-repo=$plugin_missing_repo, dry-run=$DRY_RUN"
           } >> "$GITHUB_STEP_SUMMARY"
