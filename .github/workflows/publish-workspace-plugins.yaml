@@ -55,12 +55,12 @@ jobs:
     with:
       rc-tag-suffix: ${{ inputs.rc-tag-suffix || '' }}
       workspace-path: ${{ inputs.workspace-path || '' }}
-      # Phase 1 rollout: flip to true after the RC validation (ADR-008). A manual
-      # workflow_dispatch can already opt in (same RC-first pattern as rc-tag-suffix
-      # above); the push path — a real release — always gets the hardcoded false
-      # until that validation is done, which is why this isn't a plain
-      # `inputs.also-publish-plugins || false`.
-      also-publish-plugins: ${{ github.event_name == 'workflow_dispatch' && inputs.also-publish-plugins || false }}
+      # Phase 1 dual publish is ON for real releases (ADR-008; validated 2026-08-24 via
+      # single-workspace RC -rc.adr008-dual1 and full-fleet RC -rc.adr008-dual2: per-plugin
+      # tags correct, repos public, release tags untouched). A manual dispatch can still
+      # opt out; note the expression must not be `... || true`, which would force true
+      # even when a dispatch explicitly passes false.
+      also-publish-plugins: ${{ github.event_name == 'push' || inputs.also-publish-plugins }}
     secrets:
       QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
       QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
