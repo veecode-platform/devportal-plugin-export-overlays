@@ -20,9 +20,21 @@
 # below is what guarantees one layer. Do not "simplify" this back to a single
 # root-only COPY, and do not split it into several COPY instructions in the
 # final stage — see devportal-planning docs/milestones/M3.md, Front 2 (Q10).
+#
+# WS-2a / ADR-008: the source tree moved from a hand-assembled
+# catalog-entities/extensions/ (this file's own directory) to the output of
+# scripts/update-index.sh (upstream RHDH's index pipeline, adapted) — see
+# user-guide/07-plugin-catalog-index.md. That pipeline's output dir already
+# has the shape `<output>/catalog-entities/extensions/` +
+# `<output>/dynamic-plugins.default.yaml`, so the build CONTEXT for this
+# Containerfile is the pipeline's --output-dir (e.g. `catalog-index/`, NOT
+# this catalog-entities/ directory) — see the `podman build` invocation in
+# the publish-catalog-index job. Only the COPY sources below changed (gained
+# a `catalog-entities/` prefix to match that tree); the resulting image
+# layout is byte-identical to before this change.
 FROM scratch AS assets
-COPY extensions/ /extensions/
-COPY extensions/ /catalog-entities/extensions/
+COPY catalog-entities/extensions/ /extensions/
+COPY catalog-entities/extensions/ /catalog-entities/extensions/
 # Stub required by the RHDH 1.10 installer: it hard-fails catalog-entities
 # extraction if this file is missing from the image, regardless of whether
 # anything references it via `includes:`. It deliberately installs nothing —

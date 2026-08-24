@@ -69,5 +69,10 @@ coverage/
 **/.pytest_cache/
 **/.venv/
 
-# Generated catalog index (assembled by scripts/assemble-catalog-index.sh)
+# Generated catalog index (assembled by scripts/update-index.sh, see
+# scripts/generateCatalogIndex.py and user-guide/07-plugin-catalog-index.md).
+# Committed only to the dedicated catalog-index-<branch> git branch, via
+# `git add -f` in the publish-catalog-index CI job — never on this branch.
 catalog-entities/extensions/packages/
+/catalog-index/
+/plugin_builds/

@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-tekton'
-  dynamicArtifact: oci://quay.io/veecode/tekton:bs_1.52.0!backstage-community-plugin-tekton
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-tekton:bs_1.52.0__3.37.0
   version: 3.37.0
   backstage:
     role: frontend-plugin

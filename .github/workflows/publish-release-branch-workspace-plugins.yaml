@@ -178,10 +178,50 @@ jobs:
     name: Publish Catalog Index
     needs:
       - export
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Full history: the "Sync to target branch" step below fetches and
+          # merges catalog-index-<branch>, which needs more than the tip commit.
+          fetch-depth: 0
+
+      - name: Determine catalog-index branch
+        id: branch
+        env:
+          RC_TAG_SUFFIX: ${{ inputs.rc-tag-suffix }}
+        run: |
+          SOURCE_BRANCH="${GITHUB_REF_NAME}"
+          # A candidate pass gets its OWN target branch (same isolation the
+          # bundle/image tag already gets via rc-tag-suffix, see the "Push to
+          # Quay.io" step below) — it must never commit onto the real
+          # catalog-index-<branch> history a candidate hasn't earned yet.
+          TARGET_BRANCH="catalog-index-${SOURCE_BRANCH}${RC_TAG_SUFFIX}"
+          echo "source-branch=$SOURCE_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "target-branch=$TARGET_BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Sync to catalog-index branch
+        # WS-2a / ADR-008: vanilla port of upstream's generate-catalog-index.yaml
+        # "Sync to target branch" step. The generated catalog-index/ tree is
+        # committed to its own branch (audit trail / consumable without
+        # pulling the OCI image), never to the release branch itself.
+        env:
+          TARGET_BRANCH: ${{ steps.branch.outputs.target-branch }}
+          SOURCE_BRANCH: ${{ steps.branch.outputs.source-branch }}
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code origin "refs/heads/$TARGET_BRANCH" >/dev/null 2>&1; then
+            git fetch origin "$TARGET_BRANCH"
+            git checkout "$TARGET_BRANCH"
+            git merge "origin/$SOURCE_BRANCH" --no-edit -X theirs || true
+          else
+            git checkout -b "$TARGET_BRANCH"
+          fi
 
       - name: Read backstage version from versions.json
         id: versions
@@ -191,38 +231,126 @@ jobs:
           echo "backstage=$BS_VERSION" >> "$GITHUB_OUTPUT"
           echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
 
-      - name: Assemble catalog index
-        run: bash scripts/assemble-catalog-index.sh
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Validate catalog index
+      - name: Install catalog index pipeline dependencies
         run: |
-          YAML_COUNT=$(find catalog-entities/extensions -name '*.yaml' | wc -l)
-          echo "Found $YAML_COUNT YAML files"
-          if [ "$YAML_COUNT" -lt 50 ]; then
-            echo "ERROR: expected at least 50 YAML files, got $YAML_COUNT"
+          pip install -r scripts/requirements.txt
+
+          # mikefarah yq, required by scripts/generateDynamicPluginsDefaultYaml.sh
+          # (same pin upstream's generate-catalog-index.yaml uses).
+          mkdir -p "$HOME/.local/bin"
+          curl -sSLo "$HOME/.local/bin/yq_mf" \
+            "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_linux_amd64"
+          chmod +x "$HOME/.local/bin/yq_mf"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Generate catalog index
+        # WS-2a / ADR-008: upstream RHDH's index pipeline (scripts/update-index.sh),
+        # adapted for this fork's single tier and quay.io/veecode registry — see
+        # user-guide/07-plugin-catalog-index.md. Replaces the retired
+        # scripts/assemble-catalog-index.sh + scripts/generate-dpdy-index.sh.
+        env:
+          # quay.io/veecode is public; these are wired for parity with upstream's
+          # non-ghcr.io auth path (scripts/plugin_utils.py get_registry_auth /
+          # generateCatalogIndex.py check_image_exists) in case that changes.
+          REGISTRY_USERNAME: veecode+ci
+          REGISTRY_PASSWORD: ${{ secrets.QUAY_TOKEN }}
+        run: |
+          # --community-registry MUST equal --registry: upstream's
+          # update-index.sh only forwards --community-registry to
+          # bootstrapPluginBuilds.py when the two differ (see WS-2a's fork
+          # patch comment there). Passing them equal here is what keeps that
+          # forwarding suppressed AND makes the resolved value correct if it
+          # ever did fire — this fork has no separate community-tier
+          # registry; every plugin publishes to quay.io/veecode regardless
+          # of the `support` label inherited from upstream metadata.
+          scripts/update-index.sh \
+            --overlays-dir . \
+            --registry quay.io/veecode \
+            --community-registry quay.io/veecode \
+            --output-dir catalog-index \
+            --plugin-builds-dir plugin_builds \
+            --packages-file default.packages.yaml \
+            --report-file catalog-index/build-report.json
+
+      - name: Assert workspace metadata was not left modified
+        # scripts/update-index.sh Step 2 (generatePluginBuildInfo.py) writes
+        # digests back into workspaces/*/metadata/*.yaml in the working tree
+        # and restores the originals via an EXIT trap. This is the guard the
+        # owner asked for explicitly: a mutated metadata file reaching the
+        # commit below is the "days of lost work" failure class, not a
+        # hypothetical one — verify the trap actually ran instead of trusting it.
+        run: |
+          if [ -n "$(git status --porcelain workspaces/)" ]; then
+            echo "ERROR: workspaces/*/metadata/*.yaml were left modified by the catalog index pipeline (restore trap in scripts/update-index.sh did not run cleanly)" >&2
+            git status --porcelain workspaces/ >&2
             exit 1
           fi
 
-          # dynamic-plugins.default.yaml (Option D step 1): the generator
-          # must have replaced the committed stub with a real, digest-pinned
-          # index in the working tree.
-          DPDY=catalog-entities/dynamic-plugins.default.yaml
+      - name: Validate catalog index
+        run: |
+          DPDY=catalog-index/dynamic-plugins.default.yaml
+          EXTENSIONS_DIR=catalog-index/catalog-entities/extensions
+          PACKAGES_DIR="$EXTENSIONS_DIR/packages"
+          REPORT=catalog-index/build-report.json
+
+          YAML_COUNT=$(find "$PACKAGES_DIR" -name '*.yaml' ! -name all.yaml 2>/dev/null | wc -l)
+          echo "Found $YAML_COUNT package entity YAML files"
+          if [ "$YAML_COUNT" -lt 50 ]; then
+            echo "ERROR: expected at least 50 package entity YAML files, got $YAML_COUNT"
+            exit 1
+          fi
+
+          # generateCatalogIndex.py's copy_catalog_entities_extensions() WARNS
+          # and returns (exit 0) if catalog-entities/extensions/ isn't found —
+          # it does not fail the run. Without an explicit check here, a wrong
+          # --catalog-entities-dir or --overlays-dir would ship an image with
+          # no plugins/collections entities while packages/ still passes the
+          # count check above — the exact "silently emptied the 2.x
+          # marketplace" failure catalog-entities/Containerfile's comment
+          # exists to warn against, just from a different cause this time.
+          PLUGINS_COUNT=$(find "$EXTENSIONS_DIR/plugins" -name '*.yaml' ! -name all.yaml 2>/dev/null | wc -l)
+          COLLECTIONS_COUNT=$(find "$EXTENSIONS_DIR/collections" -name '*.yaml' 2>/dev/null | wc -l)
+          echo "Found $PLUGINS_COUNT plugin entity YAML files, $COLLECTIONS_COUNT collection YAML files"
+          if [ "$PLUGINS_COUNT" -lt 1 ]; then
+            echo "ERROR: $EXTENSIONS_DIR/plugins is empty or missing — hand-maintained plugin entities were not copied"
+            exit 1
+          fi
+          if [ "$COLLECTIONS_COUNT" -lt 1 ]; then
+            echo "ERROR: $EXTENSIONS_DIR/collections is empty or missing — hand-maintained collections were not copied"
+            exit 1
+          fi
+
           if [ ! -f "$DPDY" ]; then
             echo "ERROR: $DPDY is missing"
             exit 1
           fi
 
           PACKAGE_COUNT=$(grep -c '^\s*- package:' "$DPDY" || true)
-          echo "Found $PACKAGE_COUNT package entries in $DPDY"
+          EXPECTED_COUNT=$(grep -c '^\s*- package:' default.packages.yaml || true)
+          echo "Found $PACKAGE_COUNT package entries in $DPDY (default.packages.yaml lists $EXPECTED_COUNT)"
           if [ "$PACKAGE_COUNT" -lt 1 ]; then
             echo "ERROR: expected at least 1 '- package:' entry in $DPDY, got $PACKAGE_COUNT"
             exit 1
           fi
+          if [ "$PACKAGE_COUNT" -ne "$EXPECTED_COUNT" ]; then
+            echo "ERROR: DPDY has $PACKAGE_COUNT entries but default.packages.yaml lists $EXPECTED_COUNT — every listed package must produce exactly one DPDY entry"
+            exit 1
+          fi
 
-          BAD_REFS=$(grep '^\s*- package:' "$DPDY" | grep -vcE 'oci://[^"[:space:]]+@sha256:[0-9a-f]{64}!' || true)
+          # WS-2a / ADR-008: digest pinning (the retired generate-dpdy-index.sh's
+          # `skopeo inspect` gate) is not carried forward — the decided final ref
+          # format is a plain tag (oci://<image>:<tag>), matching what upstream
+          # generates and what WS-2b's metadata rewrite produces. Assert every
+          # entry is still a syntactically real, tagged oci:// ref.
+          BAD_REFS=$(grep '^\s*- package:' "$DPDY" | grep -vcE "oci://[^\"'[:space:]]+:[^\"'[:space:]@]+" || true)
           if [ "$BAD_REFS" -ne 0 ]; then
-            echo "ERROR: $BAD_REFS package entries are not digest-pinned oci refs (expected oci://<image>@sha256:<64 hex>!<selector>)"
-            grep '^\s*- package:' "$DPDY" | grep -vE 'oci://[^"[:space:]]+@sha256:[0-9a-f]{64}!' || true
+            echo "ERROR: $BAD_REFS package entries are not tagged oci refs (expected oci://<image>:<tag>)"
+            grep '^\s*- package:' "$DPDY" | grep -vE "oci://[^\"'[:space:]]+:[^\"'[:space:]@]+" || true
             exit 1
           fi
 
@@ -233,10 +361,32 @@ jobs:
             exit 1
           fi
 
+          # Fail-loud on unresolvable images: this is the exact guarantee the
+          # retired generate-dpdy-index.sh enforced (its skopeo digest
+          # resolution failed the whole script if any referenced image was
+          # unreachable) after the 2026-08-20 incident recorded in
+          # .github/workflows/audit-quay-visibility.yaml — 13 of 63
+          # metadata-referenced images were unreachable and got published
+          # anyway. generateCatalogIndex.py itself only WARNS on missing
+          # images (upstream is more tolerant by design); this step restores
+          # the fork's fail-loud guarantee on top of that.
+          if [ -f "$REPORT" ]; then
+            FAILED=$(jq '.summary.failed // 0' "$REPORT")
+            FALLBACKS=$(jq '[.plugins[] | select(.stages["image-metadata-fetch"].fallback == true)] | length' "$REPORT" 2>/dev/null || echo 0)
+            echo "build-report.json: failed=$FAILED fallbacks=$FALLBACKS"
+            if [ "$FALLBACKS" -gt 0 ]; then
+              echo "WARNING: $FALLBACKS plugin(s) resolved via an older fallback tag — see catalog-index/build-report.json"
+            fi
+            if [ "$FAILED" -gt 0 ]; then
+              echo "ERROR: $FAILED plugin(s) have no resolvable OCI image in quay.io/veecode — refusing to publish an index with unreachable images"
+              jq -r '.plugins | to_entries[] | select(.value.overall == "fail") | "  - " + .key' "$REPORT"
+              exit 1
+            fi
+          fi
+
       - name: Build OCI image
         run: |
-          cd catalog-entities
-          podman build -t plugin-catalog-index -f Containerfile .
+          podman build -t plugin-catalog-index -f catalog-entities/Containerfile catalog-index
 
       - name: Push to Quay.io
         env:
@@ -333,4 +483,34 @@ jobs:
               -H "Content-Type: application/json" \
               -d '{"visibility":"public"}' \
               "https://quay.io/api/v1/repository/veecode/$plugin/changevisibility" || true
+          done
+
+      - name: Commit and push catalog-index branch
+        # WS-2a / ADR-008: intentionally the LAST step. The git branch commit
+        # is an audit trail, not the artifact — the OCI image above is. A
+        # git push failure here (races, protected-branch rules, token scope)
+        # must never withhold an already-built, already-pushed image.
+        env:
+          TARGET_BRANCH: ${{ steps.branch.outputs.target-branch }}
+        run: |
+          SHORT_SHA="${GITHUB_SHA:0:7}"
+          # -f: catalog-index/ and plugin_builds/ are gitignored on the release
+          # branch (local-dev hygiene) — they are meant to be committed here,
+          # on the dedicated catalog-index-<branch> branch only.
+          git add -f catalog-index/ plugin_builds/
+          git commit -m "Generate catalog-index from ${SHORT_SHA}" || echo "No changes to commit"
+
+          MAX_RETRIES=3
+          for i in $(seq 1 $MAX_RETRIES); do
+            if git push origin "$TARGET_BRANCH"; then
+              echo "Push succeeded"
+              break
+            fi
+            if [ "$i" -lt "$MAX_RETRIES" ]; then
+              echo "Push failed, retrying (attempt $((i+1))/$MAX_RETRIES)..."
+              git pull -X theirs origin "$TARGET_BRANCH"
+            else
+              echo "Push failed after $MAX_RETRIES attempts"
+              exit 1
+            fi
           done

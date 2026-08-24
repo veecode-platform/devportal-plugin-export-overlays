@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-tech-radar-backend"
-  dynamicArtifact: oci://quay.io/veecode/tech-radar:bs_1.52.0!backstage-community-plugin-tech-radar-backend
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-tech-radar-backend:bs_1.52.0__1.16.0
   version: 1.16.0
   backstage:
     role: backend-plugin

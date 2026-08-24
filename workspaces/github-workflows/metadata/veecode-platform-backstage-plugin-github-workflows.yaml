@@ -12,7 +12,7 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-github-workflows"
-  dynamicArtifact: oci://quay.io/veecode/github-workflows:bs_1.52.0!veecode-platform-backstage-plugin-github-workflows
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-github-workflows:bs_1.52.0__1.3.7
   nfs:
     entrypoint: ./alpha
     exposedModules:
