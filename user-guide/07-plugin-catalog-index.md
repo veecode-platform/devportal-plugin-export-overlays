@@ -119,7 +119,7 @@ Plugins with no resolvable image are logged as warnings by this script and shipp
 
 **Face-owned packages** (workspaces `marketplace`, `veecode-homepage`, `veecode-theme`): the VeeCode product face ships these baked into the devportal-core image (`dynamic-plugins.veecode.yaml`), which is their canonical version source (ADR-005/ADR-006 — "face out of the index"). A same-level duplicate plugin key between that baked file and this DPDY is a fatal `InstallException` at RHDH 1.10 installer merge time regardless of `disabled` state, so these packages are omitted from `default.packages.yaml` entirely (commented there). Their entities are still copied unfiltered, same as disabled workspaces.
 
-> **Open question**: `vertigo-theme` is structurally identical to `veecode-theme` (a tenant-specific baked theme plugin) but was never added to the face-owned exclusion list this file replaces. It is **not** excluded here either, preserving current behavior exactly — flagged for the repo owner to confirm whether that was an oversight.
+**`vertigo-theme` stays in, on purpose**: it looks structurally identical to `veecode-theme` (a tenant-specific baked theme plugin), but the vertigo tenant's production stack resolves `vertigo-platform-plugin-vertigo-theme` via `{{inherit}}` against this DPDY today (`values-fork.yaml.tpl`, helm rev 26, live) — excluding it would break theme version resolution in that tenant's production. Confirmed with the repo owner; not an oversight.
 
 ---
 

@@ -27,10 +27,13 @@
 # catalog-entities/extensions/packages/ unfiltered, so the marketplace UI
 # still sees them; only their DPDY membership is withheld.
 #
-# NOTE (open question, see PR body): vertigo-theme is structurally identical
-# to veecode-theme (a tenant-specific baked theme plugin) but was NOT in the
-# original FACE_OWNED_IMAGES list, so it is NOT excluded here either -- this
-# preserves current behavior exactly. Flagging in case that was an oversight.
+# vertigo-theme is intentionally NOT excluded, despite looking structurally
+# identical to veecode-theme (a tenant-specific baked theme plugin): the
+# vertigo tenant's production stack resolves
+# `vertigo-platform-plugin-vertigo-theme` via {{inherit}} against THIS DPDY
+# today (values-fork.yaml.tpl, helm rev 26, live) -- excluding it would break
+# theme version resolution in prod. Confirmed with the repo owner; this is
+# not an oversight, don't "fix" it later without checking that dependency.
 packages:
   enabled: []
   disabled:
