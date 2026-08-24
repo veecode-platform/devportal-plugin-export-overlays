@@ -248,17 +248,73 @@ jobs:
           chmod +x "$HOME/.local/bin/yq_mf"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
+      - name: Set per-plugin Quay repositories to public
+        # ADR-008 dual publish: export-utils pushes each plugin as its own image
+        # quay.io/veecode/<plugin-name>. Those repos are created on first push and
+        # start PRIVATE, so flip them here. This step MUST run BEFORE "Generate
+        # catalog index": the pipeline queries quay anonymously (see that step's
+        # comment), and an anonymous GET against a still-private repo 401s, which
+        # would silently drop brand-new plugins from the index (or trip the
+        # fail-loud gate). The export jobs this job `needs:` have already pushed
+        # everything by the time we run.
+        #
+        # Repo names are derived from spec.dynamicArtifact in the metadata files.
+        # Bare per-plugin refs (post-#206) put the repo name right after
+        # `veecode/`; legacy `<workspace>:<tag>!<plugin>` refs put it after `!`.
+        # Both extractions are emitted: for a legacy ref the first one yields the
+        # workspace bundle repo, and flipping an already-public repo is a no-op,
+        # so the union is safe. The name is the normalized form export-utils uses
+        # (jq -r '.name | sub("^@";"") | sub("[/@]";"-")' package.json). Only
+        # workspaces with an active (non .disabled) plugins-list.yaml are
+        # fleet-published at all, so disabled workspaces are excluded.
+        #
+        # Tolerant to individual failure: a plugin skipped this run (e.g. the
+        # compatibility gate) simply has no repo yet, and that is not an error here.
+        # Bool wiring note: a boolean workflow_call input can arrive stringified
+        # ('true'/'false') depending on how the caller expression evaluated, and
+        # the string 'false' is truthy to `if:`. Checking both forms is what
+        # keeps this step actually off by default.
+        if: inputs.also-publish-plugins == true || inputs.also-publish-plugins == 'true'
+        env:
+          QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
+        run: |
+          if [ -z "$QUAY_API_TOKEN" ]; then
+            echo "QUAY_API_TOKEN not set, skipping per-plugin visibility change"
+            exit 0
+          fi
+
+          for plugin in $(
+            for ws in workspaces/*/; do
+              ws="${ws%/}"
+              [ -f "$ws/plugins-list.yaml" ] || continue
+              sed -n 's|.*dynamicArtifact:.*oci://quay\.io/veecode/\([^:!@]*\)[:!@].*|\1|p' "$ws"/metadata/*.yaml 2>/dev/null || true
+              sed -n 's|.*dynamicArtifact:.*oci://quay\.io/veecode/.*!\(.*\)|\1|p' "$ws"/metadata/*.yaml 2>/dev/null || true
+            done | sort -u
+          ); do
+            echo "Setting quay.io/veecode/$plugin to public"
+            curl -s -X PUT \
+              -H "Authorization: Bearer $QUAY_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d '{"visibility":"public"}' \
+              "https://quay.io/api/v1/repository/veecode/$plugin/changevisibility" || true
+          done
+
       - name: Generate catalog index
         # WS-2a / ADR-008: upstream RHDH's index pipeline (scripts/update-index.sh),
         # adapted for this fork's single tier and quay.io/veecode registry — see
         # user-guide/07-plugin-catalog-index.md. Replaces the retired
         # scripts/assemble-catalog-index.sh + scripts/generate-dpdy-index.sh.
-        env:
-          # quay.io/veecode is public; these are wired for parity with upstream's
-          # non-ghcr.io auth path (scripts/plugin_utils.py get_registry_auth /
-          # generateCatalogIndex.py check_image_exists) in case that changes.
-          REGISTRY_USERNAME: veecode+ci
-          REGISTRY_PASSWORD: ${{ secrets.QUAY_TOKEN }}
+        #
+        # Registry queries are ANONYMOUS on purpose (no REGISTRY_USERNAME /
+        # REGISTRY_PASSWORD env): the pipeline's non-ghcr auth path sends
+        # `Authorization: Basic` straight at quay's /v2/ endpoints, and quay
+        # rejects that with 401 even for PUBLIC repos (it requires the bearer
+        # token dance). Wiring the creds here is what failed the 2026-08-24
+        # cutover run with build-report failed=98 while every tag existed.
+        # Anonymous GETs return 200 for public repos — same way upstream
+        # queries quay.io/rhdh. Precondition: the per-plugin visibility step
+        # ABOVE runs before this one, so repos created by this run's exports
+        # are already public when queried.
         run: |
           # --community-registry MUST equal --registry: upstream's
           # update-index.sh only forwards --community-registry to
@@ -441,49 +497,6 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"visibility":"public"}' \
             "https://quay.io/api/v1/repository/veecode/plugin-catalog-index/changevisibility" || true
-
-      - name: Set per-plugin Quay repositories to public
-        # Phase 1 dual publish (ADR-008). When also-publish-plugins is on, export-utils
-        # pushes each plugin as its own image quay.io/veecode/<plugin-name>, alongside
-        # the workspace bundle. Those repos are created on first push and start
-        # PRIVATE (same story as the bundle index above), so flip them here too.
-        #
-        # Plugin names are derived from spec.dynamicArtifact in the metadata files,
-        # taking the text after `!` — that suffix is already the normalized name
-        # export-utils uses for the image repo (jq -r '.name | sub("^@";"") |
-        # sub("[/@]";"-")' package.json). Only workspaces with an active (non
-        # .disabled) plugins-list.yaml are fleet-published at all, so disabled
-        # workspaces are excluded from the derivation.
-        #
-        # Tolerant to individual failure, same as the step above: a plugin skipped
-        # this run (e.g. the compatibility gate) simply has no repo yet, and that is
-        # not an error here.
-        # Bool wiring note: a boolean workflow_call input can arrive stringified
-        # ('true'/'false') depending on how the caller expression evaluated, and
-        # the string 'false' is truthy to `if:`. Checking both forms is what
-        # keeps this step actually off by default.
-        if: inputs.also-publish-plugins == true || inputs.also-publish-plugins == 'true'
-        env:
-          QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
-        run: |
-          if [ -z "$QUAY_API_TOKEN" ]; then
-            echo "QUAY_API_TOKEN not set, skipping per-plugin visibility change"
-            exit 0
-          fi
-
-          for plugin in $(
-            for ws in workspaces/*/; do
-              ws="${ws%/}"
-              [ -f "$ws/plugins-list.yaml" ] || continue
-              grep -h 'dynamicArtifact:.*oci://quay.io/veecode/' "$ws"/metadata/*.yaml 2>/dev/null | sed 's|.*!||' || true
-            done | sort -u
-          ); do
-            curl -s -X PUT \
-              -H "Authorization: Bearer $QUAY_API_TOKEN" \
-              -H "Content-Type: application/json" \
-              -d '{"visibility":"public"}' \
-              "https://quay.io/api/v1/repository/veecode/$plugin/changevisibility" || true
-          done
 
       - name: Commit and push catalog-index branch
         # WS-2a / ADR-008: intentionally the LAST step. The git branch commit
