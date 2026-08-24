@@ -12,7 +12,7 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-github-workflows-backend"
-  dynamicArtifact: oci://quay.io/veecode/github-workflows:bs_1.52.0!veecode-platform-backstage-plugin-github-workflows-backend
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-github-workflows-backend:bs_1.52.0__1.3.7
   version: 1.3.7
   backstage:
     role: backend-plugin

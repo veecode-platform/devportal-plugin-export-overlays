@@ -17,7 +17,7 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-catalog-backend-module-ai-resources"
-  dynamicArtifact: oci://quay.io/veecode/ai-resources:bs_1.52.0!veecode-platform-backstage-plugin-catalog-backend-module-ai-resources
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-catalog-backend-module-ai-resources:bs_1.52.0__0.1.0
   version: 0.1.0
   # Registration-only backend module: it activates schemas that already ship
   # inside the image (@backstage/catalog-model/alpha) and carries no config of

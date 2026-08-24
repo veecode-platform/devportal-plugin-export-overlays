@@ -17,7 +17,7 @@ metadata:
     - observability
 spec:
   packageName: "@backstage-community/plugin-grafana"
-  dynamicArtifact: oci://quay.io/veecode/grafana:bs_1.52.0!backstage-community-plugin-grafana
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-grafana:bs_1.52.0__0.17.0
   version: 0.17.0
   backstage:
     role: frontend-plugin
