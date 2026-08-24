@@ -1,0 +1,58 @@
+name: Promote Catalog Index to latest
+
+# The ONLY path that moves quay.io/veecode/plugin-catalog-index:latest.
+#
+# Publishing is automatic and versioned (publish-release-branch-workspace-
+# plugins.yaml pushes bs_<version> tags on every export); PROMOTION is this
+# workflow: manual dispatch + approval on the `catalog-latest-promotion`
+# GitHub Environment. `:latest` is consumed by deployed production instances
+# (SaaS included), so it only moves when a human decides the source line has
+# graduated. See CLAUDE.md § "Publish vs. promote (:latest)".
+
+on:
+  workflow_dispatch:
+    inputs:
+      source-tag:
+        description: "Existing plugin-catalog-index tag to promote (e.g. bs_1.49.4 or bs_1.53.0_20260721T120000)"
+        required: true
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    # Requires a human approval configured in repo Settings > Environments.
+    environment: catalog-latest-promotion
+    steps:
+      - name: Install skopeo
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q skopeo
+
+      - name: Audit trail — digests before promotion
+        env:
+          SOURCE_TAG: ${{ inputs.source-tag }}
+        run: |
+          IMAGE="quay.io/veecode/plugin-catalog-index"
+          SRC_DIGEST=$(skopeo inspect --format '{{.Digest}}' "docker://$IMAGE:$SOURCE_TAG")
+          echo "source  $IMAGE:$SOURCE_TAG = $SRC_DIGEST"
+          CUR_DIGEST=$(skopeo inspect --format '{{.Digest}}' "docker://$IMAGE:latest" 2>/dev/null || echo '(none)')
+          echo "current $IMAGE:latest = $CUR_DIGEST"
+          {
+            echo "## Promotion audit"
+            echo ""
+            echo "| pointer | digest |"
+            echo "|---|---|"
+            echo "| source \`$SOURCE_TAG\` | \`$SRC_DIGEST\` |"
+            echo "| previous \`:latest\` | \`$CUR_DIGEST\` |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Promote to :latest
+        env:
+          QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
+          SOURCE_TAG: ${{ inputs.source-tag }}
+        run: |
+          IMAGE="quay.io/veecode/plugin-catalog-index"
+          skopeo login -u veecode+ci -p "$QUAY_TOKEN" quay.io
+          skopeo copy --all "docker://$IMAGE:$SOURCE_TAG" "docker://$IMAGE:latest"
+          NEW_DIGEST=$(skopeo inspect --format '{{.Digest}}' "docker://$IMAGE:latest")
+          echo "promoted $IMAGE:latest = $NEW_DIGEST"
+          echo "| new \`:latest\` | \`$NEW_DIGEST\` |" >> "$GITHUB_STEP_SUMMARY"

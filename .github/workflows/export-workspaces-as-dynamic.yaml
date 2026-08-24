@@ -62,7 +62,13 @@ on:
         description: Optional commit ID of the last successful publishing of plugin container images
         type: string
         required: false
-  
+
+      bundle-workspace:
+        description: Bundle all exported plugins into a single OCI image per workspace instead of one image per plugin
+        type: boolean
+        required: false
+        default: false
+
   workflow_dispatch:
     inputs:
       image-registry-user:
@@ -115,12 +121,18 @@ on:
         description: Repository prefix of the dynamic plugin container images
         type: string
         required: false
-  
+
       last-publish-commit:
         description: Optional commit ID of the last successful publishing of plugin container images
         type: string
         required: false
-  
+
+      bundle-workspace:
+        description: Bundle all exported plugins into a single OCI image per workspace instead of one image per plugin
+        type: boolean
+        required: false
+        default: false
+
 concurrency:
   group: ${{ github.workflow_ref }}-${{ github.ref }}
   cancel-in-progress: true
@@ -138,6 +150,7 @@ jobs:
       publish-container: ${{ inputs.publish-container }}
       image-repository-prefix: ${{ inputs.image-repository-prefix }}
       image-registry-user: ${{ inputs.image-registry-user || 'veecode+ci' }}
+      bundle-workspace: ${{ inputs.bundle-workspace }}
       
     secrets:
       image-registry-password: ${{ secrets.image-registry-password || secrets.QUAY_TOKEN || secrets.GITHUB_TOKEN }}

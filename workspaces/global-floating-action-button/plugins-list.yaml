@@ -1,4 +1,8 @@
-plugins/application-listener-test:
-plugins/application-provider-test:
 plugins/global-floating-action-button:
+
+# Upstream test fixtures, not product plugins. No metadata/*.yaml and no
+# consumer reference anywhere in the fleet.
+#plugins/application-listener-test:
+#plugins/application-provider-test:
+
 # touched to force publish 2026-05-15

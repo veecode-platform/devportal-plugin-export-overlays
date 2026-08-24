@@ -5,10 +5,6 @@ on:
     branches:
       - main
       - 'release-*'
-    paths:
-      - 'workspaces/**/metadata/**'
-      - 'scripts/validate-app-config-examples.py'
-      - '.github/workflows/validate-app-config-examples.yaml'
   workflow_dispatch:
 
 concurrency:
@@ -33,8 +29,8 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install PyYAML
-        run: pip install pyyaml
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
 
       - name: Validate (full tree)
         if: github.event_name == 'workflow_dispatch'

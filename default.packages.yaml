@@ -1,70 +1,137 @@
-# MANUALLY maintained list of "core plugins"
+# GENERATED (initial import, WS-2a / ADR-008) from workspaces/*/metadata/*.yaml.
+# Format matches upstream RHDH's default.packages.yaml (scripts/update-index.sh Step 3).
 #
-# Do not add packages to this list without prior agreement from PM
+# Lists every plugin package belonging to an ACTIVE workspace (has a
+# plugins-list.yaml without the .disabled suffix -- i.e. the fleet actually
+# exports and publishes it). Regenerate this list when a workspace is
+# enabled/disabled or a package is added/removed from an active workspace.
 #
-# New packages should only be "tech-preview" or "generally-available"
-#    16 are tech-preview, and should be promoted via a PM-sponsored Feature to generally-available at some point
-#    06 are community, and should be removed over time
+# Everything below is intentionally listed under `disabled:` (patched into
+# scripts/generateDynamicPluginsDefaultYaml.sh -- upstream's build_plugin_entry
+# emits `enabled:`, this fork's DPDY consumer contract requires the literal
+# `disabled: true` key, see ADR-005/ADR-006 and catalog-entities/Containerfile).
+# This index only declares canonical plugin versions for {{inherit}} to
+# resolve from CATALOG_INDEX_IMAGE; enabling a plugin for a given
+# tenant/operator stays their job, in their own dynamic-plugins.yaml.
+#
+# FACE-OWNED packages are deliberately excluded (not just disabled): the
+# VeeCode product face ships them baked into the devportal-core image
+# (dynamic-plugins.veecode.yaml), which is their canonical version source
+# (ADR-005/ADR-006 -- "face out of the index"). A same-level duplicate plugin
+# key between that baked file and this DPDY is a fatal InstallException at
+# RHDH 1.10 installer merge time regardless of disabled state. Excluded
+# workspaces: marketplace, veecode-homepage, veecode-theme (matches the
+# FACE_OWNED_IMAGES list this file replaces from the retired
+# scripts/generate-dpdy-index.sh). Their Package *entities* are NOT excluded
+# here -- generateCatalogIndex.py copies workspaces/*/metadata/*.yaml into
+# catalog-entities/extensions/packages/ unfiltered, so the marketplace UI
+# still sees them; only their DPDY membership is withheld.
+#
+# vertigo-theme is intentionally NOT excluded, despite looking structurally
+# identical to veecode-theme (a tenant-specific baked theme plugin): the
+# vertigo tenant's production stack resolves
+# `vertigo-platform-plugin-vertigo-theme` via {{inherit}} against THIS DPDY
+# today (values-fork.yaml.tpl, helm rev 26, live) -- excluding it would break
+# theme version resolution in prod. Confirmed with the repo owner; this is
+# not an oversight, don't "fix" it later without checking that dependency.
 packages:
-  enabled: # should onyly include GA (or TP with a path to GA) content here
-  - package: '@backstage-community/plugin-analytics-provider-segment' # generally-available
-  - package: '@backstage-community/plugin-scaffolder-backend-module-regex' # generally-available
-  - package: '@backstage/plugin-techdocs' # generally-available
-  - package: '@backstage/plugin-techdocs-backend' # generally-available
-  - package: '@backstage/plugin-techdocs-module-addons-contrib' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-adoption-insights' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-adoption-insights-backend' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-analytics-module-adoption-insights' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-catalog-backend-module-extensions' # tech-preview
-  - package: '@red-hat-developer-hub/backstage-plugin-dynamic-home-page' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-global-floating-action-button' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-global-header' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-extensions' # tech-preview
-  - package: '@red-hat-developer-hub/backstage-plugin-extensions-backend' # tech-preview
-  - package: "@red-hat-developer-hub/backstage-plugin-lightspeed" # generally-available
-  - package: "@red-hat-developer-hub/backstage-plugin-lightspeed-backend" # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-quickstart' # generally-available
-
-  disabled: # should ideally contain no community content; TODO: remove some community or TP stuff in 2.1?
-  - package: '@backstage-community/plugin-acr' # tech-preview
-  - package: '@backstage-community/plugin-catalog-backend-module-keycloak' # generally-available
-  - package: '@backstage-community/plugin-catalog-backend-module-pingidentity' # tech-preview
-  - package: '@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor' # tech-preview
-  - package: '@backstage-community/plugin-rbac' # generally-available
-  - package: '@backstage-community/plugin-scaffolder-backend-module-kubernetes' # generally-available
-  - package: '@backstage-community/plugin-tech-radar' # generally-available
-  - package: '@backstage-community/plugin-tech-radar-backend' # generally-available
-  - package: '@backstage-community/plugin-topology' # generally-available
-  - package: '@backstage/plugin-catalog-backend-module-github' # generally-available
-  - package: '@backstage/plugin-catalog-backend-module-github-org' # generally-available
-  - package: '@backstage/plugin-catalog-backend-module-gitlab' # production
-  - package: '@backstage/plugin-catalog-backend-module-gitlab-org' # production
-  - package: '@backstage/plugin-catalog-backend-module-ldap' # generally-available
-  - package: '@backstage/plugin-catalog-backend-module-msgraph' # generally-available
-  - package: '@backstage/plugin-events-backend-module-github' # tech-preview
-  - package: '@backstage/plugin-kubernetes' # tech-preview
-  - package: '@backstage/plugin-kubernetes-backend' # generally-available
-  - package: '@backstage/plugin-notifications' # tech-preview
-  - package: '@backstage/plugin-notifications-backend' # tech-preview
-  - package: '@backstage/plugin-notifications-backend-module-email' # tech-preview
-  - package: '@backstage/plugin-scaffolder-backend-module-github' # generally-available
-  - package: '@backstage/plugin-scaffolder-backend-module-gitlab' # tech-preview
-  - package: '@backstage/plugin-signals' # tech-preview
-  - package: '@backstage/plugin-signals-backend' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-bulk-import' # tech-preview
-  - package: '@red-hat-developer-hub/backstage-plugin-bulk-import-backend' # tech-preview
-  - package: '@red-hat-developer-hub/backstage-plugin-homepage-backend' # tech-preview
-  - package: '@red-hat-developer-hub/backstage-plugin-orchestrator' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-orchestrator-backend' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-orchestrator-backend-module-loki' # tech-preview
-  - package: '@red-hat-developer-hub/backstage-plugin-orchestrator-form-widgets' # generally-available
-  - package: '@red-hat-developer-hub/backstage-plugin-scaffolder-backend-module-orchestrator' # generally-available
-  - package: '@roadiehq/scaffolder-backend-module-http-request' # generally-available
-
-  # these community supported plugins do not have a downstream analogue in overlays repo's rhdh-supported-packages.txt
-  - package: '@backstage-community/plugin-quay' # community
-  - package: '@backstage-community/plugin-quay-backend' # community
-  - package: '@backstage-community/plugin-scaffolder-backend-module-quay' # community
-  - package: '@backstage-community/plugin-tekton' # community
-  - package: '@roadiehq/backstage-plugin-argo-cd-backend' # community - TODO: replace with RH Argo CD plugin when it's ready
-  - package: '@roadiehq/scaffolder-backend-argocd' # community - TODO: replace with RH Argo CD plugin when it's ready
+  enabled: []
+  disabled:
+    - package: "@aws/amazon-ecs-plugin-for-backstage"
+    - package: "@aws/amazon-ecs-plugin-for-backstage-backend"
+    - package: "@aws/aws-codebuild-plugin-for-backstage"
+    - package: "@aws/aws-codebuild-plugin-for-backstage-backend"
+    - package: "@aws/aws-codepipeline-plugin-for-backstage"
+    - package: "@aws/aws-codepipeline-plugin-for-backstage-backend"
+    - package: "@aws/aws-s3-catalog-module-for-backstage"
+    - package: "@backstage-community/plugin-adr"
+    - package: "@backstage-community/plugin-adr-backend"
+    - package: "@backstage-community/plugin-analytics-module-ga4"
+    - package: "@backstage-community/plugin-analytics-module-matomo"
+    - package: "@backstage-community/plugin-analytics-module-newrelic-browser"
+    - package: "@backstage-community/plugin-analytics-provider-segment"
+    - package: "@backstage-community/plugin-announcements"
+    - package: "@backstage-community/plugin-announcements-backend"
+    - package: "@backstage-community/plugin-argocd"
+    - package: "@backstage-community/plugin-argocd-backend"
+    - package: "@backstage-community/plugin-azure-devops"
+    - package: "@backstage-community/plugin-azure-devops-backend"
+    - package: "@backstage-community/plugin-bookmarks"
+    - package: "@backstage-community/plugin-catalog-backend-module-azure-devops-annotator-processor"
+    - package: "@backstage-community/plugin-github-actions"
+    - package: "@backstage-community/plugin-github-deployments"
+    - package: "@backstage-community/plugin-github-discussions"
+    - package: "@backstage-community/plugin-github-issues"
+    - package: "@backstage-community/plugin-github-pull-requests-board"
+    - package: "@backstage-community/plugin-grafana"
+    - package: "@backstage-community/plugin-jenkins"
+    - package: "@backstage-community/plugin-jenkins-backend"
+    - package: "@backstage-community/plugin-jfrog-artifactory"
+    - package: "@backstage-community/plugin-lighthouse"
+    - package: "@backstage-community/plugin-lighthouse-backend"
+    - package: "@backstage-community/plugin-mcp-chat"
+    - package: "@backstage-community/plugin-mcp-chat-backend"
+    - package: "@backstage-community/plugin-multi-source-security-viewer"
+    - package: "@backstage-community/plugin-multi-source-security-viewer-backend"
+    - package: "@backstage-community/plugin-nexus-repository-manager"
+    - package: "@backstage-community/plugin-npm"
+    - package: "@backstage-community/plugin-npm-backend"
+    - package: "@backstage-community/plugin-rbac"
+    - package: "@backstage-community/plugin-scaffolder-backend-module-azure-devops"
+    - package: "@backstage-community/plugin-scaffolder-backend-module-dotnet"
+    - package: "@backstage-community/plugin-scaffolder-backend-module-jenkins"
+    - package: "@backstage-community/plugin-scaffolder-backend-module-kubernetes"
+    - package: "@backstage-community/plugin-scaffolder-backend-module-regex"
+    - package: "@backstage-community/plugin-scaffolder-backend-module-sonarqube"
+    - package: "@backstage-community/plugin-search-backend-module-announcements"
+    - package: "@backstage-community/plugin-search-backend-module-azure-devops"
+    - package: "@backstage-community/plugin-search-backend-module-github-discussions"
+    - package: "@backstage-community/plugin-sonarqube"
+    - package: "@backstage-community/plugin-sonarqube-backend"
+    - package: "@backstage-community/plugin-tech-insights"
+    - package: "@backstage-community/plugin-tech-insights-backend"
+    - package: "@backstage-community/plugin-tech-insights-backend-module-jsonfc"
+    - package: "@backstage-community/plugin-tech-insights-maturity"
+    - package: "@backstage-community/plugin-tech-radar"
+    - package: "@backstage-community/plugin-tech-radar-backend"
+    - package: "@backstage-community/plugin-tekton"
+    - package: "@backstage-community/plugin-todo"
+    - package: "@backstage-community/plugin-todo-backend"
+    - package: "@backstage-community/search-backend-module-adr"
+    - package: "@backstage/plugin-auth"
+    - package: "@backstage/plugin-events-backend-module-gitlab"
+    - package: "@backstage/plugin-mcp-actions-backend"
+    - package: "@backstage/plugin-notifications-backend-module-email"
+    - package: "@backstage/plugin-scaffolder-backend-module-gerrit"
+    - package: "@immobiliarelabs/backstage-plugin-gitlab"
+    - package: "@immobiliarelabs/backstage-plugin-gitlab-backend"
+    - package: "@proberaum/backstage-plugin-github-notifications-backend"
+    - package: "@red-hat-developer-hub/backstage-plugin-app-auth"
+    - package: "@red-hat-developer-hub/backstage-plugin-app-integrations"
+    - package: "@red-hat-developer-hub/backstage-plugin-catalog-backend-module-extensions"
+    - package: "@red-hat-developer-hub/backstage-plugin-dynamic-home-page"
+    - package: "@red-hat-developer-hub/backstage-plugin-extensions"
+    - package: "@red-hat-developer-hub/backstage-plugin-global-floating-action-button"
+    - package: "@red-hat-developer-hub/backstage-plugin-global-header"
+    - package: "@red-hat-developer-hub/backstage-plugin-homepage-backend"
+    - package: "@red-hat-developer-hub/backstage-plugin-konflux"
+    - package: "@red-hat-developer-hub/backstage-plugin-konflux-backend"
+    - package: "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras"
+    - package: "@red-hat-developer-hub/backstage-plugin-software-catalog-mcp-extras"
+    - package: "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras"
+    - package: "@roadiehq/backstage-plugin-argo-cd"
+    - package: "@roadiehq/backstage-plugin-argo-cd-backend"
+    - package: "@roadiehq/backstage-plugin-datadog"
+    - package: "@roadiehq/backstage-plugin-github-insights"
+    - package: "@roadiehq/backstage-plugin-github-pull-requests"
+    - package: "@roadiehq/backstage-plugin-iframe"
+    - package: "@roadiehq/backstage-plugin-jira"
+    - package: "@roadiehq/backstage-plugin-security-insights"
+    - package: "@roadiehq/scaffolder-backend-argocd"
+    - package: "@roadiehq/scaffolder-backend-module-aws"
+    - package: "@roadiehq/scaffolder-backend-module-http-request"
+    - package: "@roadiehq/scaffolder-backend-module-utils"
+    - package: "@veecode-platform/backstage-plugin-catalog-backend-module-ai-resources"
+    - package: "@veecode-platform/backstage-plugin-github-workflows"
+    - package: "@veecode-platform/backstage-plugin-github-workflows-backend"
+    - package: "vertigo-platform-plugin-vertigo-theme"

@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-global-floating-action-button'
-  dynamicArtifact: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-global-floating-action-button
+  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-floating-action-button:bs_1.52.0__1.9.3
   version: 1.9.3
   backstage:
     role: frontend-plugin

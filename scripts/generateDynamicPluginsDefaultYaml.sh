@@ -214,34 +214,33 @@ explain_missing() {
 # -----------------------------------------------------------------------------
 build_plugin_entry() {
   local meta_path=$1
-  local disabled=$2
+  local enabled=$2
 
   local dynamic_artifact package_value
   dynamic_artifact=$(yq_raw '.spec.dynamicArtifact // ""' "$meta_path" 2>/dev/null)
-
-  if [[ "$dynamic_artifact" == ./.* ]]; then
-    package_value=$dynamic_artifact
-  elif [[ "$dynamic_artifact" == *"oci://"*"!"* ]]; then
-    # Strip !fragment if present (e.g. oci://...!package-name)
-    package_value="${dynamic_artifact%%!*}"
-  else
-    package_value=$dynamic_artifact
-  fi
+  package_value=$dynamic_artifact
 
   local entry
+  # FORK PATCH (WS-2a / ADR-008): emit `disabled:` instead of upstream's
+  # `enabled:`. This fork's DPDY consumer contract (RHDH 1.10 installer +
+  # catalog-entities/Containerfile, ADR-005/ADR-006) requires the literal
+  # `disabled: true` key on every entry — every plugin here declares a
+  # canonical version only, enabling stays the tenant/operator's job in
+  # their own dynamic-plugins.yaml. Inverted boolean, same enabled/$enabled
+  # input from default.packages.yaml's enabled/disabled list membership.
   if [[ "${YQ_IS_MIKE_FARAH:-0}" -eq 1 ]]; then
-    # Preserve nested scalar quoting (pluginConfig); pass package/disabled via env — mikefarah has no jq --arg on eval.
+    # Preserve nested scalar quoting (pluginConfig); pass package/enabled via env — mikefarah has no jq --arg on eval.
     export MF_PKG="$package_value"
-    export MF_DIS="$disabled"
+    export MF_ENB="$enabled"
     entry=$("$YQ_BIN" --unwrapScalar=false eval --expression \
-      '{"package": env(MF_PKG), "disabled": (env(MF_DIS) == "true"), "pluginConfig": .spec.appConfigExamples[0].content} | with_entries(select(.value != null))' \
+      '{"package": env(MF_PKG), "disabled": (env(MF_ENB) != "true"), "pluginConfig": .spec.appConfigExamples[0].content} | with_entries(select(.value != null))' \
       "$meta_path" -o yaml)
   else
     # shellcheck disable=SC2016
     entry=$("$YQ_BIN" "${YQ_YAML_OPT}" \
       --arg pkg "$package_value" \
-      --argjson dis "$disabled" \
-      '({package: $pkg, disabled: $dis} +
+      --argjson enb "$enabled" \
+      '({package: $pkg, disabled: ($enb | not)} +
        (if .spec.appConfigExamples[0].content then {pluginConfig: .spec.appConfigExamples[0].content} else {} end))
        | with_entries(select(.value != null))' \
       "$meta_path")
@@ -287,7 +286,7 @@ while [[ $idx -lt $enabled_count ]]; do
     explain_missing "$pkg_name" >&2
     exit 1
   fi
-  entry=$(build_plugin_entry "$meta_path" "false") || {
+  entry=$(build_plugin_entry "$meta_path" "true") || {
     echo "  ✗ $pkg_name (failed to generate entry)" >&2
     exit 1
   }
@@ -317,7 +316,7 @@ while [[ $idx -lt $disabled_count ]]; do
     explain_missing "$pkg_name" >&2
     exit 1
   fi
-  entry=$(build_plugin_entry "$meta_path" "true") || {
+  entry=$(build_plugin_entry "$meta_path" "false") || {
     echo "  ✗ $pkg_name (failed to generate entry)" >&2
     exit 1
   }
@@ -344,11 +343,12 @@ cat << EOL > "$OUTPUT_FILE".head
 # THIS FILE IS GENERATED - DO NOT EDIT!
 #
 # File dynamic-plugins.default.yaml is now generated from default.packages.yaml
-# and default configuration located in the overlays repo under workspaces/*/metadata/*.yaml
-# See https://github.com/redhat-developer/rhdh-plugin-export-overlays/
+# and default configuration located in this repo under workspaces/*/metadata/*.yaml
 #
-# To update this file, trigger a rebuld of the index image from 
-# https://gitlab.cee.redhat.com/rhidp/rhdh-plugin-catalog/-/blob/rhdh-1-rhel-9/build/ci/update-index.sh
+# To update this file, trigger a rebuild of the catalog index image via the
+# publish-catalog-index job in
+# .github/workflows/publish-release-branch-workspace-plugins.yaml
+# (runs scripts/update-index.sh, see also user-guide/07-plugin-catalog-index.md)
 EOL
 cat "$OUTPUT_FILE".head "$OUTPUT_FILE" > "$OUTPUT_FILE"_
 mv "$OUTPUT_FILE"_ "$OUTPUT_FILE"
@@ -360,6 +360,7 @@ inject_tag_comments_in_dpdy "$OUTPUT_FILE"
 # Stats (from final YAML)
 # -----------------------------------------------------------------------------
 total=$(yq_raw '.plugins | length' "$OUTPUT_FILE")
+# FORK PATCH (WS-2a / ADR-008): stats read `disabled:`, matching the emitted key.
 enabled_num=$(yq_raw '[.plugins[] | select(.disabled == false)] | length' "$OUTPUT_FILE")
 disabled_num=$(yq_raw '[.plugins[] | select(.disabled == true)] | length' "$OUTPUT_FILE")
 with_config=$(yq_raw '[.plugins[] | select(has("pluginConfig"))] | length' "$OUTPUT_FILE")

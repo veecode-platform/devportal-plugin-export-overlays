@@ -17,7 +17,7 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage-community/plugin-scaffolder-backend-module-dotnet"
-  dynamicArtifact: oci://quay.io/veecode/azure-devops:bs_1.49.4!backstage-community-plugin-scaffolder-backend-module-dotnet
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet:bs_1.52.0__0.13.0
   version: 0.13.0
   backstage:
     role: backend-plugin-module

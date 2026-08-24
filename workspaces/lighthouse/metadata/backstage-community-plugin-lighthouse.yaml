@@ -16,11 +16,11 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-lighthouse'
-  dynamicArtifact: oci://quay.io/veecode/lighthouse:bs_1.49.4!backstage-community-plugin-lighthouse
-  version: 0.20.0
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-lighthouse:bs_1.52.0__0.24.0
+  version: 0.24.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.52.0
   author: Red Hat
   support: community
   lifecycle: active
@@ -53,3 +53,8 @@ spec:
                     if:
                       allOf:
                         - isLighthouseAvailable
+        # The frontend's configSchema requires lighthouse.baseUrl (verified
+        # against the bs_1.53.0 bundle's dist-scalprum/configSchema.json);
+        # without it the whole 'app' plugin fails startup schema validation.
+        lighthouse:
+          baseUrl: ${LIGHTHOUSE_URL}

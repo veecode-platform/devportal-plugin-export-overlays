@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-search-backend-module-github-discussions"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/backstage-community-plugin-search-backend-module-github-discussions:bs_1.49.4__0.11.0!backstage-community-plugin-search-backend-module-github-discussions
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions:bs_1.52.0__0.11.0
   version: 0.11.0
   backstage:
     role: backend-plugin
@@ -27,6 +27,10 @@ spec:
   appConfigExamples:
     - title: Default configuration
       content:
+        integrations:
+          github:
+            - host: github.com
+              token: ${GITHUB_TOKEN}
         search:
           collators:
             githubDiscussions:

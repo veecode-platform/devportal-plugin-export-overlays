@@ -1,0 +1,35 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  # Catalog activation module for the AiResource entity kind (ADR-007 in
+  # devportal-planning) — Package only for now, intentionally NO Plugin
+  # catalog entity and NOT listed in catalog-entities/extensions/plugins/all.yaml.
+  # Whether it becomes a marketplace-visible extension is a separate product
+  # decision; same hidden pattern as veecode-theme and vertigo-theme until then.
+  name: veecode-platform-backstage-plugin-catalog-backend-module-ai-resources
+  namespace: veecode
+  title: "AI Resources Catalog Model"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/ai-resources
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-catalog-backend-module-ai-resources"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-catalog-backend-module-ai-resources:bs_1.52.0__0.1.0
+  version: 0.1.0
+  # Registration-only backend module: it activates schemas that already ship
+  # inside the image (@backstage/catalog-model/alpha) and carries no config of
+  # its own. Deployments must additionally allow the AiResource kind in
+  # catalog.rules.
+  appConfigNotRequired: true
+  appConfigExamples: []
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.52.0
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - ai-resources

@@ -18,7 +18,7 @@ metadata:
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-scorecard-backend-module-openssf"
   dynamicArtifact: oci://quay.io/veecode/scorecard:bs_1.49.4!red-hat-developer-hub-backstage-plugin-scorecard-backend-module-openssf
-  version: 0.2.11
+  version: 0.2.12
   backstage:
     role: backend-plugin-module
     supportedVersions: 1.49.4

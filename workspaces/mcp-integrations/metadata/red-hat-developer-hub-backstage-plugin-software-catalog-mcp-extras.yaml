@@ -16,8 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-software-catalog-mcp-extras"
-  dynamicArtifact: oci://quay.io/veecode/mcp-integrations:bs_1.49.4!red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras
-  version: 0.2.1
+  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras:bs_1.52.0__0.2.3
+  version: 0.2.3
   backstage:
     role: backend-plugin
     supportedVersions: 1.48.3

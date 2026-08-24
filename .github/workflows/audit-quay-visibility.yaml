@@ -1,0 +1,167 @@
+# Audits (and optionally fixes) the visibility of every quay.io/veecode image
+# referenced by workspaces/*/metadata/*.yaml dynamicArtifact refs.
+#
+# Why this exists: export-utils' export-dynamic.yaml DOES set repos public after
+# a publish, but the fleet export is incremental — repos created before that
+# step landed (or by other pipelines) stayed private, and quay answers 401 for
+# both "private" and "nonexistent" when anonymous. That broke the catalog-index
+# DPDY generation (generate-dpdy-index.sh fail-loud on digest resolution,
+# 2026-08-20: 13 of 63 metadata-referenced images were unreachable anonymously)
+# and, worse, meant those plugins were never actually pullable by consumers.
+#
+# With QUAY_API_TOKEN this job can tell the two cases apart:
+#   - repo exists + private  -> flipped to public (unless dry-run)
+#   - repo does not exist    -> reported as MISSING-REPO (metadata is stale)
+#   - repo public, tag absent-> reported as MISSING-TAG (metadata is stale)
+#
+# Also audits the per-plugin repos from Phase 1 dual publish (ADR-008,
+# quay.io/veecode/<plugin-name>, wired in publish-release-branch-workspace-plugins.yaml).
+# That feature defaults to off, so a MISSING-REPO there is expected right now, not a
+# sign of stale metadata — see the section below for the distinct wording.
+name: Audit Quay visibility (metadata-referenced images)
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "true = only report; false = flip private repos to public"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Audit metadata-referenced quay repos
+        env:
+          QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          set -euo pipefail
+          if [ -z "$QUAY_API_TOKEN" ]; then
+            echo "FATAL: QUAY_API_TOKEN secret not available" >&2
+            exit 1
+          fi
+          AUTH="Authorization: Bearer $QUAY_API_TOKEN"
+
+          # unique image:tag pairs from metadata dynamicArtifact refs (quay.io/veecode only)
+          grep -h 'dynamicArtifact' workspaces/*/metadata/*.yaml \
+            | sed 's|.*oci://||; s|!.*||' \
+            | grep '^quay.io/veecode/' | sort -u > /tmp/refs.txt
+
+          missing_repo=0; missing_tag=0; flipped=0; private_found=0; ok=0
+          {
+            echo "## Quay visibility audit ($(wc -l < /tmp/refs.txt) unique image:tag refs)"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          for repo in $(cut -d: -f1 /tmp/refs.txt | sed 's|quay.io/veecode/||' | sort -u); do
+            body=$(curl -s -H "$AUTH" "https://quay.io/api/v1/repository/veecode/$repo")
+            if echo "$body" | grep -q '"is_public": *true'; then
+              state=public
+            elif echo "$body" | grep -q '"is_public": *false'; then
+              state=private
+            else
+              state=missing
+            fi
+            case "$state" in
+              missing)
+                { echo "- ❌ MISSING-REPO: \`veecode/$repo\` (metadata is stale)" >> "$GITHUB_STEP_SUMMARY"; echo "- ❌ MISSING-REPO: \`veecode/$repo\` (metadata is stale)"; }
+                missing_repo=$((missing_repo+1)); continue ;;
+              private)
+                private_found=$((private_found+1))
+                if [ "$DRY_RUN" = "false" ]; then
+                  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+                    -H "$AUTH" -H "Content-Type: application/json" \
+                    -d '{"visibility":"public"}' \
+                    "https://quay.io/api/v1/repository/veecode/$repo/changevisibility")
+                  if [ "$code" = "200" ]; then
+                    { echo "- 🔓 FLIPPED to public: \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- 🔓 FLIPPED to public: \`veecode/$repo\`"; }
+                    flipped=$((flipped+1))
+                  else
+                    { echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`"; }
+                  fi
+                else
+                  { echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`"; }
+                fi ;;
+              public) ok=$((ok+1)) ;;
+            esac
+
+            # tag existence for every ref of this repo
+            for tag in $(grep "^quay.io/veecode/$repo:" /tmp/refs.txt | cut -d: -f2-); do
+              tcode=$(curl -s -H "$AUTH" \
+                "https://quay.io/api/v1/repository/veecode/$repo/tag/?specificTag=$tag&onlyActiveTags=true" \
+                | grep -c '"name"') || true
+              if [ "$tcode" -eq 0 ]; then
+                { echo "- ❌ MISSING-TAG: \`veecode/$repo:$tag\` (metadata is stale)" >> "$GITHUB_STEP_SUMMARY"; echo "- ❌ MISSING-TAG: \`veecode/$repo:$tag\` (metadata is stale)"; }
+                missing_tag=$((missing_tag+1))
+              fi
+            done
+          done
+
+          {
+            echo ""
+            echo "**Totals:** public-ok=$ok, private=$private_found (flipped=$flipped), missing-repo=$missing_repo, missing-tag=$missing_tag, dry-run=$DRY_RUN"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          # Per-plugin repos (Phase 1 dual publish, ADR-008): quay.io/veecode/<plugin-name>.
+          # Derived the same way publish-release-branch-workspace-plugins.yaml does it —
+          # the text after `!` in dynamicArtifact, restricted to workspaces with an
+          # active (non .disabled) plugins-list.yaml, i.e. the ones the fleet actually
+          # publishes. Visibility only, no tag check: unlike the bundle refs above, the
+          # per-plugin tag (bs_<backstage>__<pluginVersion>) isn't tracked in refs.txt.
+          for ws in workspaces/*/; do
+            ws="${ws%/}"
+            [ -f "$ws/plugins-list.yaml" ] || continue
+            grep -h 'dynamicArtifact:.*oci://quay.io/veecode/' "$ws"/metadata/*.yaml 2>/dev/null | sed 's|.*!||' || true
+          done | sort -u > /tmp/plugin-repos.txt
+
+          plugin_missing_repo=0; plugin_flipped=0; plugin_private_found=0; plugin_ok=0
+          {
+            echo ""
+            echo "## Per-plugin visibility audit ($(wc -l < /tmp/plugin-repos.txt) plugin repos, Phase 1 dual publish — default off)"
+            echo ""
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          for repo in $(cat /tmp/plugin-repos.txt); do
+            body=$(curl -s -H "$AUTH" "https://quay.io/api/v1/repository/veecode/$repo")
+            if echo "$body" | grep -q '"is_public": *true'; then
+              state=public
+            elif echo "$body" | grep -q '"is_public": *false'; then
+              state=private
+            else
+              state=missing
+            fi
+            case "$state" in
+              missing)
+                { echo "- ⚪ MISSING-REPO: \`veecode/$repo\` (not published yet, or dual publish is off — expected while ADR-008 is default-off)" >> "$GITHUB_STEP_SUMMARY"; echo "- ⚪ MISSING-REPO: \`veecode/$repo\` (dual publish likely off, not stale)"; }
+                plugin_missing_repo=$((plugin_missing_repo+1)); continue ;;
+              private)
+                plugin_private_found=$((plugin_private_found+1))
+                if [ "$DRY_RUN" = "false" ]; then
+                  code=$(curl -s -o /dev/null -w '%{http_code}' -X POST \
+                    -H "$AUTH" -H "Content-Type: application/json" \
+                    -d '{"visibility":"public"}' \
+                    "https://quay.io/api/v1/repository/veecode/$repo/changevisibility")
+                  if [ "$code" = "200" ]; then
+                    { echo "- 🔓 FLIPPED to public: \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- 🔓 FLIPPED to public: \`veecode/$repo\`"; }
+                    plugin_flipped=$((plugin_flipped+1))
+                  else
+                    { echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- ⚠️ FLIP FAILED (HTTP $code): \`veecode/$repo\`"; }
+                  fi
+                else
+                  { echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`" >> "$GITHUB_STEP_SUMMARY"; echo "- 🔒 PRIVATE (would flip): \`veecode/$repo\`"; }
+                fi ;;
+              public) plugin_ok=$((plugin_ok+1)) ;;
+            esac
+          done
+
+          {
+            echo ""
+            echo "**Per-plugin totals:** public-ok=$plugin_ok, private=$plugin_private_found (flipped=$plugin_flipped), missing-repo=$plugin_missing_repo, dry-run=$DRY_RUN"
+          } >> "$GITHUB_STEP_SUMMARY"

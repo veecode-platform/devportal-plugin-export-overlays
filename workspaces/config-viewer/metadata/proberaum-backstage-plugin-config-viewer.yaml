@@ -14,7 +14,7 @@ metadata:
   tags: []
 spec:
   packageName: "@proberaum/backstage-plugin-config-viewer"
-  dynamicArtifact: oci://ghcr.io/redhat-developer/rhdh-plugin-export-overlays/proberaum-backstage-plugin-config-viewer:bs_1.49.4__0.13.0!proberaum-backstage-plugin-config-viewer
+  dynamicArtifact: oci://quay.io/veecode/config-viewer:bs_1.49.4!proberaum-backstage-plugin-config-viewer
   version: 0.13.0
   backstage:
     role: frontend-plugin

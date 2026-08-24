@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-jenkins-backend"
-  dynamicArtifact: oci://quay.io/veecode/jenkins:bs_1.49.4!backstage-community-plugin-jenkins-backend
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-jenkins-backend:bs_1.52.0__0.27.0
   version: 0.27.0
   backstage:
     role: backend-plugin
@@ -30,8 +30,6 @@ spec:
     - title: Default configuration
       content:
         jenkins:
-          instances:
-            - name: default
-              baseUrl: ${JENKINS_URL}
-              username: ${JENKINS_USERNAME}
-              apiKey: ${JENKINS_TOKEN}
+          baseUrl: ${JENKINS_URL}
+          username: ${JENKINS_USERNAME}
+          apiKey: ${JENKINS_TOKEN}

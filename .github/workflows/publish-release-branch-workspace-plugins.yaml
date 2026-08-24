@@ -1,6 +1,39 @@
 name: Publish RHDH Release Dynamic Plugin Images 
 on:
   workflow_call:
+    inputs:
+      workspace-path:
+        description: >-
+          Limit the export to a single workspace (e.g. 'workspaces/veecode-theme').
+          Empty exports the whole fleet, which is the only correct default for a real
+          publish. A one-workspace run exists to make an RC dispatch cheap enough to
+          test: a full fleet export is 71 workspaces.
+        type: string
+        default: ''
+        required: false
+
+      rc-tag-suffix:
+        description: >-
+          Release-candidate suffix for the bundle tag, e.g. '-rc.abc1234'. When set,
+          compatible workspaces publish bs_<version><suffix> instead of bs_<version>,
+          so a bump run can prove the fleet from its own branch BEFORE anything merges
+          — which is the whole reason the Drydock phase machine existed (ADR-0009).
+          The suffix is applied inside the compatibility check, so incompatible
+          workspaces still fall back to next__ and never claim a version they lack.
+        type: string
+        default: ''
+        required: false
+
+      also-publish-plugins:
+        description: >-
+          Phase 1 dual publish (ADR-008): when true, every plugin in a
+          bundle-workspace is ALSO pushed as its own image
+          quay.io/veecode/<plugin-name>, in addition to the existing
+          workspace bundle. Wiring only — export-utils does the actual
+          publish. Default false keeps today's behaviour byte-identical.
+        type: boolean
+        default: false
+        required: false
     secrets:
       QUAY_TOKEN:
         description: Quay.io robot account token for pushing OCI images
@@ -21,11 +54,30 @@ jobs:
       last-published-commit: ${{ steps.get-last-published-commit.outputs.last-published-commit }}
 
     steps:
+      # A RELEASE CANDIDATE always publishes the whole fleet.
+      #
+      # Skipping unchanged workspaces is an optimisation for the main branch, where
+      # the bundle tag is stable (`bs_<version>`) and a workspace that did not change
+      # already has its bundle under that tag. A candidate tag is derived from the
+      # COMMIT (`bs_<version>-rc.<sha>`), so it is a brand-new tag every time — and a
+      # skipped workspace simply has no bundle under it.
+      #
+      # Drydock resolves every declared fleet member at one tag and hashes the set, so
+      # a partial candidate is not a smaller candidate: it is an unresolvable one. The
+      # 1.54.0-next.0 run hit this the moment its branch gained a second commit —
+      # `bs_…-rc.15a69df` held 44 workspaces, `bs_…-rc.7a599c5a` held 1, and the run
+      # blocked on PUBLISH_FAILED with the publish workflow green. Every repair round
+      # would do the same, because repair moves HEAD by design.
+      #
+      # Forcing it here rather than adding an input: there is no case where a
+      # candidate wants a partial fleet, so leaving it to the caller only leaves room
+      # to get it wrong.
       - name: Get last published commit
         id: get-last-published-commit
+        if: inputs.rc-tag-suffix == ''
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
-          INPUT_RELEASE_BRANCH: ${{ github.ref_name }}      
+          INPUT_RELEASE_BRANCH: ${{ github.ref_name }}
         with:
           script: |
             core.info(`Getting latest commit on branch ${core.getInput('release_branch')}`);
@@ -48,7 +100,7 @@ jobs:
             });
 
             for (const run of runs.data.workflow_runs) {
-              if (context.payload.commits.some(c => c.id === run.head_sha)) {
+              if ((context.payload.commits ?? []).some(c => c.id === run.head_sha)) {
                 core.info(`Skipping run ${run.id} for commit ${run.head_sha}, it's part of the push`);
                 continue;
               }
@@ -81,10 +133,17 @@ jobs:
       publish-container: true
       image-repository-prefix: quay.io/veecode
       last-publish-commit: ${{ needs.prepare.outputs.last-published-commit }}
-      # use empty prefix so that we will prepend bs_1.yy.z__ instead of next__
+      # Empty prefix means "let export-utils compute bs_1.yy.z__ per workspace,
+      # gated on compatibility". Never hardcode a prefix here: it overrides that
+      # computation for EVERY workspace, so an incompatible one would publish a
+      # bs_ tag asserting support it does not have. RC tags go through
+      # rc-tag-suffix, which is applied inside the gate instead of replacing it.
       image-tag-prefix: ${{ '' }}
+      rc-tag-suffix: ${{ inputs.rc-tag-suffix }}
+      workspace-path: ${{ inputs.workspace-path }}
       image-registry-user: veecode+ci
       bundle-workspace: true
+      also-publish-plugins: ${{ inputs.also-publish-plugins }}
 
     secrets:
       image-registry-password: ${{ secrets.QUAY_TOKEN }}
@@ -97,14 +156,72 @@ jobs:
       id-token: write
 
   publish-catalog-index:
+    # Runs on a candidate pass too, under the CANDIDATE tag.
+    #
+    # It used to be skipped outright, and the reason recorded here was the tag, not
+    # the artifact: this job derived its name from versions.json alone, so on a
+    # candidate branch it pushed the RELEASE tag `bs_<version>` — the very tag the
+    # Factory's final gate checks for coherence. It did exactly that from a throwaway
+    # branch during the first RC dispatch (2026-07-27).
+    #
+    # Skipping was the wrong cure for that. A platform image bakes
+    # `plugin-catalog-index:bs_<version>` at build time and the fetch is build-fatal,
+    # so with no candidate index the first image on any new Backstage version could
+    # not be built at all — and that image is what the run verifies against. The
+    # 1.54.0-next.0 run hit it: `plugin-catalog-index:bs_1.54.0-next.0` had zero tags.
+    #
+    # Honouring `rc-tag-suffix` fixes the tag without giving up the artifact, exactly
+    # as the bundle export already does. `bs_<version>` stays untouched until a real
+    # release publishes it, and a candidate index is coherent by construction: it is
+    # assembled from `catalog-entities/` at the very commit under test.
     runs-on: ubuntu-latest
     name: Publish Catalog Index
     needs:
       - export
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          # Full history: the "Sync to target branch" step below fetches and
+          # merges catalog-index-<branch>, which needs more than the tip commit.
+          fetch-depth: 0
+
+      - name: Determine catalog-index branch
+        id: branch
+        env:
+          RC_TAG_SUFFIX: ${{ inputs.rc-tag-suffix }}
+        run: |
+          SOURCE_BRANCH="${GITHUB_REF_NAME}"
+          # A candidate pass gets its OWN target branch (same isolation the
+          # bundle/image tag already gets via rc-tag-suffix, see the "Push to
+          # Quay.io" step below) — it must never commit onto the real
+          # catalog-index-<branch> history a candidate hasn't earned yet.
+          TARGET_BRANCH="catalog-index-${SOURCE_BRANCH}${RC_TAG_SUFFIX}"
+          echo "source-branch=$SOURCE_BRANCH" >> "$GITHUB_OUTPUT"
+          echo "target-branch=$TARGET_BRANCH" >> "$GITHUB_OUTPUT"
+
+      - name: Sync to catalog-index branch
+        # WS-2a / ADR-008: vanilla port of upstream's generate-catalog-index.yaml
+        # "Sync to target branch" step. The generated catalog-index/ tree is
+        # committed to its own branch (audit trail / consumable without
+        # pulling the OCI image), never to the release branch itself.
+        env:
+          TARGET_BRANCH: ${{ steps.branch.outputs.target-branch }}
+          SOURCE_BRANCH: ${{ steps.branch.outputs.source-branch }}
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          if git ls-remote --exit-code origin "refs/heads/$TARGET_BRANCH" >/dev/null 2>&1; then
+            git fetch origin "$TARGET_BRANCH"
+            git checkout "$TARGET_BRANCH"
+            git merge "origin/$SOURCE_BRANCH" --no-edit -X theirs || true
+          else
+            git checkout -b "$TARGET_BRANCH"
+          fi
 
       - name: Read backstage version from versions.json
         id: versions
@@ -114,38 +231,258 @@ jobs:
           echo "backstage=$BS_VERSION" >> "$GITHUB_OUTPUT"
           echo "timestamp=$TIMESTAMP" >> "$GITHUB_OUTPUT"
 
-      - name: Assemble catalog index
-        run: bash scripts/assemble-catalog-index.sh
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install catalog index pipeline dependencies
+        run: |
+          pip install -r scripts/requirements.txt
+
+          # mikefarah yq, required by scripts/generateDynamicPluginsDefaultYaml.sh
+          # (same pin upstream's generate-catalog-index.yaml uses).
+          mkdir -p "$HOME/.local/bin"
+          curl -sSLo "$HOME/.local/bin/yq_mf" \
+            "https://github.com/mikefarah/yq/releases/download/v4.53.2/yq_linux_amd64"
+          chmod +x "$HOME/.local/bin/yq_mf"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Set per-plugin Quay repositories to public
+        # ADR-008 dual publish: export-utils pushes each plugin as its own image
+        # quay.io/veecode/<plugin-name>. Those repos are created on first push and
+        # start PRIVATE, so flip them here. This step MUST run BEFORE "Generate
+        # catalog index": the pipeline queries quay anonymously (see that step's
+        # comment), and an anonymous GET against a still-private repo 401s, which
+        # would silently drop brand-new plugins from the index (or trip the
+        # fail-loud gate). The export jobs this job `needs:` have already pushed
+        # everything by the time we run.
+        #
+        # Repo names are derived from spec.dynamicArtifact in the metadata files.
+        # Bare per-plugin refs (post-#206) put the repo name right after
+        # `veecode/`; legacy `<workspace>:<tag>!<plugin>` refs put it after `!`.
+        # Both extractions are emitted: for a legacy ref the first one yields the
+        # workspace bundle repo, and flipping an already-public repo is a no-op,
+        # so the union is safe. The name is the normalized form export-utils uses
+        # (jq -r '.name | sub("^@";"") | sub("[/@]";"-")' package.json). Only
+        # workspaces with an active (non .disabled) plugins-list.yaml are
+        # fleet-published at all, so disabled workspaces are excluded.
+        #
+        # Tolerant to individual failure: a plugin skipped this run (e.g. the
+        # compatibility gate) simply has no repo yet, and that is not an error here.
+        # Bool wiring note: a boolean workflow_call input can arrive stringified
+        # ('true'/'false') depending on how the caller expression evaluated, and
+        # the string 'false' is truthy to `if:`. Checking both forms is what
+        # keeps this step actually off by default.
+        if: inputs.also-publish-plugins == true || inputs.also-publish-plugins == 'true'
+        env:
+          QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
+        run: |
+          if [ -z "$QUAY_API_TOKEN" ]; then
+            echo "QUAY_API_TOKEN not set, skipping per-plugin visibility change"
+            exit 0
+          fi
+
+          for plugin in $(
+            for ws in workspaces/*/; do
+              ws="${ws%/}"
+              [ -f "$ws/plugins-list.yaml" ] || continue
+              sed -n 's|.*dynamicArtifact:.*oci://quay\.io/veecode/\([^:!@]*\)[:!@].*|\1|p' "$ws"/metadata/*.yaml 2>/dev/null || true
+              sed -n 's|.*dynamicArtifact:.*oci://quay\.io/veecode/.*!\(.*\)|\1|p' "$ws"/metadata/*.yaml 2>/dev/null || true
+            done | sort -u
+          ); do
+            echo "Setting quay.io/veecode/$plugin to public"
+            curl -s -X PUT \
+              -H "Authorization: Bearer $QUAY_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d '{"visibility":"public"}' \
+              "https://quay.io/api/v1/repository/veecode/$plugin/changevisibility" || true
+          done
+
+      - name: Generate catalog index
+        # WS-2a / ADR-008: upstream RHDH's index pipeline (scripts/update-index.sh),
+        # adapted for this fork's single tier and quay.io/veecode registry — see
+        # user-guide/07-plugin-catalog-index.md. Replaces the retired
+        # scripts/assemble-catalog-index.sh + scripts/generate-dpdy-index.sh.
+        #
+        # Registry queries are ANONYMOUS on purpose (no REGISTRY_USERNAME /
+        # REGISTRY_PASSWORD env): the pipeline's non-ghcr auth path sends
+        # `Authorization: Basic` straight at quay's /v2/ endpoints, and quay
+        # rejects that with 401 even for PUBLIC repos (it requires the bearer
+        # token dance). Wiring the creds here is what failed the 2026-08-24
+        # cutover run with build-report failed=98 while every tag existed.
+        # Anonymous GETs return 200 for public repos — same way upstream
+        # queries quay.io/rhdh. Precondition: the per-plugin visibility step
+        # ABOVE runs before this one, so repos created by this run's exports
+        # are already public when queried.
+        run: |
+          # --community-registry MUST equal --registry: upstream's
+          # update-index.sh only forwards --community-registry to
+          # bootstrapPluginBuilds.py when the two differ (see WS-2a's fork
+          # patch comment there). Passing them equal here is what keeps that
+          # forwarding suppressed AND makes the resolved value correct if it
+          # ever did fire — this fork has no separate community-tier
+          # registry; every plugin publishes to quay.io/veecode regardless
+          # of the `support` label inherited from upstream metadata.
+          scripts/update-index.sh \
+            --overlays-dir . \
+            --registry quay.io/veecode \
+            --community-registry quay.io/veecode \
+            --output-dir catalog-index \
+            --plugin-builds-dir plugin_builds \
+            --packages-file default.packages.yaml \
+            --report-file catalog-index/build-report.json
+
+      - name: Assert workspace metadata was not left modified
+        # scripts/update-index.sh Step 2 (generatePluginBuildInfo.py) writes
+        # digests back into workspaces/*/metadata/*.yaml in the working tree
+        # and restores the originals via an EXIT trap. This is the guard the
+        # owner asked for explicitly: a mutated metadata file reaching the
+        # commit below is the "days of lost work" failure class, not a
+        # hypothetical one — verify the trap actually ran instead of trusting it.
+        run: |
+          if [ -n "$(git status --porcelain workspaces/)" ]; then
+            echo "ERROR: workspaces/*/metadata/*.yaml were left modified by the catalog index pipeline (restore trap in scripts/update-index.sh did not run cleanly)" >&2
+            git status --porcelain workspaces/ >&2
+            exit 1
+          fi
 
       - name: Validate catalog index
         run: |
-          YAML_COUNT=$(find catalog-entities/extensions -name '*.yaml' | wc -l)
-          echo "Found $YAML_COUNT YAML files"
+          DPDY=catalog-index/dynamic-plugins.default.yaml
+          EXTENSIONS_DIR=catalog-index/catalog-entities/extensions
+          PACKAGES_DIR="$EXTENSIONS_DIR/packages"
+          REPORT=catalog-index/build-report.json
+
+          YAML_COUNT=$(find "$PACKAGES_DIR" -name '*.yaml' ! -name all.yaml 2>/dev/null | wc -l)
+          echo "Found $YAML_COUNT package entity YAML files"
           if [ "$YAML_COUNT" -lt 50 ]; then
-            echo "ERROR: expected at least 50 YAML files, got $YAML_COUNT"
+            echo "ERROR: expected at least 50 package entity YAML files, got $YAML_COUNT"
             exit 1
+          fi
+
+          # generateCatalogIndex.py's copy_catalog_entities_extensions() WARNS
+          # and returns (exit 0) if catalog-entities/extensions/ isn't found —
+          # it does not fail the run. Without an explicit check here, a wrong
+          # --catalog-entities-dir or --overlays-dir would ship an image with
+          # no plugins/collections entities while packages/ still passes the
+          # count check above — the exact "silently emptied the 2.x
+          # marketplace" failure catalog-entities/Containerfile's comment
+          # exists to warn against, just from a different cause this time.
+          PLUGINS_COUNT=$(find "$EXTENSIONS_DIR/plugins" -name '*.yaml' ! -name all.yaml 2>/dev/null | wc -l)
+          COLLECTIONS_COUNT=$(find "$EXTENSIONS_DIR/collections" -name '*.yaml' 2>/dev/null | wc -l)
+          echo "Found $PLUGINS_COUNT plugin entity YAML files, $COLLECTIONS_COUNT collection YAML files"
+          if [ "$PLUGINS_COUNT" -lt 1 ]; then
+            echo "ERROR: $EXTENSIONS_DIR/plugins is empty or missing — hand-maintained plugin entities were not copied"
+            exit 1
+          fi
+          if [ "$COLLECTIONS_COUNT" -lt 1 ]; then
+            echo "ERROR: $EXTENSIONS_DIR/collections is empty or missing — hand-maintained collections were not copied"
+            exit 1
+          fi
+
+          if [ ! -f "$DPDY" ]; then
+            echo "ERROR: $DPDY is missing"
+            exit 1
+          fi
+
+          PACKAGE_COUNT=$(grep -c '^\s*- package:' "$DPDY" || true)
+          EXPECTED_COUNT=$(grep -c '^\s*- package:' default.packages.yaml || true)
+          echo "Found $PACKAGE_COUNT package entries in $DPDY (default.packages.yaml lists $EXPECTED_COUNT)"
+          if [ "$PACKAGE_COUNT" -lt 1 ]; then
+            echo "ERROR: expected at least 1 '- package:' entry in $DPDY, got $PACKAGE_COUNT"
+            exit 1
+          fi
+          if [ "$PACKAGE_COUNT" -ne "$EXPECTED_COUNT" ]; then
+            echo "ERROR: DPDY has $PACKAGE_COUNT entries but default.packages.yaml lists $EXPECTED_COUNT — every listed package must produce exactly one DPDY entry"
+            exit 1
+          fi
+
+          # WS-2a / ADR-008: digest pinning (the retired generate-dpdy-index.sh's
+          # `skopeo inspect` gate) is not carried forward — the decided final ref
+          # format is a plain tag (oci://<image>:<tag>), matching what upstream
+          # generates and what WS-2b's metadata rewrite produces. Assert every
+          # entry is still a syntactically real, tagged oci:// ref.
+          BAD_REFS=$(grep '^\s*- package:' "$DPDY" | grep -vcE "oci://[^\"'[:space:]]+:[^\"'[:space:]@]+" || true)
+          if [ "$BAD_REFS" -ne 0 ]; then
+            echo "ERROR: $BAD_REFS package entries are not tagged oci refs (expected oci://<image>:<tag>)"
+            grep '^\s*- package:' "$DPDY" | grep -vE "oci://[^\"'[:space:]]+:[^\"'[:space:]@]+" || true
+            exit 1
+          fi
+
+          DISABLED_COUNT=$(grep -c '^\s*disabled: true\s*$' "$DPDY" || true)
+          echo "Found $DISABLED_COUNT 'disabled: true' entries"
+          if [ "$DISABLED_COUNT" -ne "$PACKAGE_COUNT" ]; then
+            echo "ERROR: disabled:true count ($DISABLED_COUNT) does not match package count ($PACKAGE_COUNT)"
+            exit 1
+          fi
+
+          # Fail-loud on unresolvable images: this is the exact guarantee the
+          # retired generate-dpdy-index.sh enforced (its skopeo digest
+          # resolution failed the whole script if any referenced image was
+          # unreachable) after the 2026-08-20 incident recorded in
+          # .github/workflows/audit-quay-visibility.yaml — 13 of 63
+          # metadata-referenced images were unreachable and got published
+          # anyway. generateCatalogIndex.py itself only WARNS on missing
+          # images (upstream is more tolerant by design); this step restores
+          # the fork's fail-loud guarantee on top of that.
+          if [ -f "$REPORT" ]; then
+            FAILED=$(jq '.summary.failed // 0' "$REPORT")
+            FALLBACKS=$(jq '[.plugins[] | select(.stages["image-metadata-fetch"].fallback == true)] | length' "$REPORT" 2>/dev/null || echo 0)
+            echo "build-report.json: failed=$FAILED fallbacks=$FALLBACKS"
+            if [ "$FALLBACKS" -gt 0 ]; then
+              echo "WARNING: $FALLBACKS plugin(s) resolved via an older fallback tag — see catalog-index/build-report.json"
+            fi
+            if [ "$FAILED" -gt 0 ]; then
+              echo "ERROR: $FAILED plugin(s) have no resolvable OCI image in quay.io/veecode — refusing to publish an index with unreachable images"
+              jq -r '.plugins | to_entries[] | select(.value.overall == "fail") | "  - " + .key' "$REPORT"
+              exit 1
+            fi
           fi
 
       - name: Build OCI image
         run: |
-          cd catalog-entities
-          podman build -t plugin-catalog-index -f Containerfile .
+          podman build -t plugin-catalog-index -f catalog-entities/Containerfile catalog-index
 
       - name: Push to Quay.io
         env:
           QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
           BS_VERSION: ${{ steps.versions.outputs.backstage }}
           TIMESTAMP: ${{ steps.versions.outputs.timestamp }}
+          RC_TAG_SUFFIX: ${{ inputs.rc-tag-suffix }}
+        # Versioned tags ONLY. The mutable `:latest` tag is a production
+        # pointer consumed by deployed instances; it is promoted exclusively
+        # by the human-approved promote-catalog-index-latest.yaml workflow.
+        # Never re-add it here — an automatic retag from a branch whose
+        # versions.json has moved would repoint every :latest consumer at an
+        # unvalidated line (see CLAUDE.md § "Publish vs. promote").
         run: |
           podman login -u veecode+ci -p "$QUAY_TOKEN" quay.io
           IMAGE="quay.io/veecode/plugin-catalog-index"
+
+          # A candidate pass publishes ONE tag: bs_<version>-rc.<sha>.
+          #
+          # It must never write `bs_<version>` — that is the tag the Factory's final
+          # gate checks for coherence, and moving it before anything is accepted is the
+          # mistake that got this whole job disabled for candidates.
+          #
+          # No timestamped companion either. The timestamp exists to keep an audit
+          # trail of successive publishes under one mutable release tag; a candidate tag
+          # already names its exact commit, so a second copy would only be garbage with
+          # a 14-day expiry.
+          if [ -n "${RC_TAG_SUFFIX}" ]; then
+            RC_TAG="bs_${BS_VERSION}${RC_TAG_SUFFIX}"
+            podman tag plugin-catalog-index "$IMAGE:${RC_TAG}"
+            podman push "$IMAGE:${RC_TAG}"
+            echo "Published $IMAGE:${RC_TAG} (candidate — bs_${BS_VERSION} untouched)"
+            exit 0
+          fi
+
           podman tag plugin-catalog-index "$IMAGE:bs_${BS_VERSION}"
           podman tag plugin-catalog-index "$IMAGE:bs_${BS_VERSION}_${TIMESTAMP}"
-          podman tag plugin-catalog-index "$IMAGE:latest"
           podman push "$IMAGE:bs_${BS_VERSION}"
           podman push "$IMAGE:bs_${BS_VERSION}_${TIMESTAMP}"
-          podman push "$IMAGE:latest"
-          echo "Published $IMAGE with tags: bs_${BS_VERSION}, bs_${BS_VERSION}_${TIMESTAMP}, latest"
+          echo "Published $IMAGE with tags: bs_${BS_VERSION}, bs_${BS_VERSION}_${TIMESTAMP} (:latest is promotion-only)"
 
       - name: Set Quay repository to public
         env:
@@ -160,3 +497,33 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"visibility":"public"}' \
             "https://quay.io/api/v1/repository/veecode/plugin-catalog-index/changevisibility" || true
+
+      - name: Commit and push catalog-index branch
+        # WS-2a / ADR-008: intentionally the LAST step. The git branch commit
+        # is an audit trail, not the artifact — the OCI image above is. A
+        # git push failure here (races, protected-branch rules, token scope)
+        # must never withhold an already-built, already-pushed image.
+        env:
+          TARGET_BRANCH: ${{ steps.branch.outputs.target-branch }}
+        run: |
+          SHORT_SHA="${GITHUB_SHA:0:7}"
+          # -f: catalog-index/ and plugin_builds/ are gitignored on the release
+          # branch (local-dev hygiene) — they are meant to be committed here,
+          # on the dedicated catalog-index-<branch> branch only.
+          git add -f catalog-index/ plugin_builds/
+          git commit -m "Generate catalog-index from ${SHORT_SHA}" || echo "No changes to commit"
+
+          MAX_RETRIES=3
+          for i in $(seq 1 $MAX_RETRIES); do
+            if git push origin "$TARGET_BRANCH"; then
+              echo "Push succeeded"
+              break
+            fi
+            if [ "$i" -lt "$MAX_RETRIES" ]; then
+              echo "Push failed, retrying (attempt $((i+1))/$MAX_RETRIES)..."
+              git pull -X theirs origin "$TARGET_BRANCH"
+            else
+              echo "Push failed after $MAX_RETRIES attempts"
+              exit 1
+            fi
+          done

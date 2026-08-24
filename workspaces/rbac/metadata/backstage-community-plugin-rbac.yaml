@@ -16,7 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-rbac'
-  dynamicArtifact: ./dynamic-plugins/dist/backstage-community-plugin-rbac
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-rbac:bs_1.52.0__1.52.4
   version: 1.52.4
   backstage:
     role: frontend-plugin

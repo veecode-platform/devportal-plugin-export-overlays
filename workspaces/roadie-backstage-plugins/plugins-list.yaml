@@ -3,6 +3,7 @@ plugins/frontend/backstage-plugin-argo-cd:
 plugins/frontend/backstage-plugin-datadog:
 plugins/frontend/backstage-plugin-github-insights:
 plugins/frontend/backstage-plugin-github-pull-requests:
+plugins/frontend/backstage-plugin-iframe:
 plugins/frontend/backstage-plugin-jira:
 plugins/frontend/backstage-plugin-security-insights:
 plugins/scaffolder-actions/scaffolder-backend-argocd: --embed-package @roadiehq/backstage-plugin-argo-cd-backend
@@ -24,7 +25,6 @@ plugins/scaffolder-actions/scaffolder-backend-module-utils:
 #plugins/frontend/backstage-plugin-bugsnag:
 #plugins/frontend/backstage-plugin-buildkite:
 #plugins/frontend/backstage-plugin-cloudsmith:
-#plugins/frontend/backstage-plugin-iframe:
 #plugins/frontend/backstage-plugin-shortcut:
 #plugins/frontend/backstage-plugin-travis-ci:
 #plugins/frontend/backstage-plugin-wiz:

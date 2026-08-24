@@ -55,6 +55,7 @@ There is no local build system — all building, testing, and publishing happens
 On a PR, comment:
 - `/publish` — Build and publish test OCI images (tagged `pr_<number>__<version>`)
 - `/smoketest` — Run smoke tests against last published artifacts (requires prior `/publish`)
+- `/override-backstage` — Override workspace Backstage compatibility version (creates `backstage.json` and rewrites metadata OCI tags)
 - `/test` or `/test e2e-tests` — Run e2e tests. Only relevant for PRs that modify workspaces containing an `e2e-tests/` directory (e.g., the `backstage` workspace)
 
 ### Important Workflows (`.github/workflows/`)
@@ -67,6 +68,27 @@ On a PR, comment:
 | `run-workspace-smoke-tests.yaml` | After publish | Verifies plugins load in RHDH container |
 | `check-backstage-compatibility.yaml` | Push + PRs | Gates release branch creation on compatibility |
 | `sync-user-guide-to-wiki.yaml` | Weekly + manual | Syncs `user-guide/` to GitHub Wiki with placeholder injection |
+| `promote-catalog-index-latest.yaml` | Manual + human approval | The ONLY path that moves `plugin-catalog-index:latest` (see "Publish vs. promote" below) |
+
+### Publish vs. promote (`:latest`) — read before touching publish workflows
+
+**Publishing is automatic and versioned; promotion is manual and human-approved. Never mix the two.**
+
+- Every push to `main` (or a release branch) touching `workspaces/**`, `catalog-entities/**` or
+  `versions.json` auto-publishes **versioned artifacts only**: plugin bundles and
+  `plugin-catalog-index:bs_<version>` / `bs_<version>_<timestamp>`. This is the staging channel —
+  it is safe precisely because nothing consumes those tags implicitly.
+- `plugin-catalog-index:latest` is a **production pointer**: deployed instances (SaaS included)
+  resolve it live. It moves ONLY via `promote-catalog-index-latest.yaml` (manual dispatch, gated by
+  the `catalog-latest-promotion` GitHub Environment, which requires human approval and records
+  before/after digests in the run summary).
+- **Never re-add a `:latest` tag/push to any automatic workflow.** The historical incident this
+  prevents: `versions.json` on `main` moved to a new Backstage line before that line was validated;
+  the only thing that kept every `:latest` consumer from being silently repointed was that the
+  export step happened to be failing. Do not rely on luck twice.
+- The same rule applies to the DevPortal platform image in `devportal-platform`: prerelease tags
+  (`2.x.y-rc.N`) publish freely; `veecode/devportal:latest` moves only on stable release tags,
+  which are a deliberate human act.
 
 ### Triggering Workflows Manually
 
@@ -413,7 +435,8 @@ Trigger nightly manually: comment `/test e2e-ocp-helm-nightly` on a PR.
 ## Documentation
 
 - `README.md` — Repo overview, PR workflow, testing procedures
-- `user-guide/` — 6-part contributor guide (getting started, export tools, ownership, metadata sync, versions, patches)
+- `user-guide/` — 6-part contributor guide (getting started, export tools, ownership, metadata sync, versions, patches) plus catalog index pipeline docs
+- `user-guide/troubleshooting-catalog-index.md` — Troubleshooting content embedded by `renderCatalogStatus.py` into each generated status page. Anchor slugs must stay in sync with `REASON_ANCHORS` in the renderer
 - `catalog-entities/extensions/README.md` — Extensions catalog metadata format
 - GitHub Wiki — Auto-synced from `user-guide/` with dynamic content injection (`{{AUTO:*}}` placeholders replaced from `versions.json`)
 - **E2E test utils docs** — https://github.com/redhat-developer/rhdh-e2e-test-utils/tree/main/docs — latest API docs, changelogs, tutorials, and configuration reference for `@red-hat-developer-hub/e2e-test-utils`

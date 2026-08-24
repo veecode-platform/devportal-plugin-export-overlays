@@ -10,17 +10,17 @@ metadata:
     - url: https://github.com/awslabs/backstage-plugins-for-aws/issues
       title: Bugs
     - title: Source Code
-      url: https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/ecs/backend
+      url: https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/ecs/backend
   annotations:
-    backstage.io/source-location: url:https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/ecs/backend
+    backstage.io/source-location: url:https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/ecs/backend
   tags: []
 spec:
   packageName: "@aws/amazon-ecs-plugin-for-backstage-backend"
-  dynamicArtifact: oci://quay.io/veecode/backstage-plugins-for-aws:bs_1.49.4!aws-amazon-ecs-plugin-for-backstage-backend
-  version: 0.9.1
+  dynamicArtifact: oci://quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend:bs_1.52.0__0.9.0
+  version: 0.9.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.48.4
   author: AWS
   support: community
   lifecycle: active

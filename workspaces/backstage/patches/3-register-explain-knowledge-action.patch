@@ -1,22 +1,22 @@
 --- plugins/mcp-actions-backend/src/plugin.ts
 +++ plugins/mcp-actions-backend/src/plugin.ts
 @@ -27,6 +27,7 @@
-   actionsServiceRef,
    metricsServiceRef,
+   tracingServiceRef,
  } from '@backstage/backend-plugin-api/alpha';
 +import { createExplainAction } from './actions/createExplainAction';
  import { parseServerConfigs } from './config';
  
  /**
-@@ -59,6 +60,7 @@
+@@ -61,6 +62,7 @@
          discovery,
          config,
          metrics,
 +        registry,
+         tracing,
+         auditor,
        }) {
-         const serverConfigs = parseServerConfigs(config);
-         const namespacedToolNames = config.getOptionalBoolean(
-@@ -114,6 +116,8 @@
+@@ -126,6 +128,8 @@
  
          httpRouter.use(router);
  

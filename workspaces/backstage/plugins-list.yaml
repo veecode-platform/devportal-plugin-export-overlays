@@ -1,5 +1,23 @@
-# Pruned: plugins already static in devportal-base or wrapped in devportal-distro
-# are excluded. Only plugins NOT available in the base/distro are exported here.
+# Curated allowlist. This file is the export selector: the workspace source is
+# cloned from source.json regardless of what is listed here, and only the
+# uncommented entries below are built and pushed into the OCI bundle. Commenting
+# an entry out costs nothing and removes nothing from upstream — it just skips
+# the export.
+#
+# Adoption criterion — an entry stays enabled only if at least one holds:
+#   (a) it has a workspaces/backstage/metadata/*.yaml, so it reaches the
+#       Extensions catalog index and is discoverable in the UI; or
+#   (b) some consumer config references its OCI ref — devportal-platform
+#       (dynamic-plugins.default.yaml, presets/*), devportal-distro or
+#       devportal-samples.
+#
+# Everything else is commented out below, grouped as upstream groups it, so
+# re-adopting a package is a one-line change. Upstream additions are never
+# enrolled automatically; each new package needs a separate adoption decision.
+#
+# Why this matters: the export step costs ~28s per entry and is ~80% of this
+# job's wall clock. At 39 entries this workspace took 22-23 min, 2.5x the next
+# slowest in the fleet, on every publish.
 #
 # Removed (static in devportal-base):
 #   auth: github, gitlab, google, microsoft, oidc, gcp-iap, oauth2-proxy
@@ -14,62 +32,93 @@
 # Removed (wrapped in devportal-distro):
 #   catalog: bitbucket-cloud, bitbucket-server
 #   scaffolder: bitbucket-cloud, bitbucket-server
+#
+# Removed while moving the source from 1.49.4 to 1.53.0:
+#   scaffolder-backend-module-bitbucket: path no longer exists upstream
+#   example-todo-list/backend: private internal examples, not product plugins
 
-# --- Auth providers not in devportal-base ---
-plugins/auth-backend-module-atlassian-provider:
-plugins/auth-backend-module-aws-alb-provider:
-plugins/auth-backend-module-azure-easyauth-provider:
-plugins/auth-backend-module-bitbucket-provider:
-plugins/auth-backend-module-cloudflare-access-provider:
-plugins/auth-backend-module-oauth2-provider:
-plugins/auth-backend-module-okta-provider:
-plugins/auth-backend-module-pinniped-provider:
-plugins/auth-backend-module-vmware-cloud-provider:
+# ============================================================================
+# Enabled — exported into the bundle
+# ============================================================================
 
-# --- Catalog modules not in devportal-base ---
-plugins/catalog-backend-module-aws:
-plugins/catalog-backend-module-backstage-openapi:
-plugins/catalog-backend-module-gcp: --embed-package @backstage/plugin-kubernetes-common
-plugins/catalog-backend-module-gerrit:
-plugins/catalog-backend-module-incremental-ingestion:
-plugins/catalog-backend-module-puppetdb:
-plugins/catalog-backend-module-unprocessed:
-
-# --- Scaffolder modules not in devportal-base/distro ---
-plugins/scaffolder-backend-module-bitbucket:
-plugins/scaffolder-backend-module-confluence-to-markdown:
-plugins/scaffolder-backend-module-cookiecutter:
-plugins/scaffolder-backend-module-gcp:
-plugins/scaffolder-backend-module-gerrit:
-plugins/scaffolder-backend-module-gitea:
-plugins/scaffolder-backend-module-rails:
-plugins/scaffolder-backend-module-sentry:
-plugins/scaffolder-backend-module-yeoman:
-
-# --- Search modules not in devportal-base ---
-plugins/search-backend-module-elasticsearch:
-plugins/search-backend-module-explore:
-plugins/search-backend-module-stack-overflow-collator:
-
-# --- Events modules not in devportal-base ---
-plugins/events-backend-module-aws-sqs:
-plugins/events-backend-module-azure:
-plugins/events-backend-module-bitbucket-cloud:
-plugins/events-backend-module-bitbucket-server:
-plugins/events-backend-module-gerrit:
-plugins/events-backend-module-gitlab:
-
-# --- Other plugins not in devportal-base ---
-plugins/config-schema:
-plugins/devtools:
-plugins/devtools-backend:
-plugins/example-todo-list:
-plugins/example-todo-list-backend:
+# Consumed by devportal-platform (dynamic-plugins.default.yaml,
+# presets/kubernetes.yaml), devportal-distro and devportal-samples.
+# Adopted deliberately in #11 so the platform can consume it via OCI ref.
 plugins/kubernetes:
+
+# Consumed by devportal-platform (dynamic-plugins.default.yaml, presets/mcp.yaml
+# and presets/mcp-chat.yaml) and covered by every patch in this workspace.
 plugins/mcp-actions-backend:
+
+# Upstream Backstage's OAuth consent page (frontend): mounts /oauth2/authorize/
+# :sessionId via its Router — the page every external MCP client lands on during
+# the DCR authorization flow. Required by any RHDH-shell consumer of
+# mcp-actions-backend (the fork/tenant shells have no baked consent route, unlike
+# devportal-base's app). Overlay scalprum-config.json synced from upstream #2498;
+# upstream exports it too (ghcr bs_1.52.0__0.1.9). Wiring: dynamicRoutes
+# path /oauth2/* -> importName Router (see metadata appConfigExamples).
+plugins/auth:
+
+# Catalogued: each has a metadata/*.yaml and a published Plugin entity.
+plugins/events-backend-module-gitlab:
+plugins/scaffolder-backend-module-gerrit:
 plugins/notifications-backend-module-email: --embed-package @backstage/plugin-notifications-node
 
-#plugins/permission-backend: ==> Static in devportal-base
-#plugins/permission-backend-module-policy-allow-all: ==> Static in devportal-base
-#plugins/scaffolder: ==> Static in devportal-base
-#plugins/scaffolder-backend: ==> Static in devportal-base
+# ============================================================================
+# Disabled — built and pushed for months with no metadata entry and no consumer
+# reference anywhere in devportal-platform, devportal-base, devportal-distro,
+# devportal-samples, next-charts or the docs. Uncomment to re-adopt, and add a
+# metadata/*.yaml alongside it.
+# ============================================================================
+
+# --- Auth providers not in devportal-base ---
+#plugins/auth-backend-module-atlassian-provider:
+#plugins/auth-backend-module-aws-alb-provider:
+#plugins/auth-backend-module-azure-easyauth-provider:
+#plugins/auth-backend-module-bitbucket-provider:
+#plugins/auth-backend-module-cloudflare-access-provider:
+#plugins/auth-backend-module-oauth2-provider:
+#plugins/auth-backend-module-okta-provider:
+#plugins/auth-backend-module-pinniped-provider:
+#plugins/auth-backend-module-vmware-cloud-provider:
+
+# --- Catalog modules not in devportal-base ---
+#plugins/catalog-backend-module-aws:
+#plugins/catalog-backend-module-backstage-openapi:
+#plugins/catalog-backend-module-gcp: --embed-package @backstage/plugin-kubernetes-common
+#plugins/catalog-backend-module-gerrit:
+#plugins/catalog-backend-module-incremental-ingestion:
+#plugins/catalog-backend-module-puppetdb:
+#plugins/catalog-backend-module-unprocessed:
+
+# --- Scaffolder modules not in devportal-base/distro ---
+#plugins/scaffolder-backend-module-confluence-to-markdown:
+#plugins/scaffolder-backend-module-cookiecutter:
+#plugins/scaffolder-backend-module-gcp:
+#plugins/scaffolder-backend-module-gitea:
+#plugins/scaffolder-backend-module-rails:
+#plugins/scaffolder-backend-module-sentry:
+#plugins/scaffolder-backend-module-yeoman:
+
+# --- Search modules not in devportal-base ---
+#plugins/search-backend-module-elasticsearch:
+#plugins/search-backend-module-explore:
+#plugins/search-backend-module-stack-overflow-collator:
+
+# --- Events modules not in devportal-base ---
+#plugins/events-backend-module-aws-sqs:
+#plugins/events-backend-module-azure:
+#plugins/events-backend-module-bitbucket-cloud:
+#plugins/events-backend-module-bitbucket-server:
+#plugins/events-backend-module-gerrit:
+
+# --- Other plugins not in devportal-base ---
+#plugins/config-schema:
+#plugins/devtools:
+#plugins/devtools-backend:
+
+# --- Static in devportal-base ---
+#plugins/permission-backend:
+#plugins/permission-backend-module-policy-allow-all:
+#plugins/scaffolder:
+#plugins/scaffolder-backend:
