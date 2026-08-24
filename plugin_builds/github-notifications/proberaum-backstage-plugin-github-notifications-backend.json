@@ -1,0 +1,9 @@
+{
+  "proberaum-backstage-plugin-github-notifications-backend": {
+    "workspacePath": "github-notifications/plugins/github-notifications-backend",
+    "registryReference": "quay.io/veecode/proberaum-backstage-plugin-github-notifications-backend:bs_1.52.0__0.12.0",
+    "digest": "sha256:7c890c9240670dcf08213cf2d6abd0c00f807bce1f18170eff097bbe1711e76d",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sicHJvYmVyYXVtLWJhY2tzdGFnZS1wbHVnaW4tZ2l0aHViLW5vdGlmaWNhdGlvbnMtYmFja2VuZCI6eyJuYW1lIjoiQHByb2JlcmF1bS9iYWNrc3RhZ2UtcGx1Z2luLWdpdGh1Yi1ub3RpZmljYXRpb25zLWJhY2tlbmQtZHluYW1pYyIsInZlcnNpb24iOiIwLjEyLjAiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImJhY2tlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJnaXRodWItbm90aWZpY2F0aW9ucyIsInBsdWdpblBhY2thZ2VzIjpbIkBwcm9iZXJhdW0vYmFja3N0YWdlLXBsdWdpbi1naXRodWItbm90aWZpY2F0aW9ucy1iYWNrZW5kIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTIuMCJ9LCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vcHJvYmVyYXVtL2JhY2tzdGFnZS1wbHVnaW5zIiwiZGlyZWN0b3J5Ijoid29ya3NwYWNlcy9naXRodWItbm90aWZpY2F0aW9ucy9wbHVnaW5zL2dpdGh1Yi1ub3RpZmljYXRpb25zLWJhY2tlbmQifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

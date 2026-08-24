@@ -1,0 +1,9 @@
+{
+  "aws-aws-s3-catalog-module-for-backstage": {
+    "workspacePath": "backstage-plugins-for-aws/plugins/core/catalog-aws-s3",
+    "registryReference": "quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.52.0__0.1.0",
+    "digest": "sha256:4c2460a4f8cd4f3ee31743cc0f3ba48b6c7e2960f069beb7928172ee2580495d",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYXdzLWF3cy1zMy1jYXRhbG9nLW1vZHVsZS1mb3ItYmFja3N0YWdlIjp7Im5hbWUiOiJAYXdzL2F3cy1zMy1jYXRhbG9nLW1vZHVsZS1mb3ItYmFja3N0YWdlLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4xLjAiLCJkZXNjcmlwdGlvbiI6IkR5bmFtaWMtcGx1Z2luIHdyYXBwZXIgZm9yIEJhY2tzdGFnZSBBV1MgUzMgY2F0YWxvZyBkaXNjb3ZlcnkuIiwiYmFja3N0YWdlIjp7InJvbGUiOiJiYWNrZW5kLXBsdWdpbi1tb2R1bGUiLCJwbHVnaW5JZCI6ImNhdGFsb2ciLCJwbHVnaW5QYWNrYWdlIjoiQGJhY2tzdGFnZS9wbHVnaW4tY2F0YWxvZy1iYWNrZW5kIiwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sInJlcG9zaXRvcnkiOnsidHlwZSI6ImdpdCIsInVybCI6ImdpdGh1Yjphd3NsYWJzL2JhY2tzdGFnZS1wbHVnaW5zLWZvci1hd3MiLCJkaXJlY3RvcnkiOiJwbHVnaW5zL2NvcmUvY2F0YWxvZy1hd3MtczMifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

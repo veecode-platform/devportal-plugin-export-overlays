@@ -1,0 +1,36 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-jenkins-backend
+  namespace: rhdh
+  title: "Jenkins Backend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/jenkins
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/jenkins
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-jenkins-backend"
+  # Tag: bs_1.52.0__0.27.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-jenkins-backend@sha256:dc043d5b0302f8e4f42d1f0599a050463082f08a214fc5991709f32471d536cb"
+  version: 0.27.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.49.4
+  author: Red Hat
+  support: community
+  lifecycle: active
+  partOf:
+    - jenkins
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        jenkins:
+          baseUrl: ${JENKINS_URL}
+          username: ${JENKINS_USERNAME}
+          apiKey: ${JENKINS_TOKEN}

@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/redhat-developer/rhdh-plugins/refs/heads/main/workspaces/extensions/json-schema/packages.json
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: aws-aws-codebuild-plugin-for-backstage
+  namespace: community
+  title: "@aws/aws-codebuild-plugin-for-backstage"
+  links:
+    - url: https://github.com/awslabs/backstage-plugins-for-aws
+      title: Homepage
+    - url: https://github.com/awslabs/backstage-plugins-for-aws/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/codebuild/frontend
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/codebuild/frontend
+  tags: []
+spec:
+  packageName: "@aws/aws-codebuild-plugin-for-backstage"
+  # Tag: bs_1.52.0__0.7.2
+  dynamicArtifact: "oci://quay.io/veecode/aws-aws-codebuild-plugin-for-backstage@sha256:e3c31521485e2e073f3b6489ab36a19751f2b343ddb6ff2e7d5931c46315ac0f"
+  version: 0.7.2
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.48.4
+  author: AWS
+  support: community
+  lifecycle: active
+  partOf:
+    - backstage-plugins-for-aws
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            aws.aws-codebuild-plugin-for-backstage:
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityAwsCodeBuildCard
+                  config:
+                    layout:
+                      gridColumn: "1 / span 6"
+                    if:
+                      anyOf:
+                        - hasAnnotation: aws.amazon.com/aws-codebuild-project-tags
+                        - hasAnnotation: aws.amazon.com/aws-codebuild-project-arn

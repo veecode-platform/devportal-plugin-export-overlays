@@ -1,0 +1,11 @@
+{
+  "aws-amazon-ecs-plugin-for-backstage-backend": {
+    "workspacePath": "aws-ecs/aws-amazon-ecs-plugin-for-backstage-backend",
+    "registryReference": "quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend:bs_1.52.0__0.9.0",
+    "fallback": true,
+    "requestedTag": "bs_1.52.0__0.8.0",
+    "digest": "sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYXdzLWFtYXpvbi1lY3MtcGx1Z2luLWZvci1iYWNrc3RhZ2UtYmFja2VuZCI6eyJuYW1lIjoiQGF3cy9hbWF6b24tZWNzLXBsdWdpbi1mb3ItYmFja3N0YWdlLWJhY2tlbmQtZHluYW1pYyIsInZlcnNpb24iOiIwLjkuMCIsImJhY2tzdGFnZSI6eyJyb2xlIjoiYmFja2VuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImFtYXpvbi1lY3MiLCJwbHVnaW5QYWNrYWdlcyI6WyJAYXdzL2FtYXpvbi1lY3MtcGx1Z2luLWZvci1iYWNrc3RhZ2UiLCJAYXdzL2FtYXpvbi1lY3MtcGx1Z2luLWZvci1iYWNrc3RhZ2UtYmFja2VuZCIsIkBhd3MvYW1hem9uLWVjcy1wbHVnaW4tZm9yLWJhY2tzdGFnZS1jb21tb24iXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sInJlcG9zaXRvcnkiOnsidHlwZSI6ImdpdCIsInVybCI6ImdpdGh1Yjphd3NsYWJzL2JhY2tzdGFnZS1wbHVnaW5zLWZvci1hd3MiLCJkaXJlY3RvcnkiOiJwbHVnaW5zL2Vjcy9iYWNrZW5kIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIn19XQ=="
+  }
+}

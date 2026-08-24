@@ -1,0 +1,61 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-lighthouse
+  namespace: rhdh
+  title: Lighthouse
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/lighthouse
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/lighthouse
+  tags: []
+spec:
+  packageName: '@backstage-community/plugin-lighthouse'
+  # Tag: bs_1.52.0__0.24.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-lighthouse@sha256:070969a15509b876990a67c5d68265795e277e135c77ed4f59b1410e8b2e28b2"
+  version: 0.24.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.52.0
+  author: Red Hat
+  support: community
+  lifecycle: active
+  partOf:
+    - lighthouse
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-lighthouse:
+              appIcons:
+                - name: lighthouse
+                  importName: LighthouseIcon
+              dynamicRoutes:
+                - path: /lighthouse
+                  importName: LighthousePage
+                  menuItem:
+                    icon: lighthouse
+                    text: menuItem.lighthouse
+                    textKey: menuItem.lighthouse
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityLastLighthouseAuditCard
+                  config:
+                    layout:
+                      gridColumnEnd:
+                        md: span 6
+                        xs: span 12
+                    if:
+                      allOf:
+                        - isLighthouseAvailable
+        # The frontend's configSchema requires lighthouse.baseUrl (verified
+        # against the bs_1.53.0 bundle's dist-scalprum/configSchema.json);
+        # without it the whole 'app' plugin fails startup schema validation.
+        lighthouse:
+          baseUrl: ${LIGHTHOUSE_URL}

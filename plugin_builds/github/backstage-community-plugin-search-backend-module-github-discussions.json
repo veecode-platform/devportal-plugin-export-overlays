@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-search-backend-module-github-discussions": {
+    "workspacePath": "github/plugins/search-backend-module-github-discussions",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions:bs_1.52.0__0.11.0",
+    "digest": "sha256:b08462ce1254cab05d1d65018cbe317bcf4fb9bcf3d76e0bee1bdd8518597a16",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W10="
+  }
+}

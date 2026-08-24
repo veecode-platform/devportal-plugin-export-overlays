@@ -1,0 +1,48 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-announcements
+  namespace: rhdh
+  title: Announcements
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-announcements"
+  # Tag: bs_1.52.0__2.11.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-announcements@sha256:79d53f3c754c6ec52f564ecbd1aed408b60bbd04f9e33fc4b774f08f198bb8b3"
+  version: 2.11.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.52.0
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-announcements:
+              dynamicRoutes:
+                - path: /announcements
+                  importName: AnnouncementsPage
+                  menuItem:
+                    text: Announcements
+              mountPoints:
+                - mountPoint: home.page/cards
+                  importName: AnnouncementsCard
+                  config:
+                    layout:
+                      gridColumnEnd:
+                        md: span 6
+                        xs: span 12
+                    props:
+                      max: 5

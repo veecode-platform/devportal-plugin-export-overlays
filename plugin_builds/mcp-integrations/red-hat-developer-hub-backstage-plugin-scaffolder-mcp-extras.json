@@ -1,0 +1,9 @@
+{
+  "red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras": {
+    "workspacePath": "mcp-integrations/plugins/scaffolder-mcp-extras",
+    "registryReference": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras:bs_1.52.0__0.4.2",
+    "digest": "sha256:35bc4a05ad78e8ac5109890f896502c2e39bac85ea0a82c0a8b90d766da07e19",
+    "support": "dev-preview",
+    "io.backstage.dynamic-packages": "W3sicmVkLWhhdC1kZXZlbG9wZXItaHViLWJhY2tzdGFnZS1wbHVnaW4tc2NhZmZvbGRlci1tY3AtZXh0cmFzIjp7Im5hbWUiOiJAcmVkLWhhdC1kZXZlbG9wZXItaHViL2JhY2tzdGFnZS1wbHVnaW4tc2NhZmZvbGRlci1tY3AtZXh0cmFzLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC40LjIiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImJhY2tlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJzY2FmZm9sZGVyLW1jcC1leHRyYXMiLCJwbHVnaW5QYWNrYWdlcyI6WyJAcmVkLWhhdC1kZXZlbG9wZXItaHViL2JhY2tzdGFnZS1wbHVnaW4tc2NhZmZvbGRlci1tY3AtZXh0cmFzIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTIuMCJ9LCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vcmVkaGF0LWRldmVsb3Blci9yaGRoLXBsdWdpbnMiLCJkaXJlY3RvcnkiOiJ3b3Jrc3BhY2VzL21jcC1pbnRlZ3JhdGlvbnMvcGx1Z2lucy9zY2FmZm9sZGVyLW1jcC1leHRyYXMifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

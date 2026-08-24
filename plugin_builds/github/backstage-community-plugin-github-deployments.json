@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-github-deployments": {
+    "workspacePath": "github/plugins/github-deployments",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-github-deployments:bs_1.52.0__0.18.0",
+    "digest": "sha256:d16c6a9a70dfc305031f445dc5c529408627bad6b6f5badca78ed2fbb5b91dd7",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tZ2l0aHViLWRlcGxveW1lbnRzIjp7Im5hbWUiOiJAYmFja3N0YWdlLWNvbW11bml0eS9wbHVnaW4tZ2l0aHViLWRlcGxveW1lbnRzLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4xOC4wIiwiZGVzY3JpcHRpb24iOiJBIEJhY2tzdGFnZSBwbHVnaW4gdGhhdCBpbnRlZ3JhdGVzIHRvd2FyZHMgR2l0SHViIERlcGxveW1lbnRzIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImdpdGh1Yi1kZXBsb3ltZW50cyIsInBsdWdpblBhY2thZ2VzIjpbIkBiYWNrc3RhZ2UtY29tbXVuaXR5L3BsdWdpbi1naXRodWItZGVwbG95bWVudHMiXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sImhvbWVwYWdlIjoiaHR0cHM6Ly9iYWNrc3RhZ2UuaW8iLCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vYmFja3N0YWdlL2NvbW11bml0eS1wbHVnaW5zIiwiZGlyZWN0b3J5Ijoid29ya3NwYWNlcy9naXRodWIvcGx1Z2lucy9naXRodWItZGVwbG95bWVudHMifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

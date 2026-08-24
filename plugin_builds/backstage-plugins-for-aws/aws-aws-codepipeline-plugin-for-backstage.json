@@ -1,0 +1,9 @@
+{
+  "aws-aws-codepipeline-plugin-for-backstage": {
+    "workspacePath": "backstage-plugins-for-aws/plugins/codepipeline/frontend",
+    "registryReference": "quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage:bs_1.52.0__0.8.1",
+    "digest": "sha256:851b231df378f7f345d0292a37cd2f646a0a436d4afa87d7597501332e394261",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYXdzLWF3cy1jb2RlcGlwZWxpbmUtcGx1Z2luLWZvci1iYWNrc3RhZ2UiOnsibmFtZSI6IkBhd3MvYXdzLWNvZGVwaXBlbGluZS1wbHVnaW4tZm9yLWJhY2tzdGFnZS1keW5hbWljIiwidmVyc2lvbiI6IjAuOC4xIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImF3cy1jb2RlcGlwZWxpbmUiLCJwbHVnaW5QYWNrYWdlcyI6WyJAYXdzL2F3cy1jb2RlcGlwZWxpbmUtcGx1Z2luLWZvci1iYWNrc3RhZ2UiLCJAYXdzL2F3cy1jb2RlcGlwZWxpbmUtcGx1Z2luLWZvci1iYWNrc3RhZ2UtYmFja2VuZCIsIkBhd3MvYXdzLWNvZGVwaXBlbGluZS1wbHVnaW4tZm9yLWJhY2tzdGFnZS1jb21tb24iXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sInJlcG9zaXRvcnkiOnsidHlwZSI6ImdpdCIsInVybCI6ImdpdGh1Yjphd3NsYWJzL2JhY2tzdGFnZS1wbHVnaW5zLWZvci1hd3MiLCJkaXJlY3RvcnkiOiJwbHVnaW5zL2NvZGVwaXBlbGluZS9mcm9udGVuZCJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+  }
+}

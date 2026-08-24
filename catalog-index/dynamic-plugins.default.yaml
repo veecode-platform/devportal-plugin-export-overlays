@@ -1,0 +1,1636 @@
+# THIS FILE IS GENERATED - DO NOT EDIT!
+#
+# File dynamic-plugins.default.yaml is now generated from default.packages.yaml
+# and default configuration located in this repo under workspaces/*/metadata/*.yaml
+#
+# To update this file, trigger a rebuild of the catalog index image via the
+# publish-catalog-index job in
+# .github/workflows/publish-release-branch-workspace-plugins.yaml
+# (runs scripts/update-index.sh, see also user-guide/07-plugin-catalog-index.md)
+plugins:
+  - package: oci://quay.io/veecode/aws-amazon-ecs-plugin-for-backstage@sha256:165f0503debcb2eba1fac492a99f17a49f6e1d98c25cd439d194a554c7e1d913
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          aws.amazon-ecs-plugin-for-backstage:
+            # Entity tab for ECS services (main plugin functionality)
+            entityTabs:
+              - path: /amazon-ecs
+                title: Amazon ECS
+                mountPoint: entity.page.amazon-ecs
+            # ECS services content in the entity tab
+            mountPoints:
+              - mountPoint: entity.page.amazon-ecs/cards
+                importName: EntityAmazonEcsServicesContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    anyOf:
+                      # Show for entities with ECS service tags
+                      - hasAnnotation: aws.amazon.com/amazon-ecs-service-tags
+                      # Show for entities with specific ECS service ARN
+                      - hasAnnotation: aws.amazon.com/amazon-ecs-service-arn
+  - package: oci://quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend@sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6
+    disabled: true
+    pluginConfig:
+      # Backend plugin uses AWS SDK credential chain
+      # Configure via environment variables:
+      aws:
+        mainAccount:
+          region: ${AWS_REGION}
+          accessKeyId: ${AWS_ACCESS_KEY_ID}
+          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  - package: oci://quay.io/veecode/aws-aws-codebuild-plugin-for-backstage@sha256:e3c31521485e2e073f3b6489ab36a19751f2b343ddb6ff2e7d5931c46315ac0f
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          aws.aws-codebuild-plugin-for-backstage:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityAwsCodeBuildCard
+                config:
+                  layout:
+                    gridColumn: "1 / span 6"
+                  if:
+                    anyOf:
+                      - hasAnnotation: aws.amazon.com/aws-codebuild-project-tags
+                      - hasAnnotation: aws.amazon.com/aws-codebuild-project-arn
+  - package: oci://quay.io/veecode/aws-aws-codebuild-plugin-for-backstage-backend@sha256:7ac8f9a9aa27bfdbdc79537bdc4792f8aa60cb000ebf4912d270a19d634b5c21
+    disabled: true
+    pluginConfig:
+      # Backend plugin uses AWS SDK credential chain
+      # Configure via environment variables:
+      aws:
+        mainAccount:
+          region: ${AWS_REGION}
+          accessKeyId: ${AWS_ACCESS_KEY_ID}
+          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  - package: oci://quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage@sha256:851b231df378f7f345d0292a37cd2f646a0a436d4afa87d7597501332e394261
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          aws.aws-codepipeline-plugin-for-backstage:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityAwsCodePipelineCard
+                config:
+                  layout:
+                    gridColumn: "1 / span 6"
+                  if:
+                    anyOf:
+                      - hasAnnotation: aws.amazon.com/aws-codepipeline-arn
+                      - hasAnnotation: aws.amazon.com/aws-codepipeline-tags
+  - package: oci://quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage-backend@sha256:086ec5ad4e02fb09de42858c325f5166350a1b5904386788bf04a0c66926e131
+    disabled: true
+    pluginConfig:
+      # Backend plugin uses AWS SDK credential chain
+      # Configure via environment variables:
+      aws:
+        mainAccount:
+          region: ${AWS_REGION}
+          accessKeyId: ${AWS_ACCESS_KEY_ID}
+          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  - package: oci://quay.io/veecode/aws-aws-s3-catalog-module-for-backstage@sha256:4c2460a4f8cd4f3ee31743cc0f3ba48b6c7e2960f069beb7928172ee2580495d
+    disabled: true
+    pluginConfig:
+      # Backend module uses AWS SDK credential chain
+      # Configure via environment variables:
+      aws:
+        mainAccount:
+          region: ${AWS_REGION}
+          accessKeyId: ${AWS_ACCESS_KEY_ID}
+          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  - package: oci://quay.io/veecode/backstage-community-plugin-adr@sha256:9792d027df44d3f89b5a968f92c26187dc96e7d840ac88d0d3579d95e076bb8e
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-adr:
+            entityTabs:
+              - mountPoint: entity.page.adrs
+                path: /adrs
+                title: ADRs
+                config:
+                  if:
+                    allOf:
+                      - isAdrAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-adr-backend@sha256:ed655aa08ef3dc98c23b03bb35fb0405d886f74cce53592140e1c256f06eba44
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-analytics-module-ga4@sha256:40305e9872bb64e39c4cc328b2fdb797d1ea30dd45d977a4a3a0f652f20d4602
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-analytics-module-ga4:
+            apiFactories:
+              - importName: googleAnalytics4Api
+      app:
+        analytics:
+          ga4:
+            measurementId: ${GA4_MEASUREMENT_ID}
+            identity: disabled
+            debug: false
+            testMode: false
+  - package: oci://quay.io/veecode/backstage-community-plugin-analytics-module-matomo@sha256:d0d2dcd20024d0a304441f5ac271a2acc0be4be8278a2101c11e38b4994b55b3
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-analytics-module-matomo:
+            apiFactories:
+              - importName: matomoAnalyticsApi
+      app:
+        analytics:
+          matomo:
+            host: ${MATOMO_HOST}
+            siteId: ${MATOMO_SITE_ID}
+  - package: oci://quay.io/veecode/backstage-community-plugin-analytics-module-newrelic-browser@sha256:8b800879770794e0574afdb77181037c26e149e5ff3b014dddf8e13a92b3f34d
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-analytics-module-newrelic-browser:
+            apiFactories:
+              - importName: newRelicAnalyticsApi
+      app:
+        analytics:
+          newRelic:
+            endpoint: ${NEWRELIC_ENDPOINT}
+            accountId: ${NEWRELIC_ACCOUNT_ID}
+            applicationId: ${NEWRELIC_APPLICATION_ID}
+            licenseKey: ${NEWRELIC_LICENSE_KEY}
+            distributedTracingEnabled: false
+            cookiesEnabled: false
+  - package: oci://quay.io/veecode/backstage-community-plugin-analytics-provider-segment@sha256:57b16eb798646257ef041802e89268c78054d5a073474ffef56e254081407707
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-analytics-provider-segment:
+            analyticsApiExtensions:
+              - importName: SegmentAnalytics
+      backend:
+        csp:
+          script-src:
+            - "'self'"
+            - "'unsafe-eval'"
+            - https://cdn.segment.com
+      app:
+        analytics:
+          segment:
+            writeKey: ${SEGMENT_WRITE_KEY}
+            maskIP: true
+            testMode: ${SEGMENT_TEST_MODE}
+            appVersion: ${RHDH_VERSION}
+            backstageVersion: ${BACKSTAGE_VERSION}
+  - package: oci://quay.io/veecode/backstage-community-plugin-announcements@sha256:79d53f3c754c6ec52f564ecbd1aed408b60bbd04f9e33fc4b774f08f198bb8b3
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-announcements:
+            dynamicRoutes:
+              - path: /announcements
+                importName: AnnouncementsPage
+                menuItem:
+                  text: Announcements
+            mountPoints:
+              - mountPoint: home.page/cards
+                importName: AnnouncementsCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      md: span 6
+                      xs: span 12
+                  props:
+                    max: 5
+  - package: oci://quay.io/veecode/backstage-community-plugin-announcements-backend@sha256:d50068f8fd6c638987f40b560fe458b124d14ac3779c13a5540d7dcc2b00d58b
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-argocd@sha256:e3c9e8fe52e51510cdf57bb8a8a4794066f49f8b441c820f35fc3b100f1bb2e8
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-argocd:
+            translationResources:
+              - importName: argocdTranslations
+                module: Alpha
+                ref: argocdTranslationRef
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: ArgocdDeploymentSummary
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: span 8
+                      xs: span 12
+                  if:
+                    allOf:
+                      - isArgocdConfigured
+              - mountPoint: entity.page.cd/cards
+                importName: ArgocdDeploymentLifecycle
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isArgocdConfigured
+  - package: oci://quay.io/veecode/backstage-community-plugin-argocd-backend@sha256:43cda540c9c41c85adff0220afb889f04030286415b359f2fff3c161ba5d69a3
+    disabled: true
+    pluginConfig:
+      argocd:
+        username: ${ARGOCD_USERNAME}
+        password: ${ARGOCD_PASSWORD}
+        appLocatorMethods:
+          - type: config
+            instances:
+              - name: argoInstance1
+                url: ${ARGOCD_INSTANCE1_URL}
+                token: ${ARGOCD_AUTH_TOKEN}
+  - package: oci://quay.io/veecode/backstage-community-plugin-azure-devops@sha256:4bc7e55b6a0b7b02235d8a764908a0ab294561017b576364057349b4bef468c2
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-azure-devops:
+            mountPoints:
+              - mountPoint: entity.page.ci/cards
+                importName: EntityAzurePipelinesContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isAzureDevOpsAvailable
+              - mountPoint: entity.page.pull-requests/cards
+                importName: EntityAzurePullRequestsContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isAzureDevOpsAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-azure-devops-backend@sha256:6e33292432cbeaa38b2913acf34cda9b819c84373675bb4fbdc62b9c1242cbc6
+    disabled: true
+    pluginConfig:
+      azureDevOps:
+        host: dev.azure.com
+        token: ${AZURE_TOKEN}
+        organization: ${AZURE_ORG}
+  - package: oci://quay.io/veecode/backstage-community-plugin-bookmarks@sha256:9bf6dd9a6d7f5cbd5416849bc0adf503f4e0e17e883a64ae21c3ffb20b2c5168
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-bookmarks:
+            translationResources:
+              - importName: bookmarksTranslations
+                ref: bookmarksTranslationRef
+            entityTabs:
+              - mountPoint: entity.page.bookmarks
+                path: /bookmarks
+                title: Bookmarks
+                titleKey: entityTab.title # does not exist yet
+                config:
+                  if:
+                    allOf:
+                      - isBookmarksAvailable
+            mountPoints:
+              - mountPoint: entity.page.bookmarks/cards
+                importName: EntityBookmarksContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                    height: calc(100vh - 300px)
+                    min-height: 500px
+  - package: oci://quay.io/veecode/backstage-community-plugin-catalog-backend-module-azure-devops-annotator-processor@sha256:682987d5c14e5f8f42cc5d320ba46b960ab3b00cf5aa9b9eabb89f69a4685d71
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-github-actions@sha256:fe9cea3a11097339f85bab0bf095ecf1dc95b972194d41e4c9ca0e34c85ecebd
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-github-actions:
+            mountPoints:
+              - mountPoint: entity.page.ci/cards
+                importName: EntityGithubActionsContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isGithubActionsAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-github-deployments@sha256:d16c6a9a70dfc305031f445dc5c529408627bad6b6f5badca78ed2fbb5b91dd7
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-github-deployments:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityGithubDeploymentsCard
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isGithubDeploymentsAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-github-discussions@sha256:0e7f30341e71c6474389604f621fb340d6a4bc913584b1b4f4a139c86fcb2fba
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-github-discussions:
+            mountPoints:
+              - mountPoint: search.page.results
+                importName: GithubDiscussionsSearchResultListItem
+  - package: oci://quay.io/veecode/backstage-community-plugin-github-issues@sha256:48ce70d694d86243562931b1529c0b6ca5f54aeff15ccbd0631a46a049a0cc6a
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-github-issues:
+            mountPoints:
+              - mountPoint: entity.page.issues/cards
+                importName: GithubIssuesCard
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - hasAnnotation: github.com/project-slug
+  - package: oci://quay.io/veecode/backstage-community-plugin-github-pull-requests-board@sha256:2bc3b7f46233e2721a1072ce44c9d326a32b2300a906d42cf65d850652e888d3
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-github-pull-requests-board:
+            entityTabs:
+              - mountPoint: entity.page.pull-requests-board
+                path: /pull-requests-board
+                title: Pull Requests Board
+            mountPoints:
+              - mountPoint: entity.page.pull-requests-board/cards
+                importName: EntityTeamPullRequestsCard
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    anyOf:
+                      - isKind: Group
+              - mountPoint: home.page/cards
+                importName: PullRequestsBoard
+                config:
+                  id: github-pull-request-board
+                  title: "GitHub: Pull Request Board"
+                  description: A board that shows open Pull Requests and their review status
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 4
+                      maxRows: 12
+                      defaultRows: 6
+                  props:
+                    entities: [] # Required! If not provided, the board will use the current user's repositories and team.
+  - package: oci://quay.io/veecode/backstage-community-plugin-grafana@sha256:f532f66d796de182d32cbe5f0eb7f0829cc31e61dac09f6cfed646ef6f8bcad3
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-grafana:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityGrafanaDashboardsCard
+                config:
+                  layout:
+                    gridColumnEnd: span 12
+                  if:
+                    allOf:
+                      - hasAnnotation: grafana/overview-dashboard
+              - mountPoint: entity.page.overview/cards
+                importName: EntityGrafanaAlertsCard
+                config:
+                  layout:
+                    gridColumnEnd: span 12
+                  if:
+                    allOf:
+                      - hasAnnotation: grafana/alert-label-selector
+      grafana:
+        domain: ${GRAFANA_DOMAIN}
+  - package: oci://quay.io/veecode/backstage-community-plugin-jenkins@sha256:bbed7a06c0b758213e58b9bb0427e22c83895b199530bb56984ea7e5caa1d193
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-jenkins:
+            mountPoints:
+              - mountPoint: entity.page.ci/cards
+                importName: EntityJenkinsContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isJenkinsAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-jenkins-backend@sha256:dc043d5b0302f8e4f42d1f0599a050463082f08a214fc5991709f32471d536cb
+    disabled: true
+    pluginConfig:
+      jenkins:
+        baseUrl: ${JENKINS_URL}
+        username: ${JENKINS_USERNAME}
+        apiKey: ${JENKINS_TOKEN}
+  - package: oci://quay.io/veecode/backstage-community-plugin-jfrog-artifactory@sha256:66abf666b74f6c149e7e111fd46f3be2512475169e07b17007cd6a5e1ea44086
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-jfrog-artifactory:
+            mountPoints:
+              - mountPoint: entity.page.image-registry/cards
+                importName: JfrogArtifactoryPage
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    anyOf:
+                      - isJfrogArtifactoryAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-lighthouse@sha256:070969a15509b876990a67c5d68265795e277e135c77ed4f59b1410e8b2e28b2
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-lighthouse:
+            appIcons:
+              - name: lighthouse
+                importName: LighthouseIcon
+            dynamicRoutes:
+              - path: /lighthouse
+                importName: LighthousePage
+                menuItem:
+                  icon: lighthouse
+                  text: menuItem.lighthouse
+                  textKey: menuItem.lighthouse
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityLastLighthouseAuditCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      md: span 6
+                      xs: span 12
+                  if:
+                    allOf:
+                      - isLighthouseAvailable
+      # The frontend's configSchema requires lighthouse.baseUrl (verified
+      # against the bs_1.53.0 bundle's dist-scalprum/configSchema.json);
+      # without it the whole 'app' plugin fails startup schema validation.
+      lighthouse:
+        baseUrl: ${LIGHTHOUSE_URL}
+  - package: oci://quay.io/veecode/backstage-community-plugin-lighthouse-backend@sha256:ca06de50b619ea14189775a835498efb62d147e1c5f74c69bcacc8d7244dfcc1
+    disabled: true
+    pluginConfig:
+      lighthouse:
+        baseUrl: "http://localhost:4008"
+  - package: oci://quay.io/veecode/backstage-community-plugin-mcp-chat@sha256:8800ded282080fec3de8d04d8d1b0ee789140ad88ffd2f31a92132d5394f090b
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-mcp-chat:
+            dynamicRoutes:
+              - path: /mcp-chat
+                importName: McpChatPage
+                menuItem:
+                  icon: MCPChatIcon
+                  text: MCP Chat
+  - package: oci://quay.io/veecode/backstage-community-plugin-mcp-chat-backend@sha256:bae55d291f54a07bf7af3cd649dd22ee7889f59fa5f9aa2cb0ea41a63aff97e0
+    disabled: true
+    pluginConfig:
+      mcpChat:
+        providers:
+          - id: openai
+            token: ${MCP_CHAT_OPENAI_API_KEY}
+            model: gpt-4o-mini
+  - package: oci://quay.io/veecode/backstage-community-plugin-multi-source-security-viewer@sha256:3808cf4cef112ce68a04a47f4303e14334065c65b987cfaade4dee8d706c7266
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-multi-source-security-viewer-backend@sha256:3c92cda3bbc9842471e00c8ebb404fce032786b1e280027d9bcdf2d29944825b
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-nexus-repository-manager@sha256:a96498a8da63a04b4d405e79937761e55a6ebc2e9070bbcdf1b274adaceb99d8
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-nexus-repository-manager:
+            mountPoints:
+              - mountPoint: entity.page.image-registry/cards
+                importName: NexusRepositoryManagerPage
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    anyOf:
+                      - isNexusRepositoryManagerAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-npm@sha256:ff44d50c6cffd4e7d314e0dc4aec03bdce1f6ec85c3c917dbfa23d6dbcb74e95
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-npm:
+            translationResources:
+              - module: alpha
+                importName: npmTranslations
+                ref: npmTranslationRef
+            entityTabs:
+              - mountPoint: entity.page.npm
+                path: /npm
+                title: npm releases
+                config:
+                  if:
+                    allOf:
+                      - isNpmAvailable
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityNpmInfoCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      xs: "span 12"
+                      md: "span 8"
+                  if:
+                    allOf:
+                      - isNpmAvailable
+              - mountPoint: entity.page.overview/cards
+                importName: EntityNpmReleaseOverviewCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      xs: "span 12"
+                      md: "span 8"
+                  if:
+                    allOf:
+                      - isNpmAvailable
+              - mountPoint: entity.page.npm/cards
+                importName: EntityNpmReleaseTableCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isNpmAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-npm-backend@sha256:81bce3dab049ea639f52916173004c30d2fb713f597db39f0e5dbcc619705273
+    disabled: true
+    pluginConfig:
+      npm:
+        defaultRegistry: ${NPM_DEFAULT_REGISTRY}
+        registries:
+          - name: private
+            url: ${NPM_REGISTRY_URL}
+            token: ${NPM_REGISTRY_TOKEN}
+  - package: oci://quay.io/veecode/backstage-community-plugin-rbac@sha256:36e9f606223dd6f2e479c3a904d28dfbec7afdcbbb8e2f18cd1d1edbf7f238e6
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-rbac:
+            translationResources:
+              - importName: rbacTranslations
+                ref: rbacTranslationRef
+                module: Alpha
+            appIcons:
+              - name: rbacIcon
+                importName: RbacIcon
+            dynamicRoutes:
+              - path: /rbac
+                importName: RbacPage
+                menuItem:
+                  icon: rbacIcon
+                  text: RBAC
+                  textKey: menuItem.rbac
+            menuItems:
+              rbac:
+                parent: default.admin
+                icon: rbacIcon
+  - package: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-azure-devops@sha256:8ef564e378570034704548315e25fb13fe5671f5b665d3fc4db78bb3e01aa415
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet@sha256:114e0f6cab92a28ed6c3d13a32404a20291a4a5ec5062269f7fe47d24de08d5a
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-jenkins@sha256:aa8aa1f4ca8df4db2fb8218eea4ba9b3069ef7b6ff5a04bfe35f32997602f398
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-kubernetes@sha256:e1bc6269337140c10eede5abe4308883c831b14d7985753dfd5a02a849c786fc
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-regex@sha256:e0f3e1f69cb6c1bccd538f8ed80e6b16b85f2540b8866c636225903bb76a0e35
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-sonarqube@sha256:ae19e47677c08b8439aface4a37d88b2d475f07bbddd814074d70322d8e61647
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-search-backend-module-announcements@sha256:56879fdd248694f0b6d17cc3079fc8b0426fd9945a59cee8a34d19dcd231f5d0
+    disabled: true
+    pluginConfig:
+      search:
+        collators:
+          announcements:
+            schedule:
+              frequency:
+                minutes: 30
+              initialDelay:
+                seconds: 30
+              timeout:
+                minutes: 3
+  - package: oci://quay.io/veecode/backstage-community-plugin-search-backend-module-azure-devops@sha256:d7e8524315f5c5853beee293ba15ba639b19a7d1019c72305d37ed55319c1a3d
+    disabled: true
+    pluginConfig:
+      search:
+        collators:
+          azureDevOpsWikiCollator:
+            baseUrl: ${AZURE_DEVOPS_BASE_URL}
+            token: ${AZURE_DEVOPS_TOKEN}
+            wikis:
+              - wikiIdentifier: ${AZURE_DEVOPS_WIKI_IDENTIFIER}
+                organization: ${AZURE_DEVOPS_ORGANIZATION}
+                project: ${AZURE_DEVOPS_PROJECT}
+            schedule:
+              frequency:
+                minutes: 30
+              initialDelay:
+                seconds: 30
+              timeout:
+                minutes: 10
+  - package: oci://quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions@sha256:b08462ce1254cab05d1d65018cbe317bcf4fb9bcf3d76e0bee1bdd8518597a16
+    disabled: true
+    pluginConfig:
+      integrations:
+        github:
+          - host: github.com
+            token: ${GITHUB_TOKEN}
+      search:
+        collators:
+          githubDiscussions:
+            url: ${GITHUB_DISCUSSIONS_REPO_URL}
+  - package: oci://quay.io/veecode/backstage-community-plugin-sonarqube@sha256:8473d9a47b6d198b3a1101a5eacc84434cb4af2134e77e4f2bca8ed08d03acc3
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-sonarqube:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntitySonarQubeCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: span 4
+                      md: span 6
+                      xs: span 12
+                  if:
+                    allOf:
+                      - isSonarQubeAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-sonarqube-backend@sha256:bdf9d45d8c73c03be632174a1918c472806cf4bc52966fb3cbe8f98363abd0c5
+    disabled: true
+    pluginConfig:
+      sonarqube:
+        baseUrl: ${SONARQUBE_URL}
+        apiKey: ${SONARQUBE_TOKEN}
+  - package: oci://quay.io/veecode/backstage-community-plugin-tech-insights@sha256:dec6fee0227110e2e29fefe34e61a4036c575f85ee58158516a2ad4ce2e7c7a9
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-tech-insights:
+            entityTabs:
+              - path: /scorecard
+                title: Scorecard
+                mountPoint: entity.page.scorecard
+            mountPoints:
+              - mountPoint: entity.page.scorecard/cards
+                importName: EntityTechInsightsScorecardContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+  - package: oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend@sha256:1a2dd0fcabcd9ae20511fd89552533d847f58d887bba15e9fb5a941dc9dab88b
+    disabled: true
+    pluginConfig:
+      techInsights:
+        factRetrievers:
+          entityOwnershipFactRetriever:
+            cadence: '0 */6 * * *'
+            lifecycle:
+              timeToLive:
+                weeks: 2
+  - package: oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend-module-jsonfc@sha256:1fdc2fed4c693a48c00700ade59f3105058dfae5eb4334f4ad26bd772d0a51f6
+    disabled: true
+    pluginConfig:
+      techInsights:
+        factChecker:
+          checks:
+            groupOwnerCheck:
+              type: json-rules-engine
+              name: Group Owner Check
+              description: Verifies that a group owns the entity
+              factIds:
+                - entityOwnershipFactRetriever
+              rule:
+                conditions:
+                  all:
+                    - fact: hasGroupOwner
+                      operator: equal
+                      value: true
+  - package: oci://quay.io/veecode/backstage-community-plugin-tech-insights-maturity@sha256:9af29e94bc27096c5cf8fcee4ea77f77f53b9a46f382fc41e21140a4b6416f04
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-tech-insights-maturity:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityMaturitySummaryCard
+  - package: oci://quay.io/veecode/backstage-community-plugin-tech-radar@sha256:2a5e149c22bdc02f6cf0d1ba6db0113105b284bf05b3806678cca601387f3b63
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-tech-radar:
+            apiFactories:
+              - importName: TechRadarApi
+            appIcons:
+              - name: techRadar
+                importName: TechRadarIcon
+            dynamicRoutes:
+              - path: /tech-radar
+                importName: TechRadarPage
+                menuItem:
+                  icon: techRadar
+                  text: menuItem.techRadar
+                  textKey: menuItem.techRadar
+                config:
+                  props:
+                    width: 1500
+                    height: 800
+  - package: oci://quay.io/veecode/backstage-community-plugin-tech-radar-backend@sha256:71f7f6c4816156120e693bf3c2ff29ee35c3725406c996c7de58607800df3a99
+    disabled: true
+    pluginConfig:
+      techRadar:
+        url: ${TECH_RADAR_DATA_URL}
+  - package: oci://quay.io/veecode/backstage-community-plugin-tekton@sha256:7a2607b5d522c090e2127d8847d58657d027a246cf4df1b970429eeba6a12c76
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-tekton:
+            translationResources:
+              - importName: tektonTranslations
+                ref: tektonTranslationRef
+            mountPoints:
+              - mountPoint: entity.page.ci/cards
+                importName: TektonCI
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isTektonCIAvailable
+  - package: oci://quay.io/veecode/backstage-community-plugin-todo@sha256:bb04131c8390091ae966e625fdad7be1002894d8b8983ae27acce56464a1880b
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-todo:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityTodoContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+  - package: oci://quay.io/veecode/backstage-community-plugin-todo-backend@sha256:349488264edc88c97e83749c07835515d4782a9542c5624b129a60128dbe7cd5
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-community-search-backend-module-adr@sha256:8e8252c816ed00ac662f4e2eb24076213c06221333e183a0d7badabe1549301d
+    disabled: true
+    pluginConfig:
+      search:
+        collators:
+          adr:
+            schedule:
+              frequency:
+                minutes: 30
+              initialDelay:
+                seconds: 30
+              timeout:
+                minutes: 3
+  - package: oci://quay.io/veecode/backstage-plugin-auth@sha256:324596731ac7571f8a58f4fe82b449b97372a8f66c6e1a443b24273463d21597
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-auth:
+            dynamicRoutes:
+              - path: /oauth2/*
+                importName: Router
+  - package: oci://quay.io/veecode/backstage-plugin-events-backend-module-gitlab@sha256:2f45814248ac78def78f9e0ceb624a8b4aae1eb1450bc57a6c1fdb0a32ed5189
+    disabled: true
+    pluginConfig:
+      events:
+        modules:
+          gitlab:
+            webhookSecret: ${VAULT_GITLAB_WEBHOOK_SECRET}
+  - package: oci://quay.io/veecode/backstage-plugin-mcp-actions-backend@sha256:d4d24e08d7630eb352fa7e6dc1da797ebc4e667aba347575dd94d4bcde82e8e2
+    disabled: true
+    pluginConfig:
+      backend:
+        auth:
+          externalAccess:
+            - type: static
+              options:
+                token: ${MCP_TOKEN}
+                subject: mcp-clients
+  - package: oci://quay.io/veecode/backstage-plugin-notifications-backend-module-email@sha256:24b8c2382d7f90268e0f32dc0c088d61fd26c349b9de86514aada9bd1bb6a6ee
+    disabled: true
+    pluginConfig:
+      notifications:
+        processors:
+          email:
+            transportConfig:
+              transport: smtp
+              hostname: ${EMAIL_HOSTNAME}
+              port: 587
+              username: ${EMAIL_USERNAME}
+              password: ${EMAIL_PASSWORD}
+            sender: ${EMAIL_SENDER}
+            broadcastConfig:
+              receiver: users
+  - package: oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-gerrit@sha256:f137c953b0da61fdbc1f1ee37718e06888ba15426afa1a9898fbc41afab3165b
+    disabled: true
+    pluginConfig:
+      integrations:
+        gerrit:
+          - host: ${GERRIT_HOST}
+            gitilesBaseUrl: ${GERRIT_GITILES_BASE_URL}
+            username: ${GERRIT_USERNAME}
+            password: ${GERRIT_PASSWORD}
+  - package: oci://quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab@sha256:54df61fe65be6aac92843ea70cf1217c0df88551f6afa8176a0fdc28228edaa6
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          immobiliarelabs.backstage-plugin-gitlab:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityGitlabMergeRequestStatsCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: span 4
+                      md: span 6
+                      xs: span 12
+                  if:
+                    allOf:
+                      - isGitlabAvailable
+              - mountPoint: entity.page.ci/cards
+                importName: EntityGitlabPipelinesTable
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isGitlabAvailable
+              - mountPoint: entity.page.issues/cards
+                importName: EntityGitlabIssuesTable
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isGitlabAvailable
+              - mountPoint: entity.page.pull-requests/cards
+                importName: EntityGitlabMergeRequestsTable
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isGitlabAvailable
+  - package: oci://quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab-backend@sha256:b1bbe7274759b17455c02c2903267adf83e48803367735109e24a14b6b1f1e3f
+    disabled: true
+    pluginConfig:
+      integrations:
+        gitlab:
+          - host: gitlab.com
+            apiBaseUrl: https://gitlab.com/api/v4
+            token: ${GITLAB_TOKEN}
+  - package: oci://quay.io/veecode/proberaum-backstage-plugin-github-notifications-backend@sha256:7c890c9240670dcf08213cf2d6abd0c00f807bce1f18170eff097bbe1711e76d
+    disabled: true
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-auth@sha256:fbe26478a0ed00a4c0da30b121befd0263705fd3d7c9a2b1e5848f7420ec92e4
+    disabled: true
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-integrations@sha256:e41aa4d40dec95856e5845c9a65f4614332e3e817ed00c0b2495ba4cbd5a2f3c
+    disabled: true
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions@sha256:696d2d0be16b1a5948d4527bf70b305d7ae157d8d4ff5740d99306a935470aed
+    disabled: true
+    pluginConfig:
+      extensions:
+        directory: ${RHDH_EXTENSIONS_DIRECTORY}
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-dynamic-home-page@sha256:c8fcb047648686749b6af3090f726e8ffc2582dfbcfdd3d45e4f2cb1cd912acd
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-dynamic-home-page:
+            dynamicRoutes:
+              - path: /
+                importName: DynamicHomePage
+            mountPoints:
+              - mountPoint: application/listener
+                importName: VisitListener
+              # the default cards
+              - mountPoint: home.page/cards
+                importName: OnboardingSection
+                config:
+                  id: rhdh-onboarding-section
+                  title: Red Hat Developer Hub - Onboarding
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  layouts:
+                    xl: {w: 12, h: 6}
+                    lg: {w: 12, h: 6}
+                    md: {w: 12, h: 7}
+                    sm: {w: 12, h: 8}
+                    xs: {w: 12, h: 9}
+                    xxs: {w: 12, h: 14}
+              - mountPoint: home.page/cards
+                importName: EntitySection
+                config:
+                  id: rhdh-entity-section
+                  title: Red Hat Developer Hub - Software Catalog
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  layouts:
+                    xl: {w: 12, h: 7}
+                    lg: {w: 12, h: 7}
+                    md: {w: 12, h: 8}
+                    sm: {w: 12, h: 9}
+                    xs: {w: 12, h: 11}
+                    xxs: {w: 12, h: 15}
+              - mountPoint: home.page/cards
+                importName: TemplateSection
+                config:
+                  id: rhdh-template-section
+                  title: Red Hat Developer Hub - Explore templates
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  layouts:
+                    xl: {w: 12, h: 5}
+                    lg: {w: 12, h: 5}
+                    md: {w: 12, h: 5}
+                    sm: {w: 12, h: 5}
+                    xs: {w: 12, h: 7.5}
+                    xxs: {w: 12, h: 13.5}
+              # additional available cards when the 'customizable' feature is enabled
+              - mountPoint: home.page/cards
+                importName: QuickAccessCard
+                config:
+                  id: quickaccess-card
+                  title: Quick Access Card
+              - mountPoint: home.page/cards
+                importName: SearchBar
+                config:
+                  id: searchbar
+                  title: Search
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 1
+                      maxRows: 2
+                      defaultRows: 2
+              - mountPoint: home.page/cards
+                importName: CatalogStarredEntitiesCard
+                config:
+                  id: catalog-starred-entities-card
+                  title: Starred catalog entities
+              - mountPoint: home.page/cards
+                importName: RecentlyVisitedCard
+                config:
+                  id: recently-visited-card
+                  title: Recently visited
+              - mountPoint: home.page/cards
+                importName: TopVisitedCard
+                config:
+                  id: top-visited-card
+                  title: Top visited
+              - mountPoint: home.page/cards
+                importName: FeaturedDocsCard
+                config:
+                  id: featured-docs-card
+                  title: Featured docs
+              - mountPoint: home.page/cards
+                importName: JokeCard
+                config:
+                  id: joke-card
+                  title: Random joke
+            translationResources:
+              - importName: homepageTranslations
+                ref: homepageTranslationRef
+                module: Alpha
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions@sha256:9767cd6b68bf7bafd7b1e43777e657b0c2d018b7424b73b6e8c80a4aa573d147
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-extensions:
+            translationResources:
+              - importName: extensionsTranslations
+                ref: extensionsTranslationRef
+                module: Alpha
+            appIcons:
+              - name: pluginsIcon
+                importName: PluginsIcon
+            dynamicRoutes:
+              - path: /extensions
+                importName: DynamicExtensionsPluginRouter
+                menuItem:
+                  icon: pluginsIcon
+                  text: Extensions
+                  textKey: menuItem.extensions
+            menuItems:
+              extensions:
+                parent: default.admin
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-floating-action-button@sha256:b795e6d608c472fb1bccd26ebeceee31a37328c6353c16631559c854cca214bc
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-global-floating-action-button:
+            translationResources:
+              - importName: globalFloatingActionButtonTranslations
+                ref: globalFloatingActionButtonTranslationRef
+            mountPoints:
+              - mountPoint: application/listener
+                importName: DynamicGlobalFloatingActionButton
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-header@sha256:2a622b6a8c30584eb1023869d7387f1ec09309f62ef3621b94a20fb5d81de1a1
+    disabled: true
+    pluginConfig:
+      app:
+        sidebar:
+          search: false
+          settings: false
+          logo: false
+      dynamicPlugins:
+        frontend:
+          default.main-menu-items:
+            menuItems:
+              default.create:
+                title: ''
+              default.admin:
+                title: Administration
+                textKey: menuItem.administration
+                icon: admin
+          red-hat-developer-hub.backstage-plugin-global-header:
+            translationResources:
+              - importName: globalHeaderTranslations
+                ref: globalHeaderTranslationRef
+            mountPoints:
+              - mountPoint: application/header
+                importName: GlobalHeader
+                config:
+                  position: above-sidebar
+              - mountPoint: global.header/component
+                importName: CompanyLogo
+                config:
+                  priority: 200
+                  props:
+                    to: /
+              - mountPoint: global.header/component
+                importName: SearchComponent
+                config:
+                  priority: 100
+              - mountPoint: global.header/component
+                importName: Spacer
+                config:
+                  priority: 99
+                  props:
+                    growFactor: 0
+              - mountPoint: global.header/component
+                importName: HeaderIconButton
+                config:
+                  priority: 90
+                  props:
+                    title: Self-service
+                    titleKey: create.title
+                    icon: add
+                    to: create
+              - mountPoint: global.header/component
+                importName: StarredDropdown
+                config:
+                  priority: 85
+              - mountPoint: global.header/component
+                importName: ApplicationLauncherDropdown
+                config:
+                  priority: 82
+              - mountPoint: global.header/application-launcher
+                importName: MenuItemLink
+                config:
+                  section: Documentation
+                  priority: 150
+                  props:
+                    title: Developer Hub
+                    titleKey: applicationLauncher.developerHub
+                    icon: developerHub
+                    link: https://docs.redhat.com/en/documentation/red_hat_developer_hub
+              - mountPoint: global.header/application-launcher
+                importName: MenuItemLink
+                config:
+                  section: Developer Tools
+                  priority: 100
+                  props:
+                    title: RHDH Local
+                    titleKey: applicationLauncher.rhdhLocal
+                    icon: developerHub
+                    link: https://github.com/redhat-developer/rhdh-local
+              - mountPoint: global.header/component
+                importName: HelpDropdown
+                config:
+                  priority: 80
+              - mountPoint: global.header/help
+                importName: SupportButton
+                config:
+                  priority: 10
+              - mountPoint: global.header/component
+                importName: NotificationButton
+                config:
+                  priority: 70
+              - mountPoint: global.header/component
+                importName: Divider
+                config:
+                  priority: 50
+              - mountPoint: global.header/component
+                importName: ProfileDropdown
+                config:
+                  priority: 10
+              - mountPoint: global.header/profile
+                importName: MenuItemLink
+                config:
+                  priority: 100
+                  props:
+                    title: Settings
+                    titleKey: profile.settings
+                    link: /settings
+                    icon: manageAccounts
+              - mountPoint: global.header/profile
+                importName: MenuItemLink
+                config:
+                  priority: 90
+                  props:
+                    title: My profile
+                    titleKey: profile.myProfile
+                    type: myProfile
+                    icon: account
+              - mountPoint: global.header/profile
+                importName: LogoutButton
+                config:
+                  priority: 10
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-homepage-backend@sha256:9223d63355448c660c7dd7a47bd07fbb921f8eaecab2587e252e1076dcf8b5d8
+    disabled: true
+    pluginConfig:
+      homepage:
+        defaultWidgets:
+          # Each leaf node needs both `id` (stable identifier) and `ref`
+          # (the widget the frontend renders). Refs and layout mirror the
+          # upstream defaults for these three sections:
+          # https://github.com/redhat-developer/rhdh-plugins/blob/main/workspaces/homepage/app-config.yaml
+          - id: onboarding
+            ref: rhdh-onboarding-section
+            layout:
+              xl: {w: 12, h: 6}
+              lg: {w: 12, h: 6}
+              md: {w: 12, h: 7}
+              sm: {w: 12, h: 8}
+              xs: {w: 12, h: 9}
+              xxs: {w: 12, h: 14}
+          - id: entity-list
+            ref: rhdh-entity-section
+            layout:
+              xl: {w: 12, h: 7}
+              lg: {w: 12, h: 7}
+              md: {w: 12, h: 8}
+              sm: {w: 12, h: 9}
+              xs: {w: 12, h: 11}
+              xxs: {w: 12, h: 15}
+          - id: template-list
+            ref: rhdh-template-section
+            layout:
+              xl: {w: 12, h: 5}
+              lg: {w: 12, h: 5}
+              md: {w: 12, h: 5}
+              sm: {w: 12, h: 5}
+              xs: {w: 12, h: 7.5}
+              xxs: {w: 12, h: 13.5}
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux@sha256:35d712874fd90bccd3b8dcbb9cae1804d6f6016682deeb30031961a89e018890
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-konflux:
+            entityTabs:
+              - path: /konflux
+                title: Konflux
+                mountPoint: entity.page.konflux
+              - path: /konflux-ci
+                title: CI/CD
+                mountPoint: entity.page.konflux-ci
+            mountPoints:
+              - mountPoint: entity.page.konflux/cards
+                importName: KonfluxPageComponent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isKonfluxTabAvailable
+              - mountPoint: entity.page.konflux-ci/cards
+                importName: KonfluxCIPageComponent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  if:
+                    allOf:
+                      - isKonfluxCiTabAvailable
+              - mountPoint: entity.page.overview/cards
+                importName: KonfluxLatestReleases
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: "span 6"
+                      md: "span 6"
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isKonfluxOverviewAvailable
+              - mountPoint: entity.page.overview/cards
+                importName: KonfluxStatus
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: "span 6"
+                      md: "span 6"
+                      xs: "span 12"
+                  if:
+                    allOf:
+                      - isKonfluxOverviewAvailable
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux-backend@sha256:7f139af75184460fee403c2f9c6b2ab2acc7cdd3f61ef706d6cbff3a195081a8
+    disabled: true
+    pluginConfig:
+      konflux:
+        authProvider: impersonationHeaders
+        clusters:
+          konflux-cluster-1:
+            apiUrl: ${KONFLUX_CLUSTER_API_URL}
+            uiUrl: ${KONFLUX_CLUSTER_UI_URL}
+            kubearchiveApiUrl: ${KONFLUX_CLUSTER_KUBEARCHIVE_API_URL}
+            serviceAccountToken: ${KONFLUX_CLUSTER_SA_TOKEN}
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:35bc4a05ad78e8ac5109890f896502c2e39bac85ea0a82c0a8b90d766da07e19
+    disabled: true
+    pluginConfig:
+      backend:
+        actions:
+          pluginSources:
+            - 'scaffolder-mcp-extras'
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras@sha256:12b120512c4f9a8c3245c27cc738c9736fcaefca260b1516435039d202b83547
+    disabled: true
+    pluginConfig:
+      backend:
+        actions:
+          pluginSources:
+            - 'software-catalog-mcp-extras'
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras@sha256:762745141c97ae4963695716d33ada9d5259351354bb89f77810b0aee6fbdc81
+    disabled: true
+    pluginConfig:
+      backend:
+        actions:
+          pluginSources:
+            - 'techdocs-mcp-extras'
+  - package: oci://quay.io/veecode/roadiehq-backstage-plugin-argo-cd@sha256:eb8aa6de7fd869ed43cefa6fdd3948966fb40c10c778aa4873fcf88a5e465495
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-argo-cd:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityArgoCDOverviewCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: span 8
+                      xs: span 12
+                  if:
+                    allOf:
+                      - isArgocdAvailable
+              - mountPoint: entity.page.cd/cards
+                importName: EntityArgoCDContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isArgocdAvailable
+  - package: oci://quay.io/veecode/roadiehq-backstage-plugin-argo-cd-backend@sha256:eff2afa63cb7ab7793395824d6047f9b2d0201acbf5586f0638711699776d909
+    disabled: true
+    pluginConfig:
+      argocd:
+        username: ${ARGOCD_USERNAME}
+        password: ${ARGOCD_PASSWORD}
+        appLocatorMethods:
+          - type: config
+            instances:
+              - name: argoInstance1
+                url: ${ARGOCD_INSTANCE1_URL}
+                token: ${ARGOCD_AUTH_TOKEN}
+  - package: oci://quay.io/veecode/roadiehq-backstage-plugin-datadog@sha256:7d020e3cbfde88457d946c19a0d4a367db4b3b925bcb4d2371755a2fad25ff1d
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-datadog:
+            mountPoints:
+              - mountPoint: entity.page.monitoring/cards
+                importName: EntityDatadogContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isDatadogAvailable
+  - package: oci://quay.io/veecode/roadiehq-backstage-plugin-github-insights@sha256:b6478705ef8e3088f4e6d1d7c01b5368ec4ac4ff5a67471055ec8dbcfda26466
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-github-insights:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityGithubInsightsComplianceCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: span 4
+                      md: span 6
+                      xs: span 12
+                  if:
+                    allOf:
+                      - isGithubInsightsAvailable
+  - package: oci://quay.io/veecode/roadiehq-backstage-plugin-github-pull-requests@sha256:e08a9e697eae52272a5ded281a9648d09718b7e5ca6e9f51a1399a9482d5606e
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-github-pull-requests:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityGithubPullRequestsOverviewCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: span 4
+                      md: span 6
+                      xs: span 12
+                  if:
+                    allOf:
+                      - isGithubPullRequestsAvailable
+              - mountPoint: entity.page.pull-requests/cards
+                importName: EntityGithubPullRequestsContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isGithubPullRequestsAvailable
+              - mountPoint: home.page/cards
+                importName: HomePageYourOpenPullRequestsCard
+                config:
+                  id: github-assigned-issues
+                  title: "GitHub: Assigned Issues"
+                  description: Issues assigned to the logged in user
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  props:
+                    title: "GitHub: Assigned Issues"
+                    query: is:issue state:open archived:false assignee:@me
+              - mountPoint: home.page/cards
+                importName: HomePageYourOpenPullRequestsCard
+                config:
+                  id: github-assigned-pull-requests
+                  title: "GitHub: Assigned Pull Requests"
+                  description: Pull Requests assigned to the logged in user
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  props:
+                    title: "GitHub: Assigned Pull Requests"
+                    query: is:pr state:open archived:false assignee:@me
+              - mountPoint: home.page/cards
+                importName: HomePageYourOpenPullRequestsCard
+                config:
+                  id: github-open-issues
+                  title: "GitHub: Open Issues"
+                  description: Issues opened by the logged in user
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  props:
+                    title: "GitHub: Open Issues"
+                    query: is:issue state:open archived:false author:@me
+              - mountPoint: home.page/cards
+                importName: HomePageYourOpenPullRequestsCard
+                config:
+                  id: github-open-pull-requests
+                  title: "GitHub: Open Pull Requests"
+                  description: Pull Requests opened by the logged in user
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  props:
+                    title: "GitHub: Open Pull Requests"
+              - mountPoint: home.page/cards
+                importName: HomePageRequestedReviewsCard
+                config:
+                  id: github-requested-reviews
+                  title: "GitHub: Requested Reviews"
+                  description: Pull Requests that waiting for a code review of the logged in user
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  props:
+                    title: "GitHub: Requested Reviews"
+  - package: oci://quay.io/veecode/roadiehq-backstage-plugin-iframe@sha256:3b4f6d7bfea26b10205f3ca953a75e814a99157f34232caef3d5bba7a4edd915
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-iframe:
+            entityTabs:
+              - path: /iframe
+                title: IFrame
+                mountPoint: entity.page.iframe
+            mountPoints:
+              - mountPoint: entity.page.iframe/cards
+                importName: EntityIFrameCard
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+                  props:
+                    srcFromAnnotation: iframe/src
+                  if:
+                    allOf:
+                      - hasAnnotation: iframe/src
+      iframe:
+        allowlist:
+          - backstage.io
+  - package: oci://quay.io/veecode/roadiehq-backstage-plugin-jira@sha256:9c895a8f123340778b085e2a28984cc554f5e643451f33b15a0d3979bb3fc3df
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-jira:
+            mountPoints:
+              - mountPoint: entity.page.issues/cards
+                importName: EntityJiraOverviewCard
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    allOf:
+                      - isJiraAvailable
+  - package: oci://quay.io/veecode/roadiehq-backstage-plugin-security-insights@sha256:f24a4412d3b5f79a2ddf11a56ac75d6688c032e3b7165cf8ddf108d11c13a878
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          roadiehq.backstage-plugin-security-insights:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityDependabotAlertsCard
+                config:
+                  layout:
+                    gridColumnEnd:
+                      lg: span 4
+                      md: span 6
+                      xs: span 12
+                  if:
+                    allOf:
+                      - isSecurityInsightsAvailable
+  - package: oci://quay.io/veecode/roadiehq-scaffolder-backend-argocd@sha256:ea8a0dcbaa5b7653679011268f544475077b31c97c91933d7fe9aa7205f54fd7
+    disabled: true
+    pluginConfig:
+      argocd:
+        username: ${ARGOCD_USERNAME}
+        password: ${ARGOCD_PASSWORD}
+        appLocatorMethods:
+          - type: config
+            instances:
+              - name: argoInstance1
+                url: ${ARGOCD_INSTANCE1_URL}
+                token: ${ARGOCD_AUTH_TOKEN}
+  - package: oci://quay.io/veecode/roadiehq-scaffolder-backend-module-aws@sha256:fdbd59bbe0d5c48ff17dd0c3c24b30423c74233db25f5baa299de4caa8033e39
+    disabled: true
+    pluginConfig:
+      # The plugin uses AWS SDK default credential chain.
+      # Optionally configure explicit credentials:
+      aws:
+        mainAccount:
+          accessKeyId: ${AWS_ACCESS_KEY_ID}
+          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  - package: oci://quay.io/veecode/roadiehq-scaffolder-backend-module-http-request@sha256:f97ccbf39855e16b1eaedbd580990f8b9e3725f041598641c5c2fca25538c627
+    disabled: true
+  - package: oci://quay.io/veecode/roadiehq-scaffolder-backend-module-utils@sha256:53830b1917cdd1e955639c896ec4afac85fe3b41b92419ee350f10928927badf
+    disabled: true
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-catalog-backend-module-ai-resources@sha256:c7603b3f918d27f60847ca4640fbe2a191b511213d37f7b75999138bb4089d7b
+    disabled: true
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-github-workflows@sha256:db84ae0a758bda91657154346be2c510149cb1955ced2960329b124e04f65c44
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          veecode-platform.backstage-plugin-github-workflows:
+            mountPoints:
+              - mountPoint: entity.page.overview/cards
+                importName: EntityGithubWorkflowsCard
+                config:
+                  layout:
+                    gridRowStart:
+                      lg: "4"
+                    gridColumnStart:
+                      lg: "1"
+                    gridColumnEnd:
+                      lg: "span 6"
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-github-workflows-backend@sha256:f7f824e5af6777af901438d085fd6606eaac9050fb6404f194f3b812a6b13856
+    disabled: true
+    pluginConfig:
+      integrations:
+        github:
+          - host: github.com
+            apps:
+              - appId: ${GITHUB_APP_ID}
+                clientId: ${GITHUB_CLIENT_ID}
+                clientSecret: ${GITHUB_CLIENT_SECRET}
+                privateKey: |
+                  ${GITHUB_PRIVATE_KEY}
+  - package: oci://quay.io/veecode/vertigo-platform-plugin-vertigo-theme@sha256:bb82ffd613fc07004ee0c1a77c7bfde5d2920cb28dfd5e93b8bedf24be49a31f
+    disabled: true

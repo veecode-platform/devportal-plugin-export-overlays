@@ -1,0 +1,32 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  namespace: rhdh
+  name: bcp-scaffolder-backend-mod-azure-devops
+  title: "Scaffolder Backend Module Azure DevOps"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/azure-devops/plugins/scaffolder-backend-module-azure-devops
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/azure-devops/plugins/scaffolder-backend-module-azure-devops
+  tags:
+    - software-templates
+spec:
+  packageName: "@backstage-community/plugin-scaffolder-backend-module-azure-devops"
+  # Tag: bs_1.52.0__0.23.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-azure-devops@sha256:8ef564e378570034704548315e25fb13fe5671f5b665d3fc4db78bb3e01aa415"
+  version: 0.23.0
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.49.4
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  partOf:
+    - azure-devops
+  appConfigNotRequired: true
+  appConfigExamples: []

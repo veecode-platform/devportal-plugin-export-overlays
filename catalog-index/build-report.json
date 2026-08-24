@@ -1,0 +1,2167 @@
+{
+  "metadata": {},
+  "plugins": {
+    "backstage-community-plugin-adr-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-adr-backend:bs_1.52.0__0.23.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:ed655aa08ef3dc98c23b03bb35fb0405d886f74cce53592140e1c256f06eba44"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-adr-backend",
+      "version": "0.23.0",
+      "workspace": "adr",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-adr": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-adr:bs_1.52.0__0.26.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:9792d027df44d3f89b5a968f92c26187dc96e7d840ac88d0d3579d95e076bb8e"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-adr",
+      "version": "0.26.0",
+      "workspace": "adr",
+      "overall": "pass"
+    },
+    "backstage-community-search-backend-module-adr": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-search-backend-module-adr:bs_1.52.0__0.20.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:8e8252c816ed00ac662f4e2eb24076213c06221333e183a0d7badabe1549301d"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/search-backend-module-adr",
+      "version": "0.20.0",
+      "workspace": "adr",
+      "overall": "pass"
+    },
+    "veecode-platform-backstage-plugin-catalog-backend-module-ai-resources": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-catalog-backend-module-ai-resources:bs_1.52.0__0.1.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:c7603b3f918d27f60847ca4640fbe2a191b511213d37f7b75999138bb4089d7b"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@veecode-platform/backstage-plugin-catalog-backend-module-ai-resources",
+      "version": "0.1.0",
+      "workspace": "ai-resources",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-analytics-module-ga4": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-ga4:bs_1.52.0__0.18.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:40305e9872bb64e39c4cc328b2fdb797d1ea30dd45d977a4a3a0f652f20d4602"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-analytics-module-ga4",
+      "version": "0.18.0",
+      "workspace": "analytics",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-analytics-module-matomo": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-matomo:bs_1.52.0__1.27.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:d0d2dcd20024d0a304441f5ac271a2acc0be4be8278a2101c11e38b4994b55b3"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-analytics-module-matomo",
+      "version": "1.27.0",
+      "workspace": "analytics",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-analytics-module-newrelic-browser": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-newrelic-browser:bs_1.52.0__0.18.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:8b800879770794e0574afdb77181037c26e149e5ff3b014dddf8e13a92b3f34d"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-analytics-module-newrelic-browser",
+      "version": "0.18.0",
+      "workspace": "analytics",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-analytics-provider-segment": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-provider-segment:bs_1.52.0__1.27.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:57b16eb798646257ef041802e89268c78054d5a073474ffef56e254081407707"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-analytics-provider-segment",
+      "version": "1.27.0",
+      "workspace": "analytics",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-announcements-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-announcements-backend:bs_1.52.0__0.26.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:d50068f8fd6c638987f40b560fe458b124d14ac3779c13a5540d7dcc2b00d58b"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-announcements-backend",
+      "version": "0.26.0",
+      "workspace": "announcements",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-announcements": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-announcements:bs_1.52.0__2.11.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:79d53f3c754c6ec52f564ecbd1aed408b60bbd04f9e33fc4b774f08f198bb8b3"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-announcements",
+      "version": "2.11.0",
+      "workspace": "announcements",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-search-backend-module-announcements": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-announcements:bs_1.52.0__0.19.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:56879fdd248694f0b6d17cc3079fc8b0426fd9945a59cee8a34d19dcd231f5d0"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-search-backend-module-announcements",
+      "version": "0.19.0",
+      "workspace": "announcements",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-app-auth": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-auth:bs_1.52.0__0.0.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:fbe26478a0ed00a4c0da30b121befd0263705fd3d7c9a2b1e5848f7420ec92e4"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-app-auth",
+      "version": "0.0.2",
+      "workspace": "app-defaults",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-app-integrations": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-integrations:bs_1.52.0__0.0.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:e41aa4d40dec95856e5845c9a65f4614332e3e817ed00c0b2495ba4cbd5a2f3c"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-app-integrations",
+      "version": "0.0.2",
+      "workspace": "app-defaults",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-argocd-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-argocd-backend:bs_1.52.0__1.4.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:43cda540c9c41c85adff0220afb889f04030286415b359f2fff3c161ba5d69a3"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-argocd-backend",
+      "version": "1.4.0",
+      "workspace": "argocd",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-argocd": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-argocd:bs_1.52.0__2.8.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:e3c9e8fe52e51510cdf57bb8a8a4794066f49f8b441c820f35fc3b100f1bb2e8"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-argocd",
+      "version": "2.8.0",
+      "workspace": "argocd",
+      "overall": "pass"
+    },
+    "aws-amazon-ecs-plugin-for-backstage-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend:bs_1.52.0__0.9.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@aws/amazon-ecs-plugin-for-backstage-backend",
+      "version": "0.9.0",
+      "workspace": "backstage-plugins-for-aws",
+      "overall": "pass"
+    },
+    "aws-amazon-ecs-plugin-for-backstage": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/aws-amazon-ecs-plugin-for-backstage:bs_1.52.0__0.6.3"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:165f0503debcb2eba1fac492a99f17a49f6e1d98c25cd439d194a554c7e1d913"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@aws/amazon-ecs-plugin-for-backstage",
+      "version": "0.6.3",
+      "workspace": "backstage-plugins-for-aws",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-azure-devops-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-azure-devops-backend:bs_1.52.0__0.27.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:6e33292432cbeaa38b2913acf34cda9b819c84373675bb4fbdc62b9c1242cbc6"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-azure-devops-backend",
+      "version": "0.27.0",
+      "workspace": "azure-devops",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-azure-devops": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-azure-devops:bs_1.52.0__0.29.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:4bc7e55b6a0b7b02235d8a764908a0ab294561017b576364057349b4bef468c2"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-azure-devops",
+      "version": "0.29.0",
+      "workspace": "azure-devops",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-catalog-backend-module-azure-devops-annotator-processor": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-catalog-backend-module-azure-devops-annotator-processor:bs_1.52.0__0.18.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:682987d5c14e5f8f42cc5d320ba46b960ab3b00cf5aa9b9eabb89f69a4685d71"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-catalog-backend-module-azure-devops-annotator-processor",
+      "version": "0.18.0",
+      "workspace": "azure-devops",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-scaffolder-backend-module-azure-devops": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-azure-devops:bs_1.52.0__0.23.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:8ef564e378570034704548315e25fb13fe5671f5b665d3fc4db78bb3e01aa415"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-scaffolder-backend-module-azure-devops",
+      "version": "0.23.0",
+      "workspace": "azure-devops",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-scaffolder-backend-module-dotnet": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet:bs_1.52.0__0.13.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:114e0f6cab92a28ed6c3d13a32404a20291a4a5ec5062269f7fe47d24de08d5a"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-scaffolder-backend-module-dotnet",
+      "version": "0.13.0",
+      "workspace": "azure-devops",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-search-backend-module-azure-devops": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-azure-devops:bs_1.52.0__0.5.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:d7e8524315f5c5853beee293ba15ba639b19a7d1019c72305d37ed55319c1a3d"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-search-backend-module-azure-devops",
+      "version": "0.5.0",
+      "workspace": "azure-devops",
+      "overall": "pass"
+    },
+    "backstage-plugin-auth": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-plugin-auth:bs_1.52.0__0.1.9"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:324596731ac7571f8a58f4fe82b449b97372a8f66c6e1a443b24273463d21597"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage/plugin-auth",
+      "version": "0.1.9",
+      "workspace": "backstage",
+      "overall": "pass"
+    },
+    "backstage-plugin-events-backend-module-gitlab": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-plugin-events-backend-module-gitlab:bs_1.52.0__0.3.13"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:2f45814248ac78def78f9e0ceb624a8b4aae1eb1450bc57a6c1fdb0a32ed5189"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage/plugin-events-backend-module-gitlab",
+      "version": "0.3.13",
+      "workspace": "backstage",
+      "overall": "pass"
+    },
+    "backstage-plugin-mcp-actions-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-plugin-mcp-actions-backend:bs_1.52.0__0.1.14"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:d4d24e08d7630eb352fa7e6dc1da797ebc4e667aba347575dd94d4bcde82e8e2"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage/plugin-mcp-actions-backend",
+      "version": "0.1.14",
+      "workspace": "backstage",
+      "overall": "pass"
+    },
+    "backstage-plugin-notifications-backend-module-email": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-plugin-notifications-backend-module-email:bs_1.52.0__0.3.22"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:24b8c2382d7f90268e0f32dc0c088d61fd26c349b9de86514aada9bd1bb6a6ee"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage/plugin-notifications-backend-module-email",
+      "version": "0.3.22",
+      "workspace": "backstage",
+      "overall": "pass"
+    },
+    "backstage-plugin-scaffolder-backend-module-gerrit": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-plugin-scaffolder-backend-module-gerrit:bs_1.52.0__0.2.22"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:f137c953b0da61fdbc1f1ee37718e06888ba15426afa1a9898fbc41afab3165b"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage/plugin-scaffolder-backend-module-gerrit",
+      "version": "0.2.22",
+      "workspace": "backstage",
+      "overall": "pass"
+    },
+    "aws-aws-codebuild-plugin-for-backstage-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/aws-aws-codebuild-plugin-for-backstage-backend:bs_1.52.0__0.9.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:7ac8f9a9aa27bfdbdc79537bdc4792f8aa60cb000ebf4912d270a19d634b5c21"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@aws/aws-codebuild-plugin-for-backstage-backend",
+      "version": "0.9.1",
+      "workspace": "backstage-plugins-for-aws",
+      "overall": "pass"
+    },
+    "aws-aws-codebuild-plugin-for-backstage": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/aws-aws-codebuild-plugin-for-backstage:bs_1.52.0__0.7.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:e3c31521485e2e073f3b6489ab36a19751f2b343ddb6ff2e7d5931c46315ac0f"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@aws/aws-codebuild-plugin-for-backstage",
+      "version": "0.7.2",
+      "workspace": "backstage-plugins-for-aws",
+      "overall": "pass"
+    },
+    "aws-aws-codepipeline-plugin-for-backstage-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage-backend:bs_1.52.0__0.10.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:086ec5ad4e02fb09de42858c325f5166350a1b5904386788bf04a0c66926e131"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@aws/aws-codepipeline-plugin-for-backstage-backend",
+      "version": "0.10.0",
+      "workspace": "backstage-plugins-for-aws",
+      "overall": "pass"
+    },
+    "aws-aws-codepipeline-plugin-for-backstage": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage:bs_1.52.0__0.8.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:851b231df378f7f345d0292a37cd2f646a0a436d4afa87d7597501332e394261"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@aws/aws-codepipeline-plugin-for-backstage",
+      "version": "0.8.1",
+      "workspace": "backstage-plugins-for-aws",
+      "overall": "pass"
+    },
+    "aws-aws-s3-catalog-module-for-backstage": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.52.0__0.1.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:4c2460a4f8cd4f3ee31743cc0f3ba48b6c7e2960f069beb7928172ee2580495d"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@aws/aws-s3-catalog-module-for-backstage",
+      "version": "0.1.0",
+      "workspace": "backstage-plugins-for-aws",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-bookmarks": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-bookmarks:bs_1.52.0__0.9.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:9bf6dd9a6d7f5cbd5416849bc0adf503f4e0e17e883a64ae21c3ffb20b2c5168"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-bookmarks",
+      "version": "0.9.0",
+      "workspace": "bookmarks",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions:bs_1.52.0__0.17.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:696d2d0be16b1a5948d4527bf70b305d7ae157d8d4ff5740d99306a935470aed"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-catalog-backend-module-extensions",
+      "version": "0.17.1",
+      "workspace": "extensions",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-extensions": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions:bs_1.52.0__0.17.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:9767cd6b68bf7bafd7b1e43777e657b0c2d018b7424b73b6e8c80a4aa573d147"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-extensions",
+      "version": "0.17.1",
+      "workspace": "extensions",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-github-actions": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-actions:bs_1.52.0__0.22.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:fe9cea3a11097339f85bab0bf095ecf1dc95b972194d41e4c9ca0e34c85ecebd"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-github-actions",
+      "version": "0.22.0",
+      "workspace": "github",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-github-deployments": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-deployments:bs_1.52.0__0.18.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:d16c6a9a70dfc305031f445dc5c529408627bad6b6f5badca78ed2fbb5b91dd7"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-github-deployments",
+      "version": "0.18.0",
+      "workspace": "github",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-github-discussions": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-discussions:bs_1.52.0__0.10.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:0e7f30341e71c6474389604f621fb340d6a4bc913584b1b4f4a139c86fcb2fba"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-github-discussions",
+      "version": "0.10.0",
+      "workspace": "github",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-github-pull-requests-board": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-pull-requests-board:bs_1.52.0__0.16.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:2bc3b7f46233e2721a1072ce44c9d326a32b2300a906d42cf65d850652e888d3"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-github-pull-requests-board",
+      "version": "0.16.0",
+      "workspace": "github",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-search-backend-module-github-discussions": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions:bs_1.52.0__0.11.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:b08462ce1254cab05d1d65018cbe317bcf4fb9bcf3d76e0bee1bdd8518597a16"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-search-backend-module-github-discussions",
+      "version": "0.11.0",
+      "workspace": "github",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-github-issues": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-issues:bs_1.52.0__1.2.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:48ce70d694d86243562931b1529c0b6ca5f54aeff15ccbd0631a46a049a0cc6a"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-github-issues",
+      "version": "1.2.1",
+      "workspace": "github-issues",
+      "overall": "pass"
+    },
+    "proberaum-backstage-plugin-github-notifications-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/proberaum-backstage-plugin-github-notifications-backend:bs_1.52.0__0.12.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:7c890c9240670dcf08213cf2d6abd0c00f807bce1f18170eff097bbe1711e76d"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@proberaum/backstage-plugin-github-notifications-backend",
+      "version": "0.12.0",
+      "workspace": "github-notifications",
+      "overall": "pass"
+    },
+    "veecode-platform-backstage-plugin-github-workflows-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-github-workflows-backend:bs_1.52.0__1.3.7"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:f7f824e5af6777af901438d085fd6606eaac9050fb6404f194f3b812a6b13856"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@veecode-platform/backstage-plugin-github-workflows-backend",
+      "version": "1.3.7",
+      "workspace": "github-workflows",
+      "overall": "pass"
+    },
+    "veecode-platform-backstage-plugin-github-workflows": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-github-workflows:bs_1.52.0__1.3.7"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:db84ae0a758bda91657154346be2c510149cb1955ced2960329b124e04f65c44"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@veecode-platform/backstage-plugin-github-workflows",
+      "version": "1.3.7",
+      "workspace": "github-workflows",
+      "overall": "pass"
+    },
+    "immobiliarelabs-backstage-plugin-gitlab-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab-backend:bs_1.52.0__7.0.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:b1bbe7274759b17455c02c2903267adf83e48803367735109e24a14b6b1f1e3f"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@immobiliarelabs/backstage-plugin-gitlab-backend",
+      "version": "7.0.0",
+      "workspace": "gitlab",
+      "overall": "pass"
+    },
+    "immobiliarelabs-backstage-plugin-gitlab": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab:bs_1.52.0__7.0.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:54df61fe65be6aac92843ea70cf1217c0df88551f6afa8176a0fdc28228edaa6"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@immobiliarelabs/backstage-plugin-gitlab",
+      "version": "7.0.0",
+      "workspace": "gitlab",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-global-floating-action-button": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-floating-action-button:bs_1.52.0__1.9.3"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:b795e6d608c472fb1bccd26ebeceee31a37328c6353c16631559c854cca214bc"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-global-floating-action-button",
+      "version": "1.9.3",
+      "workspace": "global-floating-action-button",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-global-header": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-header:bs_1.52.0__1.21.6"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:2a622b6a8c30584eb1023869d7387f1ec09309f62ef3621b94a20fb5d81de1a1"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-global-header",
+      "version": "1.21.6",
+      "workspace": "global-header",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-grafana": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-grafana:bs_1.52.0__0.17.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:f532f66d796de182d32cbe5f0eb7f0829cc31e61dac09f6cfed646ef6f8bcad3"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-grafana",
+      "version": "0.17.0",
+      "workspace": "grafana",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-dynamic-home-page": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-dynamic-home-page:bs_1.52.0__1.13.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:c8fcb047648686749b6af3090f726e8ffc2582dfbcfdd3d45e4f2cb1cd912acd"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-dynamic-home-page",
+      "version": "1.13.1",
+      "workspace": "homepage",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-homepage-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-homepage-backend:bs_1.52.0__0.1.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:9223d63355448c660c7dd7a47bd07fbb921f8eaecab2587e252e1076dcf8b5d8"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-homepage-backend",
+      "version": "0.1.1",
+      "workspace": "homepage",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-jenkins-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-jenkins-backend:bs_1.52.0__0.27.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:dc043d5b0302f8e4f42d1f0599a050463082f08a214fc5991709f32471d536cb"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-jenkins-backend",
+      "version": "0.27.0",
+      "workspace": "jenkins",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-jenkins": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-jenkins:bs_1.52.0__0.30.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:bbed7a06c0b758213e58b9bb0427e22c83895b199530bb56984ea7e5caa1d193"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-jenkins",
+      "version": "0.30.0",
+      "workspace": "jenkins",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-scaffolder-backend-module-jenkins": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-jenkins:bs_1.52.0__0.20.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:aa8aa1f4ca8df4db2fb8218eea4ba9b3069ef7b6ff5a04bfe35f32997602f398"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-scaffolder-backend-module-jenkins",
+      "version": "0.20.0",
+      "workspace": "jenkins",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-jfrog-artifactory": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-jfrog-artifactory:bs_1.52.0__1.30.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:66abf666b74f6c149e7e111fd46f3be2512475169e07b17007cd6a5e1ea44086"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-jfrog-artifactory",
+      "version": "1.30.0",
+      "workspace": "jfrog-artifactory",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-konflux-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux-backend:bs_1.52.0__0.1.8"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:7f139af75184460fee403c2f9c6b2ab2acc7cdd3f61ef706d6cbff3a195081a8"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-konflux-backend",
+      "version": "0.1.8",
+      "workspace": "konflux",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-konflux": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux:bs_1.52.0__0.1.8"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:35d712874fd90bccd3b8dcbb9cae1804d6f6016682deeb30031961a89e018890"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-konflux",
+      "version": "0.1.8",
+      "workspace": "konflux",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-lighthouse-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-lighthouse-backend:bs_1.52.0__0.25.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:ca06de50b619ea14189775a835498efb62d147e1c5f74c69bcacc8d7244dfcc1"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-lighthouse-backend",
+      "version": "0.25.0",
+      "workspace": "lighthouse",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-lighthouse": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-lighthouse:bs_1.52.0__0.24.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:070969a15509b876990a67c5d68265795e277e135c77ed4f59b1410e8b2e28b2"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-lighthouse",
+      "version": "0.24.0",
+      "workspace": "lighthouse",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-mcp-chat-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-mcp-chat-backend:bs_1.52.0__0.8.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:bae55d291f54a07bf7af3cd649dd22ee7889f59fa5f9aa2cb0ea41a63aff97e0"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-mcp-chat-backend",
+      "version": "0.8.0",
+      "workspace": "mcp-chat",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-mcp-chat": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-mcp-chat:bs_1.52.0__0.6.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:8800ded282080fec3de8d04d8d1b0ee789140ad88ffd2f31a92132d5394f090b"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-mcp-chat",
+      "version": "0.6.0",
+      "workspace": "mcp-chat",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras:bs_1.52.0__0.4.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:35bc4a05ad78e8ac5109890f896502c2e39bac85ea0a82c0a8b90d766da07e19"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras",
+      "version": "0.4.2",
+      "workspace": "mcp-integrations",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras:bs_1.52.0__0.2.3"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:12b120512c4f9a8c3245c27cc738c9736fcaefca260b1516435039d202b83547"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-software-catalog-mcp-extras",
+      "version": "0.2.3",
+      "workspace": "mcp-integrations",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.52.0__0.2.4"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:762745141c97ae4963695716d33ada9d5259351354bb89f77810b0aee6fbdc81"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras",
+      "version": "0.2.4",
+      "workspace": "mcp-integrations",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-multi-source-security-viewer-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-multi-source-security-viewer-backend:bs_1.52.0__0.4.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:3c92cda3bbc9842471e00c8ebb404fce032786b1e280027d9bcdf2d29944825b"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-multi-source-security-viewer-backend",
+      "version": "0.4.1",
+      "workspace": "multi-source-security-viewer",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-multi-source-security-viewer": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-multi-source-security-viewer:bs_1.52.0__0.15.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:3808cf4cef112ce68a04a47f4303e14334065c65b987cfaade4dee8d706c7266"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-multi-source-security-viewer",
+      "version": "0.15.2",
+      "workspace": "multi-source-security-viewer",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-nexus-repository-manager": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-nexus-repository-manager:bs_1.52.0__1.23.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:a96498a8da63a04b4d405e79937761e55a6ebc2e9070bbcdf1b274adaceb99d8"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-nexus-repository-manager",
+      "version": "1.23.2",
+      "workspace": "nexus-repository-manager",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-npm-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-npm-backend:bs_1.52.0__1.20.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:81bce3dab049ea639f52916173004c30d2fb713f597db39f0e5dbcc619705273"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-npm-backend",
+      "version": "1.20.0",
+      "workspace": "npm",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-npm": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-npm:bs_1.52.0__1.20.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:ff44d50c6cffd4e7d314e0dc4aec03bdce1f6ec85c3c917dbfa23d6dbcb74e95"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-npm",
+      "version": "1.20.0",
+      "workspace": "npm",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-rbac": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-rbac:bs_1.52.0__1.52.4"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:36e9f606223dd6f2e479c3a904d28dfbec7afdcbbb8e2f18cd1d1edbf7f238e6"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-rbac",
+      "version": "1.52.4",
+      "workspace": "rbac",
+      "overall": "pass"
+    },
+    "roadiehq-backstage-plugin-argo-cd-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-argo-cd-backend:bs_1.52.0__4.8.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:eff2afa63cb7ab7793395824d6047f9b2d0201acbf5586f0638711699776d909"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/backstage-plugin-argo-cd-backend",
+      "version": "4.8.0",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-backstage-plugin-argo-cd": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-argo-cd:bs_1.52.0__2.12.5"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:eb8aa6de7fd869ed43cefa6fdd3948966fb40c10c778aa4873fcf88a5e465495"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/backstage-plugin-argo-cd",
+      "version": "2.12.5",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-backstage-plugin-datadog": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-datadog:bs_1.52.0__2.7.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:7d020e3cbfde88457d946c19a0d4a367db4b3b925bcb4d2371755a2fad25ff1d"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/backstage-plugin-datadog",
+      "version": "2.7.2",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-backstage-plugin-github-insights": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-github-insights:bs_1.52.0__3.5.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:b6478705ef8e3088f4e6d1d7c01b5368ec4ac4ff5a67471055ec8dbcfda26466"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/backstage-plugin-github-insights",
+      "version": "3.5.0",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-backstage-plugin-github-pull-requests": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-github-pull-requests:bs_1.52.0__3.7.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:e08a9e697eae52272a5ded281a9648d09718b7e5ca6e9f51a1399a9482d5606e"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/backstage-plugin-github-pull-requests",
+      "version": "3.7.0",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-backstage-plugin-iframe": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-iframe:bs_1.52.0__1.6.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:3b4f6d7bfea26b10205f3ca953a75e814a99157f34232caef3d5bba7a4edd915"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/backstage-plugin-iframe",
+      "version": "1.6.1",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-backstage-plugin-jira": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-jira:bs_1.52.0__2.14.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:9c895a8f123340778b085e2a28984cc554f5e643451f33b15a0d3979bb3fc3df"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/backstage-plugin-jira",
+      "version": "2.14.0",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-backstage-plugin-security-insights": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-security-insights:bs_1.52.0__3.3.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:f24a4412d3b5f79a2ddf11a56ac75d6688c032e3b7165cf8ddf108d11c13a878"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/backstage-plugin-security-insights",
+      "version": "3.3.1",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-scaffolder-backend-argocd": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-argocd:bs_1.52.0__1.8.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:ea8a0dcbaa5b7653679011268f544475077b31c97c91933d7fe9aa7205f54fd7"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/scaffolder-backend-argocd",
+      "version": "1.8.1",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-scaffolder-backend-module-aws": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-aws:bs_1.52.0__2.8.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:fdbd59bbe0d5c48ff17dd0c3c24b30423c74233db25f5baa299de4caa8033e39"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/scaffolder-backend-module-aws",
+      "version": "2.8.2",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-scaffolder-backend-module-http-request": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-http-request:bs_1.52.0__5.6.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:f97ccbf39855e16b1eaedbd580990f8b9e3725f041598641c5c2fca25538c627"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/scaffolder-backend-module-http-request",
+      "version": "5.6.0",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "roadiehq-scaffolder-backend-module-utils": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-utils:bs_1.52.0__4.1.2"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:53830b1917cdd1e955639c896ec4afac85fe3b41b92419ee350f10928927badf"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@roadiehq/scaffolder-backend-module-utils",
+      "version": "4.1.2",
+      "workspace": "roadie-backstage-plugins",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-scaffolder-backend-module-kubernetes": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-kubernetes:bs_1.52.0__2.17.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:e1bc6269337140c10eede5abe4308883c831b14d7985753dfd5a02a849c786fc"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-scaffolder-backend-module-kubernetes",
+      "version": "2.17.1",
+      "workspace": "scaffolder-backend-module-kubernetes",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-scaffolder-backend-module-regex": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-regex:bs_1.52.0__2.15.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:e0f3e1f69cb6c1bccd538f8ed80e6b16b85f2540b8866c636225903bb76a0e35"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-scaffolder-backend-module-regex",
+      "version": "2.15.1",
+      "workspace": "scaffolder-backend-module-regex",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-scaffolder-backend-module-sonarqube": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-sonarqube:bs_1.52.0__2.15.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:ae19e47677c08b8439aface4a37d88b2d475f07bbddd814074d70322d8e61647"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-scaffolder-backend-module-sonarqube",
+      "version": "2.15.0",
+      "workspace": "scaffolder-backend-module-sonarqube",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-sonarqube-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-sonarqube-backend:bs_1.52.0__1.1.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:bdf9d45d8c73c03be632174a1918c472806cf4bc52966fb3cbe8f98363abd0c5"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-sonarqube-backend",
+      "version": "1.1.1",
+      "workspace": "sonarqube",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-sonarqube": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-sonarqube:bs_1.52.0__1.1.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:8473d9a47b6d198b3a1101a5eacc84434cb4af2134e77e4f2bca8ed08d03acc3"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-sonarqube",
+      "version": "1.1.0",
+      "workspace": "sonarqube",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-tech-insights-backend-module-jsonfc": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-backend-module-jsonfc:bs_1.52.0__0.7.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:1fdc2fed4c693a48c00700ade59f3105058dfae5eb4334f4ad26bd772d0a51f6"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-tech-insights-backend-module-jsonfc",
+      "version": "0.7.0",
+      "workspace": "tech-insights",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-tech-insights-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-backend:bs_1.52.0__2.5.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:1a2dd0fcabcd9ae20511fd89552533d847f58d887bba15e9fb5a941dc9dab88b"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-tech-insights-backend",
+      "version": "2.5.0",
+      "workspace": "tech-insights",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-tech-insights-maturity": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-maturity:bs_1.52.0__0.6.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:9af29e94bc27096c5cf8fcee4ea77f77f53b9a46f382fc41e21140a4b6416f04"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-tech-insights-maturity",
+      "version": "0.6.0",
+      "workspace": "tech-insights",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-tech-insights": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights:bs_1.52.0__1.0.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:dec6fee0227110e2e29fefe34e61a4036c575f85ee58158516a2ad4ce2e7c7a9"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-tech-insights",
+      "version": "1.0.0",
+      "workspace": "tech-insights",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-tech-radar-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-radar-backend:bs_1.52.0__1.16.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:71f7f6c4816156120e693bf3c2ff29ee35c3725406c996c7de58607800df3a99"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-tech-radar-backend",
+      "version": "1.16.0",
+      "workspace": "tech-radar",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-tech-radar": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-radar:bs_1.52.0__1.17.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:2a5e149c22bdc02f6cf0d1ba6db0113105b284bf05b3806678cca601387f3b63"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-tech-radar",
+      "version": "1.17.0",
+      "workspace": "tech-radar",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-tekton": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tekton:bs_1.52.0__3.37.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:7a2607b5d522c090e2127d8847d58657d027a246cf4df1b970429eeba6a12c76"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-tekton",
+      "version": "3.37.0",
+      "workspace": "tekton",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-todo-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-todo-backend:bs_1.52.0__0.23.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:349488264edc88c97e83749c07835515d4782a9542c5624b129a60128dbe7cd5"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-todo-backend",
+      "version": "0.23.0",
+      "workspace": "todo",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-todo": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-todo:bs_1.52.0__0.22.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:bb04131c8390091ae966e625fdad7be1002894d8b8983ae27acce56464a1880b"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-todo",
+      "version": "0.22.0",
+      "workspace": "todo",
+      "overall": "pass"
+    },
+    "vertigo-platform-plugin-vertigo-theme": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/vertigo-platform-plugin-vertigo-theme:bs_1.52.0__0.1.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:bb82ffd613fc07004ee0c1a77c7bfde5d2920cb28dfd5e93b8bedf24be49a31f"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "vertigo-platform-plugin-vertigo-theme",
+      "version": "0.1.0",
+      "workspace": "vertigo-theme",
+      "overall": "pass"
+    }
+  },
+  "summary": {
+    "total": 98,
+    "succeeded": 98,
+    "failed": 0
+  },
+  "status": "success"
+}

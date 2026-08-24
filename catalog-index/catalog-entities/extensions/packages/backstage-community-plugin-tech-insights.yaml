@@ -1,0 +1,48 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-tech-insights
+  namespace: rhdh
+  title: "Tech Insights"
+  links:
+  - url: https://red.ht/rhdh
+    title: Homepage
+  - url: https://github.com/backstage/community-plugins/issues
+    title: Bugs
+  - title: Source Code
+    url: https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
+  tags: []
+spec:
+  packageName: '@backstage-community/plugin-tech-insights'
+  # Tag: bs_1.52.0__1.0.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tech-insights@sha256:dec6fee0227110e2e29fefe34e61a4036c575f85ee58158516a2ad4ce2e7c7a9"
+  version: 1.0.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.47.2
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+  - tech-insights
+  appConfigExamples:
+    - title: Default configuration
+      # Verificado em runtime (drydock, 2026-07-17) contra veecode/devportal:2.2.1:
+      # EntityTechInsightsScorecardContent monta e renderiza na tab dedicada
+      # (export confirmado no bundle; requer o backend + módulo jsonfc habilitados).
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-tech-insights:
+              entityTabs:
+                - path: /scorecard
+                  title: Scorecard
+                  mountPoint: entity.page.scorecard
+              mountPoints:
+                - mountPoint: entity.page.scorecard/cards
+                  importName: EntityTechInsightsScorecardContent
+                  config:
+                    layout:
+                      gridColumn: "1 / -1"

@@ -1,0 +1,9 @@
+{
+  "red-hat-developer-hub-backstage-plugin-konflux": {
+    "workspacePath": "konflux/plugins/konflux",
+    "registryReference": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux:bs_1.52.0__0.1.8",
+    "digest": "sha256:35d712874fd90bccd3b8dcbb9cae1804d6f6016682deeb30031961a89e018890",
+    "support": "dev-preview",
+    "io.backstage.dynamic-packages": "W3sicmVkLWhhdC1kZXZlbG9wZXItaHViLWJhY2tzdGFnZS1wbHVnaW4ta29uZmx1eCI6eyJuYW1lIjoiQHJlZC1oYXQtZGV2ZWxvcGVyLWh1Yi9iYWNrc3RhZ2UtcGx1Z2luLWtvbmZsdXgtZHluYW1pYyIsInZlcnNpb24iOiIwLjEuOCIsImJhY2tzdGFnZSI6eyJyb2xlIjoiZnJvbnRlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJrb25mbHV4IiwicGx1Z2luUGFja2FnZXMiOlsiQHJlZC1oYXQtZGV2ZWxvcGVyLWh1Yi9iYWNrc3RhZ2UtcGx1Z2luLWtvbmZsdXgiLCJAcmVkLWhhdC1kZXZlbG9wZXItaHViL2JhY2tzdGFnZS1wbHVnaW4ta29uZmx1eC1iYWNrZW5kIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTIuMCJ9LCJob21lcGFnZSI6Imh0dHBzOi8vcmVkLmh0L3JoZGgiLCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vcmVkaGF0LWRldmVsb3Blci9yaGRoLXBsdWdpbnMiLCJkaXJlY3RvcnkiOiJ3b3Jrc3BhY2VzL2tvbmZsdXgvcGx1Z2lucy9rb25mbHV4In0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIiwiYnVncyI6Imh0dHBzOi8vZ2l0aHViLmNvbS9yZWRoYXQtZGV2ZWxvcGVyL3JoZGgtcGx1Z2lucy9pc3N1ZXMifX1d"
+  }
+}

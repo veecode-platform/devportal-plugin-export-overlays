@@ -1,0 +1,43 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: devportal-marketplace-frontend-dynamic
+  namespace: veecode
+  title: "DevPortal Marketplace Frontend"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspace/marketplace
+  tags: []
+spec:
+  packageName: "devportal-marketplace-frontend-dynamic"
+  dynamicArtifact: oci://quay.io/veecode/devportal-marketplace-frontend-dynamic:bs_1.52.0__0.1.0
+  version: 0.1.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.4
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - marketplace
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            devportal.marketplace-frontend:
+              appIcons:
+                - name: pluginsIcon
+                  importName: PluginsIcon
+              dynamicRoutes:
+                - path: /marketplace
+                  importName: DynamicExtensionsPluginRouter
+                  menuItem:
+                    icon: pluginsIcon
+                    text: Marketplace
+              menuItems:
+                marketplace:
+                  title: Marketplace
+                  icon: pluginsIcon

@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-search-backend-module-azure-devops": {
+    "workspacePath": "azure-devops/plugins/search-backend-module-azure-devops",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-search-backend-module-azure-devops:bs_1.52.0__0.5.0",
+    "digest": "sha256:d7e8524315f5c5853beee293ba15ba639b19a7d1019c72305d37ed55319c1a3d",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tc2VhcmNoLWJhY2tlbmQtbW9kdWxlLWF6dXJlLWRldm9wcyI6eyJuYW1lIjoiQGJhY2tzdGFnZS1jb21tdW5pdHkvcGx1Z2luLXNlYXJjaC1iYWNrZW5kLW1vZHVsZS1henVyZS1kZXZvcHMtZHluYW1pYyIsInZlcnNpb24iOiIwLjUuMCIsImRlc2NyaXB0aW9uIjoiVGhlIGF6dXJlLWRldm9wcyBiYWNrZW5kIG1vZHVsZSBmb3IgdGhlIHNlYXJjaCBwbHVnaW4uIiwiYmFja3N0YWdlIjp7InJvbGUiOiJiYWNrZW5kLXBsdWdpbi1tb2R1bGUiLCJwbHVnaW5JZCI6InNlYXJjaCIsInBsdWdpblBhY2thZ2UiOiJAYmFja3N0YWdlL3BsdWdpbi1zZWFyY2gtYmFja2VuZCIsInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTIuMCJ9LCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vYmFja3N0YWdlL2NvbW11bml0eS1wbHVnaW5zIiwiZGlyZWN0b3J5Ijoid29ya3NwYWNlcy9henVyZS1kZXZvcHMvcGx1Z2lucy9zZWFyY2gtYmFja2VuZC1tb2R1bGUtYXp1cmUtZGV2b3BzIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIn19XQ=="
+  }
+}
