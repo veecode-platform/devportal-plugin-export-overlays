@@ -1,0 +1,67 @@
+# Anchors every bundle digest referenced by a given plugin-catalog-index image with an
+# immutable tag (anchor-<short-index-digest>), so a subsequent fleet republish that moves
+# the bundle tags cannot orphan digests a digest-pinned index still points at.
+#
+# Why this exists (ADR-008, packaging-convergence cutover): the Phase 2 metadata merge
+# triggers a full-fleet republish that moves every bundle tag. The v3 tenant keeps using
+# its digest-pinned index (cdca88e5...) until its own cutover MR applies — during that
+# window, unanchored old bundle digests would be quay-GC bait, which is exactly the
+# 2026-08-20 incident class. Run this BEFORE merging the metadata rewrite.
+#
+# Temporary tooling: retire in Phase 4 together with bundle publishing itself.
+name: Anchor bundle digests referenced by a catalog index
+
+on:
+  workflow_dispatch:
+    inputs:
+      index-ref:
+        description: "Catalog index image ref whose DPDY refs should be anchored (tag or digest)"
+        type: string
+        default: 'quay.io/veecode/plugin-catalog-index:bs_1.52.0'
+        required: true
+
+jobs:
+  anchor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Anchor referenced bundle digests
+        env:
+          QUAY_TOKEN: ${{ secrets.QUAY_TOKEN }}
+          INDEX_REF: ${{ inputs.index-ref }}
+        run: |
+          set -euo pipefail
+          echo "$QUAY_TOKEN" | skopeo login -u 'veecode+ci' --password-stdin quay.io
+
+          workdir=$(mktemp -d)
+          skopeo copy "docker://${INDEX_REF}" "dir:${workdir}/index"
+
+          # The index is FROM scratch with a single layer; the DPDY sits at its root.
+          layer=$(python3 -c "import json;print(json.load(open('${workdir}/index/manifest.json'))['layers'][0]['digest'].split(':')[1])")
+          mkdir -p "${workdir}/rootfs"
+          tar -xzf "${workdir}/index/${layer}" -C "${workdir}/rootfs"
+          dpdy="${workdir}/rootfs/dynamic-plugins.default.yaml"
+          test -s "$dpdy" || { echo "::error::No dynamic-plugins.default.yaml in ${INDEX_REF}"; exit 1; }
+
+          index_short=$(skopeo inspect --format '{{.Digest}}' "docker://${INDEX_REF}" | cut -d: -f2 | cut -c1-8)
+          anchor_tag="anchor-${index_short}"
+          echo "Anchor tag: ${anchor_tag}"
+
+          # Collect unique image@digest refs from the DPDY (format: oci://<image>@sha256:<hex>!<selector>)
+          grep -oE 'oci://[^"[:space:]!]+@sha256:[0-9a-f]{64}' "$dpdy" | sed 's|^oci://||' | sort -u > "${workdir}/refs.txt"
+          total=$(wc -l < "${workdir}/refs.txt"); anchored=0; failed=0
+          echo "Found ${total} unique digest refs"
+
+          while IFS= read -r ref; do
+            image="${ref%@*}"
+            if skopeo copy --all "docker://${ref}" "docker://${image}:${anchor_tag}"; then
+              anchored=$((anchored+1))
+            else
+              echo "::error title=Anchor failed::${ref}"
+              failed=$((failed+1))
+            fi
+          done < "${workdir}/refs.txt"
+
+          echo "## Anchoring summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "Index: \`${INDEX_REF}\` → anchor tag \`${anchor_tag}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Anchored: ${anchored}/${total} (failed: ${failed})" >> "$GITHUB_STEP_SUMMARY"
+          test "$failed" -eq 0
