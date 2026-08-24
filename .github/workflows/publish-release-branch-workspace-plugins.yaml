@@ -23,6 +23,17 @@ on:
         type: string
         default: ''
         required: false
+
+      also-publish-plugins:
+        description: >-
+          Phase 1 dual publish (ADR-008): when true, every plugin in a
+          bundle-workspace is ALSO pushed as its own image
+          quay.io/veecode/<plugin-name>, in addition to the existing
+          workspace bundle. Wiring only — export-utils does the actual
+          publish. Default false keeps today's behaviour byte-identical.
+        type: boolean
+        default: false
+        required: false
     secrets:
       QUAY_TOKEN:
         description: Quay.io robot account token for pushing OCI images
@@ -132,6 +143,7 @@ jobs:
       workspace-path: ${{ inputs.workspace-path }}
       image-registry-user: veecode+ci
       bundle-workspace: true
+      also-publish-plugins: ${{ inputs.also-publish-plugins }}
 
     secrets:
       image-registry-password: ${{ secrets.QUAY_TOKEN }}
@@ -279,3 +291,46 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"visibility":"public"}' \
             "https://quay.io/api/v1/repository/veecode/plugin-catalog-index/changevisibility" || true
+
+      - name: Set per-plugin Quay repositories to public
+        # Phase 1 dual publish (ADR-008). When also-publish-plugins is on, export-utils
+        # pushes each plugin as its own image quay.io/veecode/<plugin-name>, alongside
+        # the workspace bundle. Those repos are created on first push and start
+        # PRIVATE (same story as the bundle index above), so flip them here too.
+        #
+        # Plugin names are derived from spec.dynamicArtifact in the metadata files,
+        # taking the text after `!` — that suffix is already the normalized name
+        # export-utils uses for the image repo (jq -r '.name | sub("^@";"") |
+        # sub("[/@]";"-")' package.json). Only workspaces with an active (non
+        # .disabled) plugins-list.yaml are fleet-published at all, so disabled
+        # workspaces are excluded from the derivation.
+        #
+        # Tolerant to individual failure, same as the step above: a plugin skipped
+        # this run (e.g. the compatibility gate) simply has no repo yet, and that is
+        # not an error here.
+        # Bool wiring note: a boolean workflow_call input can arrive stringified
+        # ('true'/'false') depending on how the caller expression evaluated, and
+        # the string 'false' is truthy to `if:`. Checking both forms is what
+        # keeps this step actually off by default.
+        if: inputs.also-publish-plugins == true || inputs.also-publish-plugins == 'true'
+        env:
+          QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
+        run: |
+          if [ -z "$QUAY_API_TOKEN" ]; then
+            echo "QUAY_API_TOKEN not set, skipping per-plugin visibility change"
+            exit 0
+          fi
+
+          for plugin in $(
+            for ws in workspaces/*/; do
+              ws="${ws%/}"
+              [ -f "$ws/plugins-list.yaml" ] || continue
+              grep -h 'dynamicArtifact:.*oci://quay.io/veecode/' "$ws"/metadata/*.yaml 2>/dev/null | sed 's|.*!||' || true
+            done | sort -u
+          ); do
+            curl -s -X PUT \
+              -H "Authorization: Bearer $QUAY_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d '{"visibility":"public"}' \
+              "https://quay.io/api/v1/repository/veecode/$plugin/changevisibility" || true
+          done
