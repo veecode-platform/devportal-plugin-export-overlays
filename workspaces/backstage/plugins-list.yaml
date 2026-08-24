@@ -50,6 +50,15 @@ plugins/kubernetes:
 # and presets/mcp-chat.yaml) and covered by every patch in this workspace.
 plugins/mcp-actions-backend:
 
+# Upstream Backstage's OAuth consent page (frontend): mounts /oauth2/authorize/
+# :sessionId via its Router — the page every external MCP client lands on during
+# the DCR authorization flow. Required by any RHDH-shell consumer of
+# mcp-actions-backend (the fork/tenant shells have no baked consent route, unlike
+# devportal-base's app). Overlay scalprum-config.json synced from upstream #2498;
+# upstream exports it too (ghcr bs_1.52.0__0.1.9). Wiring: dynamicRoutes
+# path /oauth2/* -> importName Router (see metadata appConfigExamples).
+plugins/auth:
+
 # Catalogued: each has a metadata/*.yaml and a published Plugin entity.
 plugins/events-backend-module-gitlab:
 plugins/scaffolder-backend-module-gerrit:
