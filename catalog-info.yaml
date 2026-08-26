@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: devportal-plugin-export-overlays
+  description: Export pipeline for dynamic plugins — fork of rhdh-plugin-export-overlays (monthly field-level reconciliation, SYNC.md). Builds per-plugin OCI images, workspace bundles and the plugin-catalog-index into quay.io/veecode (ADR-008); runs on workflows from devportal-plugin-export-utils.
+  annotations:
+    github.com/project-slug: veecode-platform/devportal-plugin-export-overlays
+  tags: [fork, ci, oci]
+  links:
+    - url: https://github.com/redhat-developer/rhdh-plugin-export-overlays
+      title: "Upstream: rhdh-plugin-export-overlays"
+spec:
+  type: tooling
+  lifecycle: production
+  owner: group:default/veecode-platform
+  system: veecode-devportal
+  dependsOn:
+    - component:default/rhdh-export-overlays
+    - component:default/devportal-plugin-export-utils
+    - resource:default/quay-veecode
