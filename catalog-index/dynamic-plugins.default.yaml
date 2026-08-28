@@ -1333,6 +1333,7 @@ plugins:
             - 'kubernetes-mcp-extras'
             - 'catalog'
             - 'scaffolder'
+            - 'announcements'
   - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:43bed3ca2ed9f8b737d8c4a58f99260a35fc853013183969140e55cc3af62098
     disabled: true
     pluginConfig:
@@ -1352,6 +1353,7 @@ plugins:
             - 'kubernetes-mcp-extras'
             - 'catalog'
             - 'scaffolder'
+            - 'announcements'
   - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras@sha256:908e807eb7733d34cd5c1bb2061df41905ac8565c17ba46c7eea63c94c02ca5d
     disabled: true
     pluginConfig:
@@ -1371,6 +1373,7 @@ plugins:
             - 'kubernetes-mcp-extras'
             - 'catalog'
             - 'scaffolder'
+            - 'announcements'
   - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras@sha256:f8ddd8242bab97849548c5acdb212c98bd979b19948279122fc116d40f910947
     disabled: true
     pluginConfig:
@@ -1390,6 +1393,7 @@ plugins:
             - 'kubernetes-mcp-extras'
             - 'catalog'
             - 'scaffolder'
+            - 'announcements'
   - package: oci://quay.io/veecode/roadiehq-backstage-plugin-argo-cd@sha256:eb8aa6de7fd869ed43cefa6fdd3948966fb40c10c778aa4873fcf88a5e465495
     disabled: true
     pluginConfig:
