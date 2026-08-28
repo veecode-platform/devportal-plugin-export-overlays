@@ -2156,11 +2156,33 @@
       "version": "0.1.0",
       "workspace": "vertigo-theme",
       "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras:bs_1.52.0__0.2.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:1a75f47882b587fca47c5fb509814115c89ef6fcafa7f50e027e4abb041bbc4f"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-kubernetes-mcp-extras",
+      "version": "0.2.0",
+      "workspace": "mcp-integrations",
+      "overall": "pass"
     }
   },
   "summary": {
-    "total": 98,
-    "succeeded": 98,
+    "total": 99,
+    "succeeded": 99,
     "failed": 0
   },
   "status": "success"

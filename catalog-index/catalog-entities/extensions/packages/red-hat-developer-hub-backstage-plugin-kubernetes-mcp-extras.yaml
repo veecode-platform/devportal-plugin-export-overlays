@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-kubernetes-mcp-extras"
-  dynamicArtifact: oci://quay.io/veecode/mcp-integrations:bs_1.52.0!red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras
+  # Tag: bs_1.52.0__0.2.0
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras@sha256:1a75f47882b587fca47c5fb509814115c89ef6fcafa7f50e027e4abb041bbc4f"
   version: 0.2.0
   backstage:
     role: backend-plugin
