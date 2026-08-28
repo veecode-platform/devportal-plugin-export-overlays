@@ -1,32 +1,31 @@
 apiVersion: extensions.backstage.io/v1alpha1
 kind: Package
 metadata:
-  name: red-hat-developer-hub-plugin-scaffolder-mcp-extras
+  name: red-hat-developer-hub-plugin-kubernetes-mcp-extras
   namespace: rhdh
-  title: "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras"
+  title: "@red-hat-developer-hub/backstage-plugin-kubernetes-mcp-extras"
   links:
     - url: https://red.ht/rhdh
       title: Homepage
     - url: https://issues.redhat.com/browse/RHDHBUGS
       title: "Report issues here. Note: Customers of Red Hat Developer Hub should raise a Red Hat support case instead."
     - title: Source Code
-      url: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/scaffolder-mcp-extras
+      url: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/kubernetes-mcp-extras
   annotations:
-    backstage.io/source-location: url:https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/scaffolder-mcp-extras
+    backstage.io/source-location: url:https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/kubernetes-mcp-extras
   tags: []
 spec:
-  packageName: "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras"
-  # Tag: bs_1.52.0__0.4.4
-  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:43bed3ca2ed9f8b737d8c4a58f99260a35fc853013183969140e55cc3af62098"
-  version: 0.4.4
+  packageName: "@red-hat-developer-hub/backstage-plugin-kubernetes-mcp-extras"
+  dynamicArtifact: oci://quay.io/veecode/mcp-integrations:bs_1.52.0!red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras
+  version: 0.2.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.48.3
+    supportedVersions: 1.52.0
   author: Red Hat
   support: dev-preview
   lifecycle: active
   partOf:
-    - scaffolder-mcp-extras
+    - kubernetes-mcp-extras
   appConfigExamples:
     - title: Default configuration
       content:

@@ -1314,7 +1314,7 @@ plugins:
             uiUrl: ${KONFLUX_CLUSTER_UI_URL}
             kubearchiveApiUrl: ${KONFLUX_CLUSTER_KUBEARCHIVE_API_URL}
             serviceAccountToken: ${KONFLUX_CLUSTER_SA_TOKEN}
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:35bc4a05ad78e8ac5109890f896502c2e39bac85ea0a82c0a8b90d766da07e19
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:43bed3ca2ed9f8b737d8c4a58f99260a35fc853013183969140e55cc3af62098
     disabled: true
     pluginConfig:
       backend:
@@ -1322,7 +1322,7 @@ plugins:
           pluginSources:
             # Unified list shared by all MCP plugins (contract: the product's
             # `mcp` preset, presets/mcp.yaml). MUST be byte-identical across the
-            # three *-mcp-extras metadata files: the upstream index pipeline
+            # four *-mcp-extras metadata files: the upstream index pipeline
             # embeds appConfigExamples as DPDY pluginConfig, and the RHDH
             # installer aborts when two plugins define backend.actions.pluginSources
             # with different values (tenant v3 outage, 2026-08-24).
@@ -1330,9 +1330,10 @@ plugins:
             - 'software-catalog-mcp-extras'
             - 'techdocs-mcp-extras'
             - 'scaffolder-mcp-extras'
+            - 'kubernetes-mcp-extras'
             - 'catalog'
             - 'scaffolder'
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras@sha256:12b120512c4f9a8c3245c27cc738c9736fcaefca260b1516435039d202b83547
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras@sha256:908e807eb7733d34cd5c1bb2061df41905ac8565c17ba46c7eea63c94c02ca5d
     disabled: true
     pluginConfig:
       backend:
@@ -1340,7 +1341,7 @@ plugins:
           pluginSources:
             # Unified list shared by all MCP plugins (contract: the product's
             # `mcp` preset, presets/mcp.yaml). MUST be byte-identical across the
-            # three *-mcp-extras metadata files: the upstream index pipeline
+            # four *-mcp-extras metadata files: the upstream index pipeline
             # embeds appConfigExamples as DPDY pluginConfig, and the RHDH
             # installer aborts when two plugins define backend.actions.pluginSources
             # with different values (tenant v3 outage, 2026-08-24).
@@ -1348,9 +1349,10 @@ plugins:
             - 'software-catalog-mcp-extras'
             - 'techdocs-mcp-extras'
             - 'scaffolder-mcp-extras'
+            - 'kubernetes-mcp-extras'
             - 'catalog'
             - 'scaffolder'
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras@sha256:c598508cb84940b1659ac2fe65aef06cbce6068bbfc365392e5075dc1c88416a
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras@sha256:f8ddd8242bab97849548c5acdb212c98bd979b19948279122fc116d40f910947
     disabled: true
     pluginConfig:
       backend:
@@ -1358,7 +1360,7 @@ plugins:
           pluginSources:
             # Unified list shared by all MCP plugins (contract: the product's
             # `mcp` preset, presets/mcp.yaml). MUST be byte-identical across the
-            # three *-mcp-extras metadata files: the upstream index pipeline
+            # four *-mcp-extras metadata files: the upstream index pipeline
             # embeds appConfigExamples as DPDY pluginConfig, and the RHDH
             # installer aborts when two plugins define backend.actions.pluginSources
             # with different values (tenant v3 outage, 2026-08-24).
@@ -1366,6 +1368,7 @@ plugins:
             - 'software-catalog-mcp-extras'
             - 'techdocs-mcp-extras'
             - 'scaffolder-mcp-extras'
+            - 'kubernetes-mcp-extras'
             - 'catalog'
             - 'scaffolder'
   - package: oci://quay.io/veecode/roadiehq-backstage-plugin-argo-cd@sha256:eb8aa6de7fd869ed43cefa6fdd3948966fb40c10c778aa4873fcf88a5e465495
