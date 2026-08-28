@@ -1,3 +1,4 @@
 plugins/software-catalog-mcp-extras:
 plugins/techdocs-mcp-extras:
 plugins/scaffolder-mcp-extras:
+plugins/kubernetes-mcp-extras:

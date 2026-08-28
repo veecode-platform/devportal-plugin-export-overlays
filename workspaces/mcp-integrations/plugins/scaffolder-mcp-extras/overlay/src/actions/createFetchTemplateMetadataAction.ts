@@ -70,6 +70,11 @@ export const createFetchTemplateMetadataAction = ({
   actionsRegistry.register({
     name: 'fetch-template-metadata',
     title: 'Fetch Software Template Metadata',
+    attributes: {
+      destructive: false,
+      readOnly: true,
+      idempotent: true,
+    },
     description: `Search and retrieve Software Template metadata from the Backstage catalog.
 
 This tool retrieves Backstage Software Templates with their configuration details, and also returns structured execution hints that can be used directly with execute-template.
