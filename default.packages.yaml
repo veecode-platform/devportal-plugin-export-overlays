@@ -116,6 +116,7 @@ packages:
     - package: "@red-hat-developer-hub/backstage-plugin-homepage-backend"
     - package: "@red-hat-developer-hub/backstage-plugin-konflux"
     - package: "@red-hat-developer-hub/backstage-plugin-konflux-backend"
+    - package: "@red-hat-developer-hub/backstage-plugin-kubernetes-mcp-extras"
     - package: "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras"
     - package: "@red-hat-developer-hub/backstage-plugin-software-catalog-mcp-extras"
     - package: "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras"
