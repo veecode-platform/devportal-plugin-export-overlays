@@ -16,8 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras"
-  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.52.0__0.2.5-veecode.1
-  version: 0.2.5-veecode.1
+  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.52.0__0.2.7-veecode.1
+  version: 0.2.7-veecode.1
   backstage:
     role: backend-plugin
     supportedVersions: 1.48.3
@@ -34,7 +34,7 @@ spec:
             pluginSources:
               # Unified list shared by all MCP plugins (contract: the product's
               # `mcp` preset, presets/mcp.yaml). MUST be byte-identical across the
-              # three *-mcp-extras metadata files: the upstream index pipeline
+              # four *-mcp-extras metadata files: the upstream index pipeline
               # embeds appConfigExamples as DPDY pluginConfig, and the RHDH
               # installer aborts when two plugins define backend.actions.pluginSources
               # with different values (tenant v3 outage, 2026-08-24).
@@ -42,5 +42,6 @@ spec:
               - 'software-catalog-mcp-extras'
               - 'techdocs-mcp-extras'
               - 'scaffolder-mcp-extras'
+              - 'kubernetes-mcp-extras'
               - 'catalog'
               - 'scaffolder'

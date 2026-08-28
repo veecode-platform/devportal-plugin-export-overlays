@@ -54,6 +54,7 @@ spec:
     - ./keycloak-catalog-integration.yaml
     - ./konflux.yaml
     - ./kubernetes-backend.yaml
+    - ./kubernetes-mcp-extras.yaml
     - ./kubernetes-scaffolder-actions.yaml
     - ./kubernetes.yaml
     - ./ldap-catalog-integration.yaml
