@@ -45,3 +45,4 @@ spec:
               - 'kubernetes-mcp-extras'
               - 'catalog'
               - 'scaffolder'
+              - 'announcements'
