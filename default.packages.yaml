@@ -137,4 +137,5 @@ packages:
     - package: "@veecode-platform/backstage-plugin-github-workflows-backend"
     - package: "@veecode-platform/backstage-plugin-gitlab-pipelines"
     - package: "@veecode-platform/backstage-plugin-gitlab-pipelines-backend"
+    - package: "@veecode-platform/plugin-aws-cost-insights"
     - package: "vertigo-platform-plugin-vertigo-theme"
