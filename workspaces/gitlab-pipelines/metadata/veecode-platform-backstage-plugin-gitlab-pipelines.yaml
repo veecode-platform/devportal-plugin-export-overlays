@@ -1,0 +1,50 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-backstage-plugin-gitlab-pipelines
+  namespace: veecode
+  title: "GitLab Pipelines"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/gitlab-pipelines
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-gitlab-pipelines"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.52.0__1.0.0
+  version: 1.0.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.2
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - gitlab-pipelines
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.backstage-plugin-gitlab-pipelines:
+              mountPoints:
+                - mountPoint: entity.page.ci/cards
+                  importName: GitlabPipelineList
+                  config:
+                    layout:
+                      gridColumn: "1 / -1"
+                    if:
+                      allOf:
+                        - isGitlabAvailable
+                - mountPoint: entity.page.overview/cards
+                  importName: GitlabJobs
+                  config:
+                    layout:
+                      gridColumnEnd:
+                        lg: "span 4"
+                        md: "span 6"
+                        xs: "span 12"
+                    if:
+                      allOf:
+                        - isGitlabJobsAvailable
