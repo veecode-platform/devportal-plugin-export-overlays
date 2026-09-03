@@ -1,0 +1,2 @@
+plugins/gitlab-pipelines: --embed-package @veecode-platform/gitlab-pipelines-common
+plugins/gitlab-pipelines-backend: --embed-package @veecode-platform/gitlab-pipelines-common
