@@ -44,6 +44,7 @@ packages:
     - package: "@aws/aws-codepipeline-plugin-for-backstage"
     - package: "@aws/aws-codepipeline-plugin-for-backstage-backend"
     - package: "@aws/aws-s3-catalog-module-for-backstage"
+    - package: "@aws/cost-insights-plugin-for-backstage-backend"
     - package: "@backstage-community/plugin-adr"
     - package: "@backstage-community/plugin-adr-backend"
     - package: "@backstage-community/plugin-analytics-module-ga4"
