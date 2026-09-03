@@ -25,7 +25,12 @@ plugins/codepipeline/backend: --embed-package @aws/aws-core-plugin-for-backstage
 plugins/core/catalog-aws-s3: --embed-package @backstage/plugin-catalog-backend-module-aws --embed-package @backstage/plugin-kubernetes-common
 #plugins/core/catalog-config:
 #plugins/core/scaffolder-actions:
-#plugins/cost-insights/backend:
+# cost-insights backend (ADR-010 FinOps): serves /api/cost-insights-aws consumed by
+# @veecode-platform/plugin-aws-cost-insights. Embeds follow the plugin's own
+# export-dynamic script (@aws family commons) PLUS the cross-family
+# @backstage-community/plugin-cost-insights-common — same MODULE_NOT_FOUND class
+# as the kubernetes-common gotcha above: the host does not provide it. No quotes.
+plugins/cost-insights/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/cost-insights-plugin-for-backstage-common --embed-package @backstage-community/plugin-cost-insights-common
 #plugins/cost-insights/frontend:
 #plugins/ecr/backend:
 #plugins/ecr/frontend:

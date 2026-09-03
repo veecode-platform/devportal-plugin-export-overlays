@@ -1,0 +1,36 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: aws-cost-insights-plugin-for-backstage-backend
+  namespace: community
+  title: "@aws/cost-insights-plugin-for-backstage-backend"
+  links:
+    - url: https://github.com/awslabs/backstage-plugins-for-aws
+      title: Homepage
+    - url: https://github.com/awslabs/backstage-plugins-for-aws/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/cost-insights/backend
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/cost-insights/backend
+  tags: []
+spec:
+  packageName: "@aws/cost-insights-plugin-for-backstage-backend"
+  dynamicArtifact: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.52.0__0.7.0
+  version: 0.7.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.48.4
+  author: AWS
+  support: community
+  lifecycle: active
+  partOf:
+    - backstage-plugins-for-aws
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        # Serves /api/cost-insights-aws (pluginId cost-insights-aws), consumed by
+        # @veecode-platform/plugin-aws-cost-insights. Credentials come from the
+        # AWS SDK default chain (IRSA in-cluster); the role needs ce:GetCostAndUsage.
+        costInsights:
+          engineerCost: 200000
