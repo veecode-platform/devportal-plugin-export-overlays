@@ -2178,11 +2178,55 @@
       "version": "0.2.0",
       "workspace": "mcp-integrations",
       "overall": "pass"
+    },
+    "veecode-platform-backstage-plugin-gitlab-pipelines-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend:bs_1.52.0__1.0.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:c13afd0167e33aa7cb5eb8d79dfdc303fd13a6859e2a8454ed2bd9b1ef194f9d"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@veecode-platform/backstage-plugin-gitlab-pipelines-backend",
+      "version": "1.0.0",
+      "workspace": "gitlab-pipelines",
+      "overall": "pass"
+    },
+    "veecode-platform-backstage-plugin-gitlab-pipelines": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.52.0__1.0.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:7d4b676fb70a5c847a047b152f60503056f2de7714b2f264a05c379aae52d767"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@veecode-platform/backstage-plugin-gitlab-pipelines",
+      "version": "1.0.0",
+      "workspace": "gitlab-pipelines",
+      "overall": "pass"
     }
   },
   "summary": {
-    "total": 99,
-    "succeeded": 99,
+    "total": 101,
+    "succeeded": 101,
     "failed": 0
   },
   "status": "success"

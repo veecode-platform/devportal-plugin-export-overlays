@@ -1,0 +1,33 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-backstage-plugin-gitlab-pipelines-backend
+  namespace: veecode
+  title: "GitLab Pipelines Backend"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/gitlab-pipelines
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-gitlab-pipelines-backend"
+  # Tag: bs_1.52.0__1.0.0
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend@sha256:c13afd0167e33aa7cb5eb8d79dfdc303fd13a6859e2a8454ed2bd9b1ef194f9d"
+  version: 1.0.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.49.2
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - gitlab-pipelines
+  appConfigExamples:
+    - title: GitLab integration (server-held token)
+      content:
+        integrations:
+          gitlab:
+            - host: ${GITLAB_HOST}
+              token: ${GITLAB_TOKEN}
+              apiBaseUrl: https://${GITLAB_HOST}/api/v4

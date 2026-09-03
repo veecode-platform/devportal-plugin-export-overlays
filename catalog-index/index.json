@@ -685,6 +685,20 @@
     "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWdpdGh1Yi13b3JrZmxvd3MtYmFja2VuZCI6eyJuYW1lIjoiQHZlZWNvZGUtcGxhdGZvcm0vYmFja3N0YWdlLXBsdWdpbi1naXRodWItd29ya2Zsb3dzLWJhY2tlbmQtZHluYW1pYyIsInZlcnNpb24iOiIxLjMuNyIsImJhY2tzdGFnZSI6eyJyb2xlIjoiYmFja2VuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImdpdGh1Yi13b3JrZmxvdy1iYWNrZW5kIiwicGx1Z2luUGFja2FnZXMiOlsiQHZlZWNvZGUtcGxhdGZvcm0vYmFja3N0YWdlLXBsdWdpbi1naXRodWItd29ya2Zsb3dzLWJhY2tlbmQiXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIn19XQ==",
     "imageTag": "bs_1.52.0__1.3.7"
   },
+  "veecode-platform-backstage-plugin-gitlab-pipelines": {
+    "workspacePath": "gitlab-pipelines/plugins/gitlab-pipelines",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines@sha256:7d4b676fb70a5c847a047b152f60503056f2de7714b2f264a05c379aae52d767",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWdpdGxhYi1waXBlbGluZXMiOnsibmFtZSI6IkB2ZWVjb2RlLXBsYXRmb3JtL2JhY2tzdGFnZS1wbHVnaW4tZ2l0bGFiLXBpcGVsaW5lcy1keW5hbWljIiwidmVyc2lvbiI6IjEuMC4wIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImdpdGxhYi1waXBlbGluZXMiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWdpdGxhYi1waXBlbGluZXMiXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIiwia2V5d29yZHMiOlsiYmFja3N0YWdlIiwiZ2l0bGFiIiwiZ2l0bGFiIHBpcGVsaW5lcyJdfX1d",
+    "imageTag": "bs_1.52.0__1.0.0"
+  },
+  "veecode-platform-backstage-plugin-gitlab-pipelines-backend": {
+    "workspacePath": "gitlab-pipelines/plugins/gitlab-pipelines-backend",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend@sha256:c13afd0167e33aa7cb5eb8d79dfdc303fd13a6859e2a8454ed2bd9b1ef194f9d",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWdpdGxhYi1waXBlbGluZXMtYmFja2VuZCI6eyJuYW1lIjoiQHZlZWNvZGUtcGxhdGZvcm0vYmFja3N0YWdlLXBsdWdpbi1naXRsYWItcGlwZWxpbmVzLWJhY2tlbmQtZHluYW1pYyIsInZlcnNpb24iOiIxLjAuMCIsImJhY2tzdGFnZSI6eyJyb2xlIjoiYmFja2VuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImdpdGxhYi1waXBlbGluZXMiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWdpdGxhYi1waXBlbGluZXMtYmFja2VuZCJdLCJzdXBwb3J0ZWQtdmVyc2lvbnMiOiIxLjUyLjAifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d",
+    "imageTag": "bs_1.52.0__1.0.0"
+  },
   "vertigo-platform-plugin-vertigo-theme": {
     "workspacePath": "vertigo-theme/plugins/vertigo-platform-plugin-vertigo-theme",
     "registryReference": "quay.io/veecode/vertigo-platform-plugin-vertigo-theme@sha256:bb82ffd613fc07004ee0c1a77c7bfde5d2920cb28dfd5e93b8bedf24be49a31f",

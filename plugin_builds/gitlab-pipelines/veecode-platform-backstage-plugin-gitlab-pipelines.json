@@ -1,0 +1,9 @@
+{
+  "veecode-platform-backstage-plugin-gitlab-pipelines": {
+    "workspacePath": "gitlab-pipelines/plugins/gitlab-pipelines",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.52.0__1.0.0",
+    "digest": "sha256:7d4b676fb70a5c847a047b152f60503056f2de7714b2f264a05c379aae52d767",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWdpdGxhYi1waXBlbGluZXMiOnsibmFtZSI6IkB2ZWVjb2RlLXBsYXRmb3JtL2JhY2tzdGFnZS1wbHVnaW4tZ2l0bGFiLXBpcGVsaW5lcy1keW5hbWljIiwidmVyc2lvbiI6IjEuMC4wIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImdpdGxhYi1waXBlbGluZXMiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWdpdGxhYi1waXBlbGluZXMiXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIiwia2V5d29yZHMiOlsiYmFja3N0YWdlIiwiZ2l0bGFiIiwiZ2l0bGFiIHBpcGVsaW5lcyJdfX1d"
+  }
+}

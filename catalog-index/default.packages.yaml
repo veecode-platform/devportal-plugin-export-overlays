@@ -135,4 +135,6 @@ packages:
     - package: "@veecode-platform/backstage-plugin-catalog-backend-module-ai-resources"
     - package: "@veecode-platform/backstage-plugin-github-workflows"
     - package: "@veecode-platform/backstage-plugin-github-workflows-backend"
+    - package: "@veecode-platform/backstage-plugin-gitlab-pipelines"
+    - package: "@veecode-platform/backstage-plugin-gitlab-pipelines-backend"
     - package: "vertigo-platform-plugin-vertigo-theme"
