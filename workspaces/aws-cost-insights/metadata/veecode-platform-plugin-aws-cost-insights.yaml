@@ -16,7 +16,7 @@ spec:
   version: 0.1.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.2
+    supportedVersions: 1.52.0
   author: VeeCode
   support: community
   lifecycle: active
