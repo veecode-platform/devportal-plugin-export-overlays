@@ -1731,7 +1731,7 @@ plugins:
           - host: ${GITLAB_HOST}
             token: ${GITLAB_TOKEN}
             apiBaseUrl: https://${GITLAB_HOST}/api/v4
-  - package: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:a7404fa47592f500c68c1624edc086943c85e69a5e91f3e563d88e0292758a96
+  - package: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:ce7a866d4890dced36dc4285a02c7440aca8227ab0cfb070acd5b014f1ba68ce
     disabled: true
     pluginConfig:
       dynamicPlugins:

@@ -2233,11 +2233,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.1.0"
+          "oci_ref": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.1.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:a7404fa47592f500c68c1624edc086943c85e69a5e91f3e563d88e0292758a96"
+          "digest": "sha256:ce7a866d4890dced36dc4285a02c7440aca8227ab0cfb070acd5b014f1ba68ce"
         },
         "dpdy": {
           "status": "pass"
@@ -2247,7 +2247,7 @@
         }
       },
       "package": "@veecode-platform/plugin-aws-cost-insights",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "workspace": "aws-cost-insights",
       "overall": "pass"
     },
