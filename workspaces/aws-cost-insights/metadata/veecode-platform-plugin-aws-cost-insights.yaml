@@ -1,0 +1,59 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-plugin-aws-cost-insights
+  namespace: veecode
+  title: "AWS Cost Insights"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/aws-cost-insights
+  tags: []
+spec:
+  packageName: "@veecode-platform/plugin-aws-cost-insights"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.1.0
+  version: 0.1.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.2
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - aws-cost-insights
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.plugin-aws-cost-insights:
+              appIcons:
+                - name: costInsightsIcon
+                  importName: CostInsightsIcon
+              dynamicRoutes:
+                - path: /cost-insights
+                  importName: CostInsightsPage
+                  menuItem:
+                    icon: costInsightsIcon
+                    text: AWS Cost Insights
+              menuItems:
+                cost-insights:
+                  title: AWS Cost Insights
+                  icon: costInsightsIcon
+                  priority: 70
+              entityTabs:
+                - path: /costs
+                  title: AWS Cost Insights
+                  mountPoint: entity.page.costs
+              mountPoints:
+                - mountPoint: entity.page.costs/cards
+                  importName: EntityCostInsightsContent
+                  config:
+                    layout:
+                      gridColumn: "1 / -1"
+                - mountPoint: entity.page.costs/cards
+                  importName: EntityClusterCostCard
+                  config:
+                    layout:
+                      gridColumn: "1 / -1"
