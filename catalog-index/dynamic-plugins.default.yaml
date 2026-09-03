@@ -34,14 +34,12 @@ plugins:
                       - hasAnnotation: aws.amazon.com/amazon-ecs-service-arn
   - package: oci://quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend@sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6
     disabled: true
-    pluginConfig:
+    pluginConfig: |
       # Backend plugin uses AWS SDK credential chain
       # Configure via environment variables:
-      aws:
-        mainAccount:
-          region: ${AWS_REGION}
-          accessKeyId: ${AWS_ACCESS_KEY_ID}
-          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
   - package: oci://quay.io/veecode/aws-aws-codebuild-plugin-for-backstage@sha256:e3c31521485e2e073f3b6489ab36a19751f2b343ddb6ff2e7d5931c46315ac0f
     disabled: true
     pluginConfig:
@@ -1725,5 +1723,40 @@ plugins:
           - host: ${GITLAB_HOST}
             token: ${GITLAB_TOKEN}
             apiBaseUrl: https://${GITLAB_HOST}/api/v4
+  - package: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:a7404fa47592f500c68c1624edc086943c85e69a5e91f3e563d88e0292758a96
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          veecode-platform.plugin-aws-cost-insights:
+            appIcons:
+              - name: costInsightsIcon
+                importName: CostInsightsIcon
+            dynamicRoutes:
+              - path: /cost-insights
+                importName: CostInsightsPage
+                menuItem:
+                  icon: costInsightsIcon
+                  text: AWS Cost Insights
+            menuItems:
+              cost-insights:
+                title: AWS Cost Insights
+                icon: costInsightsIcon
+                priority: 70
+            entityTabs:
+              - path: /costs
+                title: AWS Cost Insights
+                mountPoint: entity.page.costs
+            mountPoints:
+              - mountPoint: entity.page.costs/cards
+                importName: EntityCostInsightsContent
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
+              - mountPoint: entity.page.costs/cards
+                importName: EntityClusterCostCard
+                config:
+                  layout:
+                    gridColumn: "1 / -1"
   - package: oci://quay.io/veecode/vertigo-platform-plugin-vertigo-theme@sha256:bb82ffd613fc07004ee0c1a77c7bfde5d2920cb28dfd5e93b8bedf24be49a31f
     disabled: true

@@ -339,7 +339,10 @@
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6"
+          "digest": "sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6",
+          "fallback": true,
+          "requestedTag": "bs_1.52.0__0.8.0",
+          "resolvedTag": "bs_1.52.0__0.9.0"
         },
         "dpdy": {
           "status": "pass"
@@ -361,7 +364,10 @@
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:165f0503debcb2eba1fac492a99f17a49f6e1d98c25cd439d194a554c7e1d913"
+          "digest": "sha256:165f0503debcb2eba1fac492a99f17a49f6e1d98c25cd439d194a554c7e1d913",
+          "fallback": true,
+          "requestedTag": "bs_1.52.0__0.6.0",
+          "resolvedTag": "bs_1.52.0__0.6.3"
         },
         "dpdy": {
           "status": "pass"
@@ -2222,11 +2228,33 @@
       "version": "1.0.0",
       "workspace": "gitlab-pipelines",
       "overall": "pass"
+    },
+    "veecode-platform-plugin-aws-cost-insights": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.1.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:a7404fa47592f500c68c1624edc086943c85e69a5e91f3e563d88e0292758a96"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@veecode-platform/plugin-aws-cost-insights",
+      "version": "0.1.0",
+      "workspace": "aws-cost-insights",
+      "overall": "pass"
     }
   },
   "summary": {
-    "total": 101,
-    "succeeded": 101,
+    "total": 102,
+    "succeeded": 102,
     "failed": 0
   },
   "status": "success"

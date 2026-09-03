@@ -170,6 +170,7 @@ spec:
     - ./veecode-platform-backstage-plugin-github-workflows.yaml
     - ./veecode-platform-backstage-plugin-gitlab-pipelines-backend.yaml
     - ./veecode-platform-backstage-plugin-gitlab-pipelines.yaml
+    - ./veecode-platform-plugin-aws-cost-insights.yaml
     - ./veecode-platform-plugin-veecode-homepage.yaml
     - ./veecode-platform-plugin-veecode-theme.yaml
     - ./vertigo-platform-plugin-vertigo-theme.yaml
