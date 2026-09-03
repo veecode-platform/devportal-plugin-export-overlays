@@ -2250,11 +2250,33 @@
       "version": "0.1.0",
       "workspace": "aws-cost-insights",
       "overall": "pass"
+    },
+    "aws-cost-insights-plugin-for-backstage-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.52.0__0.7.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:452cc06b6bbd65227a4dd082ff11bdbb796cef1d9da1cf7afbfa3e90161b6d27"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@aws/cost-insights-plugin-for-backstage-backend",
+      "version": "0.7.0",
+      "workspace": "backstage-plugins-for-aws",
+      "overall": "pass"
     }
   },
   "summary": {
-    "total": 102,
-    "succeeded": 102,
+    "total": 103,
+    "succeeded": 103,
     "failed": 0
   },
   "status": "success"

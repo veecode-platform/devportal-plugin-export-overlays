@@ -102,6 +102,14 @@ plugins:
           region: ${AWS_REGION}
           accessKeyId: ${AWS_ACCESS_KEY_ID}
           secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+  - package: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:452cc06b6bbd65227a4dd082ff11bdbb796cef1d9da1cf7afbfa3e90161b6d27
+    disabled: true
+    pluginConfig:
+      # Serves /api/cost-insights-aws (pluginId cost-insights-aws), consumed by
+      # @veecode-platform/plugin-aws-cost-insights. Credentials come from the
+      # AWS SDK default chain (IRSA in-cluster); the role needs ce:GetCostAndUsage.
+      costInsights:
+        engineerCost: 200000
   - package: oci://quay.io/veecode/backstage-community-plugin-adr@sha256:9792d027df44d3f89b5a968f92c26187dc96e7d840ac88d0d3579d95e076bb8e
     disabled: true
     pluginConfig:

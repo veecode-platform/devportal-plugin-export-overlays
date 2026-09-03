@@ -13,6 +13,7 @@ spec:
     - ./aws-aws-codepipeline-plugin-for-backstage-backend.yaml
     - ./aws-aws-codepipeline-plugin-for-backstage.yaml
     - ./aws-aws-s3-catalog-module-for-backstage.yaml
+    - ./aws-cost-insights-plugin-for-backstage-backend.yaml
     - ./backstage-community-backstage-plugin-catalog-backend-module-mta-entity-provider.yaml
     - ./backstage-community-backstage-plugin-mta-backend.yaml
     - ./backstage-community-backstage-plugin-mta-frontend.yaml
