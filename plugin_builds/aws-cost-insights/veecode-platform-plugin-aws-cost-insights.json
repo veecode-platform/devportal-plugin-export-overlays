@@ -1,9 +1,9 @@
 {
   "veecode-platform-plugin-aws-cost-insights": {
     "workspacePath": "aws-cost-insights/plugins/aws-cost-insights",
-    "registryReference": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.1.1",
-    "digest": "sha256:ce7a866d4890dced36dc4285a02c7440aca8227ab0cfb070acd5b014f1ba68ce",
+    "registryReference": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.1.2",
+    "digest": "sha256:d930edfb0a18f26b342c892c43703caef2678eefcbe6ad22219b20bead1ca5d3",
     "support": "community",
-    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1wbHVnaW4tYXdzLWNvc3QtaW5zaWdodHMiOnsibmFtZSI6IkB2ZWVjb2RlLXBsYXRmb3JtL3BsdWdpbi1hd3MtY29zdC1pbnNpZ2h0cy1keW5hbWljIiwidmVyc2lvbiI6IjAuMS4xIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImF3cy1jb3N0LWluc2lnaHRzIiwicGx1Z2luUGFja2FnZXMiOlsiQHZlZWNvZGUtcGxhdGZvcm0vcGx1Z2luLWF3cy1jb3N0LWluc2lnaHRzIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTIuMCJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1wbHVnaW4tYXdzLWNvc3QtaW5zaWdodHMiOnsibmFtZSI6IkB2ZWVjb2RlLXBsYXRmb3JtL3BsdWdpbi1hd3MtY29zdC1pbnNpZ2h0cy1keW5hbWljIiwidmVyc2lvbiI6IjAuMS4yIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImF3cy1jb3N0LWluc2lnaHRzIiwicGx1Z2luUGFja2FnZXMiOlsiQHZlZWNvZGUtcGxhdGZvcm0vcGx1Z2luLWF3cy1jb3N0LWluc2lnaHRzIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTIuMCJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
   }
 }

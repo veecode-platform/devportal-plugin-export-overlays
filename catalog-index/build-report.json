@@ -339,10 +339,7 @@
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6",
-          "fallback": true,
-          "requestedTag": "bs_1.52.0__0.8.0",
-          "resolvedTag": "bs_1.52.0__0.9.0"
+          "digest": "sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6"
         },
         "dpdy": {
           "status": "pass"
@@ -364,10 +361,7 @@
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:165f0503debcb2eba1fac492a99f17a49f6e1d98c25cd439d194a554c7e1d913",
-          "fallback": true,
-          "requestedTag": "bs_1.52.0__0.6.0",
-          "resolvedTag": "bs_1.52.0__0.6.3"
+          "digest": "sha256:165f0503debcb2eba1fac492a99f17a49f6e1d98c25cd439d194a554c7e1d913"
         },
         "dpdy": {
           "status": "pass"
@@ -2233,11 +2227,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.1.1"
+          "oci_ref": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.1.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:ce7a866d4890dced36dc4285a02c7440aca8227ab0cfb070acd5b014f1ba68ce"
+          "digest": "sha256:d930edfb0a18f26b342c892c43703caef2678eefcbe6ad22219b20bead1ca5d3"
         },
         "dpdy": {
           "status": "pass"
@@ -2247,7 +2241,7 @@
         }
       },
       "package": "@veecode-platform/plugin-aws-cost-insights",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "workspace": "aws-cost-insights",
       "overall": "pass"
     },
