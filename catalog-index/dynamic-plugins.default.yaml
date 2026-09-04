@@ -102,7 +102,7 @@ plugins:
           region: ${AWS_REGION}
           accessKeyId: ${AWS_ACCESS_KEY_ID}
           secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
-  - package: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:5e0bd3548dad460e830a6852bf442f32953597537c534530954332de2ab9f049
+  - package: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:db8488ce46d8f1fbeee297c8499d86448060f66bad807da0383a940c2ae5b03a
     disabled: true
     pluginConfig:
       # Serves /api/cost-insights-aws (pluginId cost-insights-aws), consumed by
@@ -1731,7 +1731,7 @@ plugins:
           - host: ${GITLAB_HOST}
             token: ${GITLAB_TOKEN}
             apiBaseUrl: https://${GITLAB_HOST}/api/v4
-  - package: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:8d08a3903f031d92303ed475ba08a63c4aa1db1e2666c8e09bf088bb3272e026
+  - package: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:1965166f48d4bfd25e29708c48bffb1f466f72dd3635068ca31bf3da144f72c4
     disabled: true
     pluginConfig:
       dynamicPlugins:
