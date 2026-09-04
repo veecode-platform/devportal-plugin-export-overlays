@@ -10,9 +10,9 @@ metadata:
     - url: https://github.com/awslabs/backstage-plugins-for-aws/issues
       title: Bugs
     - title: Source Code
-      url: https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/ecs/frontend
+      url: https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/ecs/frontend
   annotations:
-    backstage.io/source-location: url:https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/ecs/frontend
+    backstage.io/source-location: url:https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/ecs/frontend
   tags: []
 spec:
   packageName: "@aws/amazon-ecs-plugin-for-backstage"
@@ -21,12 +21,12 @@ spec:
   version: 0.6.3
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.48.4
+    supportedVersions: 1.43.1
   author: AWS
   support: community
   lifecycle: active
   partOf:
-    - backstage-plugins-for-aws
+    - aws-ecs
   appConfigExamples:
     - title: Default configuration
       content:

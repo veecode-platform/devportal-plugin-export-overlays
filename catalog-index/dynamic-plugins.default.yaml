@@ -34,14 +34,12 @@ plugins:
                       - hasAnnotation: aws.amazon.com/amazon-ecs-service-arn
   - package: oci://quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend@sha256:2aa7ebf4decc80baca13a92a94502884071b7ec57c667ef0f23910768214b8b6
     disabled: true
-    pluginConfig:
+    pluginConfig: |
       # Backend plugin uses AWS SDK credential chain
       # Configure via environment variables:
-      aws:
-        mainAccount:
-          region: ${AWS_REGION}
-          accessKeyId: ${AWS_ACCESS_KEY_ID}
-          secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
   - package: oci://quay.io/veecode/aws-aws-codebuild-plugin-for-backstage@sha256:e3c31521485e2e073f3b6489ab36a19751f2b343ddb6ff2e7d5931c46315ac0f
     disabled: true
     pluginConfig:
@@ -104,7 +102,7 @@ plugins:
           region: ${AWS_REGION}
           accessKeyId: ${AWS_ACCESS_KEY_ID}
           secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
-  - package: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:452cc06b6bbd65227a4dd082ff11bdbb796cef1d9da1cf7afbfa3e90161b6d27
+  - package: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:5e0bd3548dad460e830a6852bf442f32953597537c534530954332de2ab9f049
     disabled: true
     pluginConfig:
       # Serves /api/cost-insights-aws (pluginId cost-insights-aws), consumed by
@@ -1733,7 +1731,7 @@ plugins:
           - host: ${GITLAB_HOST}
             token: ${GITLAB_TOKEN}
             apiBaseUrl: https://${GITLAB_HOST}/api/v4
-  - package: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:d930edfb0a18f26b342c892c43703caef2678eefcbe6ad22219b20bead1ca5d3
+  - package: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:8d08a3903f031d92303ed475ba08a63c4aa1db1e2666c8e09bf088bb3272e026
     disabled: true
     pluginConfig:
       dynamicPlugins:
