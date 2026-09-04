@@ -16,8 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@aws/cost-insights-plugin-for-backstage-backend"
-  dynamicArtifact: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.52.0__0.8.0
-  version: 0.8.0
+  dynamicArtifact: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.52.0__0.9.0
+  version: 0.9.0
   backstage:
     role: backend-plugin
     supportedVersions: 1.48.4
