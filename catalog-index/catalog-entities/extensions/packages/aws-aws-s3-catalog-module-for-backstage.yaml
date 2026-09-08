@@ -5,23 +5,23 @@ metadata:
   namespace: community
   title: "@aws/aws-s3-catalog-module-for-backstage"
   links:
-    - url: https://github.com/veecode-platform/backstage-plugins-for-aws
+    - url: https://github.com/veecode-platform/devportal-plugins
       title: Homepage
-    - url: https://github.com/veecode-platform/backstage-plugins-for-aws/issues
+    - url: https://github.com/veecode-platform/devportal-plugins/issues
       title: Bugs
     - title: Source Code
-      url: https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/core/catalog-aws-s3
+      url: https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/aws-s3-catalog/plugins/aws-s3-catalog-module
   annotations:
-    backstage.io/source-location: url:https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/core/catalog-aws-s3
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/aws-s3-catalog/plugins/aws-s3-catalog-module
   tags: []
 spec:
   packageName: "@aws/aws-s3-catalog-module-for-backstage"
-  # Tag: bs_1.52.0__0.1.0
-  dynamicArtifact: "oci://quay.io/veecode/aws-aws-s3-catalog-module-for-backstage@sha256:4c2460a4f8cd4f3ee31743cc0f3ba48b6c7e2960f069beb7928172ee2580495d"
-  version: 0.1.0
+  # Tag: bs_1.52.0__0.2.0
+  dynamicArtifact: "oci://quay.io/veecode/aws-aws-s3-catalog-module-for-backstage@sha256:75a1f2cef4e82165c425ced374cb3500cf0120daaac0577ed17885384244edd6"
+  version: 0.2.0
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.48.4
+    supportedVersions: 1.52.0
   author: AWS
   support: community
   lifecycle: active

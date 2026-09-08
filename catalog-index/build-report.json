@@ -715,11 +715,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.52.0__0.1.0"
+          "oci_ref": "quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.52.0__0.2.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:4c2460a4f8cd4f3ee31743cc0f3ba48b6c7e2960f069beb7928172ee2580495d"
+          "digest": "sha256:75a1f2cef4e82165c425ced374cb3500cf0120daaac0577ed17885384244edd6"
         },
         "dpdy": {
           "status": "pass"
