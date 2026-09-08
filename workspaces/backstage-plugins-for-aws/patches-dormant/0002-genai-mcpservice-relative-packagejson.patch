@@ -1,0 +1,22 @@
+diff --git a/plugins/genai/backend/src/service/McpService.ts b/plugins/genai/backend/src/service/McpService.ts
+index f3f338e..b7c3ab9 100644
+--- a/plugins/genai/backend/src/service/McpService.ts
++++ b/plugins/genai/backend/src/service/McpService.ts
+@@ -18,7 +18,7 @@ import {
+   ListToolsRequestSchema,
+   CallToolRequestSchema,
+ } from '@modelcontextprotocol/sdk/types.js';
+-import { version } from '@aws/genai-plugin-for-backstage-backend/package.json';
++import packageJson from '../../package.json';
+ 
+ export class McpService {
+   public constructor(private readonly agentService: AgentService) {}
+@@ -39,7 +39,7 @@ export class McpService {
+     const server = new McpServer(
+       {
+         name: `backstage-${agentName}`,
+-        version,
++        version: packageJson.version,
+       },
+       { capabilities: { tools: {} } },
+     );

@@ -1,0 +1,22 @@
+diff --git a/plugins/genai/agent-langgraph/src/LangGraphReactAgentType.ts b/plugins/genai/agent-langgraph/src/LangGraphReactAgentType.ts
+index 5cda940..05c789f 100644
+--- a/plugins/genai/agent-langgraph/src/LangGraphReactAgentType.ts
++++ b/plugins/genai/agent-langgraph/src/LangGraphReactAgentType.ts
+@@ -54,7 +54,6 @@ import {
+   GenerateResponse,
+ } from '@aws/genai-plugin-for-backstage-common';
+ import { CallbackHandler } from 'langfuse-langchain';
+-import { SqliteSaver } from '@langchain/langgraph-checkpoint-sqlite';
+ import { PostgresSaver } from '@langchain/langgraph-checkpoint-postgres';
+ import {
+   ActionsService,
+@@ -162,6 +161,9 @@ export class LangGraphReactAgentType implements AgentType {
+       } else if (dbConfig.client === 'better-sqlite3') {
+         logger.info('Using sqlite checkpointer');
+ 
++        const { SqliteSaver } = await import(
++          '@langchain/langgraph-checkpoint-sqlite'
++        );
+         const checkpointer = SqliteSaver.fromConnString(':memory:');
+ 
+         return checkpointer;
