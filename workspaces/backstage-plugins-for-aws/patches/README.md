@@ -27,7 +27,7 @@ remaining five exports failed. The retired `veecode-platform` fork carried this
 same negation in its root `package.json`, which is why the fork never hit it.
 
 On a clean checkout the negation is a no-op: `yarn workspaces list` returns the
-same 32 workspaces with and without it (verified against `awslabs@b492f565` with
+same 31 workspaces with and without it (verified against `awslabs@b492f565` with
 `yarn-4.12.0`). It only excludes build artifacts, which were never in
 `yarn.lock`.
 
