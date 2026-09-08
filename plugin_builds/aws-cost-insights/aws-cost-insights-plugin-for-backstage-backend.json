@@ -1,0 +1,9 @@
+{
+  "aws-cost-insights-plugin-for-backstage-backend": {
+    "workspacePath": "aws-cost-insights/plugins/cost-insights-backend",
+    "registryReference": "quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.52.0__0.10.0",
+    "digest": "sha256:95014282070071256d5cfa8603be7745e9ea4ab4fcec0894c6c7e8d0f3f4bb43",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYXdzLWNvc3QtaW5zaWdodHMtcGx1Z2luLWZvci1iYWNrc3RhZ2UtYmFja2VuZCI6eyJuYW1lIjoiQGF3cy9jb3N0LWluc2lnaHRzLXBsdWdpbi1mb3ItYmFja3N0YWdlLWJhY2tlbmQtZHluYW1pYyIsInZlcnNpb24iOiIwLjEwLjAiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImJhY2tlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJjb3N0LWluc2lnaHRzLWF3cyIsInBsdWdpblBhY2thZ2VzIjpbIkBhd3MvY29zdC1pbnNpZ2h0cy1wbHVnaW4tZm9yLWJhY2tzdGFnZSIsIkBhd3MvY29zdC1pbnNpZ2h0cy1wbHVnaW4tZm9yLWJhY2tzdGFnZS1iYWNrZW5kIiwiQGF3cy9jb3N0LWluc2lnaHRzLXBsdWdpbi1mb3ItYmFja3N0YWdlLWNvbW1vbiJdLCJzdXBwb3J0ZWQtdmVyc2lvbnMiOiIxLjUyLjAifSwicmVwb3NpdG9yeSI6eyJ0eXBlIjoiZ2l0IiwidXJsIjoiZ2l0aHViOmF3c2xhYnMvYmFja3N0YWdlLXBsdWdpbnMtZm9yLWF3cyIsImRpcmVjdG9yeSI6InBsdWdpbnMvZWNzL2JhY2tlbmQifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}
