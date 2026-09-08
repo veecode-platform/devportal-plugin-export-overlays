@@ -4,33 +4,19 @@ plugins/codebuild/frontend:
 plugins/codebuild/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/aws-core-plugin-for-backstage-node
 plugins/codepipeline/frontend:
 plugins/codepipeline/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/aws-core-plugin-for-backstage-node
-# The trailing --shared-package NEGATION is load-bearing (gotcha
-# plugin-dinamico-rhdh-peer-nao-empacotado, fixed 2026-08-13, REGRESSED on the
-# 2026-08-20 migration to this fleet and took staging down): the CLI's
-# -common/-node auto-embed is family-scoped, so @backstage/plugin-kubernetes-common
-# (cross-family hard dep of the AWS module's AwsEKSClusterProcessor) is demoted
-# to a peer the host does NOT provide — the bundle installs fine and dies at
-# load with MODULE_NOT_FOUND. Export flags are part of the artifact's contract:
-# never port this line without them. Form notes, both empirically bitten:
-# (a) NO quotes anywhere — export-utils' run_cli splits args by plain
-#     IFS=space with no shell-quote parsing, so quotes become literal
-#     characters and the CLI silently ignores the argument (PR #190 shipped
-#     the bundle without the dep again exactly this way);
-# (b) a SECOND --embed-package, not the --shared-package '!' negation — the
-#     negation form trips rhdh-cli 1.11.2's private-dependency validator
-#     (the negated package's own @backstage deps land as private while being
-#     shared) and exits 1; embedding demotes them to peers the host provides.
-#     Validated 2026-08-20 by a local export on the exact source commit:
-#     exit 0 and plugin-kubernetes-common present in dist-dynamic/node_modules.
-plugins/core/catalog-aws-s3: --embed-package @backstage/plugin-catalog-backend-module-aws --embed-package @backstage/plugin-kubernetes-common
 #plugins/core/catalog-config:
+# MIGRATED (ADR-011): plugins/core/catalog-aws-s3 was published from here until
+# aws-aws-s3-catalog-module-for-backstage 0.1.0. It now lives in this repo's
+# workspaces/aws-s3-catalog, sourced from devportal-plugins. Do NOT re-add it here:
+# two workspaces publishing the same quay repository would race on the same tag.
 #plugins/core/scaffolder-actions:
-# cost-insights backend (ADR-010 FinOps): serves /api/cost-insights-aws consumed by
-# @veecode-platform/plugin-aws-cost-insights. Embeds follow the plugin's own
-# export-dynamic script (@aws family commons) PLUS the cross-family
-# @backstage-community/plugin-cost-insights-common — same MODULE_NOT_FOUND class
-# as the kubernetes-common gotcha above: the host does not provide it. No quotes.
-plugins/cost-insights/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/cost-insights-plugin-for-backstage-common --embed-package @backstage-community/plugin-cost-insights-common
+# MIGRATED (ADR-011): plugins/cost-insights/backend was published from here until
+# aws-cost-insights-plugin-for-backstage-backend 0.9.0. It now lives in this repo's
+# workspaces/aws-cost-insights, sourced from devportal-plugins. Same warning as above --
+# and note the disabled frontend entry immediately below is NOT the migrated half: the
+# canonical cost-insights frontend is @veecode-platform/plugin-aws-cost-insights, already
+# published from workspaces/aws-cost-insights. Enabling this line would export the fork's
+# stale copy against a backend that no longer ships from this workspace.
 #plugins/cost-insights/frontend:
 #plugins/ecr/backend:
 #plugins/ecr/frontend:
