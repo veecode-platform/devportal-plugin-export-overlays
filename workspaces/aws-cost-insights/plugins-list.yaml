@@ -1,1 +1,7 @@
 plugins/aws-cost-insights:
+# cost-insights backend (ADR-010 FinOps): serves /api/cost-insights-aws consumed by
+# @veecode-platform/plugin-aws-cost-insights. Embeds follow the plugin's own
+# export-dynamic script (@aws family commons) PLUS the cross-family
+# @backstage-community/plugin-cost-insights-common — same MODULE_NOT_FOUND class
+# as the kubernetes-common gotcha above: the host does not provide it. No quotes.
+plugins/cost-insights-backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/cost-insights-plugin-for-backstage-common --embed-package @backstage-community/plugin-cost-insights-common
