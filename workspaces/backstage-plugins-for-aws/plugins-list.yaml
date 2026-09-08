@@ -5,7 +5,18 @@ plugins/codebuild/backend: --embed-package @aws/aws-core-plugin-for-backstage-co
 plugins/codepipeline/frontend:
 plugins/codepipeline/backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/aws-core-plugin-for-backstage-node
 #plugins/core/catalog-config:
+# MIGRATED (ADR-011): plugins/core/catalog-aws-s3 was published from here until
+# aws-aws-s3-catalog-module-for-backstage 0.1.0. It now lives in this repo's
+# workspaces/aws-s3-catalog, sourced from devportal-plugins. Do NOT re-add it here:
+# two workspaces publishing the same quay repository would race on the same tag.
 #plugins/core/scaffolder-actions:
+# MIGRATED (ADR-011): plugins/cost-insights/backend was published from here until
+# aws-cost-insights-plugin-for-backstage-backend 0.9.0. It now lives in this repo's
+# workspaces/aws-cost-insights, sourced from devportal-plugins. Same warning as above --
+# and note the disabled frontend entry immediately below is NOT the migrated half: the
+# canonical cost-insights frontend is @veecode-platform/plugin-aws-cost-insights, already
+# published from workspaces/aws-cost-insights. Enabling this line would export the fork's
+# stale copy against a backend that no longer ships from this workspace.
 #plugins/cost-insights/frontend:
 #plugins/ecr/backend:
 #plugins/ecr/frontend:
