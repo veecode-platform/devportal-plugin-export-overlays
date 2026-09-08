@@ -33,3 +33,10 @@ same 32 workspaces with and without it (verified against `awslabs@b492f565` with
 
 Applies to `awslabs/backstage-plugins-for-aws` @ `b492f565`. Any `repo-ref` bump
 should re-check that the hunk still applies — a failing patch fails the export.
+
+Prior art: `workspaces/aws-ecs/patches/1-avoid-double-wildcards.patch` (that
+workspace is currently disabled) fixes the same collision on the same upstream
+repo at an older ref by narrowing the glob to `plugins/*/*` instead of adding a
+negation. Verified equivalent against `b492f565` — both forms yield the same 31
+workspaces, and upstream has no package under `plugins/` above or below depth 2.
+Either form is fine; don't add both.
