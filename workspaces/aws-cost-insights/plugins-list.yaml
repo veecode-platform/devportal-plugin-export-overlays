@@ -1,1 +1,15 @@
 plugins/aws-cost-insights:
+# cost-insights backend (ADR-010 FinOps): serves /api/cost-insights-aws consumed by
+# @veecode-platform/plugin-aws-cost-insights.
+#
+# The three --embed-package flags reproduce, verbatim, the export arguments the retired
+# fork used at cf408c11 to build the image production runs today (ADR-011 keeps the
+# published artifact byte-identical, so these cannot drift). Two of them are the @aws
+# family commons; the third, @backstage-community/plugin-cost-insights-common, is
+# cross-family and is embedded for the same reason: the DevPortal host does not provide
+# it, so leaving it out yields MODULE_NOT_FOUND at plugin load rather than a build error.
+#
+# No quotes anywhere on the flags line: export-utils splits these args on plain IFS, so a
+# quote becomes a literal character and the flag is silently dropped (this already shipped
+# a broken bundle once).
+plugins/cost-insights-backend: --embed-package @aws/aws-core-plugin-for-backstage-common --embed-package @aws/cost-insights-plugin-for-backstage-common --embed-package @backstage-community/plugin-cost-insights-common
