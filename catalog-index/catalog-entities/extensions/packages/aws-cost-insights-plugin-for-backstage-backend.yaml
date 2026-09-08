@@ -10,18 +10,18 @@ metadata:
     - url: https://github.com/awslabs/backstage-plugins-for-aws/issues
       title: Bugs
     - title: Source Code
-      url: https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/cost-insights/backend
+      url: https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/aws-cost-insights/plugins/cost-insights-backend
   annotations:
-    backstage.io/source-location: url:https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/cost-insights/backend
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/aws-cost-insights/plugins/cost-insights-backend
   tags: []
 spec:
   packageName: "@aws/cost-insights-plugin-for-backstage-backend"
-  # Tag: bs_1.52.0__0.9.0
-  dynamicArtifact: "oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:db8488ce46d8f1fbeee297c8499d86448060f66bad807da0383a940c2ae5b03a"
-  version: 0.9.0
+  # Tag: bs_1.52.0__0.10.0
+  dynamicArtifact: "oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:95014282070071256d5cfa8603be7745e9ea4ab4fcec0894c6c7e8d0f3f4bb43"
+  version: 0.10.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.48.4
+    supportedVersions: 1.52.0
   author: AWS
   support: community
   lifecycle: active
