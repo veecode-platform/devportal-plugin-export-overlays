@@ -1,0 +1,12 @@
+--- a/package.json
++++ b/package.json
+@@ -34,7 +34,8 @@
+   },
+   "workspaces": [
+     "packages/*",
+-    "plugins/**"
++    "plugins/**",
++    "!plugins/**/dist-dynamic/**"
+   ],
+   "devDependencies": {
+     "@backstage/cli": "backstage:^",
