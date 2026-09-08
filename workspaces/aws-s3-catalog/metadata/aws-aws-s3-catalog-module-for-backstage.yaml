@@ -5,9 +5,9 @@ metadata:
   namespace: community
   title: "@aws/aws-s3-catalog-module-for-backstage"
   links:
-    - url: https://github.com/veecode-platform/backstage-plugins-for-aws
+    - url: https://github.com/veecode-platform/devportal-plugins
       title: Homepage
-    - url: https://github.com/veecode-platform/backstage-plugins-for-aws/issues
+    - url: https://github.com/veecode-platform/devportal-plugins/issues
       title: Bugs
     - title: Source Code
       url: https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/aws-s3-catalog/plugins/aws-s3-catalog-module

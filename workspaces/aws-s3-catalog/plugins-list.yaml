@@ -1,4 +1,4 @@
-# The trailing --shared-package NEGATION is load-bearing (gotcha
+# The two trailing --embed-package flags are load-bearing (gotcha
 # plugin-dinamico-rhdh-peer-nao-empacotado, fixed 2026-08-13, REGRESSED on the
 # 2026-08-20 migration to this fleet and took staging down): the CLI's
 # -common/-node auto-embed is family-scoped, so @backstage/plugin-kubernetes-common
