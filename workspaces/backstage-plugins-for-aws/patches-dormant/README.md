@@ -38,11 +38,16 @@ genai is not exported by this workspace (the `plugins/genai/*` entries in
 `plugins-list.yaml` are commented out). If it ever is:
 
 ```bash
-mkdir -p workspaces/backstage-plugins-for-aws/patches
 git mv workspaces/backstage-plugins-for-aws/patches-dormant/000*.patch \
        workspaces/backstage-plugins-for-aws/patches/
 ```
 
-Then re-check them against the `source.json` ref in force at that time — a
+`patches/` already exists and already holds
+`0001-workspaces-exclude-dist-dynamic.patch`. These two files have distinct
+names, so nothing is overwritten — but `override-sources.sh` applies
+`patches/*.patch` in `sort` order, so check the resulting order before assuming
+it. Renumber if a genai patch ever has to land before the glob fix.
+
+Then re-check the patches against the `source.json` ref in force at that time — a
 `repo-ref` bump can make either hunk fail to apply, and a failing patch fails the
 export.
