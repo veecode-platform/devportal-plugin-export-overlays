@@ -8,7 +8,9 @@ subset that prevents production incidents. If you automate anything here, read b
 **Publishing is automatic and versioned; promotion to `:latest` is manual and human-approved.**
 
 - Pushes to `main` / release branches auto-publish **versioned** artifacts only
-  (plugin bundles, `plugin-catalog-index:bs_<version>`). That is the staging channel.
+  (plugin bundles, `plugin-catalog-index:bs_<version>`). Moving `bs_<version>` tags have
+  production consumers (a deployment can pin one directly as its index — see CLAUDE.md
+  "Publish vs. promote"): republishing an existing version line is not consequence-free.
 - `plugin-catalog-index:latest` is a **production pointer** consumed live by deployed
   instances (SaaS included). It moves exclusively via
   `.github/workflows/promote-catalog-index-latest.yaml` — manual dispatch, gated by the

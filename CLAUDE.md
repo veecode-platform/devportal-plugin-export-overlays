@@ -76,8 +76,14 @@ On a PR, comment:
 
 - Every push to `main` (or a release branch) touching `workspaces/**`, `catalog-entities/**` or
   `versions.json` auto-publishes **versioned artifacts only**: plugin bundles and
-  `plugin-catalog-index:bs_<version>` / `bs_<version>_<timestamp>`. This is the staging channel —
-  it is safe precisely because nothing consumes those tags implicitly.
+  `plugin-catalog-index:bs_<version>` / `bs_<version>_<timestamp>`. This channel is NOT
+  consequence-free: since 2026-09 at least one production deployment pins a **moving
+  `bs_<version>` tag** (not `latest`) as its catalog index and re-reads it on every pod
+  restart, so a publish that byte-changes an existing version line reaches production with
+  no promotion step. Before merging anything that regenerates an existing `bs_<version>`
+  index, know what the diff will be; after publish, verify it (full-document diff against
+  the previous index digest). Only the timestamped `bs_<version>_<timestamp>` tags are
+  immutable snapshots.
 - `plugin-catalog-index:latest` is a **production pointer**: deployed instances (SaaS included)
   resolve it live. It moves ONLY via `promote-catalog-index-latest.yaml` (manual dispatch, gated by
   the `catalog-latest-promotion` GitHub Environment, which requires human approval and records
