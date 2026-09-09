@@ -11,9 +11,9 @@ metadata:
     - url: https://github.com/awslabs/backstage-plugins-for-aws/issues
       title: Bugs
     - title: Source Code
-      url: https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/codepipeline/frontend
+      url: https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/codepipeline/frontend
   annotations:
-    backstage.io/source-location: url:https://github.com/veecode-platform/backstage-plugins-for-aws/tree/main/plugins/codepipeline/frontend
+    backstage.io/source-location: url:https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/codepipeline/frontend
   tags: []
 spec:
   packageName: "@aws/aws-codepipeline-plugin-for-backstage"
@@ -22,7 +22,7 @@ spec:
   version: 0.9.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.48.4
+    supportedVersions: 1.52.0
   author: AWS
   support: community
   lifecycle: active
