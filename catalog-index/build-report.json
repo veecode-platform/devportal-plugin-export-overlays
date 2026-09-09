@@ -715,11 +715,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.52.0__0.2.0"
+          "oci_ref": "quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.52.0__0.3.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:75a1f2cef4e82165c425ced374cb3500cf0120daaac0577ed17885384244edd6"
+          "digest": "sha256:c0be44abffcf3380dae4b315807867cf92d0d6c316abcb73ee967ed55b53165c"
         },
         "dpdy": {
           "status": "pass"
@@ -729,7 +729,7 @@
         }
       },
       "package": "@aws/aws-s3-catalog-module-for-backstage",
-      "version": "0.2.0",
+      "version": "0.3.0",
       "workspace": "aws-s3-catalog",
       "overall": "pass"
     },
