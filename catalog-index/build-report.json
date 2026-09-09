@@ -2255,11 +2255,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.52.0__0.10.0"
+          "oci_ref": "quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.52.0__0.11.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:95014282070071256d5cfa8603be7745e9ea4ab4fcec0894c6c7e8d0f3f4bb43"
+          "digest": "sha256:bd379b06bdd790ad4dac60d2be8ba2743f542c313da034580867047a513f7fe2"
         },
         "dpdy": {
           "status": "pass"
@@ -2269,7 +2269,7 @@
         }
       },
       "package": "@aws/cost-insights-plugin-for-backstage-backend",
-      "version": "0.10.0",
+      "version": "0.11.0",
       "workspace": "aws-cost-insights",
       "overall": "pass"
     }

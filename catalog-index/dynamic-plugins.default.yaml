@@ -102,7 +102,7 @@ plugins:
           region: ${AWS_REGION}
           accessKeyId: ${AWS_ACCESS_KEY_ID}
           secretAccessKey: ${AWS_SECRET_ACCESS_KEY}
-  - package: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:95014282070071256d5cfa8603be7745e9ea4ab4fcec0894c6c7e8d0f3f4bb43
+  - package: oci://quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend@sha256:bd379b06bdd790ad4dac60d2be8ba2743f542c313da034580867047a513f7fe2
     disabled: true
     pluginConfig:
       # Serves /api/cost-insights-aws (pluginId cost-insights-aws), consumed by
