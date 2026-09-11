@@ -12,9 +12,9 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-kong-service-manager"
-  # Tag: bs_1.52.0__1.2.0
-  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:c29b6dd42d2633c654f2c001b19e97accce97323f7c6145a8f8a9968c80f9b8a"
-  version: 1.2.0
+  # Tag: bs_1.52.0__1.2.1
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:14cb6eccb25975d82e406616b03edf64ffed2ffec2f445ff8c1b9e96fa51ea9f"
+  version: 1.2.1
   backstage:
     role: frontend-plugin
     supportedVersions: 1.52.0
