@@ -1,0 +1,2 @@
+plugins/kong-service-manager: --embed-package @veecode-platform/backstage-plugin-kong-service-manager-common
+plugins/kong-service-manager-backend: --embed-package @veecode-platform/backstage-plugin-kong-service-manager-common
