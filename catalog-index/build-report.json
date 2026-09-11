@@ -2272,11 +2272,55 @@
       "version": "0.11.0",
       "workspace": "aws-cost-insights",
       "overall": "pass"
+    },
+    "veecode-platform-backstage-plugin-kong-service-manager-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend:bs_1.52.0__1.2.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:b09e8bde7b97b7fa97234f6ba04892319f104b7e3caa210ee95ffa37c8467b14"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@veecode-platform/backstage-plugin-kong-service-manager-backend",
+      "version": "1.2.0",
+      "workspace": "kong-tools",
+      "overall": "pass"
+    },
+    "veecode-platform-backstage-plugin-kong-service-manager": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager:bs_1.52.0__1.2.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:c29b6dd42d2633c654f2c001b19e97accce97323f7c6145a8f8a9968c80f9b8a"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@veecode-platform/backstage-plugin-kong-service-manager",
+      "version": "1.2.0",
+      "workspace": "kong-tools",
+      "overall": "pass"
     }
   },
   "summary": {
-    "total": 103,
-    "succeeded": 103,
+    "total": 105,
+    "succeeded": 105,
     "failed": 0
   },
   "status": "success"

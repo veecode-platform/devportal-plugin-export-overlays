@@ -1,0 +1,44 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-backstage-plugin-kong-service-manager
+  namespace: veecode
+  title: "Kong Service Manager"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/kong-tools
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-kong-service-manager"
+  # Tag: bs_1.52.0__1.2.0
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:c29b6dd42d2633c654f2c001b19e97accce97323f7c6145a8f8a9968c80f9b8a"
+  version: 1.2.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.52.0
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - kong-tools
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.backstage-plugin-kong-service-manager:
+              entityTabs:
+                - path: /kong
+                  title: Kong
+                  mountPoint: entity.page.kong
+              mountPoints:
+                - mountPoint: entity.page.kong/cards
+                  importName: KongServiceManagerContent
+                  config:
+                    layout:
+                      gridColumn: "1 / -1"
+                    if:
+                      allOf:
+                        - hasAnnotation: kong-manager/service-name
