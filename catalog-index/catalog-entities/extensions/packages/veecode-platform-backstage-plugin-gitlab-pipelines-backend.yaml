@@ -12,9 +12,9 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-gitlab-pipelines-backend"
-  # Tag: bs_1.52.0__1.0.0
-  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend@sha256:c13afd0167e33aa7cb5eb8d79dfdc303fd13a6859e2a8454ed2bd9b1ef194f9d"
-  version: 1.0.0
+  # Tag: bs_1.52.0__1.1.0
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend@sha256:4c32753cda67325fb094dd8d298d1c52320073555d2e0f24c7712631d51b5b43"
+  version: 1.1.0
   backstage:
     role: backend-plugin
     supportedVersions: 1.49.2

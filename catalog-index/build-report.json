@@ -2189,11 +2189,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend:bs_1.52.0__1.0.0"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend:bs_1.52.0__1.1.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:c13afd0167e33aa7cb5eb8d79dfdc303fd13a6859e2a8454ed2bd9b1ef194f9d"
+          "digest": "sha256:4c32753cda67325fb094dd8d298d1c52320073555d2e0f24c7712631d51b5b43"
         },
         "dpdy": {
           "status": "pass"
@@ -2203,7 +2203,7 @@
         }
       },
       "package": "@veecode-platform/backstage-plugin-gitlab-pipelines-backend",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "workspace": "gitlab-pipelines",
       "overall": "pass"
     },
@@ -2211,11 +2211,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.52.0__1.0.0"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.52.0__1.1.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:7d4b676fb70a5c847a047b152f60503056f2de7714b2f264a05c379aae52d767"
+          "digest": "sha256:9fc99717de618f678ccb8643da54dad127feec39e657bd21269f83a687277f55"
         },
         "dpdy": {
           "status": "pass"
@@ -2225,7 +2225,7 @@
         }
       },
       "package": "@veecode-platform/backstage-plugin-gitlab-pipelines",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "workspace": "gitlab-pipelines",
       "overall": "pass"
     },
