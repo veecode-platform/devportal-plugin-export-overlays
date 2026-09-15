@@ -1697,7 +1697,7 @@ plugins:
                 clientSecret: ${GITHUB_CLIENT_SECRET}
                 privateKey: |
                   ${GITHUB_PRIVATE_KEY}
-  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines@sha256:9fc99717de618f678ccb8643da54dad127feec39e657bd21269f83a687277f55
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines@sha256:6e1f46bd0b3452b2375ddd407694801f891ba60006a3d9b1cf8f7db570e8286c
     disabled: true
     pluginConfig:
       dynamicPlugins:
@@ -1723,7 +1723,7 @@ plugins:
                   if:
                     allOf:
                       - isGitlabJobsAvailable
-  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend@sha256:4c32753cda67325fb094dd8d298d1c52320073555d2e0f24c7712631d51b5b43
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend@sha256:6ce933e588c208d8a5a96bf05a261c265b647d362841818f980779f3f26979a3
     disabled: true
     pluginConfig:
       integrations:
@@ -1731,7 +1731,7 @@ plugins:
           - host: ${GITLAB_HOST}
             token: ${GITLAB_TOKEN}
             apiBaseUrl: https://${GITLAB_HOST}/api/v4
-  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:1130a7295806f95ccaaac90c501eba66d5a5e581151ede83fb91bd27c8f87b57
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:fa2a1dcfb10c7fc8d9f43e7cfc95f56e376ec89aec0b04cf55f5ff023667a637
     disabled: true
     pluginConfig:
       dynamicPlugins:
@@ -1750,7 +1750,7 @@ plugins:
                   if:
                     allOf:
                       - hasAnnotation: kong-manager/service-name
-  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend@sha256:3ff9dbaacb75e45e46855f7e83995e91320a548463c069e908cddf1164086147
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend@sha256:909432fc387b3816e01055bd652cc6de6036f0a5bb07aa677849e819047611eb
     disabled: true
     pluginConfig:
       kong:

@@ -2189,11 +2189,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend:bs_1.52.0__1.1.0"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend:bs_1.52.0__1.1.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:4c32753cda67325fb094dd8d298d1c52320073555d2e0f24c7712631d51b5b43"
+          "digest": "sha256:6ce933e588c208d8a5a96bf05a261c265b647d362841818f980779f3f26979a3"
         },
         "dpdy": {
           "status": "pass"
@@ -2203,7 +2203,7 @@
         }
       },
       "package": "@veecode-platform/backstage-plugin-gitlab-pipelines-backend",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "workspace": "gitlab-pipelines",
       "overall": "pass"
     },
@@ -2211,11 +2211,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.52.0__1.1.0"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.52.0__1.1.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:9fc99717de618f678ccb8643da54dad127feec39e657bd21269f83a687277f55"
+          "digest": "sha256:6e1f46bd0b3452b2375ddd407694801f891ba60006a3d9b1cf8f7db570e8286c"
         },
         "dpdy": {
           "status": "pass"
@@ -2225,7 +2225,7 @@
         }
       },
       "package": "@veecode-platform/backstage-plugin-gitlab-pipelines",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "workspace": "gitlab-pipelines",
       "overall": "pass"
     },
@@ -2277,11 +2277,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend:bs_1.52.0__1.3.3"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend:bs_1.52.0__1.4.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:3ff9dbaacb75e45e46855f7e83995e91320a548463c069e908cddf1164086147"
+          "digest": "sha256:909432fc387b3816e01055bd652cc6de6036f0a5bb07aa677849e819047611eb"
         },
         "dpdy": {
           "status": "pass"
@@ -2291,7 +2291,7 @@
         }
       },
       "package": "@veecode-platform/backstage-plugin-kong-service-manager-backend",
-      "version": "1.3.3",
+      "version": "1.4.0",
       "workspace": "kong-tools",
       "overall": "pass"
     },
@@ -2299,11 +2299,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager:bs_1.52.0__1.3.3"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager:bs_1.52.0__1.4.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:1130a7295806f95ccaaac90c501eba66d5a5e581151ede83fb91bd27c8f87b57"
+          "digest": "sha256:fa2a1dcfb10c7fc8d9f43e7cfc95f56e376ec89aec0b04cf55f5ff023667a637"
         },
         "dpdy": {
           "status": "pass"
@@ -2313,7 +2313,7 @@
         }
       },
       "package": "@veecode-platform/backstage-plugin-kong-service-manager",
-      "version": "1.3.3",
+      "version": "1.4.0",
       "workspace": "kong-tools",
       "overall": "pass"
     }
