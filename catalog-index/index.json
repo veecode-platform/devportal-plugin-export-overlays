@@ -712,17 +712,17 @@
   },
   "veecode-platform-backstage-plugin-kong-service-manager": {
     "workspacePath": "kong-tools/plugins/kong-service-manager",
-    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:fa2a1dcfb10c7fc8d9f43e7cfc95f56e376ec89aec0b04cf55f5ff023667a637",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:d552d43895a3568a5eaac013ea5aa64c973a28d436226404637b2488b7ab9276",
     "support": "community",
-    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyIjp7Im5hbWUiOiJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMS40LjAiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImZyb250ZW5kLXBsdWdpbiIsInBsdWdpbklkIjoia29uZy1zZXJ2aWNlLW1hbmFnZXIiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyIiwiQHZlZWNvZGUtcGxhdGZvcm0vYmFja3N0YWdlLXBsdWdpbi1rb25nLXNlcnZpY2UtbWFuYWdlci1jb21tb24iXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIn19XQ==",
-    "imageTag": "bs_1.52.0__1.4.0"
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyIjp7Im5hbWUiOiJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMS40LjEiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImZyb250ZW5kLXBsdWdpbiIsInBsdWdpbklkIjoia29uZy1zZXJ2aWNlLW1hbmFnZXIiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyIiwiQHZlZWNvZGUtcGxhdGZvcm0vYmFja3N0YWdlLXBsdWdpbi1rb25nLXNlcnZpY2UtbWFuYWdlci1jb21tb24iXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIn19XQ==",
+    "imageTag": "bs_1.52.0__1.4.1"
   },
   "veecode-platform-backstage-plugin-kong-service-manager-backend": {
     "workspacePath": "kong-tools/plugins/kong-service-manager-backend",
-    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend@sha256:909432fc387b3816e01055bd652cc6de6036f0a5bb07aa677849e819047611eb",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend@sha256:6a6b857183c7607f25fbb50ff5fd265e4b6e24edaf34cb6fcb154dac7e55ca5f",
     "support": "community",
-    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyLWJhY2tlbmQiOnsibmFtZSI6IkB2ZWVjb2RlLXBsYXRmb3JtL2JhY2tzdGFnZS1wbHVnaW4ta29uZy1zZXJ2aWNlLW1hbmFnZXItYmFja2VuZC1keW5hbWljIiwidmVyc2lvbiI6IjEuNC4wIiwiYmFja3N0YWdlIjp7InJvbGUiOiJiYWNrZW5kLXBsdWdpbiIsInBsdWdpbklkIjoia29uZy1zZXJ2aWNlLW1hbmFnZXItYmFja2VuZCIsInBsdWdpblBhY2thZ2VzIjpbIkB2ZWVjb2RlLXBsYXRmb3JtL2JhY2tzdGFnZS1wbHVnaW4ta29uZy1zZXJ2aWNlLW1hbmFnZXItYmFja2VuZCJdLCJzdXBwb3J0ZWQtdmVyc2lvbnMiOiIxLjUyLjAifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d",
-    "imageTag": "bs_1.52.0__1.4.0"
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyLWJhY2tlbmQiOnsibmFtZSI6IkB2ZWVjb2RlLXBsYXRmb3JtL2JhY2tzdGFnZS1wbHVnaW4ta29uZy1zZXJ2aWNlLW1hbmFnZXItYmFja2VuZC1keW5hbWljIiwidmVyc2lvbiI6IjEuNC4xIiwiYmFja3N0YWdlIjp7InJvbGUiOiJiYWNrZW5kLXBsdWdpbiIsInBsdWdpbklkIjoia29uZy1zZXJ2aWNlLW1hbmFnZXItYmFja2VuZCIsInBsdWdpblBhY2thZ2VzIjpbIkB2ZWVjb2RlLXBsYXRmb3JtL2JhY2tzdGFnZS1wbHVnaW4ta29uZy1zZXJ2aWNlLW1hbmFnZXItYmFja2VuZCJdLCJzdXBwb3J0ZWQtdmVyc2lvbnMiOiIxLjUyLjAifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d",
+    "imageTag": "bs_1.52.0__1.4.1"
   },
   "veecode-platform-plugin-aws-cost-insights": {
     "workspacePath": "aws-cost-insights/plugins/aws-cost-insights",
