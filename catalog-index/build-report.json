@@ -2277,11 +2277,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend:bs_1.52.0__1.5.1"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend:bs_1.52.0__1.5.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:0c142f355b6f519e904fd7b5bc88c5a4c3065e389f3af152a40cc145fd45a158"
+          "digest": "sha256:882115e6c8e8027e7eec551931c333706472632d072ae1ddb8f3c61e22200557"
         },
         "dpdy": {
           "status": "pass"
@@ -2291,7 +2291,7 @@
         }
       },
       "package": "@veecode-platform/backstage-plugin-kong-service-manager-backend",
-      "version": "1.5.1",
+      "version": "1.5.2",
       "workspace": "kong-tools",
       "overall": "pass"
     },
@@ -2299,11 +2299,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager:bs_1.52.0__1.5.1"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager:bs_1.52.0__1.5.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:1b7ab483206deb5e67b2427ff004d087d486bb705b3029d8281b037a35d2d736"
+          "digest": "sha256:0ac27a64256048300be8250d027ec8e6082d45820022a6185ab1e4e19ec03665"
         },
         "dpdy": {
           "status": "pass"
@@ -2313,7 +2313,7 @@
         }
       },
       "package": "@veecode-platform/backstage-plugin-kong-service-manager",
-      "version": "1.5.1",
+      "version": "1.5.2",
       "workspace": "kong-tools",
       "overall": "pass"
     }
