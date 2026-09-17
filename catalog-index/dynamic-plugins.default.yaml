@@ -1731,7 +1731,7 @@ plugins:
           - host: ${GITLAB_HOST}
             token: ${GITLAB_TOKEN}
             apiBaseUrl: https://${GITLAB_HOST}/api/v4
-  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:a5a565db42edb3be32e0b165036c5a8749eb1c43245aa8da04354c06ac74bb7e
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager@sha256:1b7ab483206deb5e67b2427ff004d087d486bb705b3029d8281b037a35d2d736
     disabled: true
     pluginConfig:
       dynamicPlugins:
@@ -1750,7 +1750,7 @@ plugins:
                   if:
                     allOf:
                       - hasAnnotation: kong-manager/service-name
-  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend@sha256:e964faf33140d6b86c6e995b4649f60f877e0f995bb0f2571bb5648a6f54536e
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend@sha256:0c142f355b6f519e904fd7b5bc88c5a4c3065e389f3af152a40cc145fd45a158
     disabled: true
     pluginConfig:
       kong:
