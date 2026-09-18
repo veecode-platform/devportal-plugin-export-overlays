@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-adr": {
+    "workspacePath": "adr/plugins/adr",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-adr:bs_1.52.0__0.26.0",
+    "digest": "sha256:9792d027df44d3f89b5a968f92c26187dc96e7d840ac88d0d3579d95e076bb8e",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tYWRyIjp7Im5hbWUiOiJAYmFja3N0YWdlLWNvbW11bml0eS9wbHVnaW4tYWRyLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4yNi4wIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImFkciIsInBsdWdpblBhY2thZ2VzIjpbIkBiYWNrc3RhZ2UtY29tbXVuaXR5L3BsdWdpbi1hZHIiLCJAYmFja3N0YWdlLWNvbW11bml0eS9wbHVnaW4tYWRyLWJhY2tlbmQiLCJAYmFja3N0YWdlLWNvbW11bml0eS9wbHVnaW4tYWRyLWNvbW1vbiJdLCJzdXBwb3J0ZWQtdmVyc2lvbnMiOiIxLjUyLjAifSwiaG9tZXBhZ2UiOiJodHRwczovL2JhY2tzdGFnZS5pbyIsInJlcG9zaXRvcnkiOnsidHlwZSI6ImdpdCIsInVybCI6Imh0dHBzOi8vZ2l0aHViLmNvbS9iYWNrc3RhZ2UvY29tbXVuaXR5LXBsdWdpbnMiLCJkaXJlY3RvcnkiOiJ3b3Jrc3BhY2VzL2Fkci9wbHVnaW5zL2FkciJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+  }
+}

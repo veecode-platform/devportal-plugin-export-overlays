@@ -1,0 +1,42 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-analytics-module-ga4
+  namespace: rhdh
+  title: "Analytics Module Ga4"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/analytics/plugins/analytics-module-ga4
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/analytics/plugins/analytics-module-ga4
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-analytics-module-ga4"
+  # Tag: bs_1.52.0__0.18.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-analytics-module-ga4@sha256:40305e9872bb64e39c4cc328b2fdb797d1ea30dd45d977a4a3a0f652f20d4602"
+  version: 0.18.0
+  backstage:
+    role: frontend-plugin-module
+    supportedVersions: 1.49.4
+  author: The Backstage Community
+  support: community
+  lifecycle: active
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-analytics-module-ga4:
+              apiFactories:
+                - importName: googleAnalytics4Api
+        app:
+          analytics:
+            ga4:
+              measurementId: ${GA4_MEASUREMENT_ID}
+              identity: disabled
+              debug: false
+              testMode: false

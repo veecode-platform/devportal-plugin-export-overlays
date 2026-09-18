@@ -1,0 +1,35 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-backstage-plugin-kong-service-manager-backend
+  namespace: veecode
+  title: "Kong Service Manager Backend"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/kong-tools
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-kong-service-manager-backend"
+  # Tag: bs_1.52.0__1.5.3
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend@sha256:60ecb6704fce27f4d6318df4103e73d4625492c7f1cfef73166f1c0848169513"
+  version: 1.5.3
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.52.0
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - kong-tools
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        kong:
+          instances:
+            - id: default
+              apiBaseUrl: http://kong-admin.kong.svc.cluster.local:8001
+              description: Kong Gateway (Admin API)
+              defaultTags:
+                - devportal-managed

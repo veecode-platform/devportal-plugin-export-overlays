@@ -1,0 +1,65 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: red-hat-developer-hub-backstage-plugin-homepage-backend
+  namespace: rhdh
+  title: Homepage Backend
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://issues.redhat.com/browse/RHDHBUGS
+      title: "Report issues here. Note: Customers of Red Hat Developer Hub should raise a Red Hat support case instead."
+    - title: Source Code
+      url: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/homepage
+  annotations:
+    backstage.io/source-location: url:https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/homepage
+  tags: []
+spec:
+  packageName: "@red-hat-developer-hub/backstage-plugin-homepage-backend"
+  # Tag: bs_1.52.0__0.1.1
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-homepage-backend@sha256:9223d63355448c660c7dd7a47bd07fbb921f8eaecab2587e252e1076dcf8b5d8"
+  version: 0.1.1
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.49.4
+  author: Red Hat
+  support: tech-preview
+  lifecycle: active
+  partOf:
+    - home-page
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        homepage:
+          defaultWidgets:
+            # Each leaf node needs both `id` (stable identifier) and `ref`
+            # (the widget the frontend renders). Refs and layout mirror the
+            # upstream defaults for these three sections:
+            # https://github.com/redhat-developer/rhdh-plugins/blob/main/workspaces/homepage/app-config.yaml
+            - id: onboarding
+              ref: rhdh-onboarding-section
+              layout:
+                xl: { w: 12, h: 6 }
+                lg: { w: 12, h: 6 }
+                md: { w: 12, h: 7 }
+                sm: { w: 12, h: 8 }
+                xs: { w: 12, h: 9 }
+                xxs: { w: 12, h: 14 }
+            - id: entity-list
+              ref: rhdh-entity-section
+              layout:
+                xl: { w: 12, h: 7 }
+                lg: { w: 12, h: 7 }
+                md: { w: 12, h: 8 }
+                sm: { w: 12, h: 9 }
+                xs: { w: 12, h: 11 }
+                xxs: { w: 12, h: 15 }
+            - id: template-list
+              ref: rhdh-template-section
+              layout:
+                xl: { w: 12, h: 5 }
+                lg: { w: 12, h: 5 }
+                md: { w: 12, h: 5 }
+                sm: { w: 12, h: 5 }
+                xs: { w: 12, h: 7.5 }
+                xxs: { w: 12, h: 13.5 }

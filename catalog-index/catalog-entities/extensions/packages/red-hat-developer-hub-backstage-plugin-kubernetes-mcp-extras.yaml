@@ -1,0 +1,49 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: red-hat-developer-hub-plugin-kubernetes-mcp-extras
+  namespace: rhdh
+  title: "@red-hat-developer-hub/backstage-plugin-kubernetes-mcp-extras"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://issues.redhat.com/browse/RHDHBUGS
+      title: "Report issues here. Note: Customers of Red Hat Developer Hub should raise a Red Hat support case instead."
+    - title: Source Code
+      url: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/kubernetes-mcp-extras
+  annotations:
+    backstage.io/source-location: url:https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations/plugins/kubernetes-mcp-extras
+  tags: []
+spec:
+  packageName: "@red-hat-developer-hub/backstage-plugin-kubernetes-mcp-extras"
+  # Tag: bs_1.52.0__0.2.0
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras@sha256:1a75f47882b587fca47c5fb509814115c89ef6fcafa7f50e027e4abb041bbc4f"
+  version: 0.2.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.52.0
+  author: Red Hat
+  support: dev-preview
+  lifecycle: active
+  partOf:
+    - kubernetes-mcp-extras
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        backend:
+          actions:
+            pluginSources:
+              # Unified list shared by all MCP plugins (contract: the product's
+              # `mcp` preset, presets/mcp.yaml). MUST be byte-identical across the
+              # four *-mcp-extras metadata files: the upstream index pipeline
+              # embeds appConfigExamples as DPDY pluginConfig, and the RHDH
+              # installer aborts when two plugins define backend.actions.pluginSources
+              # with different values (tenant v3 outage, 2026-08-24).
+              - 'mcp-actions'
+              - 'software-catalog-mcp-extras'
+              - 'techdocs-mcp-extras'
+              - 'scaffolder-mcp-extras'
+              - 'kubernetes-mcp-extras'
+              - 'catalog'
+              - 'scaffolder'
+              - 'announcements'

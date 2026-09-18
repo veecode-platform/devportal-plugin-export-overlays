@@ -1,0 +1,47 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-tech-insights-backend-module-jsonfc
+  namespace: rhdh
+  title: "Tech Insights Backend Module Jsonfc"
+  links:
+  - url: https://red.ht/rhdh
+    title: Homepage
+  - url: https://github.com/backstage/community-plugins/issues
+    title: Bugs
+  - title: Source Code
+    url: https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
+  tags: []
+spec:
+  packageName: '@backstage-community/plugin-tech-insights-backend-module-jsonfc'
+  # Tag: bs_1.52.0__0.7.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend-module-jsonfc@sha256:1fdc2fed4c693a48c00700ade59f3105058dfae5eb4334f4ad26bd772d0a51f6"
+  version: 0.7.0
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.47.2
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+  - tech-insights
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        techInsights:
+          factChecker:
+            checks:
+              groupOwnerCheck:
+                type: json-rules-engine
+                name: Group Owner Check
+                description: Verifies that a group owns the entity
+                factIds:
+                  - entityOwnershipFactRetriever
+                rule:
+                  conditions:
+                    all:
+                      - fact: hasGroupOwner
+                        operator: equal
+                        value: true

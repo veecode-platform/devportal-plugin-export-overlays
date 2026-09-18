@@ -1,0 +1,9 @@
+{
+  "aws-aws-codebuild-plugin-for-backstage-backend": {
+    "workspacePath": "backstage-plugins-for-aws/plugins/codebuild/backend",
+    "registryReference": "quay.io/veecode/aws-aws-codebuild-plugin-for-backstage-backend:bs_1.52.0__0.10.0",
+    "digest": "sha256:e4c22fd372c5394a2d30e811112f6dff95e6bf9693d3343965b88ecbca8d4dab",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYXdzLWF3cy1jb2RlYnVpbGQtcGx1Z2luLWZvci1iYWNrc3RhZ2UtYmFja2VuZCI6eyJuYW1lIjoiQGF3cy9hd3MtY29kZWJ1aWxkLXBsdWdpbi1mb3ItYmFja3N0YWdlLWJhY2tlbmQtZHluYW1pYyIsInZlcnNpb24iOiIwLjEwLjAiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImJhY2tlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJhd3MtY29kZWJ1aWxkIiwicGx1Z2luUGFja2FnZXMiOlsiQGF3cy9hd3MtY29kZWJ1aWxkLXBsdWdpbi1mb3ItYmFja3N0YWdlIiwiQGF3cy9hd3MtY29kZWJ1aWxkLXBsdWdpbi1mb3ItYmFja3N0YWdlLWJhY2tlbmQiLCJAYXdzL2F3cy1jb2RlYnVpbGQtcGx1Z2luLWZvci1iYWNrc3RhZ2UtY29tbW9uIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTIuMCJ9LCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJnaXRodWI6YXdzbGFicy9iYWNrc3RhZ2UtcGx1Z2lucy1mb3ItYXdzIiwiZGlyZWN0b3J5IjoicGx1Z2lucy9jb2RlYnVpbGQvYmFja2VuZCJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+  }
+}

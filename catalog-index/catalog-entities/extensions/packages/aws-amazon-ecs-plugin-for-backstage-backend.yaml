@@ -1,0 +1,37 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: aws-amazon-ecs-plugin-for-backstage-backend
+  namespace: community
+  title: "@aws/amazon-ecs-plugin-for-backstage-backend"
+  links:
+    - url: https://github.com/awslabs/backstage-plugins-for-aws
+      title: Homepage
+    - url: https://github.com/awslabs/backstage-plugins-for-aws/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/ecs/backend
+  annotations:
+    backstage.io/source-location: url:https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/ecs/backend
+  tags: []
+spec:
+  packageName: "@aws/amazon-ecs-plugin-for-backstage-backend"
+  # Tag: bs_1.52.0__0.10.0
+  dynamicArtifact: "oci://quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend@sha256:31fb6a6e42b00d1d2f1cc978c86be512405f4338d8e924987b599f15cfff8577"
+  version: 0.10.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.43.1
+  author: AWS
+  support: community
+  lifecycle: active
+  partOf:
+    - aws-ecs
+  appConfigExamples:
+    - title: AWS Credentials Configuration
+      content: |
+        # Backend plugin uses AWS SDK credential chain
+        # Configure via environment variables:
+        AWS_REGION: us-east-1
+        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
