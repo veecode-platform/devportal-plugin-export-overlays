@@ -76,3 +76,7 @@ coverage/
 catalog-entities/extensions/packages/
 /catalog-index/
 /plugin_builds/
+
+# Local code-index snapshots (codedb, codegraph): machine-local, never committed.
+codedb.snapshot
+.codegraph/
