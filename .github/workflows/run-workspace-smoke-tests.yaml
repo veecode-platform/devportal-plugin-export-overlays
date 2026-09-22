@@ -22,7 +22,7 @@ on:
         description: Extracted error messages from container logs
         value: ${{ jobs.run.outputs.error-logs }}
       image-ref:
-        description: Resolved RHDH container image used for smoke tests
+        description: Resolved container image used for smoke tests
         value: ${{ jobs.run.outputs.image-ref }}
 
 jobs:
@@ -98,11 +98,20 @@ jobs:
             TARGET_BRANCH="${INPUT_TARGET_BRANCH:-main}"
             if [[ "$TARGET_BRANCH" =~ ^release-([0-9]+\.[0-9]+)$ ]]; then
               IMAGE_TAG="next-${BASH_REMATCH[1]}"
+              IMAGE_REF="quay.io/rhdh-community/rhdh:${IMAGE_TAG}"
+              echo "Using default RHDH image tag: $IMAGE_TAG (target branch: $TARGET_BRANCH)"
             else
-              IMAGE_TAG="next"
+              # VeeCode fork: main publishes for VeeCode DevPortal, so the smoke runs on
+              # the image the local runner pins, not upstream's rhdh:next. One source:
+              # devportal-local's compose default, kept current by its chart-bump workflow.
+              RUNNER_COMPOSE_URL="https://raw.githubusercontent.com/veecode-platform/devportal-local/main/docker-compose.yml"
+              IMAGE_REF=$(curl -fsSL "$RUNNER_COMPOSE_URL" | grep -o -m1 'DEVPORTAL_IMAGE:-[^}]*' | sed 's/^DEVPORTAL_IMAGE:-//')
+              if [[ ! "$IMAGE_REF" =~ ^docker\.io/veecode/devportal@sha256:[0-9a-f]{64}$ ]]; then
+                echo "Could not resolve the DevPortal image pinned by devportal-local (got: '${IMAGE_REF}')."
+                exit 1
+              fi
+              echo "Using the DevPortal image pinned by devportal-local: $IMAGE_REF"
             fi
-            IMAGE_REF="quay.io/rhdh-community/rhdh:${IMAGE_TAG}"
-            echo "Using default RHDH image tag: $IMAGE_TAG (target branch: $TARGET_BRANCH)"
           fi
           echo "image-ref=$IMAGE_REF" >> "$GITHUB_OUTPUT"
           
