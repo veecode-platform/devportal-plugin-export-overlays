@@ -1,0 +1,28 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-backstage-plugin-coldrun-acceptance-three-backend
+  namespace: veecode
+  title: Coldrun Acceptance Three Backend
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/coldrun-acceptance-three/plugins/coldrun-acceptance-three-backend
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-coldrun-acceptance-three-backend"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-coldrun-acceptance-three-backend:bs_1.52.0__0.1.0
+  version: 0.1.0
+  # This plugin exposes only an unauthenticated /health route and reads no
+  # app-config, so it opts out of the app-config example gate.
+  appConfigNotRequired: true
+  appConfigExamples: []
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.52.0
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - coldrun-acceptance-three-backend
