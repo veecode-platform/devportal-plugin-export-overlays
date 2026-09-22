@@ -1,0 +1,29 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  # Disposable acceptance workspace (see AGENTS.md: workspaces/*-drydock are
+  # never merged to main). It exists on this PR branch only, to publish an
+  # isolated pr_<number>__<version> candidate and prove the publish path.
+  # Package only: no Plugin catalog entity, not listed in all.yaml.
+  name: veecode-platform-backstage-plugin-acceptance-drydock-backend
+  namespace: veecode
+  title: "M8 Acceptance Drydock Backend"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/acceptance-drydock/plugins/acceptance-drydock-backend
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-acceptance-drydock-backend"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-acceptance-drydock-backend:bs_1.52.0__0.1.0
+  version: 0.1.0
+  appConfigExamples: []
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.52.0
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - acceptance-drydock-backend
