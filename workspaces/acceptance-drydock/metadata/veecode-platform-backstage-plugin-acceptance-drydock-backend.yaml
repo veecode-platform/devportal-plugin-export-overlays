@@ -18,6 +18,9 @@ spec:
   packageName: "@veecode-platform/backstage-plugin-acceptance-drydock-backend"
   dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-acceptance-drydock-backend:bs_1.52.0__0.1.0
   version: 0.1.0
+  # The plugin registers one unauthenticated /health route and reads no
+  # configuration, so there is nothing to show and nothing to require.
+  appConfigNotRequired: true
   appConfigExamples: []
   backstage:
     role: backend-plugin
