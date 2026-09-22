@@ -12,7 +12,8 @@
 //      appConfigExamples[].content, or opt out via spec.appConfigNotRequired.
 //      Ported unchanged from the previous Python script (RHIDP-12590).
 //   2. semantic — each example's content must satisfy the plugin's own config
-//      schema, read from the published package (RHIDP-13509). Off by default;
+//      schema, read from the published package or OCI artifact (RHIDP-13509).
+//      Off by default;
 //      enable with --check-schemas.
 //   3. undeclared keys — within the subtrees a plugin's schema owns, a key it
 //      does not declare is a typo (RHIDP-15902). Off by default; enable with
@@ -36,6 +37,7 @@ import {
   SchemaResolver,
   findUndeclaredKeys,
   validateExample,
+  type SchemaOrigin,
   type SchemaOutcome,
   type SchemaRequest,
   type SchemaSource,
@@ -63,11 +65,15 @@ export type Row = {
  * package has no schema added 1 to `noSchema`, printed side by side as if
  * comparable. Individual mismatches are already listed under their row.
  */
-export type SchemaTally = {
+export type SchemaOutcomeCounts = {
   validated: number;
   mismatched: number;
   noSchema: number;
   unavailable: number;
+};
+
+export type SchemaTally = SchemaOutcomeCounts & {
+  bySource: Record<SchemaOrigin | "unknown", SchemaOutcomeCounts>;
 };
 
 /**
@@ -87,13 +93,45 @@ export type UndeclaredTally = {
 
 /** Table rule width beyond the status column — inherited from the Python table. */
 const RULE_PADDING = 75;
+type SchemaCountKey = "validated" | "mismatched" | "noSchema" | "unavailable";
+
+function emptySchemaOutcomeCounts(): SchemaOutcomeCounts {
+  return { validated: 0, mismatched: 0, noSchema: 0, unavailable: 0 };
+}
+
+export function createSchemaTally(): SchemaTally {
+  return {
+    ...emptySchemaOutcomeCounts(),
+    bySource: {
+      oci: emptySchemaOutcomeCounts(),
+      npm: emptySchemaOutcomeCounts(),
+      unknown: emptySchemaOutcomeCounts(),
+    },
+  };
+}
+
+function incrementTally(
+  tally: SchemaTally,
+  key: SchemaCountKey,
+  source: SchemaOrigin | "unknown",
+): void {
+  tally[key] += 1;
+  tally.bySource[source][key] += 1;
+}
+
+function sourceBreakdown(tally: SchemaTally, key: SchemaCountKey): string {
+  const parts = (["oci", "npm", "unknown"] as const)
+    .filter((source) => tally.bySource[source][key] > 0)
+    .map((source) => `${source} ${tally.bySource[source][key]}`);
+  return parts.length > 0 ? ` (${parts.join(", ")})` : "";
+}
 
 const USAGE = `Usage: validate-app-config-examples [options]
 
   --since <SHA>      Only validate metadata YAML changed in SHA...HEAD.
                      Exits 0 when the range touches no metadata.
   --check-schemas    Also validate each example against the plugin's config
-                     schema, resolved from the published package.
+                     schema, resolved from the published package or OCI artifact.
   --check-undeclared-keys
                      Also report keys the plugin's schema does not declare,
                      within the subtrees it owns. Its own findings never fail
@@ -156,12 +194,7 @@ export async function main(
 
   const resolver = new SchemaResolver();
   const rows: Row[] = [];
-  const tally: SchemaTally = {
-    validated: 0,
-    mismatched: 0,
-    noSchema: 0,
-    unavailable: 0,
-  };
+  const tally = createSchemaTally();
   const undeclared: UndeclaredTally | undefined = checkUndeclared
     ? { withOwnedSubtree: 0, withFindings: 0 }
     : undefined;
@@ -209,7 +242,7 @@ export async function main(
 async function checkSchemas(
   row: Row,
   doc: Record<string, unknown> | undefined,
-  source: SchemaSource,
+  schemaSource: SchemaSource,
   warnOnly: boolean,
   tally: SchemaTally,
   patches: readonly string[],
@@ -223,17 +256,27 @@ async function checkSchemas(
   const coordinates = packageCoordinates(doc);
   if (!coordinates) {
     row.notes.push("no packageName/version — schema check skipped");
-    tally.unavailable += 1;
+    incrementTally(tally, "unavailable", "unknown");
     return;
   }
   const pkg = { ...coordinates, patches };
 
   let validatedAny = false;
   let mismatchedAny = false;
+  let source: SchemaOrigin | "unknown" = "unknown";
 
   for (const example of examples) {
     const label = `${row.path} (${example.title})`;
-    const outcome = await validateExample(source, pkg, label, example.content);
+    const outcome = await validateExample(
+      schemaSource,
+      pkg,
+      label,
+      example.content,
+    );
+
+    if (outcome.source !== undefined) {
+      source = outcome.source;
+    }
 
     // no-schema and unavailable are properties of the package, not the example,
     // so the first one settles the whole file — and leave before the undeclared
@@ -252,13 +295,13 @@ async function checkSchemas(
   }
 
   if (mismatchedAny) {
-    tally.mismatched += 1;
+    incrementTally(tally, "mismatched", source);
   } else if (validatedAny) {
-    tally.validated += 1;
+    incrementTally(tally, "validated", source);
   }
 
   if (undeclared) {
-    await checkUndeclaredKeys(row, source, pkg, examples, undeclared);
+    await checkUndeclaredKeys(row, schemaSource, pkg, examples, undeclared);
   }
 }
 
@@ -314,14 +357,14 @@ function recordPackageOutcome(
   tally: SchemaTally,
 ): void {
   if (outcome.kind === "no-schema") {
-    tally.noSchema += 1;
+    incrementTally(tally, "noSchema", outcome.source ?? "unknown");
     row.notes.push(
       `${packageName} declares no configSchema — nothing to validate against`,
     );
     return;
   }
 
-  tally.unavailable += 1;
+  incrementTally(tally, "unavailable", outcome.source ?? "unknown");
   row.notes.push(`schema unavailable: ${outcome.reason}`);
   // A patch that has stopped applying is a defect in this repo, not a fact
   // about the registry, and it silently removes a package from validation.
@@ -481,10 +524,10 @@ export function printReport(
 
   if (checkedSchemas) {
     write(
-      `Schemas — validated: ${tally.validated}  ` +
-        `mismatched: ${tally.mismatched}  ` +
-        `no schema: ${tally.noSchema}  ` +
-        `unavailable: ${tally.unavailable}\n`,
+      `Schemas — validated: ${tally.validated}${sourceBreakdown(tally, "validated")}  ` +
+        `mismatched: ${tally.mismatched}${sourceBreakdown(tally, "mismatched")}  ` +
+        `no schema: ${tally.noSchema}${sourceBreakdown(tally, "noSchema")}  ` +
+        `unavailable: ${tally.unavailable}${sourceBreakdown(tally, "unavailable")}\n`,
     );
     if (tally.validated === 0) {
       write(

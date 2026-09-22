@@ -165,6 +165,17 @@ describe("packageCoordinates", () => {
     });
   });
 
+  it("also returns the dynamic artifact when metadata provides one", () => {
+    const { doc } = evaluateDocument(
+      `${PACKAGE_HEAD}spec:\n  packageName: "@scope/thing"\n  version: "1.2.3"\n  dynamicArtifact: "oci://quay.io/veecode/thing:tag"\n  appConfigNotRequired: true\n  appConfigExamples: []\n`,
+    );
+    assert.deepEqual(packageCoordinates(doc), {
+      name: "@scope/thing",
+      version: "1.2.3",
+      dynamicArtifact: "oci://quay.io/veecode/thing:tag",
+    });
+  });
+
   it("returns nothing when either half is missing — a floating version is worse than no check", () => {
     const { doc } = evaluateDocument(
       `${PACKAGE_HEAD}spec:\n  packageName: "@scope/thing"\n  appConfigNotRequired: true\n  appConfigExamples: []\n`,

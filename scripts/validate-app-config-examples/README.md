@@ -36,9 +36,15 @@ yarn node dist/validate.mjs --check-schemas --warn-only
 yarn node dist/validate.mjs --check-schemas --check-undeclared-keys
 ```
 
-The full-tree sweep reports `mismatched: 0` as of RHIDP-15903, so it fails on a
-mismatch rather than warning — the weekly schedule is what gives that verdict
-somewhere to land, since a PR only ever sees the metadata it touched.
+For local runs, the validator needs `skopeo` on `PATH`. On hosts without a
+native binary, use a temporary shim that runs the official
+`quay.io/skopeo/stable` container and mounts the requested `dir:` destination;
+CI uses the runner's native `skopeo`. Remove the shim and its temporary lane
+after validation.
+
+The full-tree sweep fails on a mismatch rather than warning. The weekly
+schedule is what gives that verdict somewhere to land, since a PR only ever
+sees the metadata it touched.
 `--warn-only` remains for surveying a tree you have not cleaned up yet — a
 release branch, say.
 
@@ -65,8 +71,24 @@ same semantics Backstage enforces at runtime, rather than an approximation of
 them.
 
 Schemas are read from the **published package**, resolved from the
-`spec.packageName` and `spec.version` the metadata already pins. That avoids
-resolving upstream repo SHAs.
+`spec.packageName` and `spec.version` the metadata already pins. That remains
+the path for packages without an OCI artifact and avoids resolving upstream
+repo SHAs.
+
+When `spec.dynamicArtifact` is an `oci://quay.io/veecode/...` reference, the
+OCI artifact is primary. The validator runs `skopeo copy` into a temporary
+`dir:` transport, extracts the layers in manifest order, and reads a compiled
+schema from `dist/.config-schema.json`, `dist/configSchema.json`, or
+`dist-scalprum/configSchema.json`. A `!<dir>` suffix selects a package directory
+inside a multi-package image; without it, the image directory is selected from
+the repository name. Compiled JSON is passed to
+`loadConfigSchema({ serialized })`, so this path does not compile TypeScript
+declarations.
+
+If the OCI reference is unsupported or the image cannot be pulled, laid out, or
+loaded, resolution falls back to the npm package path and replays workspace
+patches. An OCI `no-schema` result or schema mismatch is authoritative and does
+not fall back.
 
 The published tarball is not quite what RHDH installs, though: this repo exports
 a _patched_ build, and `workspaces/<ws>/patches/*.patch` can rewrite the plugin's
@@ -81,6 +103,11 @@ exactly the mismatch the patch exists to fix — and, unlike every other
 is nobody's defect; a patch that has stopped applying is this repo's, and it
 silently removes a package from validation. Failing is the only way the weekly
 sweep can surface it, because an `unavailable` row otherwise stays `PASS`.
+
+OCI images are already the patched builds RHDH installs, so
+`workspaces/<ws>/patches/*.patch` is **not** replayed for a successful OCI
+reference. npm fallback references keep the replay behaviour above. A final
+unavailable result therefore means the npm fallback also could not be read.
 
 If a workspace patch rewrites the same-named config schema for two plugins of
 one upstream monorepo, the package reports `unavailable` too: the directory that
@@ -119,8 +146,9 @@ Verified against the real compiler, not assumed.
 Three outcomes are reported as notes rather than failures, because none is a
 defect in the metadata: the package declares no `configSchema`, it is not on the
 registry, or its schema could not be compiled. **Every run that checks schemas
-prints a tally** of validated / mismatched / no-schema / unavailable, and says so
-explicitly when nothing was validated — otherwise an offline runner reports
+prints a tally** of validated / mismatched / no-schema / unavailable, with an
+`(oci N, npm M)` source breakdown for each outcome, and says so explicitly when
+nothing was validated — otherwise an offline runner reports
 `PASS: 180  FAIL: 0` having checked nothing, and the gate looks green because it
 is inert.
 
@@ -186,6 +214,11 @@ run reports valid documents as carrying undeclared properties. This package
 therefore builds its own strict variant (`rejectUndeclaredKeys`), closing only
 nodes that actually enumerate properties, and leaving union branches alone.
 
+The semantic check applies the same ownership boundary to required roots: `app`
+and `backend` are portal-owned and are removed from the plugin schema projection
+before an example is validated. A plugin example therefore need not repeat host
+configuration supplied by the portal.
+
 Findings are the undeclared-property errors the strict run reports and the
 lenient one did not. Restricting to that one error class keeps the label honest;
 differencing against the lenient run stops a violation the plugin's own schema
@@ -240,11 +273,14 @@ declared keys at all, so its files are skipped silently.
 | ----------------- | ---------------------------------------------------- |
 | `src/json.ts`     | the shared mapping guard and error-property reader   |
 | `src/metadata.ts` | YAML reading and the structural verdicts             |
-| `src/schema.ts`   | package download, schema loading, example validation |
+| `src/schema.ts`   | package/OCI schema loading, example validation       |
+| `src/oci.ts`      | OCI parsing, layer extraction, compiled JSON schemas |
 | `src/validate.ts` | CLI, reporting, exit codes                           |
 | `src/*.test.ts`   | the unit tests                                       |
 
 `yarn check` runs the type check and the unit tests. The tests never touch the
-network: the semantic layer is exercised through `loadConfigSchema({ serialized })`,
-which builds a real Backstage schema in memory, so the suite stays fast and
-deterministic while still testing the actual validator.
+network: the semantic layer is exercised through
+`loadConfigSchema({ serialized })`, which builds a real Backstage schema in
+memory, and a local OCI layer fixture exercises extraction and directory
+selection. The suite stays fast and deterministic while still testing the
+actual validator.
