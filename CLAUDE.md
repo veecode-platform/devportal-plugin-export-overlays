@@ -94,7 +94,9 @@ On a PR, comment:
   export step happened to be failing. Do not rely on luck twice.
 - The same rule applies to the DevPortal platform image in `devportal-platform`: prerelease tags
   (`2.x.y-rc.N`) publish freely; `veecode/devportal:latest` moves only on stable release tags,
-  which are a deliberate human act.
+  which are a deliberate human act. That applies to the 2.x line only: `:latest` is frozen on
+  2.x and no 3.x artifact, compose, script, doc or agent instruction may reference it; 3.x
+  consumers pin a version tag or digest (`devportal-planning` ADR-012).
 
 ### Triggering Workflows Manually
 

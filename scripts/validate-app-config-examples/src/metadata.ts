@@ -24,6 +24,12 @@ export type StructuralResult = {
   doc?: Record<string, unknown>;
 };
 
+export type PackageCoordinates = {
+  name: string;
+  version: string;
+  dynamicArtifact?: string;
+};
+
 /**
  * Mirrors the Python `_is_empty_content`: null/undefined, an empty mapping, an
  * empty sequence, and a blank string all count as "no content". An empty
@@ -136,25 +142,29 @@ export function isMetadataPath(path: string): boolean {
 }
 
 /**
- * The npm coordinates a Package metadata document points at, when it has them.
+ * The package coordinates a Package metadata document points at, when it has them.
  * Both halves are required: the name alone leaves the version floating, and
  * validating against a different version than the one shipped is worse than
  * not validating at all.
  */
 export function packageCoordinates(
   doc: Record<string, unknown> | undefined,
-): { name: string; version: string } | undefined {
+): PackageCoordinates | undefined {
   if (!doc || !isPlainObject(doc.spec)) {
     return undefined;
   }
-  const { packageName, version } = doc.spec;
+  const { packageName, version, dynamicArtifact } = doc.spec;
   if (typeof packageName !== "string" || typeof version !== "string") {
     return undefined;
   }
   if (packageName === "" || version === "") {
     return undefined;
   }
-  return { name: packageName, version };
+  const coordinates: PackageCoordinates = { name: packageName, version };
+  if (typeof dynamicArtifact === "string" && dynamicArtifact !== "") {
+    coordinates.dynamicArtifact = dynamicArtifact;
+  }
+  return coordinates;
 }
 
 /**
