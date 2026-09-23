@@ -8,16 +8,18 @@
 // Semantic validation of appConfigExamples against the plugin's own config
 // schema (RHIDP-13509).
 //
-// Schemas come from the *published* package rather than the source repo: the
-// metadata already pins `packageName` + `version`, and it needs no cross-repo
-// SHA resolution.
+// Schemas come from the *published* package or the exact OCI artifact rather
+// than the source repo: metadata pins both forms and needs no cross-repo SHA
+// resolution.
 //
-// That tarball is not quite what RHDH installs, though. This repo exports a
+// The npm tarball is not quite what RHDH installs, though. This repo exports a
 // patched build — `workspaces/<ws>/patches/*.patch` is applied to the source
 // before packaging — and one of those patches rewrites a plugin's `config.d.ts`.
-// So the resolver replays the config schema patches onto the extracted tarball
-// before loading it; without that, `dynatrace-dql` reports a mismatch against a
-// schema its own overlay already fixed. See applyConfigSchemaPatches.
+// So the npm resolver replays the config schema patches onto the extracted
+// tarball before loading it; without that, `dynatrace-dql` reports a mismatch
+// against a schema its own overlay already fixed. See applyConfigSchemaPatches.
+// OCI artifacts are already that patched build, so patches are deliberately not
+// replayed on that path.
 //
 // @backstage/config-loader reads `configSchema` from package.json and handles
 // both forms found across this catalogue — a compiled `config.schema.json`, and
@@ -51,8 +53,13 @@ import {
 } from "node:path";
 import { promisify } from "node:util";
 import { loadConfigSchema } from "@backstage/config-loader";
-import type { JsonObject } from "@backstage/types";
+import type { JsonObject, JsonValue } from "@backstage/types";
 import { byCodepoint, errorProperty, isPlainObject } from "./json.js";
+import {
+  loadOciSchema,
+  parseOciReference,
+  type OciSchemaLoader,
+} from "./oci.js";
 
 const execFileAsync = promisify(execFile);
 
@@ -63,10 +70,17 @@ type LoadedSchema = Awaited<ReturnType<typeof loadConfigSchema>>;
 const DIAGNOSTIC_LINES = 3;
 
 export type SchemaOutcome =
-  | { kind: "ok" }
-  | { kind: "invalid"; errors: string[] }
-  | { kind: "no-schema" }
-  | { kind: "unavailable"; reason: string; patchFailure?: boolean };
+  | { kind: "ok"; source?: SchemaOrigin }
+  | { kind: "invalid"; errors: string[]; source?: SchemaOrigin }
+  | { kind: "no-schema"; source?: SchemaOrigin }
+  | {
+      kind: "unavailable";
+      reason: string;
+      patchFailure?: boolean;
+      source?: SchemaOrigin;
+    };
+
+export type SchemaOrigin = "oci" | "npm";
 
 /**
  * What the undeclared-key layer made of one example.
@@ -97,15 +111,20 @@ export type UndeclaredOutcome = {
 const UNDECLARED_PROPERTY = /additionalProperty=/;
 
 export type ResolvedSchema =
-  | { kind: "schema"; schema: LoadedSchema }
-  | { kind: "no-schema" }
+  | { kind: "schema"; schema: LoadedSchema; source?: SchemaOrigin }
+  | { kind: "no-schema"; source?: SchemaOrigin }
   /**
    * `patchFailure` separates a defect in this repo from a fact about the
    * registry. A package that is unpublished or whose config.d.ts needs its
    * dependencies is nobody's bug; a workspace patch that has stopped applying
    * is ours, and is the one thing here worth failing a run over.
    */
-  | { kind: "unavailable"; reason: string; patchFailure?: boolean };
+  | {
+      kind: "unavailable";
+      reason: string;
+      patchFailure?: boolean;
+      source?: SchemaOrigin;
+    };
 
 /**
  * Which schema to load, and what this repo does to it before shipping.
@@ -118,6 +137,7 @@ export type ResolvedSchema =
 export type SchemaRequest = {
   name: string;
   version: string;
+  dynamicArtifact?: string;
   patches?: readonly string[];
 };
 
@@ -131,6 +151,11 @@ export type SchemaRequest = {
 export type SchemaSource = {
   resolve(request: SchemaRequest): Promise<ResolvedSchema>;
 };
+
+export type NpmSchemaLoader = (
+  spec: string,
+  patches: readonly string[],
+) => Promise<ResolvedSchema>;
 
 // The leading character is deliberately narrower than npm's own grammar: it
 // must not be `-`, or the value reaches `npm pack` as a flag. Note the dash sits
@@ -153,28 +178,62 @@ export function isSafePackageSpec(name: string, version: string): boolean {
 }
 
 /**
- * Downloads a published package and loads its config schema.
+ * Downloads a published package or OCI artifact and loads its config schema.
  *
- * Results are cached by `name@version`, a key the registry treats as immutable,
- * so a full-tree run fetches each tarball once rather than once per metadata
- * file referencing it.
+ * Results are cached by package coordinates plus the patch/artifact reference,
+ * so a full-tree run fetches each immutable artifact once rather than once per
+ * metadata file referencing it.
  */
 export class SchemaResolver implements SchemaSource {
   private readonly cache = new Map<string, Promise<ResolvedSchema>>();
   private readonly tempDirs: string[] = [];
 
+  constructor(
+    private readonly ociLoader: OciSchemaLoader = loadOciSchema,
+    private readonly npmLoader?: NpmSchemaLoader,
+  ) {}
+
   async resolve({
     name,
     version,
+    dynamicArtifact,
     patches = [],
   }: SchemaRequest): Promise<ResolvedSchema> {
+    const spec = `${name}@${version}`;
     if (!isSafePackageSpec(name, version)) {
       return {
         kind: "unavailable",
         reason: `refusing to fetch unsafe package spec ${name}@${version}`,
+        source: "npm",
       };
     }
-    const spec = `${name}@${version}`;
+    if (dynamicArtifact?.startsWith("oci://")) {
+      const reference = parseOciReference(dynamicArtifact);
+      if (reference === undefined) {
+        return this.resolveNpm(spec, patches);
+      }
+      const key = ["oci", spec, dynamicArtifact, ...patches].join("|");
+      let pending = this.cache.get(key);
+      if (!pending) {
+        pending = this.loadOci(reference)
+          .then((result) =>
+            result.kind === "unavailable"
+              ? this.resolveNpm(spec, patches)
+              : result,
+          )
+          .catch(() => this.resolveNpm(spec, patches));
+        this.cache.set(key, pending);
+      }
+      return pending;
+    }
+
+    return this.resolveNpm(spec, patches);
+  }
+
+  private resolveNpm(
+    spec: string,
+    patches: readonly string[],
+  ): Promise<ResolvedSchema> {
     // The patch list joins the key because it changes the schema that comes
     // out: two workspaces pinning the same package can patch it differently.
     const key = [spec, ...patches].join("|");
@@ -183,9 +242,12 @@ export class SchemaResolver implements SchemaSource {
       // Catch before caching: a rejected promise stored here would be re-thrown
       // for every later file with the same package, escaping validateExample
       // and aborting the whole run instead of failing one row.
-      pending = this.load(spec, patches).catch((error) => ({
+      const loadNpm =
+        this.npmLoader ?? ((name, patchList) => this.load(name, patchList));
+      pending = loadNpm(spec, patches).catch((error) => ({
         kind: "unavailable" as const,
         reason: describeError(error),
+        source: "npm" as const,
       }));
       this.cache.set(key, pending);
     }
@@ -209,7 +271,11 @@ export class SchemaResolver implements SchemaSource {
       dir = await mkdtemp(join(tmpdir(), "app-config-schema-"));
       this.tempDirs.push(dir);
     } catch (error) {
-      return { kind: "unavailable", reason: `temp dir failed: ${error}` };
+      return {
+        kind: "unavailable",
+        reason: `temp dir failed: ${error}`,
+        source: "npm",
+      };
     }
 
     let packageDir: string;
@@ -218,7 +284,11 @@ export class SchemaResolver implements SchemaSource {
     } catch (error) {
       // Plenty of packages in this catalogue are not on the public registry.
       // That is not a metadata defect, so it is reported rather than failed.
-      return { kind: "unavailable", reason: describeError(error) };
+      return {
+        kind: "unavailable",
+        reason: describeError(error),
+        source: "npm",
+      };
     }
 
     try {
@@ -231,6 +301,7 @@ export class SchemaResolver implements SchemaSource {
         kind: "unavailable",
         reason: describeError(error),
         patchFailure: true,
+        source: "npm",
       };
     }
 
@@ -246,11 +317,55 @@ export class SchemaResolver implements SchemaSource {
       // empty one that accepts anything. Detect that so the result is reported
       // honestly instead of as a vacuous pass.
       if (!hasConstraints(schema.serialize())) {
-        return { kind: "no-schema" };
+        return { kind: "no-schema", source: "npm" };
       }
-      return { kind: "schema", schema };
+      return { kind: "schema", schema, source: "npm" };
     } catch (error) {
-      return { kind: "unavailable", reason: describeError(error) };
+      return {
+        kind: "unavailable",
+        reason: describeError(error),
+        source: "npm",
+      };
+    }
+  }
+
+  private async loadOci(
+    reference: Parameters<OciSchemaLoader>[0],
+  ): Promise<ResolvedSchema> {
+    let dir: string;
+    try {
+      dir = await mkdtemp(join(tmpdir(), "app-config-oci-schema-"));
+      this.tempDirs.push(dir);
+    } catch (error) {
+      return {
+        kind: "unavailable",
+        reason: `temp dir failed: ${error}`,
+        source: "oci",
+      };
+    }
+
+    const compiled = await this.ociLoader(reference, dir);
+    if (compiled === undefined) {
+      return { kind: "no-schema", source: "oci" };
+    }
+
+    try {
+      const schema = await loadConfigSchema({
+        serialized: {
+          backstageConfigSchemaVersion: 1,
+          schemas: [compiled],
+        },
+      });
+      if (!hasConstraints(schema.serialize())) {
+        return { kind: "no-schema", source: "oci" };
+      }
+      return { kind: "schema", schema, source: "oci" };
+    } catch (error) {
+      return {
+        kind: "unavailable",
+        reason: describeError(error),
+        source: "oci",
+      };
     }
   }
 }
@@ -680,6 +795,69 @@ export function substitutePlaceholders(
   return value;
 }
 
+/** Roots supplied by the portal rather than by a plugin's example. */
+const HOST_OWNED_TOP_LEVEL_KEYS = new Set(["app", "backend"]);
+
+/**
+ * Makes host-owned roots optional without dropping them.
+ *
+ * The portal supplies `app` and `backend`, so an example may omit them or the
+ * keys their own `required` lists name. A subtree an example does set there,
+ * such as `app.analytics.ga4`, is still checked in full, required keys
+ * included. Combinators on the roots are left alone: dropping `required`
+ * inside `oneOf`, `not` or `if` changes what the schema accepts.
+ */
+export function scopeSerializedSchema(serialized: JsonObject): JsonObject {
+  const document = structuredClone(serialized);
+  if (!Array.isArray(document.schemas)) {
+    return document;
+  }
+
+  document.schemas = document.schemas.map((entry) => {
+    if (!isPlainObject(entry) || !isPlainObject(entry.value)) {
+      return entry;
+    }
+    const value = { ...entry.value };
+    if (isPlainObject(value.properties)) {
+      value.properties = Object.fromEntries(
+        Object.entries(value.properties).map(([key, node]) => [
+          key,
+          HOST_OWNED_TOP_LEVEL_KEYS.has(key) ? withoutRequired(node) : node,
+        ]),
+      );
+    }
+    if (Array.isArray(value.required)) {
+      value.required = value.required.filter(
+        (key) => typeof key !== "string" || !HOST_OWNED_TOP_LEVEL_KEYS.has(key),
+      );
+    }
+    return { ...entry, value };
+  });
+  return document;
+}
+
+function withoutRequired(node: JsonValue | undefined): JsonValue | undefined {
+  if (!isPlainObject(node)) {
+    return node;
+  }
+  return Object.fromEntries(
+    Object.entries(node).filter(([key]) => key !== "required"),
+  );
+}
+
+const scopedSchemas = new WeakMap<LoadedSchema, Promise<LoadedSchema>>();
+
+function pluginScopedSchema(schema: LoadedSchema): Promise<LoadedSchema> {
+  let pending = scopedSchemas.get(schema);
+  if (!pending) {
+    pending = loadConfigSchema({
+      serialized: scopeSerializedSchema(schema.serialize()),
+    });
+    scopedSchemas.set(schema, pending);
+  }
+  return pending;
+}
+
 /** Runs the schema over one document. Returns the errors, or undefined if clean. */
 function runSchema(
   schema: LoadedSchema,
@@ -747,37 +925,70 @@ export async function validateExample(
 ): Promise<SchemaOutcome> {
   const resolved = await source.resolve(pkg);
   if (resolved.kind !== "schema") {
-    return resolved.kind === "no-schema"
-      ? { kind: "no-schema" }
+    if (resolved.kind === "no-schema") {
+      return resolved.source === undefined
+        ? { kind: "no-schema" }
+        : { kind: "no-schema", source: resolved.source };
+    }
+    return resolved.source === undefined
+      ? {
+          kind: "unavailable",
+          reason: resolved.reason,
+          patchFailure: resolved.patchFailure,
+        }
       : {
           kind: "unavailable",
           reason: resolved.reason,
           patchFailure: resolved.patchFailure,
+          source: resolved.source,
         };
   }
 
-  if (!isPlainObject(content)) {
+  let schema: LoadedSchema;
+  try {
+    schema = await pluginScopedSchema(resolved.schema);
+  } catch (error) {
     return {
-      kind: "invalid",
-      errors: ["app-config content must be a mapping"],
+      kind: "unavailable",
+      reason: describeError(error),
+      source: resolved.source,
     };
   }
 
-  const errors = runSchema(resolved.schema, content, label);
+  if (!isPlainObject(content)) {
+    return resolved.source === undefined
+      ? {
+          kind: "invalid",
+          errors: ["app-config content must be a mapping"],
+        }
+      : {
+          kind: "invalid",
+          errors: ["app-config content must be a mapping"],
+          source: resolved.source,
+        };
+  }
+
+  const errors = runSchema(schema, content, label);
   if (errors === undefined) {
-    return { kind: "ok" };
+    return resolved.source === undefined
+      ? { kind: "ok" }
+      : { kind: "ok", source: resolved.source };
   }
 
   if (containsPlaceholder(content)) {
     for (const value of PLACEHOLDER_VALUES) {
       const substituted = substitutePlaceholders(content, value);
-      if (runSchema(resolved.schema, substituted, label) === undefined) {
-        return { kind: "ok" };
+      if (runSchema(schema, substituted, label) === undefined) {
+        return resolved.source === undefined
+          ? { kind: "ok" }
+          : { kind: "ok", source: resolved.source };
       }
     }
   }
 
-  return { kind: "invalid", errors };
+  return resolved.source === undefined
+    ? { kind: "invalid", errors }
+    : { kind: "invalid", errors, source: resolved.source };
 }
 
 /**
@@ -925,7 +1136,9 @@ export function declaredTopLevelKeys(serialized: unknown): string[] {
     const { properties } = entry.value;
     if (isPlainObject(properties)) {
       for (const key of Object.keys(properties)) {
-        keys.add(key);
+        if (!HOST_OWNED_TOP_LEVEL_KEYS.has(key)) {
+          keys.add(key);
+        }
       }
     }
   }
@@ -981,21 +1194,26 @@ export async function findUndeclaredKeys(
     return { ownsSubtree: false, findings: [] };
   }
 
-  const declared = declaredTopLevelKeys(resolved.schema.serialize());
+  let schema: LoadedSchema;
+  try {
+    schema = await pluginScopedSchema(resolved.schema);
+  } catch {
+    return { ownsSubtree: false, findings: [] };
+  }
+
+  const declared = declaredTopLevelKeys(schema.serialize());
   const projected = projectOntoKeys(content, declared);
   if (Object.keys(projected).length === 0) {
     return { ownsSubtree: false, findings: [] };
   }
 
-  const strict = await strictVariant(resolved.schema);
+  const strict = await strictVariant(schema);
   if (strict === undefined) {
     // The strict compile failed on a document the lenient one accepted. Nothing
     // can be found here, and saying otherwise would overstate the coverage.
     return { ownsSubtree: false, findings: [] };
   }
-  const lenientErrors = new Set(
-    runSchema(resolved.schema, projected, label) ?? [],
-  );
+  const lenientErrors = new Set(runSchema(schema, projected, label) ?? []);
   // Deduplicated: one undeclared key reached through several union branches is
   // one finding, and the raw list repeats it once per branch.
   const strictErrors = new Set(runSchema(strict, projected, label) ?? []);

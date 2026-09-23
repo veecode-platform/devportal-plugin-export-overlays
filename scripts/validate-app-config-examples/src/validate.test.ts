@@ -12,6 +12,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { byCodepoint } from "./json.js";
 import {
+  createSchemaTally,
   exitCodeFor,
   main,
   printReport,
@@ -19,12 +20,7 @@ import {
   type SchemaTally,
 } from "./validate.js";
 
-const NO_SCHEMAS: SchemaTally = {
-  validated: 0,
-  mismatched: 0,
-  noSchema: 0,
-  unavailable: 0,
-};
+const NO_SCHEMAS: SchemaTally = createSchemaTally();
 
 function capture() {
   const out: string[] = [];
@@ -137,6 +133,21 @@ describe("report output", () => {
     const tally: SchemaTally = { ...NO_SCHEMAS, noSchema: 1, unavailable: 5 };
     printReport([passing], tally, { checked: true }, io.write, io.writeError);
     assert.match(io.stdout, /no example was checked against a schema/);
+  });
+
+  it("prints the source beside each schema outcome", () => {
+    const io = capture();
+    const tally = {
+      ...NO_SCHEMAS,
+      validated: 3,
+      bySource: {
+        oci: { validated: 2, mismatched: 0, noSchema: 0, unavailable: 0 },
+        npm: { validated: 1, mismatched: 0, noSchema: 0, unavailable: 0 },
+        unknown: { validated: 0, mismatched: 0, noSchema: 0, unavailable: 0 },
+      },
+    } as SchemaTally;
+    printReport([passing], tally, { checked: true }, io.write, io.writeError);
+    assert.match(io.stdout, /validated: 3 \(oci 2, npm 1\)/);
   });
 
   it("does not warn when at least one example was validated", () => {

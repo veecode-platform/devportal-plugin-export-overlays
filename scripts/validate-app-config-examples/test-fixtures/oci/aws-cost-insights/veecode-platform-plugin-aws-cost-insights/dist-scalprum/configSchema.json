@@ -1,0 +1,13 @@
+{
+  "type": "object",
+  "required": ["costInsights"],
+  "properties": {
+    "costInsights": {
+      "type": "object",
+      "required": ["engineerCost"],
+      "properties": {
+        "engineerCost": { "type": "number" }
+      }
+    }
+  }
+}

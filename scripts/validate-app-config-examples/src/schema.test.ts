@@ -10,12 +10,16 @@
 // exercise the actual Backstage validator rather than a stand-in for it.
 
 import assert from "node:assert/strict";
+import { execFile } from "node:child_process";
 import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
+import { promisify } from "node:util";
 import { loadConfigSchema } from "@backstage/config-loader";
 import type { JsonObject } from "@backstage/types";
+import { loadOciSchema, parseOciReference, readCompiledSchema } from "./oci.js";
 import {
   applyConfigSchemaPatches,
   containsPlaceholder,
@@ -30,6 +34,7 @@ import {
   isSafePackageSpec,
   projectOntoKeys,
   rejectUndeclaredKeys,
+  SchemaResolver,
   splitDiffByFile,
   splitSchemaErrors,
   stripLevelFor,
@@ -39,6 +44,68 @@ import {
 } from "./schema.js";
 
 const PKG = { name: "@scope/plugin", version: "1.0.0" };
+const execFileAsync = promisify(execFile);
+const FIXTURE_DIGEST = "f".repeat(64);
+const OCI_FIXTURE_ROOT = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "../test-fixtures/oci/aws-cost-insights",
+);
+
+/** Makes the static extracted-layer fixture look like skopeo's `dir:` output. */
+async function copyOciFixture(
+  _reference: { image: string; directory?: string },
+  destination: string,
+): Promise<void> {
+  await execFileAsync("tar", [
+    "-czf",
+    join(destination, FIXTURE_DIGEST),
+    "-C",
+    OCI_FIXTURE_ROOT,
+    "veecode-platform-plugin-aws-cost-insights",
+  ]);
+  await writeFile(
+    join(destination, "manifest.json"),
+    JSON.stringify({
+      schemaVersion: 2,
+      layers: [
+        {
+          mediaType: "application/vnd.oci.image.layer.v1.tar+gzip",
+          digest: `sha256:${FIXTURE_DIGEST}`,
+        },
+      ],
+    }),
+  );
+}
+
+async function copyOciNoSchemaFixture(
+  _reference: { image: string; directory?: string },
+  destination: string,
+): Promise<void> {
+  const fixtureRoot = await mkdtemp(join(tmpdir(), "oci-no-schema-fixture-"));
+  try {
+    await mkdir(join(fixtureRoot, "unrelated-package"));
+    await writeFile(
+      join(fixtureRoot, "unrelated-package", "package.json"),
+      JSON.stringify({ name: "unrelated-package", version: "1.0.0" }),
+    );
+    await execFileAsync("tar", [
+      "-czf",
+      join(destination, FIXTURE_DIGEST),
+      "-C",
+      fixtureRoot,
+      "unrelated-package",
+    ]);
+  } finally {
+    await rm(fixtureRoot, { recursive: true, force: true });
+  }
+  await writeFile(
+    join(destination, "manifest.json"),
+    JSON.stringify({
+      schemaVersion: 2,
+      layers: [{ digest: `sha256:${FIXTURE_DIGEST}` }],
+    }),
+  );
+}
 
 /** A source backed by a real in-memory schema built from `properties`. */
 async function sourceFor(properties: JsonObject) {
@@ -91,6 +158,48 @@ async function sourceWithSchema(): Promise<SchemaSource> {
   return { resolve: async () => ({ kind: "schema", schema }) };
 }
 
+async function sourceWithHostOwnedRoots(): Promise<SchemaSource> {
+  const schema = await loadConfigSchema({
+    serialized: {
+      backstageConfigSchemaVersion: 1,
+      schemas: [
+        {
+          path: "plugin/config.d.ts",
+          value: {
+            type: "object",
+            required: ["app", "backend"],
+            properties: {
+              app: {
+                type: "object",
+                required: ["title"],
+                properties: {
+                  title: { type: "string" },
+                  analytics: {
+                    type: "object",
+                    required: ["measurementId"],
+                    properties: { measurementId: { type: "string" } },
+                  },
+                },
+              },
+              backend: {
+                type: "object",
+                required: ["baseUrl"],
+                properties: { baseUrl: { type: "string" } },
+              },
+              acme: {
+                type: "object",
+                required: ["url"],
+                properties: { url: { type: "string" } },
+              },
+            },
+          },
+        },
+      ],
+    },
+  });
+  return { resolve: async () => ({ kind: "schema", schema }) };
+}
+
 describe("validateExample", () => {
   it("accepts an example that satisfies the schema", async () => {
     const outcome = await validateExample(
@@ -98,6 +207,54 @@ describe("validateExample", () => {
       PKG,
       "label",
       { acme: { baseUrl: "https://example.test", retries: 3 } },
+    );
+    assert.deepEqual(outcome, { kind: "ok" });
+  });
+
+  it("ignores host-owned app and backend roots when validating plugin config", async () => {
+    const outcome = await validateExample(
+      await sourceWithHostOwnedRoots(),
+      PKG,
+      "plugin-only example",
+      { acme: { url: "https://example.test" } },
+    );
+    assert.deepEqual(outcome, { kind: "ok" });
+  });
+
+  it("still validates keys an example sets under a host-owned root", async () => {
+    const outcome = await validateExample(
+      await sourceWithHostOwnedRoots(),
+      PKG,
+      "plugin example",
+      { acme: { url: "https://example.test" }, app: { title: { bad: 1 } } },
+    );
+    assert.equal(outcome.kind, "invalid");
+    assert.match(
+      outcome.kind === "invalid" ? outcome.errors[0] : "",
+      /must be string .* at \/app\/title/,
+    );
+  });
+
+  it("still requires keys inside a subtree an example sets under a host-owned root", async () => {
+    const outcome = await validateExample(
+      await sourceWithHostOwnedRoots(),
+      PKG,
+      "plugin example",
+      { acme: { url: "https://example.test" }, app: { analytics: {} } },
+    );
+    assert.equal(outcome.kind, "invalid");
+    assert.match(
+      outcome.kind === "invalid" ? outcome.errors[0] : "",
+      /measurementId/,
+    );
+  });
+
+  it("requires none of the direct keys of a host-owned root", async () => {
+    const outcome = await validateExample(
+      await sourceWithHostOwnedRoots(),
+      PKG,
+      "plugin example",
+      { acme: { url: "https://example.test" }, app: {}, backend: {} },
     );
     assert.deepEqual(outcome, { kind: "ok" });
   });
@@ -504,6 +661,23 @@ describe("declaredTopLevelKeys", () => {
     assert.deepEqual(declaredTopLevelKeys({ schemas: "nope" }), []);
     assert.deepEqual(declaredTopLevelKeys({ schemas: [] }), []);
   });
+
+  it("excludes host-owned app and backend roots from plugin ownership", () => {
+    assert.deepEqual(
+      declaredTopLevelKeys({
+        backstageConfigSchemaVersion: 1,
+        schemas: [
+          {
+            value: {
+              type: "object",
+              properties: { app: {}, backend: {}, acme: {} },
+            },
+          },
+        ],
+      }),
+      ["acme"],
+    );
+  });
 });
 
 describe("projectOntoKeys", () => {
@@ -683,6 +857,229 @@ describe("isSafePackageSpec", () => {
   it("rejects a version that is not version-shaped", () => {
     assert.equal(isSafePackageSpec("plugin", "--force"), false);
     assert.equal(isSafePackageSpec("plugin", "latest"), false);
+  });
+});
+
+describe("parseOciReference", () => {
+  it("parses a supported quay reference with and without a directory selector", () => {
+    assert.deepEqual(
+      parseOciReference("oci://quay.io/veecode/image:tag!selected-package"),
+      {
+        image: "quay.io/veecode/image:tag",
+        directory: "selected-package",
+      },
+    );
+    assert.deepEqual(parseOciReference("oci://quay.io/veecode/image:tag"), {
+      image: "quay.io/veecode/image:tag",
+      directory: undefined,
+    });
+  });
+
+  it("rejects other registries and directory traversal", () => {
+    assert.equal(
+      parseOciReference("oci://registry.example.com/veecode/image:tag"),
+      undefined,
+    );
+    assert.equal(
+      parseOciReference("oci://quay.io/veecode/image:tag!../outside"),
+      undefined,
+    );
+  });
+});
+
+describe("OCI schema resolution", () => {
+  const image =
+    "oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights:tag";
+
+  it("extracts a local layer fixture and selects the directory after `!`", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "oci-schema-test-"));
+    try {
+      const reference = parseOciReference(
+        `${image}!veecode-platform-plugin-aws-cost-insights`,
+      );
+      assert.ok(reference);
+      const document = await loadOciSchema(
+        reference,
+        directory,
+        copyOciFixture,
+      );
+      assert.ok(document);
+      assert.equal(document.path, "dist-scalprum/configSchema.json");
+      assert.deepEqual(document.value.required, ["costInsights"]);
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("reads the backend compiled schema filename when the hidden form is absent", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "oci-backend-schema-test-"));
+    try {
+      await mkdir(join(directory, "dist"));
+      await writeFile(
+        join(directory, "dist", "configSchema.json"),
+        JSON.stringify({ type: "object", required: ["backend"] }),
+      );
+      const document = await readCompiledSchema(directory);
+      assert.deepEqual(document, {
+        path: "dist/configSchema.json",
+        value: { type: "object", required: ["backend"] },
+      });
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("uses the OCI schema authoritatively and reports missing costInsights", async () => {
+    let loaderCalls = 0;
+    const resolver = new SchemaResolver(async (reference, directory) => {
+      loaderCalls += 1;
+      return loadOciSchema(reference, directory, copyOciFixture);
+    });
+    const request = {
+      name: "@veecode-platform/plugin-aws-cost-insights",
+      version: "0.3.0",
+      dynamicArtifact: image,
+    };
+    try {
+      const resolved = await resolver.resolve(request);
+      assert.equal(resolved.kind, "schema");
+      assert.equal(loaderCalls, 1);
+
+      const outcome = await validateExample(
+        resolver,
+        request,
+        "aws-cost-insights without costInsights",
+        {},
+      );
+      assert.equal(outcome.kind, "invalid");
+      assert.equal(outcome.source, "oci");
+      assert.match(
+        outcome.kind === "invalid" ? outcome.errors.join(" ") : "",
+        /costInsights/,
+      );
+    } finally {
+      await resolver.cleanup();
+    }
+  });
+
+  it("reports an OCI artifact without a compiled schema as no-schema", async () => {
+    const directory = await mkdtemp(join(tmpdir(), "oci-no-schema-test-"));
+    try {
+      const reference = parseOciReference("oci://quay.io/veecode/image:tag");
+      assert.ok(reference);
+      assert.equal(
+        await loadOciSchema(reference, directory, copyOciNoSchemaFixture),
+        undefined,
+      );
+    } finally {
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("falls back to npm for an unsupported OCI reference", async () => {
+    let loaderCalls = 0;
+    let npmCalls = 0;
+    const resolver = new SchemaResolver(
+      async () => {
+        loaderCalls += 1;
+        throw new Error("OCI loader should not run");
+      },
+      async () => {
+        npmCalls += 1;
+        return { kind: "no-schema", source: "npm" };
+      },
+    );
+    const result = await resolver.resolve({
+      name: "plugin",
+      version: "1.0.0",
+      dynamicArtifact: "oci://registry.example.com/plugin:tag",
+    });
+    assert.deepEqual(result, { kind: "no-schema", source: "npm" });
+    assert.equal(loaderCalls, 0);
+    assert.equal(npmCalls, 1);
+  });
+
+  it("falls back to npm when an OCI image cannot be read", async () => {
+    let npmCalls = 0;
+    const resolver = new SchemaResolver(
+      async () => {
+        throw new Error("OCI pull failed");
+      },
+      async () => {
+        npmCalls += 1;
+        return { kind: "no-schema", source: "npm" };
+      },
+    );
+    const result = await resolver.resolve({
+      name: "plugin",
+      version: "1.0.0",
+      dynamicArtifact: image,
+    });
+    assert.deepEqual(result, { kind: "no-schema", source: "npm" });
+    assert.equal(npmCalls, 1);
+  });
+
+  it("uses the existing npm loader and patch list after an OCI read failure", async () => {
+    let npmCalls = 0;
+    const resolver = new SchemaResolver(
+      async () => {
+        throw new Error("OCI layout failed");
+      },
+      async (spec, patches) => {
+        npmCalls += 1;
+        assert.equal(spec, "plugin@1.0.0");
+        assert.deepEqual(patches, ["workspace.patch"]);
+        return { kind: "no-schema", source: "npm" };
+      },
+    );
+    const result = await resolver.resolve({
+      name: "plugin",
+      version: "1.0.0",
+      dynamicArtifact: image,
+      patches: ["workspace.patch"],
+    });
+    assert.deepEqual(result, { kind: "no-schema", source: "npm" });
+    assert.equal(npmCalls, 1);
+  });
+
+  it("does not share an npm fallback across different patch lists", async () => {
+    let npmCalls = 0;
+    const resolver = new SchemaResolver(
+      async () => {
+        throw new Error("OCI layout failed");
+      },
+      async () => {
+        npmCalls += 1;
+        return { kind: "no-schema", source: "npm" };
+      },
+    );
+    const request = {
+      name: "plugin",
+      version: "1.0.0",
+      dynamicArtifact: image,
+    };
+
+    await resolver.resolve({ ...request, patches: [] });
+    await resolver.resolve({ ...request, patches: ["workspace.patch"] });
+    assert.equal(npmCalls, 2);
+  });
+
+  it("keeps an OCI no-schema result authoritative", async () => {
+    let npmCalls = 0;
+    const resolver = new SchemaResolver(
+      async () => undefined,
+      async () => {
+        npmCalls += 1;
+        return { kind: "unavailable" as const, reason: "npm fallback" };
+      },
+    );
+    const result = await resolver.resolve({
+      name: "plugin",
+      version: "1.0.0",
+      dynamicArtifact: image,
+    });
+    assert.deepEqual(result, { kind: "no-schema", source: "oci" });
+    assert.equal(npmCalls, 0);
   });
 });
 
