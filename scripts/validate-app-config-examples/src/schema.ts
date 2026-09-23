@@ -53,7 +53,7 @@ import {
 } from "node:path";
 import { promisify } from "node:util";
 import { loadConfigSchema } from "@backstage/config-loader";
-import type { JsonObject } from "@backstage/types";
+import type { JsonObject, JsonValue } from "@backstage/types";
 import { byCodepoint, errorProperty, isPlainObject } from "./json.js";
 import {
   loadOciSchema,
@@ -798,7 +798,13 @@ export function substitutePlaceholders(
 /** Roots supplied by the portal rather than by a plugin's example. */
 const HOST_OWNED_TOP_LEVEL_KEYS = new Set(["app", "backend"]);
 
-/** Removes host-owned roots from the schema's own required/property lists. */
+/**
+ * Makes host-owned roots optional without dropping them.
+ *
+ * The portal supplies `app` and `backend`, so an example may omit them and
+ * nothing under them is required; keys an example does set there are still
+ * checked against the plugin's schema.
+ */
 export function scopeSerializedSchema(serialized: JsonObject): JsonObject {
   const document = structuredClone(serialized);
   if (!Array.isArray(document.schemas)) {
@@ -812,9 +818,10 @@ export function scopeSerializedSchema(serialized: JsonObject): JsonObject {
     const value = { ...entry.value };
     if (isPlainObject(value.properties)) {
       value.properties = Object.fromEntries(
-        Object.entries(value.properties).filter(
-          ([key]) => !HOST_OWNED_TOP_LEVEL_KEYS.has(key),
-        ),
+        Object.entries(value.properties).map(([key, node]) => [
+          key,
+          HOST_OWNED_TOP_LEVEL_KEYS.has(key) ? withoutRequired(node) : node,
+        ]),
       );
     }
     if (Array.isArray(value.required)) {
@@ -825,6 +832,20 @@ export function scopeSerializedSchema(serialized: JsonObject): JsonObject {
     return { ...entry, value };
   });
   return document;
+}
+
+function withoutRequired(node: JsonValue | undefined): JsonValue | undefined {
+  if (Array.isArray(node)) {
+    return node.map((item) => withoutRequired(item) ?? null);
+  }
+  if (!isPlainObject(node)) {
+    return node;
+  }
+  return Object.fromEntries(
+    Object.entries(node)
+      .filter(([key, item]) => !(key === "required" && Array.isArray(item)))
+      .map(([key, item]) => [key, withoutRequired(item)]),
+  );
 }
 
 const scopedSchemas = new WeakMap<LoadedSchema, Promise<LoadedSchema>>();

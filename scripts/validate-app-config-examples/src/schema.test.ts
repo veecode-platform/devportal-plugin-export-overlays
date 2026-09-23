@@ -214,6 +214,30 @@ describe("validateExample", () => {
     assert.deepEqual(outcome, { kind: "ok" });
   });
 
+  it("still validates keys an example sets under a host-owned root", async () => {
+    const outcome = await validateExample(
+      await sourceWithHostOwnedRoots(),
+      PKG,
+      "plugin example",
+      { acme: { url: "https://example.test" }, app: { title: { bad: 1 } } },
+    );
+    assert.equal(outcome.kind, "invalid");
+    assert.match(
+      outcome.kind === "invalid" ? outcome.errors[0] : "",
+      /must be string .* at \/app\/title/,
+    );
+  });
+
+  it("requires nothing under a host-owned root", async () => {
+    const outcome = await validateExample(
+      await sourceWithHostOwnedRoots(),
+      PKG,
+      "plugin example",
+      { acme: { url: "https://example.test" }, app: {}, backend: {} },
+    );
+    assert.deepEqual(outcome, { kind: "ok" });
+  });
+
   it("rejects wrong nesting on a declared key", async () => {
     const outcome = await validateExample(
       await sourceWithSchema(),

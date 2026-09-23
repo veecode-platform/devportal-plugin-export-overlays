@@ -39,8 +39,7 @@ yarn node dist/validate.mjs --check-schemas --check-undeclared-keys
 For local runs, the validator needs `skopeo` on `PATH`. On hosts without a
 native binary, use a temporary shim that runs the official
 `quay.io/skopeo/stable` container and mounts the requested `dir:` destination;
-CI uses the runner's native `skopeo`. Remove the shim and its temporary lane
-after validation.
+CI uses the runner's native `skopeo`. Remove the shim after validation.
 
 The full-tree sweep fails on a mismatch rather than warning. The weekly
 schedule is what gives that verdict somewhere to land, since a PR only ever
@@ -215,9 +214,10 @@ therefore builds its own strict variant (`rejectUndeclaredKeys`), closing only
 nodes that actually enumerate properties, and leaving union branches alone.
 
 The semantic check applies the same ownership boundary to required roots: `app`
-and `backend` are portal-owned and are removed from the plugin schema projection
-before an example is validated. A plugin example therefore need not repeat host
-configuration supplied by the portal.
+and `backend` are portal-owned, so nothing under them is required of a plugin
+example, and an example need not repeat host configuration the portal supplies.
+Keys an example does set there, such as `app.analytics`, are still validated
+against the plugin's schema.
 
 Findings are the undeclared-property errors the strict run reports and the
 lenient one did not. Restricting to that one error class keeps the label honest;
