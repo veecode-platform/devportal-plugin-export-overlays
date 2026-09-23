@@ -801,9 +801,9 @@ const HOST_OWNED_TOP_LEVEL_KEYS = new Set(["app", "backend"]);
 /**
  * Makes host-owned roots optional without dropping them.
  *
- * The portal supplies `app` and `backend`, so an example may omit them and
- * nothing under them is required; keys an example does set there are still
- * checked against the plugin's schema.
+ * The portal supplies `app` and `backend`, so an example may omit them or
+ * their direct keys. A subtree an example does set there, such as
+ * `app.analytics.ga4`, is still checked in full, required keys included.
  */
 export function scopeSerializedSchema(serialized: JsonObject): JsonObject {
   const document = structuredClone(serialized);
@@ -835,16 +835,11 @@ export function scopeSerializedSchema(serialized: JsonObject): JsonObject {
 }
 
 function withoutRequired(node: JsonValue | undefined): JsonValue | undefined {
-  if (Array.isArray(node)) {
-    return node.map((item) => withoutRequired(item) ?? null);
-  }
   if (!isPlainObject(node)) {
     return node;
   }
   return Object.fromEntries(
-    Object.entries(node)
-      .filter(([key, item]) => !(key === "required" && Array.isArray(item)))
-      .map(([key, item]) => [key, withoutRequired(item)]),
+    Object.entries(node).filter(([key]) => key !== "required"),
   );
 }
 
