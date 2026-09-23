@@ -801,9 +801,11 @@ const HOST_OWNED_TOP_LEVEL_KEYS = new Set(["app", "backend"]);
 /**
  * Makes host-owned roots optional without dropping them.
  *
- * The portal supplies `app` and `backend`, so an example may omit them or
- * their direct keys. A subtree an example does set there, such as
- * `app.analytics.ga4`, is still checked in full, required keys included.
+ * The portal supplies `app` and `backend`, so an example may omit them or the
+ * keys their own `required` lists name. A subtree an example does set there,
+ * such as `app.analytics.ga4`, is still checked in full, required keys
+ * included. Combinators on the roots are left alone: dropping `required`
+ * inside `oneOf`, `not` or `if` changes what the schema accepts.
  */
 export function scopeSerializedSchema(serialized: JsonObject): JsonObject {
   const document = structuredClone(serialized);

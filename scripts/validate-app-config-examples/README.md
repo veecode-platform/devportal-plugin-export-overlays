@@ -214,11 +214,14 @@ therefore builds its own strict variant (`rejectUndeclaredKeys`), closing only
 nodes that actually enumerate properties, and leaving union branches alone.
 
 The semantic check applies the same ownership boundary to required roots: `app`
-and `backend` are portal-owned, so neither they nor their direct keys are
-required of a plugin example, and an example need not repeat host configuration
-the portal supplies. A subtree an example does set there, such as
+and `backend` are portal-owned, so they and the keys their own `required` lists
+name are optional for a plugin example, and an example need not repeat host
+configuration the portal supplies. A subtree an example does set there, such as
 `app.analytics.ga4`, is still validated in full against the plugin's schema,
-required keys included.
+required keys included. A requirement a schema states through a combinator on
+`app` or `backend` (`allOf`, `anyOf`, `oneOf`, `if`/`then`) is left as is:
+removing `required` inside `oneOf`, `not` or `if` would change what the schema
+accepts rather than only relax it.
 
 Findings are the undeclared-property errors the strict run reports and the
 lenient one did not. Restricting to that one error class keeps the label honest;
