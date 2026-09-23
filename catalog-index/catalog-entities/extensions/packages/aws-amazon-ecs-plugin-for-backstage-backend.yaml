@@ -27,11 +27,8 @@ spec:
   lifecycle: active
   partOf:
     - aws-ecs
-  appConfigExamples:
-    - title: AWS Credentials Configuration
-      content: |
-        # Backend plugin uses AWS SDK credential chain
-        # Configure via environment variables:
-        AWS_REGION: us-east-1
-        AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-        AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+  # No app-config keys: the backend reads AWS credentials through the AWS SDK
+  # default chain (AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY in the
+  # environment, or a role in-cluster).
+  appConfigNotRequired: true
+  appConfigExamples: []

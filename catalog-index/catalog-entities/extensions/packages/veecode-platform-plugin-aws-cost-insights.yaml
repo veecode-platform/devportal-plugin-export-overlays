@@ -26,6 +26,11 @@ spec:
   appConfigExamples:
     - title: Default configuration
       content:
+        # Required by the cost-insights frontend schema; without it the portal
+        # rejects the frontend config and every route returns 503. Same value as
+        # the backend package's example.
+        costInsights:
+          engineerCost: 200000
         dynamicPlugins:
           frontend:
             veecode-platform.plugin-aws-cost-insights:
