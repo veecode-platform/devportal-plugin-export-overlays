@@ -166,6 +166,8 @@ spec:
     - ./roadiehq-scaffolder-backend-module-aws.yaml
     - ./roadiehq-scaffolder-backend-module-http-request.yaml
     - ./roadiehq-scaffolder-backend-module-utils.yaml
+    - ./veecode-platform-backstage-plugin-about-backend.yaml
+    - ./veecode-platform-backstage-plugin-about.yaml
     - ./veecode-platform-backstage-plugin-catalog-backend-module-ai-resources.yaml
     - ./veecode-platform-backstage-plugin-github-workflows-backend.yaml
     - ./veecode-platform-backstage-plugin-github-workflows.yaml
