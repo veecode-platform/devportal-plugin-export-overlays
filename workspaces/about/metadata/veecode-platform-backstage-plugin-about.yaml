@@ -1,0 +1,49 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  # DevPortal's own About page (Administration > About): Package only,
+  # intentionally NO Plugin catalog entity. The product installs it by
+  # default; it is not a marketplace extension. Same pattern as
+  # veecode-homepage.
+  name: veecode-platform-backstage-plugin-about
+  namespace: veecode
+  title: "About"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/about/plugins/about
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-about"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-about:bs_1.52.0__1.2.1
+  version: 1.2.1
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.backstage-plugin-about:
+              appIcons:
+                - name: aboutIcon
+                  importName: AboutIcon
+              dynamicRoutes:
+                - path: /about
+                  importName: AboutPage
+                  menuItem:
+                    icon: aboutIcon
+                    text: About
+                    enabled: true
+              menuItems:
+                about:
+                  parent: default.admin
+                  title: About
+                  icon: aboutIcon
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.52.0
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - about
