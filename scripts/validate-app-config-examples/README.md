@@ -218,10 +218,10 @@ and `backend` are portal-owned, so they and the keys their own `required` lists
 name are optional for a plugin example, and an example need not repeat host
 configuration the portal supplies. A subtree an example does set there, such as
 `app.analytics.ga4`, is still validated in full against the plugin's schema,
-required keys included. A requirement a schema states through a combinator on
-`app` or `backend` (`allOf`, `anyOf`, `oneOf`, `if`/`then`) is left as is:
-removing `required` inside `oneOf`, `not` or `if` would change what the schema
-accepts rather than only relax it.
+required keys included. A requirement a schema states through a combinator at
+the schema root or on `app` or `backend` (`allOf`, `anyOf`, `oneOf`,
+`if`/`then`/`else`) is left as is: removing `required` inside `oneOf`, `not` or
+`if` would change what the schema accepts rather than only relax it.
 
 Findings are the undeclared-property errors the strict run reports and the
 lenient one did not. Restricting to that one error class keeps the label honest;
