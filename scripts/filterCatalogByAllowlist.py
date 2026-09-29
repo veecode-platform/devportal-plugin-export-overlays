@@ -11,7 +11,9 @@
 #   2. drops each Plugin left with no package;
 #   3. rewrites plugins/all.yaml and packages/all.yaml to match.
 #
-# PluginCollections that list a dropped Plugin are reported, not edited.
+# PluginCollections that list a dropped Plugin are reported, not edited. The step
+# exits 1, changing nothing, when a package file name is shared by an allowed and
+# a not allowed workspace, because the flattened index file cannot be traced.
 
 import argparse
 import sys
@@ -43,7 +45,7 @@ class Allowlist:
 
     allowed: set[str] = field(default_factory=set)
     denied: dict[str, str] = field(default_factory=dict)
-    shadowed: dict[str, list[str]] = field(default_factory=dict)
+    collisions: dict[str, list[str]] = field(default_factory=dict)
 
 
 def load_entity(path: Path) -> dict:
@@ -62,8 +64,9 @@ def entity_name(entity: dict, default: str = "") -> str:
 def build_allowlist(overlays_dir: Path) -> Allowlist:
     """Decide, for every workspaces/*/metadata/*.yaml, whether the export covers it.
 
-    The generator flattens all workspaces into one folder by file name, so a name
-    shared by two workspaces is allowed when any of them allows it.
+    The generator flattens all workspaces into one folder by file name and keeps
+    whichever copy it reads last, so a name that one workspace allows and another
+    does not is a collision: the index copy cannot be traced to the allowed source.
     """
     mappings = build_workspace_mappings(overlays_dir)
     plugin_path_by_entity: dict[tuple[str, str], str] = {}
@@ -72,7 +75,7 @@ def build_allowlist(overlays_dir: Path) -> Allowlist:
         plugin_path_by_entity[(ws_name, stem)] = plugin_path
 
     allowlist = Allowlist()
-    denied_in: dict[str, list[str]] = {}
+    sources: dict[str, list[str]] = {}
     denied_reason: dict[str, str] = {}
     for ws_dir in sorted((overlays_dir / "workspaces").iterdir()):
         metadata_dir = ws_dir / "metadata"
@@ -81,19 +84,23 @@ def build_allowlist(overlays_dir: Path) -> Allowlist:
         exported = (ws_dir / "plugins-list.yaml").exists()
         active_paths = set(read_plugins_list(ws_dir))
         for metadata_file in sorted(metadata_dir.glob("*.yaml")):
+            reason = None
             if not exported:
                 reason = REASON_WORKSPACE_DISABLED
             else:
                 name = entity_name(load_entity(metadata_file), metadata_file.stem)
-                if plugin_path_by_entity.get((ws_dir.name, name)) in active_paths:
-                    allowlist.allowed.add(metadata_file.name)
-                    continue
-                reason = REASON_NO_ACTIVE_ENTRY
-            denied_in.setdefault(metadata_file.name, []).append(ws_dir.name)
-            denied_reason.setdefault(metadata_file.name, reason)
+                if plugin_path_by_entity.get((ws_dir.name, name)) not in active_paths:
+                    reason = REASON_NO_ACTIVE_ENTRY
+            source = metadata_file.relative_to(overlays_dir).as_posix()
+            if reason is None:
+                allowlist.allowed.add(metadata_file.name)
+                sources.setdefault(metadata_file.name, []).append(f"{source} (allowed)")
+            else:
+                denied_reason.setdefault(metadata_file.name, reason)
+                sources.setdefault(metadata_file.name, []).append(f"{source} ({reason})")
 
     allowlist.denied = {n: r for n, r in denied_reason.items() if n not in allowlist.allowed}
-    allowlist.shadowed = {n: ws for n, ws in denied_in.items() if n in allowlist.allowed}
+    allowlist.collisions = {n: sources[n] for n in allowlist.allowed if n in denied_reason}
     return allowlist
 
 
@@ -124,9 +131,12 @@ def filter_catalog(overlays_dir: Path, catalog_dir: Path) -> None:
         sys.exit(1)
 
     allowlist = build_allowlist(overlays_dir)
-    for name, workspaces in sorted(allowlist.shadowed.items()):
-        log_warn(f"{name} also exists in a disabled workspace ({', '.join(workspaces)}); "
-                 "the generator copies whichever workspace it reads last, so the index copy may come from there")
+    for name, sources in sorted(allowlist.collisions.items()):
+        log_error(f"{name} is shared by an allowed and a not allowed workspace: {'; '.join(sources)}")
+    if allowlist.collisions:
+        log_error("The generator keeps whichever copy it reads last, so the index may carry the one the export "
+                  "does not cover. Remove or rename the not allowed copy. Nothing was changed.")
+        sys.exit(1)
 
     packages = index_files(packages_dir)
     removed_packages = [f for f in packages if f.name not in allowlist.allowed]
