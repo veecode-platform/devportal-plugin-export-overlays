@@ -21,4 +21,8 @@
 # the failure is not only startup config validation, which `configOverrides` in
 # src/plugin-config.ts recovers without losing the boot signal.
 
-# (no entries — every package the index declares is expected to install and boot)
+# TODO(PLANNING-53): the published image ships the plugin bundle but its
+# `io.backstage.dynamic-packages` annotation is `[]` (base64 `W10=`), so the install CLI
+# aborts the WHOLE install with "No plugins found in OCI image". Republish the image
+# from workspaces/github, then delete this entry.
+install ^backstage-community-plugin-search-backend-module-github-discussions$
