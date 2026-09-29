@@ -16,6 +16,7 @@ on:
       - 'catalog-entities/**'
       - 'scripts/checkCatalogPackages.py'
       - 'scripts/schemas/**'
+      - 'scripts/requirements.txt'
       - '.github/workflows/check-catalog-packages.yaml'
   workflow_dispatch:
     inputs:
