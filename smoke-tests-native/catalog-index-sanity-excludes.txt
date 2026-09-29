@@ -1,0 +1,24 @@
+# Packages the catalog-index sanity check skips (`yarn smoke --catalog-index`).
+#
+# Same format and same discipline as plugin-sweep-excludes.txt — see
+# src/exclusions.ts for the grammar. One entry per line:
+#
+#   # TODO(TICKET-123): why this package cannot be validated, and what unblocks it.
+#   <scope> <javascript-regex>
+#
+# `scope` says how much validation the package loses:
+#
+#   install — the artifact is not pulled at all. Loses everything.
+#   boot    — the artifact IS pulled and its layout validated, but the plugin is not
+#             loaded into `startTestBackend`. Loses only the boot signal.
+#
+# Write patterns against the OCI image name (`aws-amazon-ecs-plugin-for-backstage`), not
+# the npm name: a catalog index carries only image refs. Every entry carries a
+# `TODO(TICKET)` with the reason; a pattern with no ticket in scope is a parse error.
+#
+# Before adding one, check that the image really is unpullable
+# (`skopeo inspect --no-creds docker://quay.io/veecode/<image>@sha256:<digest>`) and that
+# the failure is not only startup config validation, which `configOverrides` in
+# src/plugin-config.ts recovers without losing the boot signal.
+
+# (no entries — every package the index declares is expected to install and boot)
