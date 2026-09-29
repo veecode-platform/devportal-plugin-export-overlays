@@ -334,3 +334,38 @@ jobs:
               });
               await new Promise(r => setTimeout(r, 2000));
             }
+
+  dispatch-catalog-check:
+    name: Check catalog packages on sync branches
+    needs: collect-auto-publish-prs
+    if: |
+      !cancelled() &&
+      needs.collect-auto-publish-prs.result == 'success' &&
+      needs.collect-auto-publish-prs.outputs.pr-numbers != '[]'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+      pull-requests: read
+    steps:
+      # Sync pull requests start no pull_request run because the sync opens them with
+      # the Actions token, but a workflow_dispatch made with that token does start one.
+      # A dispatch on the sync branch attaches the run to the pull request; a branch that
+      # predates check-catalog-packages.yaml cannot be dispatched, so it is checked from
+      # the default branch instead (visible in Actions, not on the pull request).
+      - name: Dispatch check-catalog-packages.yaml on each updated sync branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          PR_NUMBERS: ${{ needs.collect-auto-publish-prs.outputs.pr-numbers }}
+        run: |
+          for number in $(jq -r '.[]' <<< "${PR_NUMBERS}"); do
+            branch="$(gh pr view "${number}" --json headRefName --jq .headRefName)"
+            echo "PR #${number}: ${branch}"
+            if ! gh workflow run check-catalog-packages.yaml --ref "${branch}"; then
+              echo "::warning::${branch} has no check-catalog-packages.yaml, checking it from ${DEFAULT_BRANCH}"
+              gh workflow run check-catalog-packages.yaml --ref "${DEFAULT_BRANCH}" -f ref="${branch}"
+            fi
+          done
