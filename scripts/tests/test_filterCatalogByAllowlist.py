@@ -125,15 +125,19 @@ def test_plugin_that_keeps_a_package_or_had_none_in_the_index_stays(index):
     assert files(catalog, "plugins") == ["bundled.yaml", "mixed.yaml", "one.yaml"]
 
 
-def test_package_shared_by_a_disabled_and_an_enabled_workspace_stays(tmp_path, capsys):
+def test_package_shared_by_a_disabled_and_an_enabled_workspace_fails_and_names_both_sources(tmp_path, capsys):
     overlays, catalog = tmp_path / "overlays", tmp_path / "catalog-index"
     add_workspace(overlays, "old", None, {"acme-one.yaml": "acme-one"})
     add_workspace(overlays, "new", "plugins/one:\n", {"acme-one.yaml": "acme-one"})
     add_catalog(catalog, packages={"acme-one.yaml": "acme-one"}, plugins={"one": ["acme-one"]})
-    run_filter(overlays, catalog)
+    with pytest.raises(SystemExit) as exit_info:
+        run_filter(overlays, catalog)
+    assert exit_info.value.code == 1
+    output = capsys.readouterr().out
+    assert "workspaces/old/metadata/acme-one.yaml" in output
+    assert "workspaces/new/metadata/acme-one.yaml" in output
     assert files(catalog, "packages") == ["acme-one.yaml"]
     assert files(catalog, "plugins") == ["one.yaml"]
-    assert "acme-one.yaml also exists in a disabled workspace" in capsys.readouterr().out
 
 
 def test_collection_listing_a_dropped_plugin_is_reported_and_left_alone(index, capsys):
