@@ -31,9 +31,12 @@ NAME_PATTERN = re.compile(r"([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9]")
 NAME_MAX_LENGTH = 63
 
 OCI_PREFIX = "oci://"
+# Repository path components follow distribution/reference's grammar (reference.go), which
+# containers/image, and so skopeo, implements: separators are ".", "_", "__" or a run of "-".
+_PATH_COMPONENT = r"[a-z0-9]+(?:(?:[._]|__|-+)[a-z0-9]+)*"
 _REGISTRY_NAME = (
     r"[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?(?::[0-9]+)?"
-    r"/[a-z0-9]+(?:[._/-][a-z0-9]+)*"
+    rf"/{_PATH_COMPONENT}(?:/{_PATH_COMPONENT})*"
 )
 _TAG = r"[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}"
 _DIGEST = r"sha256:[a-f0-9]{64}"
@@ -200,8 +203,8 @@ def check_files(files: list[Path], resolver: Resolver, jobs: int = 8) -> dict:
 
             spec = entity.get("spec")
             artifact = spec.get("dynamicArtifact") if isinstance(spec, dict) else None
-            if not artifact:
-                skipped.append({"path": str(path), "entity": name, "reason": "no-dynamic-artifact"})
+            if artifact is None or (isinstance(artifact, str) and not artifact.strip()):
+                add("reference", "missing", "spec.dynamicArtifact is missing or empty")
             elif not isinstance(artifact, str):
                 add("reference", "unsupported", "spec.dynamicArtifact is not a string")
             elif artifact.startswith(OCI_PREFIX):
