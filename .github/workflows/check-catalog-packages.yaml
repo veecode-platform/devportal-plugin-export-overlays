@@ -1,0 +1,80 @@
+name: Check catalog packages
+
+# Resolves the spec.dynamicArtifact of every package in an enabled workspace and validates
+# each Package entity against the portal's schema. A workspace is enabled when it has a
+# plugins-list.yaml (parked workspaces keep plugins-list.yaml.disabled).
+#
+# No `branches:` filter on purpose: stacked pull requests must be checked too.
+# Sync pull requests start no pull_request run, so update-plugins-repo-refs.yaml
+# dispatches this workflow on each sync branch instead.
+
+on:
+  pull_request:
+    paths:
+      - 'workspaces/*/metadata/**'
+      - 'workspaces/*/plugins-list.yaml*'
+      - 'catalog-entities/**'
+      - 'scripts/checkCatalogPackages.py'
+      - 'scripts/schemas/**'
+      - 'scripts/requirements.txt'
+      - '.github/workflows/check-catalog-packages.yaml'
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Branch, tag or SHA whose packages are checked. Empty checks the ref the workflow runs on.
+        type: string
+        required: false
+        default: ""
+
+concurrency:
+  group: check-catalog-packages-${{ github.event.pull_request.number || inputs.ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-catalog-packages:
+    name: check-catalog-packages
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      # A sync branch can predate this workflow, so the packages come from `ref` and the
+      # check itself always comes from the ref the workflow runs on.
+      - name: Checkout the packages to check
+        if: inputs.ref != ''
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ inputs.ref }}
+          path: target
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Install skopeo
+        run: command -v skopeo >/dev/null || { sudo apt-get update -q && sudo apt-get install -y -q skopeo; }
+
+      - name: Check the packages of enabled workspaces
+        shell: bash
+        env:
+          PACKAGES_ROOT: ${{ inputs.ref != '' && 'target' || '.' }}
+        run: |
+          shopt -s nullglob
+          files=()
+          for dir in "${PACKAGES_ROOT}"/workspaces/*/; do
+            if [[ -f "${dir}plugins-list.yaml" ]]; then
+              files+=("${dir}"metadata/*.yaml)
+            fi
+          done
+          echo "Checking ${#files[@]} package files of enabled workspaces"
+          python3 scripts/checkCatalogPackages.py "${files[@]}"
