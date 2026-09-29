@@ -26,3 +26,30 @@
 # aborts the WHOLE install with "No plugins found in OCI image". Republish the image
 # from workspaces/github, then delete this entry.
 install ^backstage-community-plugin-search-backend-module-github-discussions$
+
+# TODO(PLANNING-53): the plugin calls resolvePackagePath('@backstage-community/plugin-announcements-backend', 'db/migrations')
+# when it loads, but the exported package is named `...-backend-dynamic`, so the harness
+# cannot resolve it. The portal host may map that name; not verified.
+boot ^backstage-community-plugin-announcements-backend$
+
+# TODO(PLANNING-53): same resolvePackagePath call for '@backstage-community/plugin-mcp-chat-backend'.
+boot ^backstage-community-plugin-mcp-chat-backend$
+
+# TODO(PLANNING-53): same resolvePackagePath call for '@backstage-community/plugin-tech-insights-backend'.
+boot ^backstage-community-plugin-tech-insights-backend$
+
+# TODO(PLANNING-53): a module of the tech-insights plugin; its extension point comes from
+# tech-insights-backend, which is skipped above.
+boot ^backstage-community-plugin-tech-insights-backend-module-jsonfc$
+
+# TODO(PLANNING-53): the package requires @backstage/backend-dynamic-feature-service, a
+# peer dependency the portal host provides and this harness does not.
+boot ^red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions$
+
+# TODO(PLANNING-53): startup fails on the required `techRadar.url`. Move this to a dummy
+# entry in `configOverrides` (src/plugin-config.ts) once the harness accepts local changes.
+boot ^backstage-community-plugin-tech-radar-backend$
+
+# TODO(PLANNING-53): a module of the notifications plugin, which the index does not
+# declare; the portal host provides it.
+boot ^backstage-plugin-notifications-backend-module-email$
