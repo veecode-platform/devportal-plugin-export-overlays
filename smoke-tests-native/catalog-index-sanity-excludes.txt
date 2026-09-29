@@ -28,8 +28,9 @@
 install ^backstage-community-plugin-search-backend-module-github-discussions$
 
 # TODO(PLANNING-53): the plugin calls resolvePackagePath('@backstage-community/plugin-announcements-backend', 'db/migrations')
-# when it loads, but the exported package is named `...-backend-dynamic`, so the harness
-# cannot resolve it. The portal host may map that name; not verified.
+# when it loads, but the exported package is named `...-backend-dynamic`. The portal's
+# backend-dynamic-feature-service resolves the original name to the `-dynamic` package;
+# this harness does not use that loader, so the failure is expected to be specific to it.
 boot ^backstage-community-plugin-announcements-backend$
 
 # TODO(PLANNING-53): same resolvePackagePath call for '@backstage-community/plugin-mcp-chat-backend'.
