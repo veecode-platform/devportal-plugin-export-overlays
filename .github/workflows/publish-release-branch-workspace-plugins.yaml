@@ -368,9 +368,9 @@ jobs:
           python3 scripts/filterCatalogByAllowlist.py --overlays-dir . --catalog-dir catalog-index
 
       - name: Check catalog package references
-        # Runs on the filtered tree: the Packages of disabled workspaces do not resolve
-        # and are not published, so only what ships can fail the job. A finding here
-        # stops it before the image is built.
+        # Runs on the filtered tree: the Packages of disabled workspaces are never
+        # published and many point at images that do not exist, so checking them would
+        # fail every run. A finding in what ships stops the job before the image is built.
         run: |
           python3 scripts/checkCatalogPackages.py catalog-index/catalog-entities/extensions/packages
 
