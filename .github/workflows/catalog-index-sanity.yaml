@@ -13,6 +13,9 @@
 name: Catalog Index Sanity
 
 on:
+  # TEMPORARY: proves the run on the PR that adds this file, because workflow_dispatch
+  # works only for a workflow file on the default branch. Removed before the merge.
+  pull_request:
   schedule:
     - cron: "0 4 * * *"
   workflow_dispatch:
