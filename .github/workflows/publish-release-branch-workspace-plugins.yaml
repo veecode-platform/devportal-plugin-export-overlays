@@ -248,6 +248,11 @@ jobs:
           chmod +x "$HOME/.local/bin/yq_mf"
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
+      - name: Install skopeo
+        # For "Check catalog package references". Installed here so a failed install
+        # stops the job before the catalog index generation, not after it.
+        run: command -v skopeo >/dev/null || { sudo apt-get update -q && sudo apt-get install -y -q skopeo; }
+
       - name: Set per-plugin Quay repositories to public
         # ADR-008 dual publish: export-utils pushes each plugin as its own image
         # quay.io/veecode/<plugin-name>. Those repos are created on first push and
@@ -315,6 +320,11 @@ jobs:
         # queries quay.io/rhdh. Precondition: the per-plugin visibility step
         # ABOVE runs before this one, so repos created by this run's exports
         # are already public when queried.
+        #
+        # --validate-mode gate: the static validation inside update-index.sh defaults to
+        # "report", which never fails the run. This job must not build an index the
+        # validator rejects, so it runs as a gate here. The findings are written next
+        # to build-report.json.
         run: |
           # --community-registry MUST equal --registry: upstream's
           # update-index.sh only forwards --community-registry to
@@ -331,7 +341,9 @@ jobs:
             --output-dir catalog-index \
             --plugin-builds-dir plugin_builds \
             --packages-file default.packages.yaml \
-            --report-file catalog-index/build-report.json
+            --report-file catalog-index/build-report.json \
+            --validate-mode gate \
+            --validation-json catalog-index/validation.json
 
       - name: Assert workspace metadata was not left modified
         # scripts/update-index.sh Step 2 (generatePluginBuildInfo.py) writes
@@ -346,6 +358,21 @@ jobs:
             git status --porcelain workspaces/ >&2
             exit 1
           fi
+
+      - name: Filter catalog index by the export allowlist
+        # generateCatalogIndex.py copies the Package entities of every workspace into the
+        # index, disabled ones included, so the index offers packages the export never
+        # publishes. Filtering before "Validate catalog index" and the image build makes
+        # both see the tree that ships.
+        run: |
+          python3 scripts/filterCatalogByAllowlist.py --overlays-dir . --catalog-dir catalog-index
+
+      - name: Check catalog package references
+        # Runs on the filtered tree: the Packages of disabled workspaces do not resolve
+        # and are not published, so only what ships can fail the job. A finding here
+        # stops it before the image is built.
+        run: |
+          python3 scripts/checkCatalogPackages.py catalog-index/catalog-entities/extensions/packages
 
       - name: Validate catalog index
         run: |
