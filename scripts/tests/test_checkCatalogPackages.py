@@ -149,6 +149,7 @@ class TestSkopeoResolver:
     def test_missing_tag_fails(self, fake_skopeo):
         result = self.resolve("missing-tag")
         assert (result.ok, result.reason) == (False, "manifest-unknown")
+        assert result.message == "reading manifest: manifest unknown"
 
     def test_missing_repository_fails_instead_of_being_taken_for_a_private_one(self, fake_skopeo):
         result = self.resolve("no-repo")

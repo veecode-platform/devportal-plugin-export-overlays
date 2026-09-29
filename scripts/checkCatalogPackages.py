@@ -105,9 +105,11 @@ def parse_reference(artifact: str) -> str | None:
     return reference if IMAGE_REFERENCE.fullmatch(reference) else None
 
 
-def _last_line(text: str) -> str:
+def _failure_summary(text: str) -> str:
     lines = [line for line in text.strip().splitlines() if line.strip()]
-    return lines[-1][:400] if lines else ""
+    line = lines[-1][:400] if lines else ""
+    logged = re.search(r'msg="(.*)"$', line)
+    return logged.group(1).replace('\\"', '"') if logged else line
 
 
 def classify_failure(stderr: str) -> str:
@@ -137,7 +139,7 @@ def skopeo_resolver(timeout: int = 60, retries: int = 2, backoff: float = 2.0) -
                 continue
             if proc.returncode == 0:
                 return Resolution(True, "resolved")
-            result = Resolution(False, classify_failure(proc.stderr), _last_line(proc.stderr))
+            result = Resolution(False, classify_failure(proc.stderr), _failure_summary(proc.stderr))
             if result.reason != "error":
                 break
         return result
