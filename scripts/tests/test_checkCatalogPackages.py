@@ -138,6 +138,29 @@ class TestReferences:
         assert reasons(report) == [("reference", reason)]
 
 
+    @pytest.mark.parametrize("artifact", ["", "   ", None])
+    def test_empty_or_absent_artifact_is_reported(self, tmp_path, artifact):
+        entity = package()
+        if artifact is None:
+            del entity["spec"]["dynamicArtifact"]
+        else:
+            entity["spec"]["dynamicArtifact"] = artifact
+        report = run(write(tmp_path, "a.yaml", entity))
+        assert reasons(report) == [("reference", "missing")]
+        assert report["skipped"] == []
+
+    @pytest.mark.parametrize(
+        "name",
+        ["plugin--backend", "plugin---backend", "plugin__backend", "plugin.backend", "org/plugin-backend", "a/b/c"],
+    )
+    def test_repository_names_the_registry_grammar_accepts_are_parsed(self, name):
+        assert check.parse_reference(f"oci://quay.io/{name}:1.0") == f"quay.io/{name}:1.0"
+
+    @pytest.mark.parametrize("name", ["plugin-_backend", "plugin___backend", "-plugin", "plugin-", "Plugin", "a//b"])
+    def test_repository_names_the_registry_grammar_rejects_are_malformed(self, name):
+        assert check.parse_reference(f"oci://quay.io/{name}:1.0") is None
+
+
 class TestSkopeoResolver:
     def resolve(self, name, retries=1):
         return check.skopeo_resolver(timeout=5, retries=retries, backoff=0)(f"quay.io/veecode/{name}:1.0.0")
