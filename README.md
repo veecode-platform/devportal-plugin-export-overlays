@@ -98,3 +98,4 @@ This repo is periodically synced with the upstream RHDH export overlays. See [SY
 
 - [rhdh-plugin-export-overlays](https://github.com/redhat-developer/rhdh-plugin-export-overlays) — upstream workspace definitions
 - [rhdh-plugin-export-utils](https://github.com/redhat-developer/rhdh-plugin-export-utils) — reusable export workflows and CLI tooling
+Temporary README-only check probe.
