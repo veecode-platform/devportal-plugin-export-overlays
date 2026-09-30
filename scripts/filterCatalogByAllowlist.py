@@ -37,6 +37,7 @@ from plugin_utils import (
 REASON_WORKSPACE_DISABLED = "workspace disabled"
 REASON_NO_ACTIVE_ENTRY = "no uncommented plugins-list entry"
 REASON_NOT_IN_OVERLAYS = "not in overlays"
+REASON_IMAGE_SHIPPED_LOCAL_PATH = "image-shipped local path"
 
 
 @dataclass
@@ -44,6 +45,7 @@ class Allowlist:
     """Package file names (as copied into the index) the overlays allow."""
 
     allowed: set[str] = field(default_factory=set)
+    allowed_reasons: dict[str, str] = field(default_factory=dict)
     denied: dict[str, str] = field(default_factory=dict)
     collisions: dict[str, list[str]] = field(default_factory=dict)
 
@@ -84,11 +86,20 @@ def build_allowlist(overlays_dir: Path) -> Allowlist:
         exported = (ws_dir / "plugins-list.yaml").exists()
         active_paths = set(read_plugins_list(ws_dir))
         for metadata_file in sorted(metadata_dir.glob("*.yaml")):
+            entity = load_entity(metadata_file)
+            dynamic_artifact = (entity.get("spec") or {}).get("dynamicArtifact")
+            if isinstance(dynamic_artifact, str) and dynamic_artifact.startswith("./"):
+                allowlist.allowed.add(metadata_file.name)
+                allowlist.allowed_reasons[metadata_file.name] = REASON_IMAGE_SHIPPED_LOCAL_PATH
+                source = metadata_file.relative_to(overlays_dir).as_posix()
+                sources.setdefault(metadata_file.name, []).append(f"{source} ({REASON_IMAGE_SHIPPED_LOCAL_PATH})")
+                continue
+
             reason = None
             if not exported:
                 reason = REASON_WORKSPACE_DISABLED
             else:
-                name = entity_name(load_entity(metadata_file), metadata_file.stem)
+                name = entity_name(entity, metadata_file.stem)
                 if plugin_path_by_entity.get((ws_dir.name, name)) not in active_paths:
                     reason = REASON_NO_ACTIVE_ENTRY
             source = metadata_file.relative_to(overlays_dir).as_posix()
@@ -155,6 +166,13 @@ def filter_catalog(overlays_dir: Path, catalog_dir: Path) -> None:
         log_debug(f"Remove package {package_file.name} ({reason})")
         package_file.unlink()
 
+    kept_reasons = [
+        allowlist.allowed_reasons[package_file.name]
+        for package_file in kept_packages
+        if package_file.name in allowlist.allowed_reasons
+    ]
+    kept_reason_summary = f" ({count_by_reason(kept_reasons)})" if kept_reasons else ""
+
     plugin_files = index_files(plugins_dir) if plugins_dir.is_dir() else []
     dropped_names: set[str] = set()
     dropped_count = 0
@@ -178,7 +196,10 @@ def filter_catalog(overlays_dir: Path, catalog_dir: Path) -> None:
 
     regenerate_all_yaml_files(catalog_dir)
 
-    log_info(f"Removed {len(removed_packages)} package(s) ({count_by_reason(reasons)}), kept {len(kept_packages)}")
+    log_info(
+        f"Removed {len(removed_packages)} package(s) ({count_by_reason(reasons)}), "
+        f"kept {len(kept_packages)}{kept_reason_summary}"
+    )
     log_info(f"Removed {dropped_count} plugin(s) left with no package, kept {len(plugin_files) - dropped_count}")
     if without_package:
         log_info(f"{without_package} kept plugin(s) already list no package present in the index; left untouched")
