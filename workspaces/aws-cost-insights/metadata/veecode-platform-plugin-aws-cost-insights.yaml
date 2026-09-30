@@ -12,7 +12,7 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/plugin-aws-cost-insights"
-  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.3.0
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.3.0-m22k1-missing
   version: 0.3.0
   backstage:
     role: frontend-plugin
