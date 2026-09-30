@@ -9,7 +9,13 @@ from filterCatalogByAllowlist import main
 from generateCatalogIndex import regenerate_all_yaml_files
 
 
-def add_workspace(overlays: Path, name: str, plugins_list: str | None, packages: dict[str, str]) -> None:
+def add_workspace(
+    overlays: Path,
+    name: str,
+    plugins_list: str | None,
+    packages: dict[str, str],
+    dynamic_artifacts: dict[str, str] | None = None,
+) -> None:
     """Create a workspace; ``plugins_list=None`` writes plugins-list.yaml.disabled.
 
     ``packages`` maps a metadata file name to the Package entity name inside it.
@@ -19,6 +25,8 @@ def add_workspace(overlays: Path, name: str, plugins_list: str | None, packages:
     listing = "plugins-list.yaml" if plugins_list is not None else "plugins-list.yaml.disabled"
     (ws / listing).write_text(plugins_list or "plugins/unused:\n")
     for file_name, entity_name in packages.items():
+        dynamic_artifact = (dynamic_artifacts or {}).get(file_name)
+        dynamic_artifact_line = f"  dynamicArtifact: {dynamic_artifact}\n" if dynamic_artifact else ""
         (ws / "metadata" / file_name).write_text(
             "apiVersion: extensions.backstage.io/v1alpha1\n"
             "kind: Package\n"
@@ -26,6 +34,7 @@ def add_workspace(overlays: Path, name: str, plugins_list: str | None, packages:
             f"  name: {entity_name}\n"
             "spec:\n"
             f"  packageName: '@acme/{entity_name}'\n"
+            f"{dynamic_artifact_line}"
         )
 
 
@@ -96,6 +105,41 @@ def test_package_of_a_disabled_workspace_is_removed(index):
     overlays, catalog = index
     run_filter(overlays, catalog)
     assert "acme-three.yaml" not in files(catalog, "packages")
+
+
+def test_local_path_package_of_a_disabled_workspace_is_kept_but_oci_is_removed(tmp_path, capsys):
+    overlays, catalog = tmp_path / "overlays", tmp_path / "catalog-index"
+    add_workspace(
+        overlays,
+        "disabled",
+        None,
+        {"acme-local.yaml": "acme-local", "acme-oci.yaml": "acme-oci"},
+        dynamic_artifacts={
+            "acme-local.yaml": "./dynamic-plugins/dist/acme-local",
+            "acme-oci.yaml": "oci://ghcr.io/acme/acme-oci:1.0.0",
+        },
+    )
+    add_workspace(overlays, "active", "plugins/enabled:\n", {"acme-enabled.yaml": "acme-enabled"})
+    add_catalog(
+        catalog,
+        packages={
+            "acme-local.yaml": "acme-local",
+            "acme-oci.yaml": "acme-oci",
+            "acme-enabled.yaml": "acme-enabled",
+        },
+        plugins={
+            "local": ["acme-local"],
+            "oci": ["acme-oci"],
+            "enabled": ["acme-enabled"],
+        },
+    )
+
+    run_filter(overlays, catalog)
+
+    assert files(catalog, "packages") == ["acme-enabled.yaml", "acme-local.yaml"]
+    assert files(catalog, "plugins") == ["enabled.yaml", "local.yaml"]
+    output = capsys.readouterr().out
+    assert "Removed 1 package(s) (workspace disabled: 1), kept 2 (image-shipped local path: 1)" in output
 
 
 def test_package_with_a_commented_plugin_line_is_removed(index):
