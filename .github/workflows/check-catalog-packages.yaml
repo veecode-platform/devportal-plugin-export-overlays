@@ -4,20 +4,13 @@ name: Check catalog packages
 # each Package entity against the portal's schema. A workspace is enabled when it has a
 # plugins-list.yaml (parked workspaces keep plugins-list.yaml.disabled).
 #
-# No `branches:` filter on purpose: stacked pull requests must be checked too.
-# Sync pull requests start no pull_request run, so update-plugins-repo-refs.yaml
-# dispatches this workflow on each sync branch instead.
+# Keep the pull_request trigger unfiltered so this required check always reports. The
+# first job filters package-check paths inside the run and skips the check for other PRs.
+# Sync pull requests opened with the Actions token still need workflow_dispatch because
+# that token does not start pull_request runs; the sync workflow dispatches on each branch.
 
 on:
   pull_request:
-    paths:
-      - 'workspaces/*/metadata/**'
-      - 'workspaces/*/plugins-list.yaml*'
-      - 'catalog-entities/**'
-      - 'scripts/checkCatalogPackages.py'
-      - 'scripts/schemas/**'
-      - 'scripts/requirements.txt'
-      - '.github/workflows/check-catalog-packages.yaml'
   workflow_dispatch:
     inputs:
       ref:
@@ -31,8 +24,58 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  detect_package_check_paths:
+    name: Detect package check paths
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      should_check: ${{ steps.detect.outputs.should_check }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Detect package check paths
+        id: detect
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          if [[ "${EVENT_NAME}" == "workflow_dispatch" ]]; then
+            echo "should_check=true" >> "${GITHUB_OUTPUT}"
+            exit 0
+          fi
+
+          changed_paths_file="${RUNNER_TEMP}/changed-paths"
+          git diff --name-only -z --merge-base "${BASE_SHA}" "${HEAD_SHA}" > "${changed_paths_file}"
+
+          should_check=false
+          while IFS= read -r -d '' path; do
+            if [[ "${path}" =~ ^workspaces/[^/]+/metadata/ ]] ||
+              [[ "${path}" =~ ^workspaces/[^/]+/plugins-list[.]yaml[^/]*$ ]] ||
+              [[ "${path}" =~ ^catalog-entities/ ]] ||
+              [[ "${path}" == "scripts/checkCatalogPackages.py" ]] ||
+              [[ "${path}" =~ ^scripts/schemas/ ]] ||
+              [[ "${path}" == "scripts/requirements.txt" ]] ||
+              [[ "${path}" == ".github/workflows/check-catalog-packages.yaml" ]]; then
+              should_check=true
+            fi
+          done < "${changed_paths_file}"
+
+          echo "should_check=${should_check}" >> "${GITHUB_OUTPUT}"
+
   check-catalog-packages:
     name: check-catalog-packages
+    needs: detect_package_check_paths
+    if: >-
+      always() &&
+      (needs.detect_package_check_paths.result != 'success' ||
+       needs.detect_package_check_paths.outputs.should_check == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
