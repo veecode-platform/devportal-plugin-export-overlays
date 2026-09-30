@@ -87,7 +87,8 @@ def build_allowlist(overlays_dir: Path) -> Allowlist:
         active_paths = set(read_plugins_list(ws_dir))
         for metadata_file in sorted(metadata_dir.glob("*.yaml")):
             entity = load_entity(metadata_file)
-            dynamic_artifact = (entity.get("spec") or {}).get("dynamicArtifact")
+            spec = entity.get("spec")
+            dynamic_artifact = spec.get("dynamicArtifact") if isinstance(spec, dict) else None
             if isinstance(dynamic_artifact, str) and dynamic_artifact.startswith("./"):
                 allowlist.allowed.add(metadata_file.name)
                 allowlist.allowed_reasons[metadata_file.name] = REASON_IMAGE_SHIPPED_LOCAL_PATH
