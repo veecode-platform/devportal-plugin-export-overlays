@@ -1,6 +1,6 @@
 {
   "aws-amazon-ecs-plugin-for-backstage": {
-    "workspacePath": "aws-ecs/aws-amazon-ecs-plugin-for-backstage",
+    "workspacePath": "backstage-plugins-for-aws/plugins/ecs/frontend",
     "registryReference": "quay.io/veecode/aws-amazon-ecs-plugin-for-backstage:bs_1.52.0__0.7.0",
     "digest": "sha256:7e20acb07eb8ad7858e15345bea1ce6ce828462f7f6c5acccf89df6e4b72a1fa",
     "support": "community",

@@ -21,12 +21,12 @@ spec:
   version: 0.7.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.43.1
+    supportedVersions: 1.52.0
   author: AWS
   support: community
   lifecycle: active
   partOf:
-    - aws-ecs
+    - backstage-plugins-for-aws
   appConfigExamples:
     - title: Default configuration
       content:

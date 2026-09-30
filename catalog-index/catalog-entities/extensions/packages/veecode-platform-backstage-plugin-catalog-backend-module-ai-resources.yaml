@@ -6,7 +6,7 @@ metadata:
   # catalog entity and NOT listed in catalog-entities/extensions/plugins/all.yaml.
   # Whether it becomes a marketplace-visible extension is a separate product
   # decision; same hidden pattern as veecode-theme and vertigo-theme until then.
-  name: veecode-platform-backstage-plugin-catalog-backend-module-ai-resources
+  name: veecode-platform-bsp-ctlg-backend-mod-ai-resources
   namespace: veecode
   title: "AI Resources Catalog Model"
   links:

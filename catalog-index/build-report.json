@@ -339,10 +339,7 @@
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:31fb6a6e42b00d1d2f1cc978c86be512405f4338d8e924987b599f15cfff8577",
-          "fallback": true,
-          "requestedTag": "bs_1.52.0__0.8.0",
-          "resolvedTag": "bs_1.52.0__0.10.0"
+          "digest": "sha256:31fb6a6e42b00d1d2f1cc978c86be512405f4338d8e924987b599f15cfff8577"
         },
         "dpdy": {
           "status": "pass"
@@ -364,10 +361,7 @@
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:7e20acb07eb8ad7858e15345bea1ce6ce828462f7f6c5acccf89df6e4b72a1fa",
-          "fallback": true,
-          "requestedTag": "bs_1.52.0__0.6.0",
-          "resolvedTag": "bs_1.52.0__0.7.0"
+          "digest": "sha256:7e20acb07eb8ad7858e15345bea1ce6ce828462f7f6c5acccf89df6e4b72a1fa"
         },
         "dpdy": {
           "status": "pass"
