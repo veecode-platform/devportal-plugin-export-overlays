@@ -1,0 +1,56 @@
+# Packages the catalog-index sanity check skips (`yarn smoke --catalog-index`).
+#
+# Same format and same discipline as plugin-sweep-excludes.txt — see
+# src/exclusions.ts for the grammar. One entry per line:
+#
+#   # TODO(TICKET-123): why this package cannot be validated, and what unblocks it.
+#   <scope> <javascript-regex>
+#
+# `scope` says how much validation the package loses:
+#
+#   install — the artifact is not pulled at all. Loses everything.
+#   boot    — the artifact IS pulled and its layout validated, but the plugin is not
+#             loaded into `startTestBackend`. Loses only the boot signal.
+#
+# Write patterns against the OCI image name (`aws-amazon-ecs-plugin-for-backstage`), not
+# the npm name: a catalog index carries only image refs. Every entry carries a
+# `TODO(TICKET)` with the reason; a pattern with no ticket in scope is a parse error.
+#
+# Before adding one, check that the image really is unpullable
+# (`skopeo inspect --no-creds docker://quay.io/veecode/<image>@sha256:<digest>`) and that
+# the failure is not only startup config validation, which `configOverrides` in
+# src/plugin-config.ts recovers without losing the boot signal.
+
+# TODO(PLANNING-53): the published image ships the plugin bundle but its
+# `io.backstage.dynamic-packages` annotation is `[]` (base64 `W10=`), so the install CLI
+# aborts the WHOLE install with "No plugins found in OCI image". Republish the image
+# from workspaces/github, then delete this entry.
+install ^backstage-community-plugin-search-backend-module-github-discussions$
+
+# TODO(PLANNING-53): the plugin calls resolvePackagePath('@backstage-community/plugin-announcements-backend', 'db/migrations')
+# when it loads, but the exported package is named `...-backend-dynamic`. The portal's
+# backend-dynamic-feature-service resolves the original name to the `-dynamic` package;
+# this harness does not use that loader, so the failure is expected to be specific to it.
+boot ^backstage-community-plugin-announcements-backend$
+
+# TODO(PLANNING-53): same resolvePackagePath call for '@backstage-community/plugin-mcp-chat-backend'.
+boot ^backstage-community-plugin-mcp-chat-backend$
+
+# TODO(PLANNING-53): same resolvePackagePath call for '@backstage-community/plugin-tech-insights-backend'.
+boot ^backstage-community-plugin-tech-insights-backend$
+
+# TODO(PLANNING-53): a module of the tech-insights plugin; its extension point comes from
+# tech-insights-backend, which is skipped above.
+boot ^backstage-community-plugin-tech-insights-backend-module-jsonfc$
+
+# TODO(PLANNING-53): the package requires @backstage/backend-dynamic-feature-service, a
+# peer dependency the portal host provides and this harness does not.
+boot ^red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions$
+
+# TODO(PLANNING-53): startup fails on the required `techRadar.url`. Move this to a dummy
+# entry in `configOverrides` (src/plugin-config.ts) once the harness accepts local changes.
+boot ^backstage-community-plugin-tech-radar-backend$
+
+# TODO(PLANNING-53): a module of the notifications plugin, which the index does not
+# declare; the portal host provides it.
+boot ^backstage-plugin-notifications-backend-module-email$
