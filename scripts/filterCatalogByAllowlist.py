@@ -182,8 +182,13 @@ def filter_catalog(overlays_dir: Path, catalog_dir: Path) -> None:
         plugin = load_entity(plugin_file)
         refs = package_refs(plugin)
         has_package = any(ref in kept_names for ref in refs)
-        if not has_package and any(ref in removed_names for ref in refs):
-            log_debug(f"Remove plugin {plugin_file.name}: all its packages left")
+        drop_reason = None
+        if not refs:
+            drop_reason = "no packages listed"
+        elif not has_package and any(ref in removed_names for ref in refs):
+            drop_reason = "all its packages left"
+        if drop_reason:
+            log_debug(f"Remove plugin {plugin_file.name}: {drop_reason}")
             dropped_names.add(entity_name(plugin, plugin_file.stem))
             dropped_count += 1
             plugin_file.unlink()

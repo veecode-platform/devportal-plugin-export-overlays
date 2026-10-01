@@ -68,11 +68,6 @@ spec:
      - **Issues**: [Jira Issues](https://issues.redhat.com/browse/RHDHBUGS)
 
 
- packages: # link to the name used in the associated package documents in ../packages
-   - red-hat-developer-hub-backstage-plugin-catalog-backend-module-model-catalog
-   - red-hat-developer-hub-backstage-plugin-catalog-techdoc-url-reader-backend
-
-
  installation: |
      ## Installation
 
@@ -332,7 +327,6 @@ spec:
      ## OpenShift AI Configuration
 
      Documentation on the OpenShift AI Model Registry configuration can be found [here](https://docs.redhat.com/en/documentation/red_hat_openshift_ai_self-managed/2.23/html/working_with_model_registries/index)
-
 
 
 

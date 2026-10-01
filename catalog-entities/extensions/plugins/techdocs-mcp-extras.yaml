@@ -61,9 +61,6 @@ spec:
      - **Issues**: [Jira Issues](https://issues.redhat.com/browse/RHDHBUGS)
 
 
- packages: # link to the name used in the associated package documents in ../packages
-   - red-hat-developer-hub-plugin-techdocs-mcp-tool
-
  installation: |
      ## Installation
 

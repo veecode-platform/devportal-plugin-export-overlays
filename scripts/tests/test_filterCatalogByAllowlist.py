@@ -169,6 +169,24 @@ def test_plugin_that_keeps_a_package_or_had_none_in_the_index_stays(index):
     assert files(catalog, "plugins") == ["bundled.yaml", "mixed.yaml", "one.yaml"]
 
 
+def test_plugin_without_packages_is_removed_but_unresolved_reference_is_kept(tmp_path):
+    overlays, catalog = tmp_path / "overlays", tmp_path / "catalog-index"
+    add_workspace(overlays, "active", "plugins/one:\n", {"acme-one.yaml": "acme-one"})
+    add_catalog(
+        catalog,
+        packages={"acme-one.yaml": "acme-one"},
+        plugins={
+            "empty": [],
+            "bundled": ["not-in-the-index"],
+            "active": ["acme-one"],
+        },
+    )
+
+    run_filter(overlays, catalog)
+
+    assert files(catalog, "plugins") == ["active.yaml", "bundled.yaml"]
+
+
 def test_package_shared_by_a_disabled_and_an_enabled_workspace_fails_and_names_both_sources(tmp_path, capsys):
     overlays, catalog = tmp_path / "overlays", tmp_path / "catalog-index"
     add_workspace(overlays, "old", None, {"acme-one.yaml": "acme-one"})
