@@ -602,30 +602,6 @@ plugins:
           - name: private
             url: ${NPM_REGISTRY_URL}
             token: ${NPM_REGISTRY_TOKEN}
-  - package: oci://quay.io/veecode/backstage-community-plugin-rbac@sha256:36e9f606223dd6f2e479c3a904d28dfbec7afdcbbb8e2f18cd1d1edbf7f238e6
-    disabled: true
-    pluginConfig:
-      dynamicPlugins:
-        frontend:
-          backstage-community.plugin-rbac:
-            translationResources:
-              - importName: rbacTranslations
-                ref: rbacTranslationRef
-                module: Alpha
-            appIcons:
-              - name: rbacIcon
-                importName: RbacIcon
-            dynamicRoutes:
-              - path: /rbac
-                importName: RbacPage
-                menuItem:
-                  icon: rbacIcon
-                  text: RBAC
-                  textKey: menuItem.rbac
-            menuItems:
-              rbac:
-                parent: default.admin
-                icon: rbacIcon
   - package: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-azure-devops@sha256:8ef564e378570034704548315e25fb13fe5671f5b665d3fc4db78bb3e01aa415
     disabled: true
   - package: oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet@sha256:114e0f6cab92a28ed6c3d13a32404a20291a4a5ec5062269f7fe47d24de08d5a
@@ -758,33 +734,6 @@ plugins:
             mountPoints:
               - mountPoint: entity.page.overview/cards
                 importName: EntityMaturitySummaryCard
-  - package: oci://quay.io/veecode/backstage-community-plugin-tech-radar@sha256:2a5e149c22bdc02f6cf0d1ba6db0113105b284bf05b3806678cca601387f3b63
-    disabled: true
-    pluginConfig:
-      dynamicPlugins:
-        frontend:
-          backstage-community.plugin-tech-radar:
-            apiFactories:
-              - importName: TechRadarApi
-            appIcons:
-              - name: techRadar
-                importName: TechRadarIcon
-            dynamicRoutes:
-              - path: /tech-radar
-                importName: TechRadarPage
-                menuItem:
-                  icon: techRadar
-                  text: menuItem.techRadar
-                  textKey: menuItem.techRadar
-                config:
-                  props:
-                    width: 1500
-                    height: 800
-  - package: oci://quay.io/veecode/backstage-community-plugin-tech-radar-backend@sha256:71f7f6c4816156120e693bf3c2ff29ee35c3725406c996c7de58607800df3a99
-    disabled: true
-    pluginConfig:
-      techRadar:
-        url: ${TECH_RADAR_DATA_URL}
   - package: oci://quay.io/veecode/backstage-community-plugin-tekton@sha256:7a2607b5d522c090e2127d8847d58657d027a246cf4df1b970429eeba6a12c76
     disabled: true
     pluginConfig:
@@ -839,6 +788,108 @@ plugins:
             dynamicRoutes:
               - path: /oauth2/*
                 importName: Router
+  - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-github@sha256:d7d3a1f0bfdea4ede1b2410a293c680c7604e9b1de18906f536d4746ae0b3b20
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          github:
+            providerId:
+              organization: ${GITHUB_ORG}
+  - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-github-org@sha256:0e61273f85ba64ea304d262f84f884a915a9f783946dea96928adb67935345d8
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          githubOrg:
+            id: production
+            githubUrl: ${GITHUB_URL}
+            orgs:
+              - ${GITHUB_ORG}
+            schedule:
+              frequency:
+                minutes: 60
+              initialDelay:
+                seconds: 15
+              timeout:
+                minutes: 15
+  - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-gitlab@sha256:8c6ba7d7b7f016d7ea08633ede1dfdad54073a623b3d08ede8e6227609d703e9
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          gitlab:
+            default:
+              host: ${GITLAB_HOST}
+              group: ${GITLAB_DISCOVERY_GROUP}
+              schedule:
+                frequency:
+                  minutes: 30
+                timeout:
+                  minutes: 3
+                initialDelay:
+                  seconds: 15
+  - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-gitlab-org@sha256:1bd009a2bca08356ee46eddc9738ba2137fe7762e54fc17c5c2d923b64ad4664
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          gitlab:
+            orgProvider:
+              host: ${GITLAB_HOST}
+              orgEnabled: true
+              group: ${GITLAB_ORG_GROUP}
+              schedule:
+                frequency:
+                  minutes: 30
+                timeout:
+                  minutes: 3
+                initialDelay:
+                  seconds: 15
+  - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-ldap@sha256:47c85ef8d6433137d3ecce2606f3630832e1d72db608987f826f9971b154919a
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          ldapOrg:
+            default:
+              target: ${LDAP_TARGET_URL}
+              bind:
+                dn: ${LDAP_BIND_DN}
+                secret: ${LDAP_BIND_SECRET}
+              users:
+                - dn: ${LDAP_USERS_DN}
+                  options:
+                    filter: (uid=*)
+              groups:
+                - dn: ${LDAP_GROUPS_DN}
+                  options:
+                    filter: (cn=*)
+              schedule:
+                frequency:
+                  minutes: 60
+                initialDelay:
+                  seconds: 15
+                timeout:
+                  minutes: 15
+  - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-msgraph@sha256:4e35f3c39026325949be60af2a9b0e04938de87a3e1e8d6caff8a0bc9ccb80b2
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          microsoftGraphOrg:
+            providerId:
+              target: https://graph.microsoft.com/v1.0
+              tenantId: ${MICROSOFT_TENANT_ID}
+              clientId: ${MICROSOFT_CLIENT_ID}
+              clientSecret: ${MICROSOFT_CLIENT_SECRET}
+              schedule:
+                frequency:
+                  minutes: 60
+                initialDelay:
+                  seconds: 15
+                timeout:
+                  minutes: 15
   - package: oci://quay.io/veecode/backstage-plugin-events-backend-module-gitlab@sha256:2f45814248ac78def78f9e0ceb624a8b4aae1eb1450bc57a6c1fdb0a32ed5189
     disabled: true
     pluginConfig:
@@ -846,6 +897,31 @@ plugins:
         modules:
           gitlab:
             webhookSecret: ${VAULT_GITLAB_WEBHOOK_SECRET}
+  - package: oci://quay.io/veecode/backstage-plugin-kubernetes@sha256:fd94026e0650a4992ecc8ff0cdaf1f515c644fc1b6373b7bff812243e81fd76f
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-kubernetes:
+            mountPoints:
+              - mountPoint: entity.page.kubernetes/cards
+                importName: EntityKubernetesContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+                  if:
+                    anyOf:
+                      - hasAnnotation: backstage.io/kubernetes-id
+                      - hasAnnotation: backstage.io/kubernetes-namespace
+  - package: oci://quay.io/veecode/backstage-plugin-kubernetes-backend@sha256:c563ab12540e2e37bfcbb2dce83668f990234a5685bbce81924a6dbbca814d6f
+    disabled: true
+    pluginConfig:
+      kubernetes:
+        serviceLocatorMethod:
+          type: multiTenant
+        clusterLocatorMethods:
+          - type: config
+            clusters: []
   - package: oci://quay.io/veecode/backstage-plugin-mcp-actions-backend@sha256:d4d24e08d7630eb352fa7e6dc1da797ebc4e667aba347575dd94d4bcde82e8e2
     disabled: true
     pluginConfig:
@@ -880,6 +956,10 @@ plugins:
             gitilesBaseUrl: ${GERRIT_GITILES_BASE_URL}
             username: ${GERRIT_USERNAME}
             password: ${GERRIT_PASSWORD}
+  - package: oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-github@sha256:07d86f89b7ee985e2ea793710de444866197e2daad46213c999a5e05157b7b48
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-gitlab@sha256:c142adb08677629ba00982502c59bf2113f352ccd644f984bc6f6231f87f0cbd
+    disabled: true
   - package: oci://quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab@sha256:54df61fe65be6aac92843ea70cf1217c0df88551f6afa8176a0fdc28228edaa6
     disabled: true
     pluginConfig:
@@ -936,137 +1016,7 @@ plugins:
     disabled: true
   - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-integrations@sha256:e41aa4d40dec95856e5845c9a65f4614332e3e817ed00c0b2495ba4cbd5a2f3c
     disabled: true
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions@sha256:696d2d0be16b1a5948d4527bf70b305d7ae157d8d4ff5740d99306a935470aed
-    disabled: true
-    pluginConfig:
-      extensions:
-        directory: ${RHDH_EXTENSIONS_DIRECTORY}
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-dynamic-home-page@sha256:c8fcb047648686749b6af3090f726e8ffc2582dfbcfdd3d45e4f2cb1cd912acd
-    disabled: true
-    pluginConfig:
-      dynamicPlugins:
-        frontend:
-          red-hat-developer-hub.backstage-plugin-dynamic-home-page:
-            dynamicRoutes:
-              - path: /
-                importName: DynamicHomePage
-            mountPoints:
-              - mountPoint: application/listener
-                importName: VisitListener
-              # the default cards
-              - mountPoint: home.page/cards
-                importName: OnboardingSection
-                config:
-                  id: rhdh-onboarding-section
-                  title: Red Hat Developer Hub - Onboarding
-                  cardLayout:
-                    width:
-                      minColumns: 4
-                      maxColumns: 12
-                      defaultColumns: 12
-                    height:
-                      minRows: 2
-                      maxRows: 12
-                      defaultRows: 4
-                  layouts:
-                    xl: {w: 12, h: 6}
-                    lg: {w: 12, h: 6}
-                    md: {w: 12, h: 7}
-                    sm: {w: 12, h: 8}
-                    xs: {w: 12, h: 9}
-                    xxs: {w: 12, h: 14}
-              - mountPoint: home.page/cards
-                importName: EntitySection
-                config:
-                  id: rhdh-entity-section
-                  title: Red Hat Developer Hub - Software Catalog
-                  cardLayout:
-                    width:
-                      minColumns: 4
-                      maxColumns: 12
-                      defaultColumns: 12
-                    height:
-                      minRows: 2
-                      maxRows: 12
-                      defaultRows: 4
-                  layouts:
-                    xl: {w: 12, h: 7}
-                    lg: {w: 12, h: 7}
-                    md: {w: 12, h: 8}
-                    sm: {w: 12, h: 9}
-                    xs: {w: 12, h: 11}
-                    xxs: {w: 12, h: 15}
-              - mountPoint: home.page/cards
-                importName: TemplateSection
-                config:
-                  id: rhdh-template-section
-                  title: Red Hat Developer Hub - Explore templates
-                  cardLayout:
-                    width:
-                      minColumns: 4
-                      maxColumns: 12
-                      defaultColumns: 12
-                    height:
-                      minRows: 2
-                      maxRows: 12
-                      defaultRows: 4
-                  layouts:
-                    xl: {w: 12, h: 5}
-                    lg: {w: 12, h: 5}
-                    md: {w: 12, h: 5}
-                    sm: {w: 12, h: 5}
-                    xs: {w: 12, h: 7.5}
-                    xxs: {w: 12, h: 13.5}
-              # additional available cards when the 'customizable' feature is enabled
-              - mountPoint: home.page/cards
-                importName: QuickAccessCard
-                config:
-                  id: quickaccess-card
-                  title: Quick Access Card
-              - mountPoint: home.page/cards
-                importName: SearchBar
-                config:
-                  id: searchbar
-                  title: Search
-                  cardLayout:
-                    width:
-                      minColumns: 4
-                      maxColumns: 12
-                      defaultColumns: 12
-                    height:
-                      minRows: 1
-                      maxRows: 2
-                      defaultRows: 2
-              - mountPoint: home.page/cards
-                importName: CatalogStarredEntitiesCard
-                config:
-                  id: catalog-starred-entities-card
-                  title: Starred catalog entities
-              - mountPoint: home.page/cards
-                importName: RecentlyVisitedCard
-                config:
-                  id: recently-visited-card
-                  title: Recently visited
-              - mountPoint: home.page/cards
-                importName: TopVisitedCard
-                config:
-                  id: top-visited-card
-                  title: Top visited
-              - mountPoint: home.page/cards
-                importName: FeaturedDocsCard
-                config:
-                  id: featured-docs-card
-                  title: Featured docs
-              - mountPoint: home.page/cards
-                importName: JokeCard
-                config:
-                  id: joke-card
-                  title: Random joke
-            translationResources:
-              - importName: homepageTranslations
-                ref: homepageTranslationRef
-                module: Alpha
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions@sha256:9767cd6b68bf7bafd7b1e43777e657b0c2d018b7424b73b6e8c80a4aa573d147
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions@sha256:9bef416a1f7f44c94f9f2c07a62b867efdb64ce4478f93b6dd9e726724a392f4
     disabled: true
     pluginConfig:
       dynamicPlugins:
@@ -1101,129 +1051,7 @@ plugins:
             mountPoints:
               - mountPoint: application/listener
                 importName: DynamicGlobalFloatingActionButton
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-header@sha256:2a622b6a8c30584eb1023869d7387f1ec09309f62ef3621b94a20fb5d81de1a1
-    disabled: true
-    pluginConfig:
-      app:
-        sidebar:
-          search: false
-          settings: false
-          logo: false
-      dynamicPlugins:
-        frontend:
-          default.main-menu-items:
-            menuItems:
-              default.create:
-                title: ''
-              default.admin:
-                title: Administration
-                textKey: menuItem.administration
-                icon: admin
-          red-hat-developer-hub.backstage-plugin-global-header:
-            translationResources:
-              - importName: globalHeaderTranslations
-                ref: globalHeaderTranslationRef
-            mountPoints:
-              - mountPoint: application/header
-                importName: GlobalHeader
-                config:
-                  position: above-sidebar
-              - mountPoint: global.header/component
-                importName: CompanyLogo
-                config:
-                  priority: 200
-                  props:
-                    to: /
-              - mountPoint: global.header/component
-                importName: SearchComponent
-                config:
-                  priority: 100
-              - mountPoint: global.header/component
-                importName: Spacer
-                config:
-                  priority: 99
-                  props:
-                    growFactor: 0
-              - mountPoint: global.header/component
-                importName: HeaderIconButton
-                config:
-                  priority: 90
-                  props:
-                    title: Self-service
-                    titleKey: create.title
-                    icon: add
-                    to: create
-              - mountPoint: global.header/component
-                importName: StarredDropdown
-                config:
-                  priority: 85
-              - mountPoint: global.header/component
-                importName: ApplicationLauncherDropdown
-                config:
-                  priority: 82
-              - mountPoint: global.header/application-launcher
-                importName: MenuItemLink
-                config:
-                  section: Documentation
-                  priority: 150
-                  props:
-                    title: Developer Hub
-                    titleKey: applicationLauncher.developerHub
-                    icon: developerHub
-                    link: https://docs.redhat.com/en/documentation/red_hat_developer_hub
-              - mountPoint: global.header/application-launcher
-                importName: MenuItemLink
-                config:
-                  section: Developer Tools
-                  priority: 100
-                  props:
-                    title: RHDH Local
-                    titleKey: applicationLauncher.rhdhLocal
-                    icon: developerHub
-                    link: https://github.com/redhat-developer/rhdh-local
-              - mountPoint: global.header/component
-                importName: HelpDropdown
-                config:
-                  priority: 80
-              - mountPoint: global.header/help
-                importName: SupportButton
-                config:
-                  priority: 10
-              - mountPoint: global.header/component
-                importName: NotificationButton
-                config:
-                  priority: 70
-              - mountPoint: global.header/component
-                importName: Divider
-                config:
-                  priority: 50
-              - mountPoint: global.header/component
-                importName: ProfileDropdown
-                config:
-                  priority: 10
-              - mountPoint: global.header/profile
-                importName: MenuItemLink
-                config:
-                  priority: 100
-                  props:
-                    title: Settings
-                    titleKey: profile.settings
-                    link: /settings
-                    icon: manageAccounts
-              - mountPoint: global.header/profile
-                importName: MenuItemLink
-                config:
-                  priority: 90
-                  props:
-                    title: My profile
-                    titleKey: profile.myProfile
-                    type: myProfile
-                    icon: account
-              - mountPoint: global.header/profile
-                importName: LogoutButton
-                config:
-                  priority: 10
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-homepage-backend@sha256:9223d63355448c660c7dd7a47bd07fbb921f8eaecab2587e252e1076dcf8b5d8
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-homepage-backend@sha256:4861291d3d17843a8dad6b05b58248b8367ce1fcdea0b160b091e6c98d2b81e3
     disabled: true
     pluginConfig:
       homepage:

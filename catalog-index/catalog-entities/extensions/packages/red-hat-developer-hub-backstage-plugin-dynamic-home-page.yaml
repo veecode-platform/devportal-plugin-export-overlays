@@ -16,12 +16,11 @@ metadata:
   tags: []
 spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-dynamic-home-page'
-  # Tag: bs_1.52.0__1.13.1
-  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-dynamic-home-page@sha256:c8fcb047648686749b6af3090f726e8ffc2582dfbcfdd3d45e4f2cb1cd912acd"
-  version: 1.13.1
+  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-dynamic-home-page:bs_1.52.0__1.13.4!red-hat-developer-hub-backstage-plugin-dynamic-home-page
+  version: 1.13.4
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.52.0
   author: Red Hat
   support: generally-available
   lifecycle: active
@@ -39,6 +38,7 @@ spec:
               mountPoints:
                 - mountPoint: application/listener
                   importName: VisitListener
+
                 # the default cards
                 - mountPoint: home.page/cards
                   importName: OnboardingSection
@@ -148,6 +148,7 @@ spec:
                   config:
                     id: joke-card
                     title: Random joke
+
               translationResources:
                 - importName: homepageTranslations
                   ref: homepageTranslationRef

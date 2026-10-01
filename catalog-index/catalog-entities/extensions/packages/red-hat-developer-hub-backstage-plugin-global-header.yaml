@@ -16,8 +16,7 @@ metadata:
   tags: []
 spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-global-header'
-  # Tag: bs_1.52.0__1.21.6
-  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-header@sha256:2a622b6a8c30584eb1023869d7387f1ec09309f62ef3621b94a20fb5d81de1a1"
+  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-header:bs_1.52.0__1.21.6!red-hat-developer-hub-backstage-plugin-global-header
   version: 1.21.6
   backstage:
     role: frontend-plugin

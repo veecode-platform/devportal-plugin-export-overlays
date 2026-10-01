@@ -1,0 +1,38 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-plugin-catalog-backend-module-github
+  namespace: rhdh
+  title: "Catalog Backend Module GitHub"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/backstage/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/backstage/tree/master/plugins/catalog-backend-module-github
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/catalog-backend-module-github
+  tags:
+    - software-catalog
+spec:
+  packageName: "@backstage/plugin-catalog-backend-module-github"
+  # Tag: bs_1.52.0__0.13.3
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-catalog-backend-module-github@sha256:d7d3a1f0bfdea4ede1b2410a293c680c7604e9b1de18906f536d4746ae0b3b20"
+  version: 0.13.3
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.52.0
+  author: Red Hat
+  support: generally-available
+  lifecycle: active
+  partOf:
+    - backstage-plugin-catalog-backend-module-github
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        catalog:
+          providers:
+            github:
+              providerId:
+                organization: ${GITHUB_ORG}
