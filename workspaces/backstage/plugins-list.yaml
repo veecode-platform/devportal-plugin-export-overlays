@@ -22,7 +22,7 @@
 # Removed (static in devportal-base):
 #   auth: github, gitlab, google, microsoft, oidc, gcp-iap, oauth2-proxy
 #   catalog: azure
-#   scaffolder: azure, notifications
+#   scaffolder: notifications
 #   search: techdocs (embedded in techdocs-backend)
 #   other: home, org, proxy-backend, events-backend-module-github
 #
@@ -33,11 +33,7 @@
 #          signals-backend, techdocs, techdocs-backend,
 #          techdocs-module-addons-contrib
 #
-# Removed (wrapped in devportal-distro):
-#   catalog: bitbucket-cloud, bitbucket-server
-#   scaffolder: bitbucket-cloud, bitbucket-server
-#
-# Removed while moving the source from 1.49.4 to 1.53.0:
+# Previously removed during the 1.49.4 to 1.53.0 migration; absent at the current 1.52.0 pin:
 #   scaffolder-backend-module-bitbucket: path no longer exists upstream
 #   example-todo-list/backend: private internal examples, not product plugins
 
@@ -66,6 +62,11 @@ plugins/auth:
 # Catalogued: each has a metadata/*.yaml and a published Plugin entity.
 plugins/events-backend-module-gitlab:
 plugins/scaffolder-backend-module-gerrit:
+plugins/scaffolder-backend-module-azure:
+plugins/catalog-backend-module-bitbucket-cloud: --embed-package @backstage/plugin-bitbucket-cloud-common
+plugins/catalog-backend-module-bitbucket-server:
+plugins/scaffolder-backend-module-bitbucket-cloud: --embed-package @backstage/plugin-bitbucket-cloud-common
+plugins/scaffolder-backend-module-bitbucket-server:
 plugins/notifications-backend-module-email: --embed-package @backstage/plugin-notifications-node
 
 # Image-shipped: the DevPortal image carries each of these as a wrapper under
