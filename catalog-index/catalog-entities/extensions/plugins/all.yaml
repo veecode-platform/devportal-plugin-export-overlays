@@ -6,9 +6,7 @@ metadata:
 spec:
   targets:
     - ./adoption-insights.yaml
-    - ./ai-model-catalog.yaml
     - ./analytics-provider-segment.yaml
-    - ./ansible-plugin.yaml
     - ./argocd-scaffolder-actions.yaml
     - ./argocd.yaml
     - ./aws-codebuild.yaml
@@ -71,11 +69,9 @@ spec:
     - ./security-insights.yaml
     - ./signals-backend.yaml
     - ./signals.yaml
-    - ./software-catalog-mcp-extras.yaml
     - ./sonarqube-catalog-cards.yaml
     - ./sonarqube-scaffolder-actions.yaml
     - ./tech-radar.yaml
-    - ./techdocs-mcp-extras.yaml
     - ./techdocs.yaml
     - ./tekton.yaml
     - ./todo.yaml
