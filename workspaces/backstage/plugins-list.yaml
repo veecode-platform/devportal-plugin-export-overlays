@@ -33,7 +33,7 @@
 #          signals-backend, techdocs, techdocs-backend,
 #          techdocs-module-addons-contrib
 #
-# Removed while moving the source from 1.49.4 to 1.53.0:
+# Previously removed during the 1.49.4 to 1.53.0 migration; absent at the current 1.52.0 pin:
 #   scaffolder-backend-module-bitbucket: path no longer exists upstream
 #   example-todo-list/backend: private internal examples, not product plugins
 

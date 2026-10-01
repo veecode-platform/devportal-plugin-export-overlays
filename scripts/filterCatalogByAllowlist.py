@@ -185,7 +185,7 @@ def filter_catalog(overlays_dir: Path, catalog_dir: Path) -> None:
         drop_reason = None
         if not refs:
             drop_reason = "no packages listed"
-        elif not has_package and any(ref in removed_names for ref in refs):
+        elif refs and all(ref in removed_names for ref in refs):
             drop_reason = "all its packages left"
         if drop_reason:
             log_debug(f"Remove plugin {plugin_file.name}: {drop_reason}")
