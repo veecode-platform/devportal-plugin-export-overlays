@@ -16,8 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-extensions'
-  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions:bs_1.52.0__0.17.1
-  version: 0.17.1
+  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions:bs_1.52.0__0.18.0
+  version: 0.18.0
   backstage:
     role: frontend-plugin
     supportedVersions: 1.49.4
