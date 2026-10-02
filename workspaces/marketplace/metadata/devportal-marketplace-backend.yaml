@@ -12,8 +12,8 @@ metadata:
   tags: []
 spec:
   packageName: "devportal-marketplace-backend"
-  dynamicArtifact: oci://quay.io/veecode/devportal-marketplace-backend:bs_1.52.0__0.2.0
-  version: 0.2.0
+  dynamicArtifact: oci://quay.io/veecode/devportal-marketplace-backend:bs_1.52.0__0.3.0
+  version: 0.3.0
   backstage:
     role: backend-plugin
     supportedVersions: 1.52.0
