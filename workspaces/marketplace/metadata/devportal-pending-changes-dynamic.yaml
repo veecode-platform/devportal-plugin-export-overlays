@@ -12,8 +12,8 @@ metadata:
   tags: []
 spec:
   packageName: "devportal-pending-changes-dynamic"
-  dynamicArtifact: oci://quay.io/veecode/devportal-pending-changes-dynamic:bs_1.52.0__0.2.0
-  version: 0.2.0
+  dynamicArtifact: oci://quay.io/veecode/devportal-pending-changes-dynamic:bs_1.52.0__0.3.0
+  version: 0.3.0
   backstage:
     role: frontend-plugin
     supportedVersions: 1.52.0
