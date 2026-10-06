@@ -1,3 +1,4 @@
 plugins/devportal-marketplace-backend: --embed-package @red-hat-developer-hub/backstage-plugin-extensions-common
 plugins/devportal-marketplace-frontend-dynamic:
 plugins/devportal-pending-changes-dynamic:
+# touched to force publish 2026-10-06 (proxy-addr 2.0.8 release tags, ADR-008 exception)
