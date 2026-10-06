@@ -1,0 +1,29 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-announcements-backend
+  namespace: rhdh
+  title: Announcements Backend
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-announcements-backend"
+  # Tag: bs_1.52.0__0.26.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-announcements-backend@sha256:d50068f8fd6c638987f40b560fe458b124d14ac3779c13a5540d7dcc2b00d58b"
+  version: 0.26.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.52.0
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigNotRequired: true
+  appConfigExamples: []

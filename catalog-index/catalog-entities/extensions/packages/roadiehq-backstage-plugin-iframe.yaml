@@ -1,0 +1,57 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: roadiehq-backstage-plugin-iframe
+  namespace: rhdh
+  title: iFrame
+  links:
+    - url: https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-iframe
+      title: Source Code
+    - url: https://github.com/RoadieHQ/roadie-backstage-plugins/issues
+      title: Bugs
+  annotations:
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-iframe
+  tags:
+    - iframe
+    - embed
+spec:
+  packageName: "@roadiehq/backstage-plugin-iframe"
+  # Tag: bs_1.52.0__1.6.1
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-iframe@sha256:3b4f6d7bfea26b10205f3ca953a75e814a99157f34232caef3d5bba7a4edd915"
+  version: 1.6.1
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.44.2
+  support: community
+  lifecycle: active
+  partOf:
+    - roadie-backstage-plugins
+  appConfigExamples:
+    - title: Default configuration
+      # Verificado em runtime (drydock, 2026-07-17) contra veecode/devportal:2.2.1:
+      # - "IFrameContent" não é um export do plugin (DynamicRoot: "PluginRoot.IFrameContent
+      #   not found, ignoring mountPoint") — no-op silencioso.
+      # - "EntityIFrameContent" é routable extension e não recebe props ("No src field provided").
+      # - EntityIFrameCard é component extension, aceita props — funciona annotation-driven.
+      content:
+        dynamicPlugins:
+          frontend:
+            roadiehq.backstage-plugin-iframe:
+              entityTabs:
+                - path: /iframe
+                  title: IFrame
+                  mountPoint: entity.page.iframe
+              mountPoints:
+                - mountPoint: entity.page.iframe/cards
+                  importName: EntityIFrameCard
+                  config:
+                    layout:
+                      gridColumn: "1 / -1"
+                    props:
+                      srcFromAnnotation: iframe/src
+                    if:
+                      allOf:
+                        - hasAnnotation: iframe/src
+        iframe:
+          allowlist:
+            - backstage.io

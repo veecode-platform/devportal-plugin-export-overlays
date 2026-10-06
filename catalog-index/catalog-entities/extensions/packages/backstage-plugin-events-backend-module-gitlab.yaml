@@ -1,0 +1,36 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-plugin-events-backend-module-gitlab
+  namespace: rhdh
+  title: "Events Backend Module GitLab"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://issues.redhat.com/browse/RHDHBUGS
+      title: "Report issues here. Note: Customers of Red Hat Developer Hub should raise a Red Hat support case instead."
+    - title: Source Code
+      url: https://github.com/backstage/backstage/tree/master/plugins/events-backend-module-gitlab
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/events-backend-module-gitlab
+  tags: []
+spec:
+  packageName: "@backstage/plugin-events-backend-module-gitlab"
+  # Tag: bs_1.52.0__0.3.13
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-events-backend-module-gitlab@sha256:2f45814248ac78def78f9e0ceb624a8b4aae1eb1450bc57a6c1fdb0a32ed5189"
+  version: 0.3.13
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.52.0
+  author: Red Hat
+  support: tech-preview
+  lifecycle: active
+  partOf:
+    - backstage-plugin-events-backend-module-gitlab
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        events:
+          modules:
+            gitlab:
+              webhookSecret: ${VAULT_GITLAB_WEBHOOK_SECRET}

@@ -1,0 +1,9 @@
+{
+  "veecode-platform-backstage-plugin-kong-service-manager": {
+    "workspacePath": "kong-tools/plugins/kong-service-manager",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager:bs_1.52.0__1.5.3",
+    "digest": "sha256:734c146c35ca54229d7898fedebdf53d938fb9361ff35726fe459809a684716a",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyIjp7Im5hbWUiOiJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMS41LjMiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImZyb250ZW5kLXBsdWdpbiIsInBsdWdpbklkIjoia29uZy1zZXJ2aWNlLW1hbmFnZXIiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWtvbmctc2VydmljZS1tYW5hZ2VyIiwiQHZlZWNvZGUtcGxhdGZvcm0vYmFja3N0YWdlLXBsdWdpbi1rb25nLXNlcnZpY2UtbWFuYWdlci1jb21tb24iXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIn19XQ=="
+  }
+}

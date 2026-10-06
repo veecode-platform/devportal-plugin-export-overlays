@@ -1,0 +1,27 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-adr-backend
+  namespace: rhdh
+  title: ADR Backend
+  links:
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/adr
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/adr
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-adr-backend"
+  # Tag: bs_1.52.0__0.23.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-adr-backend@sha256:ed655aa08ef3dc98c23b03bb35fb0405d886f74cce53592140e1c256f06eba44"
+  version: 0.23.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.52.0
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigNotRequired: true
+  appConfigExamples: []

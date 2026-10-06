@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-analytics-module-newrelic-browser": {
+    "workspacePath": "analytics/plugins/analytics-module-newrelic-browser",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-analytics-module-newrelic-browser:bs_1.52.0__0.18.0",
+    "digest": "sha256:8b800879770794e0574afdb77181037c26e149e5ff3b014dddf8e13a92b3f34d",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tYW5hbHl0aWNzLW1vZHVsZS1uZXdyZWxpYy1icm93c2VyIjp7Im5hbWUiOiJAYmFja3N0YWdlLWNvbW11bml0eS9wbHVnaW4tYW5hbHl0aWNzLW1vZHVsZS1uZXdyZWxpYy1icm93c2VyLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4xOC4wIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4tbW9kdWxlIiwicGx1Z2luSWQiOiJhcHAiLCJwbHVnaW5QYWNrYWdlIjoiQGJhY2tzdGFnZS9wbHVnaW4tYXBwIiwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sInJlcG9zaXRvcnkiOnsidHlwZSI6ImdpdCIsInVybCI6Imh0dHBzOi8vZ2l0aHViLmNvbS9iYWNrc3RhZ2UvY29tbXVuaXR5LXBsdWdpbnMiLCJkaXJlY3RvcnkiOiJ3b3Jrc3BhY2VzL2FuYWx5dGljcy9wbHVnaW5zL2FuYWx5dGljcy1tb2R1bGUtbmV3cmVsaWMtYnJvd3NlciJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+  }
+}

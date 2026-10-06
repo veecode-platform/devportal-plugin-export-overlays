@@ -1,0 +1,73 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-npm
+  namespace: rhdh
+  title: NPM
+  links:
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/npm
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/npm
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-npm"
+  # Tag: bs_1.52.0__1.20.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-npm@sha256:ff44d50c6cffd4e7d314e0dc4aec03bdce1f6ec85c3c917dbfa23d6dbcb74e95"
+  version: 1.20.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.4
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-npm:
+              translationResources:
+                - module: alpha
+                  importName: npmTranslations
+                  ref: npmTranslationRef
+              entityTabs:
+                - mountPoint: entity.page.npm
+                  path: /npm
+                  title: npm releases
+                  config:
+                    if:
+                      allOf:
+                        - isNpmAvailable
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityNpmInfoCard
+                  config:
+                    layout:
+                      gridColumnEnd:
+                        xs: "span 12"
+                        md: "span 8"
+                    if:
+                      allOf:
+                        - isNpmAvailable
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityNpmReleaseOverviewCard
+                  config:
+                    layout:
+                      gridColumnEnd:
+                        xs: "span 12"
+                        md: "span 8"
+                    if:
+                      allOf:
+                        - isNpmAvailable
+                - mountPoint: entity.page.npm/cards
+                  importName: EntityNpmReleaseTableCard
+                  config:
+                    layout:
+                      gridColumnEnd:
+                        xs: "span 12"
+                    if:
+                      allOf:
+                        - isNpmAvailable

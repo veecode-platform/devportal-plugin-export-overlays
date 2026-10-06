@@ -1,0 +1,35 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-sonarqube-backend
+  namespace: rhdh
+  title: "SonarQube Backend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/sonarqube
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/sonarqube
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-sonarqube-backend"
+  # Tag: bs_1.52.0__1.1.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-sonarqube-backend@sha256:bdf9d45d8c73c03be632174a1918c472806cf4bc52966fb3cbe8f98363abd0c5"
+  version: 1.1.1
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.49.4
+  author: Red Hat
+  support: community
+  lifecycle: active
+  partOf:
+    - sonarqube-catalog-cards
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        sonarqube:
+          baseUrl: ${SONARQUBE_URL}
+          apiKey: ${SONARQUBE_TOKEN}

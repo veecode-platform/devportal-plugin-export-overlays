@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-todo-backend": {
+    "workspacePath": "todo/plugins/todo-backend",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-todo-backend:bs_1.52.0__0.23.0",
+    "digest": "sha256:349488264edc88c97e83749c07835515d4782a9542c5624b129a60128dbe7cd5",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tdG9kby1iYWNrZW5kIjp7Im5hbWUiOiJAYmFja3N0YWdlLWNvbW11bml0eS9wbHVnaW4tdG9kby1iYWNrZW5kLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4yMy4wIiwiZGVzY3JpcHRpb24iOiJBIEJhY2tzdGFnZSBiYWNrZW5kIHBsdWdpbiB0aGF0IGxldHMgeW91IGJyb3dzZSBUT0RPIGNvbW1lbnRzIGluIHlvdXIgc291cmNlIGNvZGUiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImJhY2tlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJ0b2RvIiwicGx1Z2luUGFja2FnZXMiOlsiQGJhY2tzdGFnZS1jb21tdW5pdHkvcGx1Z2luLXRvZG8iLCJAYmFja3N0YWdlLWNvbW11bml0eS9wbHVnaW4tdG9kby1iYWNrZW5kIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTIuMCJ9LCJob21lcGFnZSI6Imh0dHBzOi8vYmFja3N0YWdlLmlvIiwicmVwb3NpdG9yeSI6eyJ0eXBlIjoiZ2l0IiwidXJsIjoiaHR0cHM6Ly9naXRodWIuY29tL2JhY2tzdGFnZS9jb21tdW5pdHktcGx1Z2lucyIsImRpcmVjdG9yeSI6IndvcmtzcGFjZXMvdG9kby9wbHVnaW5zL3RvZG8tYmFja2VuZCJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+  }
+}

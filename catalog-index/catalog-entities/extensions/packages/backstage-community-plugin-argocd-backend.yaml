@@ -1,0 +1,41 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-redhat-argocd-backend
+  namespace: rhdh
+  title: "ArgoCD Backend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/argocd
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/argocd
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-argocd-backend"
+  # Tag: bs_1.52.0__1.4.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-argocd-backend@sha256:43cda540c9c41c85adff0220afb889f04030286415b359f2fff3c161ba5d69a3"
+  version: 1.4.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.49.4
+  author: Red Hat
+  support: community
+  lifecycle: active
+  partOf:
+    - redhat-argocd
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        argocd:
+          username: ${ARGOCD_USERNAME}
+          password: ${ARGOCD_PASSWORD}
+          appLocatorMethods:
+            - type: config
+              instances:
+                - name: argoInstance1
+                  url: ${ARGOCD_INSTANCE1_URL}
+                  token: ${ARGOCD_AUTH_TOKEN}

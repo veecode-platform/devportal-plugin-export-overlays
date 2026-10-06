@@ -1,0 +1,41 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: immobiliarelabs-backstage-plugin-gitlab-backend
+  namespace: rhdh
+  title: "GitLab Backend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/immobiliare/backstage-plugin-gitlab/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/immobiliare/backstage-plugin-gitlab/tree/main/packages/gitlab-backend
+  annotations:
+    backstage.io/source-location: url:https://github.com/immobiliare/backstage-plugin-gitlab/tree/main/packages/gitlab-backend
+  tags: []
+spec:
+  packageName: "@immobiliarelabs/backstage-plugin-gitlab-backend"
+  # Tag: bs_1.52.0__7.0.0
+  dynamicArtifact: "oci://quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab-backend@sha256:b1bbe7274759b17455c02c2903267adf83e48803367735109e24a14b6b1f1e3f"
+  version: 7.0.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.42.5
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - backstage-catalog-cards
+  appConfigExamples:
+    - title: Default configuration
+      # Verificado em runtime (drydock, 2026-07-17): o plugin lê `integrations.gitlab`
+      # (array) via getConfigArray e o boot MORRE se a chave não existir
+      # ("Missing required config value at 'integrations.gitlab'"). O example anterior
+      # (`gitlab: {host, token}`) tinha shape errado e não satisfazia o gate.
+      content:
+        integrations:
+          gitlab:
+            - host: gitlab.com
+              apiBaseUrl: https://gitlab.com/api/v4
+              token: ${GITLAB_TOKEN}

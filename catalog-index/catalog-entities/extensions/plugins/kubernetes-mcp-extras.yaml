@@ -1,0 +1,103 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/redhat-developer/rhdh-plugins/refs/heads/main/workspaces/extensions/json-schema/plugins.json
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Plugin
+metadata:
+ name: kubernetes-mcp-extras
+ namespace: rhdh
+ title: Kubernetes MCP Tool
+ annotations:
+   extensions.backstage.io/pre-installed: 'true' # this means the plugin yaml is preinstalled, not the plugin itself, all other plugins are marked as 'custom'
+ links:
+   - title: Homepage
+     url: https://red.ht/rhdh
+   - title: Bugs
+     url: https://issues.redhat.com/browse/RHDHBUGS
+   - title: Documentation for Red Hat Developer Hub
+     url: https://docs.redhat.com/en/documentation/red_hat_developer_hub/latest/html/interacting_with_model_context_protocol_tools_for_red_hat_developer_hub/assembly-model-context-protocol-tools
+   - title: Source Code
+     url: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/mcp-integrations
+ tags:
+   - mcp
+   - developer-tools
+   - ai
+   - kubernetes
+ description: |
+   Backend plugin that provides MCP tools to allow AI clients to query Kubernetes clusters and resources registered in the portal
+spec:
+ author: Red Hat
+ support: dev-preview
+ lifecycle: active
+ publisher: Red Hat
+
+
+ highlights:
+   - Integrations with Kubernetes for AI assistants
+   - Lists the Kubernetes clusters registered with the portal
+   - Fetches the Kubernetes resources associated with catalog entities
+
+
+ description: |
+     # Kubernetes MCP Tool Plugin
+
+
+     A backend plugin that provides a set of MCP tools to allow AI clients to interact with Kubernetes on Red Hat Developer Hub
+
+
+     Model Context Protocol (MCP) provides a standard for connecting AI models and applications (MCP clients) to external systems, enabling them to access information and workflows on those systems. MCP servers define tools which can be called by AI applications to access this data.
+     RHDH supports running MCP tools through the mcp-actions-backend plugin available in Backstage.
+
+     ### Key Features
+
+
+     - **Cluster discovery**: The `get-kubernetes-clusters` action lists all Kubernetes clusters registered with this Backstage instance
+     - **Entity resources**: The `get-kubernetes-resources-for-entity` action fetches the Kubernetes resources associated with a catalog entity across all registered clusters
+
+     ## Requirements
+
+
+     This plugin talks to the `kubernetes-backend` plugin over its HTTP API, so the `@backstage/plugin-kubernetes-backend` plugin must also be installed and configured in your backend.
+
+     ## Support
+
+
+     - **MCP Server Plugin**: [MCP Server README](https://github.com/backstage/backstage/blob/master/plugins/mcp-actions-backend/README.md)
+     - **Backend Plugin**: [Backend README](https://github.com/redhat-developer/rhdh-plugins/blob/main/workspaces/mcp-integrations/README.md)
+     - **Issues**: [Jira Issues](https://issues.redhat.com/browse/RHDHBUGS)
+
+
+ packages: # link to the name used in the associated package documents in ../packages
+   - red-hat-developer-hub-plugin-kubernetes-mcp-extras
+
+ installation: |
+     ## Installation
+
+     ### Installing the MCP Actions Backend Plugin
+
+     First, install the `MCP Actions Backend` plugin available in the marketplace, and make sure the `Kubernetes` backend plugin is installed and configured
+
+     ### Dynamic Plugin Installation for Red Hat Developer Hub
+
+     Add the following configuration to your dynamic plugin yaml:
+
+     ```yaml
+     includes:
+       - dynamic-plugins.default.yaml
+     plugins:
+       # MCP server backend plugin
+       - package: oci://quay.io/veecode/mcp-integrations:bs_1.52.0!red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras
+         disabled: false
+     ```
+
+     ## RHDH Configuration
+
+     ### Complete Configuration Reference
+
+    
+     Register the MCP tool as a plugin source in your App Config:
+
+     ```yaml
+     backend:
+       actions:
+         pluginSources:
+           - kubernetes-mcp-extras
+     ```

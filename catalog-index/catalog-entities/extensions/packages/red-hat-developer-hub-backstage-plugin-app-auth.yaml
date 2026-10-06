@@ -1,0 +1,31 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: red-hat-developer-hub-backstage-plugin-app-auth
+  namespace: rhdh
+  title: App Auth
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://issues.redhat.com/browse/RHDHBUGS
+      title: "Report issues here. Note: Customers of Red Hat Developer Hub should raise a Red Hat support case instead."
+    - title: Source Code
+      url: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/app-defaults/plugins/app-auth
+  annotations:
+    backstage.io/source-location: url:https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/app-defaults/plugins/app-auth
+  tags: []
+spec:
+  packageName: "@red-hat-developer-hub/backstage-plugin-app-auth"
+  # Tag: bs_1.52.0__0.0.2
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-auth@sha256:fbe26478a0ed00a4c0da30b121befd0263705fd3d7c9a2b1e5848f7420ec92e4"
+  version: 0.0.2
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.4
+  author: Red Hat
+  support: dev-preview
+  lifecycle: active
+  partOf:
+    - app-auth
+  appConfigNotRequired: true
+  appConfigExamples: []

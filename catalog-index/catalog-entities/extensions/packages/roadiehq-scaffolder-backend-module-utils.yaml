@@ -1,0 +1,32 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: roadiehq-scaffolder-backend-module-utils
+  namespace: rhdh
+  title: "Scaffolder Backend Module Utils"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/RoadieHQ/roadie-backstage-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-module-utils
+  annotations:
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/scaffolder-actions/scaffolder-backend-module-utils
+  tags:
+    - software-templates
+spec:
+  packageName: "@roadiehq/scaffolder-backend-module-utils"
+  # Tag: bs_1.52.0__4.1.2
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-scaffolder-backend-module-utils@sha256:53830b1917cdd1e955639c896ec4afac85fe3b41b92419ee350f10928927badf"
+  version: 4.1.2
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.49.4
+  author: Roadie
+  support: community
+  lifecycle: active
+  partOf:
+    - roadie-scaffolder-util-actions
+  appConfigNotRequired: true
+  appConfigExamples: []

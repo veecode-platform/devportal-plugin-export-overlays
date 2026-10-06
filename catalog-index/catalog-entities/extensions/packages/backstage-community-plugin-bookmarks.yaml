@@ -1,0 +1,51 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-bookmarks
+  namespace: rhdh
+  title: Bookmarks
+  links:
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/bookmarks
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/bookmarks
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-bookmarks"
+  # Tag: bs_1.52.0__0.9.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-bookmarks@sha256:9bf6dd9a6d7f5cbd5416849bc0adf503f4e0e17e883a64ae21c3ffb20b2c5168"
+  version: 0.9.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.49.4
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-bookmarks:
+              translationResources:
+                - importName: bookmarksTranslations
+                  ref: bookmarksTranslationRef
+              entityTabs:
+                - mountPoint: entity.page.bookmarks
+                  path: /bookmarks
+                  title: Bookmarks
+                  titleKey: entityTab.title # does not exist yet
+                  config:
+                    if:
+                      allOf:
+                        - isBookmarksAvailable
+              mountPoints:
+                - mountPoint: entity.page.bookmarks/cards
+                  importName: EntityBookmarksContent
+                  config:
+                    layout:
+                      gridColumn: 1 / -1
+                      height: calc(100vh - 300px)
+                      min-height: 500px

@@ -1,0 +1,9 @@
+{
+  "veecode-platform-backstage-plugin-github-workflows": {
+    "workspacePath": "github-workflows/plugins/github-workflows",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-github-workflows:bs_1.52.0__1.3.7",
+    "digest": "sha256:db84ae0a758bda91657154346be2c510149cb1955ced2960329b124e04f65c44",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWdpdGh1Yi13b3JrZmxvd3MiOnsibmFtZSI6IkB2ZWVjb2RlLXBsYXRmb3JtL2JhY2tzdGFnZS1wbHVnaW4tZ2l0aHViLXdvcmtmbG93cy1keW5hbWljIiwidmVyc2lvbiI6IjEuMy43IiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImdpdGh1Yi13b3JrZmxvd3MiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWdpdGh1Yi13b3JrZmxvd3MiXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41Mi4wIn0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIiwia2V5d29yZHMiOlsiYmFja3N0YWdlIiwiZ2l0aHViIiwiZ2l0aHViIHdvcmtmbG93cyJdfX1d"
+  }
+}

@@ -1,0 +1,38 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-tech-insights-maturity
+  namespace: rhdh
+  title: "Tech Insights Maturity"
+  links:
+  - url: https://red.ht/rhdh
+    title: Homepage
+  - url: https://github.com/backstage/community-plugins/issues
+    title: Bugs
+  - title: Source Code
+    url: https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/tech-insights
+  tags: []
+spec:
+  packageName: '@backstage-community/plugin-tech-insights-maturity'
+  # Tag: bs_1.52.0__0.6.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tech-insights-maturity@sha256:9af29e94bc27096c5cf8fcee4ea77f77f53b9a46f382fc41e21140a4b6416f04"
+  version: 0.6.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.47.2
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+  - tech-insights
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-tech-insights-maturity:
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityMaturitySummaryCard
