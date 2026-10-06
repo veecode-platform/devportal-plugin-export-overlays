@@ -1,0 +1,71 @@
+# Deletes per-plugin release tags on quay.io/veecode so the next publish can push the tag
+# again. The per-plugin tag `bs_<backstage>__<pluginVersion>` is immutable by design
+# (ADR-008): export-utils skips the push when the tag exists. This workflow is the
+# recorded exception path, for a rebuild that fixes a vulnerability without a plugin
+# version change. Each deletion needs a decision recorded in ADR-008.
+#
+# Safety:
+#   - each entry names the digest the tag must point at; a mismatch aborts everything;
+#   - the digest must stay referenced by a `face-*` or `anchor-*` tag, so images that
+#     pin it keep installing after the tag moves (quay garbage-collects untagged digests);
+#   - dry-run is the default.
+name: Delete plugin release tags (ADR-008 exception)
+
+on:
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: "Space-separated <repo>:<tag>@sha256:<digest> entries under quay.io/veecode"
+        type: string
+        required: true
+      dry-run:
+        description: "true = only check; false = delete"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check and delete
+        env:
+          QUAY_API_TOKEN: ${{ secrets.QUAY_API_TOKEN }}
+          TAGS: ${{ inputs.tags }}
+          DRY_RUN: ${{ inputs.dry-run }}
+        run: |
+          set -euo pipefail
+          [ -n "$QUAY_API_TOKEN" ] || { echo "::error::QUAY_API_TOKEN secret not available"; exit 1; }
+          API=https://quay.io/api/v1/repository/veecode
+          AUTH="Authorization: Bearer $QUAY_API_TOKEN"
+          read -ra ENTRIES <<< "$TAGS"
+          [ "${#ENTRIES[@]}" -gt 0 ] || { echo "::error::no entries"; exit 1; }
+
+          for entry in "${ENTRIES[@]}"; do
+            [[ $entry =~ ^([a-z0-9._-]+):([A-Za-z0-9._-]+)@(sha256:[a-f0-9]{64})$ ]] ||
+              { echo "::error::malformed entry: $entry"; exit 1; }
+            repo=${BASH_REMATCH[1]} tag=${BASH_REMATCH[2]} want=${BASH_REMATCH[3]}
+            have=$(curl -fsS -H "$AUTH" "$API/$repo/tag/?specificTag=$tag&onlyActiveTags=true" |
+              jq -r '.tags[0].manifest_digest // empty')
+            [ "$have" = "$want" ] ||
+              { echo "::error::$repo:$tag points at '${have:-nothing}', expected $want"; exit 1; }
+            anchors=$(curl -fsS -H "$AUTH" "$API/$repo/tag/?onlyActiveTags=true&limit=100" |
+              jq -r --arg d "$want" '[.tags[] | select(.manifest_digest == $d) | .name |
+                select(startswith("face-") or startswith("anchor-"))] | join(",")')
+            [ -n "$anchors" ] ||
+              { echo "::error::$repo@$want has no face-/anchor- tag; deleting $tag could orphan it"; exit 1; }
+            echo "checked $repo:$tag = $want (kept alive by: $anchors)"
+          done
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "dry run: nothing deleted"
+            exit 0
+          fi
+          for entry in "${ENTRIES[@]}"; do
+            [[ $entry =~ ^([a-z0-9._-]+):([A-Za-z0-9._-]+)@ ]]
+            repo=${BASH_REMATCH[1]} tag=${BASH_REMATCH[2]}
+            curl -fsS -X DELETE -H "$AUTH" "$API/$repo/tag/$tag" -o /dev/null
+            echo "deleted $repo:$tag"
+          done
