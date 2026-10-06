@@ -94,10 +94,11 @@ jobs:
               repo: context.repo.repo,
               workflow_id: workflowId,
               branch: core.getInput('release_branch'),
-              // No server-side status filter: with status: 'success' the list came back
-              // stale in 3 of the 7 publications checked (2026-09-16 to 2026-10-05), naming a run from
-              // 2026-09-04, so those runs rebuilt nearly every workspace. The unfiltered
-              // list was current when the filtered one was not; the conclusion is
+              // No server-side status filter. With status: 'success' the list came back
+              // stale in 3 of the 7 publications checked (2026-09-16 to 2026-10-05) and
+              // named the 2026-09-04 run, so those runs rebuilt every workspace changed
+              // since then (17 of 48 on 2026-10-05, when one had changed). The unfiltered
+              // list was current when the filtered one was not, so the conclusion is
               // checked below instead. Upstream has the same query.
               per_page: 30,
               exclude_pull_requests: true,
