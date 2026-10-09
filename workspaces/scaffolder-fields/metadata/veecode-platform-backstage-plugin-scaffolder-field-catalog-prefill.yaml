@@ -3,7 +3,7 @@ kind: Package
 metadata:
   # Package only: no Plugin catalog entity yet, so it is not listed in the
   # marketplace.
-  name: veecode-platform-backstage-plugin-scaffolder-field-catalog-prefill
+  name: veecode-platform-bsp-scaffolder-field-catalog-prefill
   namespace: veecode
   title: "Catalog Entity Prefill (scaffolder field)"
   links:
