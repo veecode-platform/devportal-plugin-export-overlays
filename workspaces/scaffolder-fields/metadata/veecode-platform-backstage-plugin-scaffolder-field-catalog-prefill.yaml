@@ -1,0 +1,37 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  # Package only: no Plugin catalog entity yet, so it is not listed in the
+  # marketplace.
+  name: veecode-platform-bsp-scaffolder-field-catalog-prefill
+  namespace: veecode
+  title: "Catalog Entity Prefill (scaffolder field)"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/scaffolder-fields/plugins/scaffolder-field-catalog-prefill
+  tags: []
+spec:
+  packageName: "@veecode-platform/backstage-plugin-scaffolder-field-catalog-prefill"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-scaffolder-field-catalog-prefill:bs_1.52.0__0.1.0
+  version: 0.1.0
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            veecode-platform.backstage-plugin-scaffolder-field-catalog-prefill:
+              scaffolderFieldExtensions:
+                - importName: CatalogEntityPrefillExtension
+              translationResources:
+                - importName: catalogEntityPrefillTranslations
+                  ref: catalogEntityPrefillTranslationRef
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.52.0
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - scaffolder-field-catalog-prefill
