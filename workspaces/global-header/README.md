@@ -47,8 +47,9 @@ merge it unless one of the two holds.
 1. Confirm that `package.json` at the new ref still has a `./legacy` export
    that points at `src/legacy.ts`.
 2. After the export, confirm that `PluginRoot` exports every name in the table.
-   The root `CLAUDE.md` section "Frontends for the VeeCode 3.x portal"
-   describes how to read the exports.
+   The 3.1.0 build exports the same 25 names as the 1.21.6 build that the 3.0
+   portal ran. The root `CLAUDE.md` section "Frontends for the VeeCode 3.x
+   portal" describes how to read the exports.
 3. Keep `name` equal to the key under `dynamicPlugins.frontend` in the
    metadata.
 
