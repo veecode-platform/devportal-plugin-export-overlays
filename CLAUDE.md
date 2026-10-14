@@ -135,6 +135,19 @@ The hook only triggers when `workspaces/*/e2e-tests/**` files are staged — zer
 - **Overlay** (`plugins/<plugin>/overlay/`): Replaces or adds entire files during packaging. Used for plugin-specific changes.
 - **Patch** (`patches/*.patch`): Applies line-by-line changes to workspace source before build. Used for workspace-wide fixes. Numbered prefix controls application order (e.g., `1-fix-something.patch`).
 
+### Frontends for the VeeCode 3.x portal
+
+The VeeCode 3.x portal runs Backstage 1.54.9 on the **old** frontend system and loads plugins through Scalprum. Many upstream packages now make `.` a new-frontend-system entry (`createFrontendPlugin`, `createFrontendModule`). Without an override, rhdh-cli 1.11.2 exposes `./src/index.ts` as `PluginRoot`, or fails when that file does not exist. None of the names in `appConfigExamples` are exported there, and the portal only logs `Plugin <scope> is not configured properly: <module>.<importName> not found, ignoring ...` in the browser console (`DynamicRoot.tsx` in devportal-core), so the plugin silently does not render.
+
+A frontend that the 3.x portal loads must expose a legacy entry as `PluginRoot`:
+
+- **Scalprum config** (`plugins/<plugin>/scalprum-config.json`): A third kind of override, next to overlay and patch. `export-dynamic.sh` passes it as `--scalprum-config`, and it replaces any inline `scalprum` key of the package. Set `name` to the Scalprum scope (the package name without `@` and with `/` replaced by `.`, which is the key under `dynamicPlugins.frontend` in the metadata) and `exposedModules.PluginRoot` to the legacy file (the `./legacy` export of the package). Add `Alpha` when the metadata names `module: Alpha` for translations.
+- **Check after the export**: Open `dist-dynamic/dist-scalprum/plugin-manifest.json`, then the container entry that `loadScripts` names. The entry maps each exposed module to a webpack module, and the chunk that defines it lists its exports in a `.d(exports, {...})` call. Every `module`, `importName`, `ref` and `config.if` name in `appConfigExamples` must be in that list.
+- **No legacy entry upstream**: Keep the workspace on the last ref that has one (`global-header` stays on 3.1.x), or on a version whose build does nothing in the portal (`app-defaults` stays on 0.0.2). Do not move it to an entry the portal cannot mount.
+- **Record each override** in `workspaces/<ws>/README.md`: the module and file it exposes, why, and what to check on the next source bump.
+
+A published per-plugin tag (`bs_<backstage>__<version>`) is immutable (ADR-008): `export-dynamic.sh` skips the push with a notice when the tag exists, and the job still passes. A build that exposes the wrong entry needs a new plugin version, or the exception path in `.github/workflows/delete-plugin-tags.yaml`.
+
 ## Working with Catalog Entities
 
 ### Plugin YAML (`catalog-entities/extensions/plugins/*.yaml`)
