@@ -18,7 +18,7 @@ spec:
   version: 0.12.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Proberaum
   support: community
   lifecycle: active

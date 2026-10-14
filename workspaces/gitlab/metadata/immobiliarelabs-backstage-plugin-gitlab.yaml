@@ -20,7 +20,7 @@ spec:
   version: 7.0.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.42.5
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

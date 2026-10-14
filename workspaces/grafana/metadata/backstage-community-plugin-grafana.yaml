@@ -21,7 +21,7 @@ spec:
   version: 0.17.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   support: community
   lifecycle: active
   partOf:

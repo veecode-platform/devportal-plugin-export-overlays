@@ -20,7 +20,7 @@ spec:
   version: 3.1.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.47.2
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active
