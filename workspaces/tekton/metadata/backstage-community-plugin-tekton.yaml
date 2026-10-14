@@ -35,6 +35,7 @@ spec:
               translationResources:
                 - importName: tektonTranslations
                   ref: tektonTranslationRef
+                  module: Alpha
               mountPoints:
                 - mountPoint: entity.page.ci/cards
                   importName: TektonCI
