@@ -16,8 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-analytics-module-matomo"
-  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-analytics-module-matomo:bs_1.52.0__1.27.0
-  version: 1.27.0
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-analytics-module-matomo:bs_1.54.9__1.31.1
+  version: 1.31.1
   backstage:
     role: frontend-plugin-module
     supportedVersions: 1.49.4

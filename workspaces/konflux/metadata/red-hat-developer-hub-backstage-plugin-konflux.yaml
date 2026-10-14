@@ -15,8 +15,8 @@ metadata:
     - cicd
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-konflux"
-  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux:bs_1.52.0__0.1.8
-  version: 0.1.8
+  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux:bs_1.54.9__0.2.1
+  version: 0.2.1
   backstage:
     role: frontend-plugin
     supportedVersions: 1.49.4

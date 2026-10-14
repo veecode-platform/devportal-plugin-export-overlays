@@ -16,8 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-tech-insights-backend'
-  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend:bs_1.52.0__2.5.0
-  version: 2.5.0
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend:bs_1.54.9__3.1.0
+  version: 3.1.0
   backstage:
     role: backend-plugin
     supportedVersions: 1.47.2
