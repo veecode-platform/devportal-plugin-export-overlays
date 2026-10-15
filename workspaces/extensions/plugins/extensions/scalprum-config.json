@@ -1,0 +1,7 @@
+{
+  "name": "red-hat-developer-hub.backstage-plugin-extensions",
+  "exposedModules": {
+    "PluginRoot": "./src/index.ts",
+    "Alpha": "./src/alpha/translations/index.ts"
+  }
+}
