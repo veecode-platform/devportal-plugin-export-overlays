@@ -29,21 +29,29 @@ spec:
   appConfigExamples:
     - title: Default configuration
       content:
-        app:
-          sidebar:
-            search: false
-            settings: false
-            logo: false
         dynamicPlugins:
           frontend:
             default.main-menu-items:
               menuItems:
-                default.create:
-                  title: ''
                 default.admin:
                   title: Administration
                   textKey: menuItem.administration
                   icon: admin
+                default.learning-path:
+                  enabled: false
+                default.home:
+                  priority: 100
+                default.catalog:
+                  priority: 96
+                default.apis:
+                  priority: 92
+                default.docs:
+                  title: Docs
+                  icon: docs
+                  to: docs
+                  priority: 88
+                default.create:
+                  priority: 84
             red-hat-developer-hub.backstage-plugin-global-header:
               translationResources:
                 - importName: globalHeaderTranslations
@@ -52,13 +60,7 @@ spec:
                 - mountPoint: application/header
                   importName: GlobalHeader
                   config:
-                    position: above-sidebar
-                - mountPoint: global.header/component
-                  importName: CompanyLogo
-                  config:
-                    priority: 200
-                    props:
-                      to: /
+                    position: above-main-content
                 - mountPoint: global.header/component
                   importName: SearchComponent
                   config:
@@ -86,26 +88,6 @@ spec:
                   importName: ApplicationLauncherDropdown
                   config:
                     priority: 82
-                - mountPoint: global.header/application-launcher
-                  importName: MenuItemLink
-                  config:
-                    section: Documentation
-                    priority: 150
-                    props:
-                      title: Developer Hub
-                      titleKey: applicationLauncher.developerHub
-                      icon: developerHub
-                      link: https://docs.redhat.com/en/documentation/red_hat_developer_hub
-                - mountPoint: global.header/application-launcher
-                  importName: MenuItemLink
-                  config:
-                    section: Developer Tools
-                    priority: 100
-                    props:
-                      title: RHDH Local
-                      titleKey: applicationLauncher.rhdhLocal
-                      icon: developerHub
-                      link: https://github.com/redhat-developer/rhdh-local
                 - mountPoint: global.header/component
                   importName: HelpDropdown
                   config:

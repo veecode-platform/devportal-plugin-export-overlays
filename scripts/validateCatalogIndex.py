@@ -18,6 +18,7 @@
 # catalog-index-validation-allowlist.txt — an entry with no ticket is a parse error.
 
 import argparse
+import base64
 import json
 import re
 import sys
@@ -117,6 +118,12 @@ RULES: dict[str, Rule] = {
         "index.json and dynamic-plugins.default.yaml disagree on a package's "
         "registry reference",
     ),
+    "missing-annotation": Rule(
+        ERROR,
+        "the image exists but lacks a usable io.backstage.dynamic-packages "
+        "annotation (missing, empty, or unreadable); always fails the build",
+        needs_builds=True,
+    ),
 }
 
 #: The rules `--no-build-metadata` cannot run, derived rather than listed.
@@ -124,6 +131,7 @@ RULES_NEEDING_BUILDS = sorted(r for r, spec in RULES.items() if spec.needs_build
 
 OCI_PREFIX = "oci://"
 LOCAL_PREFIX = "./dynamic-plugins/dist/"
+DYNAMIC_PACKAGES_ANNOTATION = "io.backstage.dynamic-packages"
 
 # A well-formed content digest. Checked separately from the rest of the reference
 # because `not-digest-pinned` and `digest-mismatch` both key off `ref.digest`: a
@@ -603,7 +611,51 @@ def _check_ref(
             )
         )
 
+    if digest:
+        finding = _annotation_finding(ref.image, build)
+        if finding:
+            findings.append(finding)
+
     return findings
+
+
+def decode_dynamic_packages(annotation: str | None) -> list | None:
+    """Decode the ``io.backstage.dynamic-packages`` annotation into its package list.
+
+    Returns the list, ``[]`` when the annotation declares nothing, or ``None`` when it
+    cannot be read. Callers act on those three differently, so they stay distinct.
+    """
+    if not annotation:
+        return []
+    try:
+        decoded = base64.b64decode("".join(annotation.split()), validate=True)
+        packages = json.loads(decoded)
+    except ValueError:
+        return None
+    return packages if isinstance(packages, list) else None
+
+
+def _annotation_finding(image: str, build: dict) -> Finding | None:
+    """Fail when the annotation is missing, empty, or not a readable package list.
+
+    plugin_builds/ stores the raw string even when decode fails, so a truthy value is not
+    enough: an invalid Base64/JSON blob or an encoded empty list installs as a no-op, same
+    as a missing annotation.
+    """
+    packages = decode_dynamic_packages(build.get(DYNAMIC_PACKAGES_ANNOTATION))
+    if packages is None:
+        return Finding(
+            rule="missing-annotation",
+            message=f"'{image}' has an unreadable {DYNAMIC_PACKAGES_ANNOTATION} annotation",
+            image=image,
+        )
+    if not packages:
+        return Finding(
+            rule="missing-annotation",
+            message=f"'{image}' is missing or empty {DYNAMIC_PACKAGES_ANNOTATION}",
+            image=image,
+        )
+    return None
 
 
 def check_index_json(

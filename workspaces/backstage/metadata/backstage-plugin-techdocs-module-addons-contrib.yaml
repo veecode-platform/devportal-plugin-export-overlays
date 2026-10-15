@@ -26,44 +26,6 @@ spec:
   lifecycle: active
   partOf:
     - contrib-techdocs-addons
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation: false
-            - addon:techdocs/report-issue
-            - addon:techdocs/text-size: false
-            - addon:techdocs/light-box: false
-    - title: ReportIssue configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation: false
-            - addon:techdocs/report-issue
-            - addon:techdocs/text-size: false
-            - addon:techdocs/light-box: false
-    - title: TextSize configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation: false
-            - addon:techdocs/report-issue: false
-            - addon:techdocs/text-size
-            - addon:techdocs/light-box: false
-    - title: LightBox configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation: false
-            - addon:techdocs/report-issue: false
-            - addon:techdocs/text-size: false
-            - addon:techdocs/light-box
-    - title: All add-ons enabled configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation
-            - addon:techdocs/report-issue
-            - addon:techdocs/text-size
-            - addon:techdocs/light-box
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []

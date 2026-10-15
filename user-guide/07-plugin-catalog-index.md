@@ -17,7 +17,7 @@ flowchart LR
     subgraph Inputs
         META["workspaces/{name}/metadata/{plugin}.yaml<br/>(Package entities)"]
         CATS["catalog-entities/extensions/<br/>(hand-maintained Plugin entities,<br/>Collections)"]
-        PKGS["default.packages.yaml<br/>(single tier, all disabled)"]
+        PKGS["default.packages.yaml<br/>(single tier, enabled and disabled lists)"]
         VERS["versions.json"]
     end
 
@@ -68,7 +68,7 @@ flowchart TB
     subgraph "Step 3: DPDY Generation"
         S3_IN["default.packages.yaml<br/>metadata appConfigExamples"]
         S3["generateDynamicPluginsDefaultYaml.sh<br/>+ injectDpdyTagComments.py"]
-        S3_OUT["dynamic-plugins.default.yaml<br/>(disabled: true, patched — see below)"]
+        S3_OUT["dynamic-plugins.default.yaml<br/>(disabled: true or false per list, patched — see below)"]
         S3_IN --> S3
         S2_OUT -- "tag & build-date<br/>for comments" --> S3
         S3 --> S3_OUT
@@ -86,7 +86,7 @@ flowchart TB
 
 ### Step 1: Plugin Builds Bootstrap (`bootstrapPluginBuilds.py`)
 
-Reads each `workspaces/*/metadata/*.yaml` file belonging to an **active** workspace (has a `plugins-list.yaml` without `.disabled`) and constructs initial `plugin_builds/<workspace>/<image-name>.json` entries. Each entry includes the workspace path and a constructed OCI tag reference. `default.packages.yaml` filters which plugins get an entry at all — face-owned and disabled-workspace packages are omitted from that file on purpose (see "What's excluded" below).
+Reads each `workspaces/*/metadata/*.yaml` file belonging to an **active** workspace (has a `plugins-list.yaml` without `.disabled`) and constructs initial `plugin_builds/<workspace>/<image-name>.json` entries. Each entry includes the workspace path and a constructed OCI tag reference. `default.packages.yaml` decides which plugins get an entry. It omits packages of disabled workspaces on purpose and lists the rest under `packages.enabled` or `packages.disabled` (see "Factory plugins" and "What's excluded" below).
 
 - **ghcr.io, or `quay.io/veecode` (FORK PATCH)**: `bs_{backstage_version}__{plugin_version}` (e.g., `bs_1.52.0__0.26.0`)
 - **quay.io/rhdh** (not used by this fork): `{rhdh_version}--{plugin_version}`
@@ -99,12 +99,12 @@ Queries `quay.io/veecode` for each plugin's constructed image reference to retri
 
 ### Step 3: DPDY Generation (`generateDynamicPluginsDefaultYaml.sh`)
 
-Generates `dynamic-plugins.default.yaml` from `default.packages.yaml` + each package's `spec.appConfigExamples[0].content`. Every entry in this fork's `default.packages.yaml` is listed under `packages.disabled`, and the generator has been patched to emit the literal `disabled: true` key (see "Patches to upstream" below) — upstream emits `enabled:`.
+Generates `dynamic-plugins.default.yaml` from `default.packages.yaml` + each package's `spec.appConfigExamples[0].content`. Packages under `packages.enabled` are emitted with `disabled: false`, and packages under `packages.disabled` with `disabled: true`. The generator has been patched to emit the literal `disabled` key (see "Patches to upstream" below) — upstream emits `enabled:`.
 
 ### Step 4: Catalog Index Generation (`generateCatalogIndex.py`)
 
 1. Copies `catalog-entities/extensions/` (hand-maintained Plugin entities, Collections — **never regenerated**) into the output directory.
-2. Copies **every** `workspaces/*/metadata/*.yaml` (Package entities) into the output's `packages/` directory, **unfiltered** — including disabled-workspace and face-owned packages. This is why the marketplace UI still sees face-owned plugins even though they're excluded from the DPDY (see below).
+2. Copies **every** `workspaces/*/metadata/*.yaml` (Package entities) into the output's `packages/` directory, **unfiltered** — including disabled-workspace packages and the packages the DPDY lists as `disabled: true`. This is why the Marketplace UI can show plugins that the DPDY does not enable (see below).
 3. Verifies each `plugin_builds/`-listed plugin's OCI image exists in `quay.io/veecode`, resolving digests and fallback tags.
 4. Updates the copied Package entity files and the DPDY with resolved OCI references and tag/build-date comments.
 5. Regenerates `all.yaml` location files in `packages/` and `plugins/`.
@@ -113,11 +113,23 @@ Plugins with no resolvable image are logged as warnings by this script and shipp
 
 ---
 
+## Factory plugins
+
+The packages under `packages.enabled` in `default.packages.yaml` are the factory plugins: the plugins the product face ships, such as the Marketplace, About, the VeeCode homepage, Tech Radar, TechDocs, and the notifications and signals packages. The index enables them, so a deployment that installs from the index gets them enabled with their configuration. A plugin update is therefore an index republish, not a new image.
+
+- Each factory plugin's `pluginConfig` comes from its package metadata (`spec.appConfigExamples[0].content`), so the plugin and its configuration ship together.
+- The `Validate catalog index` step of `publish-catalog-index` (in `.github/workflows/publish-release-branch-workspace-plugins.yaml`) fails unless the `disabled: false` entries are exactly the `packages.enabled` list, each resolved to its `quay.io/veecode` repository, and every other entry is `disabled: true`.
+- The product image must not also declare a factory plugin. RHDH's installer fails with `Duplicate plugin configuration` when an enabled pathless index entry and an image entry name the same plugin. ADR-015 describes the image side.
+
+ADR-015, "Factory plugins ship enabled in the plugin catalog index", is a proposal. It lives at `docs/adr/015-factory-plugins-enabled-in-the-catalog-index.md` in `veecode-platform/devportal-planning`, on branch `adr/face-in-index`, and is not yet on that repository's `main`.
+
+---
+
 ## What's excluded
 
 **Disabled workspaces** (no `plugins-list.yaml`, or `.disabled`): never fleet-published, so their packages don't appear in `default.packages.yaml` and get no `plugin_builds/` entry. Their Package *entities* are still copied into `catalog-entities/extensions/packages/` (step 4.2 above is unfiltered), same as before this change.
 
-**Face-owned packages** (workspaces `marketplace`, `veecode-homepage`, `veecode-theme`): the VeeCode product face ships these baked into the devportal-core image (`dynamic-plugins.veecode.yaml`), which is their canonical version source (ADR-005/ADR-006 — "face out of the index"). A same-level duplicate plugin key between that baked file and this DPDY is a fatal `InstallException` at RHDH 1.10 installer merge time regardless of `disabled` state, so these packages are omitted from `default.packages.yaml` entirely (commented there). Their entities are still copied unfiltered, same as disabled workspaces.
+**veecode-theme** (workspace `veecode-theme`) is not listed in `default.packages.yaml`, as before (ADR-015, D5). Its entities are still copied unfiltered, same as disabled workspaces. The RHDH dynamic home page is listed under `packages.disabled`, so it is offered but not enabled.
 
 **`vertigo-theme` stays in, on purpose**: it looks structurally identical to `veecode-theme` (a tenant-specific baked theme plugin), but the vertigo tenant's production stack resolves `vertigo-platform-plugin-vertigo-theme` via `{{inherit}}` against this DPDY today (`values-fork.yaml.tpl`, helm rev 26, live) — excluding it would break theme version resolution in that tenant's production. Confirmed with the repo owner; not an oversight.
 
@@ -132,7 +144,7 @@ This fork does not carry a diverged copy of the upstream scripts — it imports 
 | `scripts/plugin_utils.py` | Added `uses_ghcr_tag_scheme()` / `GHCR_LIKE_REGISTRIES = ("ghcr.io", "quay.io/veecode")` — shared by the two patches below. |
 | `scripts/bootstrapPluginBuilds.py` | `construct_registry_reference()` and the `--rhdh-version` requirement check use `uses_ghcr_tag_scheme()` instead of a bare `'ghcr.io' in registry_base` check. |
 | `scripts/generatePluginBuildInfo.py` | `resolve_fallback_tag()`'s separator detection and `_registry_tag_separator()` use `uses_ghcr_tag_scheme()` — otherwise `quay.io/veecode` would fall into the `quay.io/rhdh`-style `--` separator and RHDH-version alias logic, which doesn't apply here. |
-| `scripts/generateDynamicPluginsDefaultYaml.sh` | `build_plugin_entry()` emits `disabled: (…)` instead of upstream's `enabled: (…)` — this fork's DPDY consumer contract (ADR-005/ADR-006, the installer's fatal-duplicate-key behavior) requires the literal `disabled: true` key on every entry. |
+| `scripts/generateDynamicPluginsDefaultYaml.sh` | `build_plugin_entry()` emits `disabled: (…)` instead of upstream's `enabled: (…)` — this fork's DPDY consumer contract (ADR-005/ADR-006, the installer's fatal-duplicate-key behavior) requires the literal `disabled` key on every entry: `true` for `packages.disabled`, `false` for `packages.enabled`. |
 
 Everywhere else — `generateCatalogIndex.py`, `plugin_utils.py`'s `get_registry_auth()` / `check_image_exists()`'s auth fallback (`REGISTRY_USERNAME`/`REGISTRY_PASSWORD` for any non-ghcr.io registry, which already covers `quay.io/veecode` correctly) — is upstream, unmodified.
 
@@ -158,7 +170,7 @@ The generated `catalog-index/` directory (an ephemeral CI working directory — 
 | `catalog-entities/extensions/packages/*.yaml` | Package entity definitions, resolved OCI references where an image was found |
 | `catalog-entities/extensions/plugins/*.yaml` | Hand-maintained plugin entity definitions (descriptions, icons, categories) — copied verbatim, never generated |
 | `catalog-entities/extensions/collections/*.yaml` | Hand-maintained collection groupings (featured, recommended, etc.) — copied verbatim |
-| `dynamic-plugins.default.yaml` | Default plugin configuration, every entry `disabled: true` |
+| `dynamic-plugins.default.yaml` | Default plugin configuration: `disabled: false` for the factory plugins, `disabled: true` for the rest |
 | `default.packages.yaml` | Copy of the input package list, for traceability |
 | `build-report.json` | Per-plugin build status with stage tracking — read by the CI validation step, not included in the final OCI image |
 

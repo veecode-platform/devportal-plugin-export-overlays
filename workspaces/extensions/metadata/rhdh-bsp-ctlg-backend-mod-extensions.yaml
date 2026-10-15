@@ -26,8 +26,6 @@ spec:
   lifecycle: active
   partOf:
     - extensions
-  appConfigExamples:
-    - title: Optional extensions directory
-      content:
-        extensions:
-          directory: ${RHDH_EXTENSIONS_DIRECTORY}
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []

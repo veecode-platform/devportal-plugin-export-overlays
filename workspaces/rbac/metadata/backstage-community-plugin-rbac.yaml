@@ -32,10 +32,6 @@ spec:
         dynamicPlugins:
           frontend:
             backstage-community.plugin-rbac:
-              translationResources:
-                - importName: rbacTranslations
-                  ref: rbacTranslationRef
-                  module: Alpha
               appIcons:
                 - name: rbacIcon
                   importName: RbacIcon
@@ -45,7 +41,6 @@ spec:
                   menuItem:
                     icon: rbacIcon
                     text: RBAC
-                    textKey: menuItem.rbac
               menuItems:
                 rbac:
                   parent: default.admin

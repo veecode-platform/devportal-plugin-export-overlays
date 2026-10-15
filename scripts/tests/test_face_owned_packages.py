@@ -1,12 +1,3 @@
-"""The product face ships 13 plugins itself, so the default list must not offer them.
-
-A face plugin that is also in the generated dynamic-plugins.default.yaml fails the
-installer with a duplicate plugin key, or is silently dropped, so none of the 13
-repositories below may appear there. The face-owned Packages are also left out of
-the generator's plugin_builds, which means nothing rewrites their tag and version:
-the tag must be typed to match spec.version.
-"""
-
 import os
 import re
 import shutil
@@ -19,21 +10,28 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 GENERATOR = REPO_ROOT / "scripts" / "generateDynamicPluginsDefaultYaml.sh"
 
-FACE_OWNED = (
-    "backstage-plugin-techdocs",
-    "backstage-plugin-techdocs-backend",
-    "backstage-plugin-techdocs-module-addons-contrib",
+FACE_ENABLED = (
+    "backstage-community-plugin-rbac",
+    "backstage-community-plugin-tech-radar",
+    "backstage-community-plugin-tech-radar-backend",
     "backstage-plugin-notifications",
     "backstage-plugin-notifications-backend",
     "backstage-plugin-signals",
     "backstage-plugin-signals-backend",
-    "backstage-community-plugin-rbac",
-    "backstage-community-plugin-tech-radar",
-    "backstage-community-plugin-tech-radar-backend",
-    "red-hat-developer-hub-backstage-plugin-global-header",
+    "backstage-plugin-techdocs",
+    "backstage-plugin-techdocs-backend",
+    "backstage-plugin-techdocs-module-addons-contrib",
+    "devportal-marketplace-backend",
+    "devportal-marketplace-frontend-dynamic",
+    "devportal-pending-changes-dynamic",
     "red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions",
-    "red-hat-developer-hub-backstage-plugin-dynamic-home-page",
+    "red-hat-developer-hub-backstage-plugin-global-header",
+    "veecode-platform-backstage-plugin-about",
+    "veecode-platform-backstage-plugin-about-backend",
+    "veecode-platform-plugin-veecode-homepage",
 )
+
+HOME_PAGE = "red-hat-developer-hub-backstage-plugin-dynamic-home-page"
 
 IMAGE_SHIPPED_DISABLED = (
     "backstage-plugin-kubernetes",
@@ -52,7 +50,6 @@ REFERENCE = re.compile(
     r"^oci://quay\.io/veecode/(?P<repository>[^:!@]+)"
     r"(?::(?P<tag>[^!@]+))?(?:@[^!]+)?(?:!(?P<selector>.+))?$"
 )
-TAG_VERSION = re.compile(r"^bs_[0-9.]+__(?P<version>.+)$")
 
 
 def repository_of(package: str) -> str:
@@ -88,9 +85,17 @@ def generated_default_list(tmp_path_factory):
     return {repository_of(entry["package"]): entry for entry in document["plugins"]}
 
 
-def test_generated_default_list_has_no_face_owned_repository(generated_default_list):
-    present = sorted(set(FACE_OWNED) & set(generated_default_list))
-    assert present == []
+def test_generated_default_list_enables_exactly_the_face_packages(generated_default_list):
+    enabled = sorted(
+        repository
+        for repository, entry in generated_default_list.items()
+        if entry.get("disabled") is False
+    )
+    assert enabled == sorted(FACE_ENABLED)
+
+
+def test_generated_default_list_keeps_the_dynamic_home_page_disabled(generated_default_list):
+    assert generated_default_list[HOME_PAGE].get("disabled") is True
 
 
 def test_generated_default_list_has_the_image_shipped_plugins_disabled(generated_default_list):
@@ -100,23 +105,3 @@ def test_generated_default_list_has_the_image_shipped_plugins_disabled(generated
         if r in generated_default_list and generated_default_list[r].get("disabled") is not True
     ]
     assert (missing, not_disabled) == ([], [])
-
-
-def test_face_owned_packages_reference_the_tag_of_their_version():
-    found = {}
-    for path in sorted((REPO_ROOT / "workspaces").glob("*/metadata/*.yaml")):
-        document = yaml.safe_load(path.read_text(encoding="utf-8"))
-        spec = document["spec"]
-        reference = REFERENCE.match(spec.get("dynamicArtifact", ""))
-        if reference and reference["repository"] in FACE_OWNED:
-            tag = TAG_VERSION.match(reference["tag"] or "")
-            found[reference["repository"]] = (
-                spec["version"], tag["version"] if tag else reference["tag"], reference["selector"],
-            )
-    assert sorted(found) == sorted(FACE_OWNED)
-    wrong = {
-        repository: values
-        for repository, values in found.items()
-        if values[0] != values[1] or values[2] not in (None, repository)
-    }
-    assert wrong == {}
