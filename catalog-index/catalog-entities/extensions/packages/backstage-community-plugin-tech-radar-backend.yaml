@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-tech-radar-backend"
-  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-tech-radar-backend:bs_1.54.9__1.21.0!backstage-community-plugin-tech-radar-backend
+  # Tag: bs_1.54.9__1.21.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tech-radar-backend@sha256:c727ce2f8f766af2f5eac5cee152a5422f140b93fdfdf49f59d28d16874b8213"
   version: 1.21.0
   backstage:
     role: backend-plugin
@@ -26,8 +27,6 @@ spec:
   lifecycle: active
   partOf:
     - tech-radar
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        techRadar:
-          url: ${TECH_RADAR_DATA_URL}
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []

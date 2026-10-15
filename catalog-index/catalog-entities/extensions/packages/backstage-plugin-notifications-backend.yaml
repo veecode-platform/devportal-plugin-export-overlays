@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-notifications-backend"
-  dynamicArtifact: oci://quay.io/veecode/backstage-plugin-notifications-backend:bs_1.54.9__0.6.8!backstage-plugin-notifications-backend
+  # Tag: bs_1.54.9__0.6.8
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-notifications-backend@sha256:d48f3ff2f2d45432fa4046bb1714eb0ac2e908b6a1bfe2297b90524ce45b1fa7"
   version: 0.6.8
   backstage:
     role: backend-plugin
@@ -24,10 +25,8 @@ spec:
   author: Red Hat
   support: tech-preview
   lifecycle: active
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        notifications:
-          concurrencyLimit: 10
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []
   partOf:
     - notifications

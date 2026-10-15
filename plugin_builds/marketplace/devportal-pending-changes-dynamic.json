@@ -1,0 +1,9 @@
+{
+  "devportal-pending-changes-dynamic": {
+    "workspacePath": "marketplace/plugins/devportal-pending-changes-dynamic",
+    "registryReference": "quay.io/veecode/devportal-pending-changes-dynamic:bs_1.54.9__0.3.0",
+    "digest": "sha256:6891aa72fa564d67d7bda84e7ca2d35b84b031938ceb9447090dab4edeb48e99",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siZGV2cG9ydGFsLXBlbmRpbmctY2hhbmdlcy1keW5hbWljIjp7Im5hbWUiOiJkZXZwb3J0YWwtcGVuZGluZy1jaGFuZ2VzLWR5bmFtaWMtZHluYW1pYyIsInZlcnNpb24iOiIwLjMuMCIsImJhY2tzdGFnZSI6eyJyb2xlIjoiZnJvbnRlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJwZW5kaW5nLWNoYW5nZXMiLCJwbHVnaW5QYWNrYWdlcyI6WyJkZXZwb3J0YWwtcGVuZGluZy1jaGFuZ2VzIiwiZGV2cG9ydGFsLXBlbmRpbmctY2hhbmdlcy1keW5hbWljIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTQuOSJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+  }
+}

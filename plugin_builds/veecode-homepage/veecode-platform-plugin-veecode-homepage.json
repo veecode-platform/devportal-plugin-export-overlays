@@ -1,0 +1,9 @@
+{
+  "veecode-platform-plugin-veecode-homepage": {
+    "workspacePath": "veecode-homepage/plugins/veecode-homepage",
+    "registryReference": "quay.io/veecode/veecode-platform-plugin-veecode-homepage:bs_1.54.9__1.0.3",
+    "digest": "sha256:fe312abc6c239d770ed77d20eb63b9016e629f3a7c68d27261ec8beec4732c23",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1wbHVnaW4tdmVlY29kZS1ob21lcGFnZSI6eyJuYW1lIjoiQHZlZWNvZGUtcGxhdGZvcm0vcGx1Z2luLXZlZWNvZGUtaG9tZXBhZ2UtZHluYW1pYyIsInZlcnNpb24iOiIxLjAuMyIsImJhY2tzdGFnZSI6eyJyb2xlIjoiZnJvbnRlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJ2ZWVjb2RlLWhvbWVwYWdlIiwicGx1Z2luUGFja2FnZXMiOlsiQGJhY2tzdGFnZS9wbHVnaW4taG9tZSJdLCJzdXBwb3J0ZWQtdmVyc2lvbnMiOiIxLjU0LjkifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

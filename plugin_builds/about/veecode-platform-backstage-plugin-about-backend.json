@@ -1,0 +1,9 @@
+{
+  "veecode-platform-backstage-plugin-about-backend": {
+    "workspacePath": "about/plugins/about-backend",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-about-backend:bs_1.54.9__1.2.0",
+    "digest": "sha256:3b3a20e3d947a0026eb680594782040cd263c584c730c6b4bda524fdd0c9bea2",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLWFib3V0LWJhY2tlbmQiOnsibmFtZSI6IkB2ZWVjb2RlLXBsYXRmb3JtL2JhY2tzdGFnZS1wbHVnaW4tYWJvdXQtYmFja2VuZC1keW5hbWljIiwidmVyc2lvbiI6IjEuMi4wIiwiYmFja3N0YWdlIjp7InJvbGUiOiJiYWNrZW5kLXBsdWdpbiIsInBsdWdpbklkIjoiYWJvdXQiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLWFib3V0LWJhY2tlbmQiXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41NC45In0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIn19XQ=="
+  }
+}

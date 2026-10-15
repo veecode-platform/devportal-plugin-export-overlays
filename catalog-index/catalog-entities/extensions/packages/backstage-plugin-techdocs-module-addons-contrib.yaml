@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-techdocs-module-addons-contrib"
-  dynamicArtifact: oci://quay.io/veecode/backstage-plugin-techdocs-module-addons-contrib:bs_1.54.9__1.1.39!backstage-plugin-techdocs-module-addons-contrib
+  # Tag: bs_1.54.9__1.1.39
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-techdocs-module-addons-contrib@sha256:9a0a16aa6248e6157bb9c94bbb74a85a430b18405ea6ab9a9ca509d533756886"
   version: 1.1.39
   backstage:
     role: frontend-plugin-module
@@ -26,44 +27,6 @@ spec:
   lifecycle: active
   partOf:
     - contrib-techdocs-addons
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation: false
-            - addon:techdocs/report-issue
-            - addon:techdocs/text-size: false
-            - addon:techdocs/light-box: false
-    - title: ReportIssue configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation: false
-            - addon:techdocs/report-issue
-            - addon:techdocs/text-size: false
-            - addon:techdocs/light-box: false
-    - title: TextSize configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation: false
-            - addon:techdocs/report-issue: false
-            - addon:techdocs/text-size
-            - addon:techdocs/light-box: false
-    - title: LightBox configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation: false
-            - addon:techdocs/report-issue: false
-            - addon:techdocs/text-size: false
-            - addon:techdocs/light-box
-    - title: All add-ons enabled configuration
-      content:
-        app:
-          extensions:
-            - addon:techdocs/expandable-navigation
-            - addon:techdocs/report-issue
-            - addon:techdocs/text-size
-            - addon:techdocs/light-box
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []

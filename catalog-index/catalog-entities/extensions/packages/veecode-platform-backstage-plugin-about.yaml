@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-about"
-  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-about:bs_1.54.9__1.2.1
+  # Tag: bs_1.54.9__1.2.1
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-about@sha256:79978700376818676b95189d4ada533e0cdded6b27ddcb0da0921d1fc36adb8e"
   version: 1.2.1
   appConfigExamples:
     - title: Default configuration

@@ -17,7 +17,8 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/plugin-veecode-homepage"
-  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-veecode-homepage:bs_1.54.9__1.0.3
+  # Tag: bs_1.54.9__1.0.3
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-plugin-veecode-homepage@sha256:fe312abc6c239d770ed77d20eb63b9016e629f3a7c68d27261ec8beec4732c23"
   version: 1.0.3
   appConfigExamples:
     - title: Default configuration
@@ -25,6 +26,9 @@ spec:
         dynamicPlugins:
           frontend:
             veecode-platform.plugin-veecode-homepage:
+              translationResources:
+                - importName: homepageTranslations
+                  ref: homepageTranslationRef
               dynamicRoutes:
                 - path: /
                   importName: VeecodeHomepagePage

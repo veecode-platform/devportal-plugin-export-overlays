@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-techdocs-backend"
-  dynamicArtifact: oci://quay.io/veecode/backstage-plugin-techdocs-backend:bs_1.54.9__2.2.5!backstage-plugin-techdocs-backend
+  # Tag: bs_1.54.9__2.2.5
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-techdocs-backend@sha256:17238af383db90e1a597f1204f5df2dc2b3bb05e72af4ae5b7c5a88de85e12ff"
   version: 2.2.5
   backstage:
     role: backend-plugin
@@ -26,12 +27,6 @@ spec:
   lifecycle: active
   partOf:
     - techdocs
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        techdocs:
-          builder: local
-          generator:
-            runIn: local
-          publisher:
-            type: local
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []

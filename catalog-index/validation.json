@@ -2,13 +2,13 @@
   "status": "pass",
   "strict": false,
   "stats": {
-    "packages": 120,
-    "oci_refs": 120,
-    "oci_images": 120,
+    "packages": 144,
+    "oci_refs": 144,
+    "oci_images": 144,
     "local_refs": 0,
-    "enabled": 0,
-    "plugin_builds": 120,
-    "index_entries": 120
+    "enabled": 18,
+    "plugin_builds": 144,
+    "index_entries": 144
   },
   "skippedRules": [],
   "findings": [],

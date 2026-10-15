@@ -12,8 +12,9 @@ metadata:
   tags: []
 spec:
   packageName: "devportal-marketplace-frontend-dynamic"
-  dynamicArtifact: oci://quay.io/veecode/devportal-marketplace-frontend-dynamic:bs_1.54.9__0.3.1
-  version: 0.3.1
+  # Tag: bs_1.54.9__0.3.2
+  dynamicArtifact: "oci://quay.io/veecode/devportal-marketplace-frontend-dynamic@sha256:aa9e50d1b28278bf24ccc78396e3e39438a4be718d3e80259f297713ddc60d31"
+  version: 0.3.2
   backstage:
     role: frontend-plugin
     supportedVersions: 1.54.9
@@ -41,3 +42,4 @@ spec:
                 marketplace:
                   title: Marketplace
                   icon: pluginsIcon
+                  priority: 72

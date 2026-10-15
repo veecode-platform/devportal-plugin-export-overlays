@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-rbac'
-  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-rbac:bs_1.54.9__2.3.1!backstage-community-plugin-rbac
+  # Tag: bs_1.54.9__2.3.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-rbac@sha256:36cc13d76a4a931bde0dc09b627bef7ffc042018c9a2d5a06478276709d925ef"
   version: 2.3.1
   backstage:
     role: frontend-plugin
@@ -32,10 +33,6 @@ spec:
         dynamicPlugins:
           frontend:
             backstage-community.plugin-rbac:
-              translationResources:
-                - importName: rbacTranslations
-                  ref: rbacTranslationRef
-                  module: Alpha
               appIcons:
                 - name: rbacIcon
                   importName: RbacIcon
@@ -45,7 +42,6 @@ spec:
                   menuItem:
                     icon: rbacIcon
                     text: RBAC
-                    textKey: menuItem.rbac
               menuItems:
                 rbac:
                   parent: default.admin

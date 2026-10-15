@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-catalog-backend-module-extensions"
-  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions:bs_1.54.9__0.18.0!red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions
+  # Tag: bs_1.54.9__0.18.0
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions@sha256:1913ab2bf3523556e9d3f0f03483c103cc329b0f9fdc210c2c9b62eb1c6871e0"
   version: 0.18.0
   backstage:
     role: backend-plugin-module
@@ -26,8 +27,6 @@ spec:
   lifecycle: active
   partOf:
     - extensions
-  appConfigExamples:
-    - title: Optional extensions directory
-      content:
-        extensions:
-          directory: ${RHDH_EXTENSIONS_DIRECTORY}
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []

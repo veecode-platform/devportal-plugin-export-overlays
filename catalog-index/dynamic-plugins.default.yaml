@@ -8,6 +8,282 @@
 # .github/workflows/publish-release-branch-workspace-plugins.yaml
 # (runs scripts/update-index.sh, see also user-guide/07-plugin-catalog-index.md)
 plugins:
+  - package: oci://quay.io/veecode/backstage-community-plugin-rbac@sha256:36cc13d76a4a931bde0dc09b627bef7ffc042018c9a2d5a06478276709d925ef
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-rbac:
+            appIcons:
+              - name: rbacIcon
+                importName: RbacIcon
+            dynamicRoutes:
+              - path: /rbac
+                importName: RbacPage
+                menuItem:
+                  icon: rbacIcon
+                  text: RBAC
+            menuItems:
+              rbac:
+                parent: default.admin
+                icon: rbacIcon
+  - package: oci://quay.io/veecode/backstage-community-plugin-tech-radar@sha256:32bbb5403933a9d3117f175b0cdc00404f62e1841fe7bef2c53b1becfee17d11
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage-community.plugin-tech-radar:
+            appIcons:
+              - name: techRadar
+                importName: TechRadarIcon
+            dynamicRoutes:
+              - path: /tech-radar
+                importName: TechRadarPage
+                menuItem:
+                  icon: techRadar
+                  text: Tech Radar
+                  textKey: menuItem.techRadar
+                config:
+                  props:
+                    width: 1500
+                    height: 800
+            menuItems:
+              tech-radar:
+                priority: 76
+  - package: oci://quay.io/veecode/backstage-community-plugin-tech-radar-backend@sha256:c727ce2f8f766af2f5eac5cee152a5422f140b93fdfdf49f59d28d16874b8213
+    disabled: false
+  - package: oci://quay.io/veecode/backstage-plugin-notifications@sha256:1919932ddf6ac59623a7f96bcc42f9e128bac0005494739dfde363784522fa03
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-notifications:
+            dynamicRoutes:
+              - path: /notifications
+                importName: NotificationsPage
+                menuItem:
+                  icon: notifications
+                  text: Notifications
+            menuItems:
+              notifications:
+                priority: 80
+  - package: oci://quay.io/veecode/backstage-plugin-notifications-backend@sha256:d48f3ff2f2d45432fa4046bb1714eb0ac2e908b6a1bfe2297b90524ce45b1fa7
+    disabled: false
+  - package: oci://quay.io/veecode/backstage-plugin-signals@sha256:5386b0ef4af65fb9ea67189ce3136811eccc0f2e6251cb369b38572b9ffa0248
+    disabled: false
+  - package: oci://quay.io/veecode/backstage-plugin-signals-backend@sha256:fba0c367d0fa243ebf5d97e7db0ee75500d7995d8e57a21c915b5609fedea82a
+    disabled: false
+  - package: oci://quay.io/veecode/backstage-plugin-techdocs@sha256:6cd5aa0c2727240e3f483c821b9cd5a9cb91f2884935806ae7f126714f04d87c
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          backstage.plugin-techdocs:
+            appIcons:
+              - name: docs
+                importName: LibraryBooks
+            dynamicRoutes:
+              - path: /docs
+                importName: TechDocsIndexPage
+              - path: /docs/:namespace/:kind/:name/*
+                importName: TechDocsReaderPage
+            mountPoints:
+              - mountPoint: entity.page.docs/cards
+                importName: EntityTechdocsContent
+                config:
+                  layout:
+                    gridColumn: 1 / -1
+  - package: oci://quay.io/veecode/backstage-plugin-techdocs-backend@sha256:17238af383db90e1a597f1204f5df2dc2b3bb05e72af4ae5b7c5a88de85e12ff
+    disabled: false
+  - package: oci://quay.io/veecode/backstage-plugin-techdocs-module-addons-contrib@sha256:9a0a16aa6248e6157bb9c94bbb74a85a430b18405ea6ab9a9ca509d533756886
+    disabled: false
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions@sha256:1913ab2bf3523556e9d3f0f03483c103cc329b0f9fdc210c2c9b62eb1c6871e0
+    disabled: false
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-header@sha256:2ef7191074461f10227608c822e883604a6674588428e22df8ae16c97b31f46a
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          default.main-menu-items:
+            menuItems:
+              default.admin:
+                title: Administration
+                textKey: menuItem.administration
+                icon: admin
+              default.learning-path:
+                enabled: false
+              default.home:
+                priority: 100
+              default.catalog:
+                priority: 96
+              default.apis:
+                priority: 92
+              default.docs:
+                title: Docs
+                icon: docs
+                to: docs
+                priority: 88
+              default.create:
+                priority: 84
+          red-hat-developer-hub.backstage-plugin-global-header:
+            translationResources:
+              - importName: globalHeaderTranslations
+                ref: globalHeaderTranslationRef
+            mountPoints:
+              - mountPoint: application/header
+                importName: GlobalHeader
+                config:
+                  position: above-main-content
+              - mountPoint: global.header/component
+                importName: SearchComponent
+                config:
+                  priority: 100
+              - mountPoint: global.header/component
+                importName: Spacer
+                config:
+                  priority: 99
+                  props:
+                    growFactor: 0
+              - mountPoint: global.header/component
+                importName: HeaderIconButton
+                config:
+                  priority: 90
+                  props:
+                    title: Self-service
+                    titleKey: create.title
+                    icon: add
+                    to: create
+              - mountPoint: global.header/component
+                importName: StarredDropdown
+                config:
+                  priority: 85
+              - mountPoint: global.header/component
+                importName: ApplicationLauncherDropdown
+                config:
+                  priority: 82
+              - mountPoint: global.header/component
+                importName: HelpDropdown
+                config:
+                  priority: 80
+              - mountPoint: global.header/help
+                importName: SupportButton
+                config:
+                  priority: 10
+              - mountPoint: global.header/component
+                importName: NotificationButton
+                config:
+                  priority: 70
+              - mountPoint: global.header/component
+                importName: Divider
+                config:
+                  priority: 50
+              - mountPoint: global.header/component
+                importName: ProfileDropdown
+                config:
+                  priority: 10
+              - mountPoint: global.header/profile
+                importName: MenuItemLink
+                config:
+                  priority: 100
+                  props:
+                    title: Settings
+                    titleKey: profile.settings
+                    link: /settings
+                    icon: manageAccounts
+              - mountPoint: global.header/profile
+                importName: MenuItemLink
+                config:
+                  priority: 90
+                  props:
+                    title: My profile
+                    titleKey: profile.myProfile
+                    type: myProfile
+                    icon: account
+              - mountPoint: global.header/profile
+                importName: LogoutButton
+                config:
+                  priority: 10
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-about@sha256:79978700376818676b95189d4ada533e0cdded6b27ddcb0da0921d1fc36adb8e
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          veecode-platform.backstage-plugin-about:
+            appIcons:
+              - name: aboutIcon
+                importName: AboutIcon
+            dynamicRoutes:
+              - path: /about
+                importName: AboutPage
+                menuItem:
+                  icon: aboutIcon
+                  text: About
+                  enabled: true
+            menuItems:
+              about:
+                parent: default.admin
+                title: About
+                icon: aboutIcon
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-about-backend@sha256:3b3a20e3d947a0026eb680594782040cd263c584c730c6b4bda524fdd0c9bea2
+    disabled: false
+  - package: oci://quay.io/veecode/veecode-platform-plugin-veecode-homepage@sha256:fe312abc6c239d770ed77d20eb63b9016e629f3a7c68d27261ec8beec4732c23
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          veecode-platform.plugin-veecode-homepage:
+            translationResources:
+              - importName: homepageTranslations
+                ref: homepageTranslationRef
+            dynamicRoutes:
+              - path: /
+                importName: VeecodeHomepagePage
+                config:
+                  props:
+                    width: 1500
+                    height: 800
+            # Visit recorder. The v3 shell mounts no VisitListener of its
+            # own — it only consumes this mount point — so without this
+            # entry visitsApi.save() is never called and the
+            # "Recently/Top visited" cards stay empty.
+            mountPoints:
+              - mountPoint: application/listener
+                importName: VisitListener
+  - package: oci://quay.io/veecode/devportal-marketplace-backend@sha256:7948f276b6404448555adbdb6a0ded08e60e68b6b2ef42580ff81a07da5fb9f0
+    disabled: false
+  - package: oci://quay.io/veecode/devportal-marketplace-frontend-dynamic@sha256:aa9e50d1b28278bf24ccc78396e3e39438a4be718d3e80259f297713ddc60d31
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          devportal.marketplace-frontend:
+            appIcons:
+              - name: pluginsIcon
+                importName: PluginsIcon
+            dynamicRoutes:
+              - path: /marketplace
+                importName: DynamicExtensionsPluginRouter
+                menuItem:
+                  icon: pluginsIcon
+                  text: Marketplace
+            menuItems:
+              marketplace:
+                title: Marketplace
+                icon: pluginsIcon
+                priority: 72
+  - package: oci://quay.io/veecode/devportal-pending-changes-dynamic@sha256:6891aa72fa564d67d7bda84e7ca2d35b84b031938ceb9447090dab4edeb48e99
+    disabled: false
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          devportal.pending-changes:
+            mountPoints:
+              - mountPoint: global.header/component
+                importName: PendingChangesButton
+                config:
+                  priority: 55
+                  props:
+                    pollingIntervalMs: 30000
   - package: oci://quay.io/veecode/aws-amazon-ecs-plugin-for-backstage@sha256:c09a6058dbaac59330d9dd01c235ed5ac14cd58bcd36e8f663e5d304e3bf4564
     disabled: true
     pluginConfig:
@@ -869,6 +1145,36 @@ plugins:
             dynamicRoutes:
               - path: /oauth2/*
                 importName: Router
+  - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-bitbucket-cloud@sha256:fb2c112cdb60748abd5c9baddf3e619b955e6ab661f67b26ad67b82dacaa580b
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          bitbucketCloud:
+            default:
+              workspace: ${BITBUCKET_WORKSPACE}
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  minutes: 1
+                timeout:
+                  minutes: 3
+  - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-bitbucket-server@sha256:50ede2e8961a60fbd972784896b6f274087e24a07f4012632322d1728e545926
+    disabled: true
+    pluginConfig:
+      catalog:
+        providers:
+          bitbucketServer:
+            default:
+              host: ${BITBUCKET_HOST}
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  minutes: 1
+                timeout:
+                  minutes: 3
   - package: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-github@sha256:1249d5b36dbe6574f02aa6fc04a208655daf1d7121ab02c7246785b40790febe
     disabled: true
     pluginConfig:
@@ -1028,6 +1334,10 @@ plugins:
             sender: ${EMAIL_SENDER}
             broadcastConfig:
               receiver: users
+  - package: oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-bitbucket-cloud@sha256:eb03449ff399cb2f12256e60a38f63d171027027ca1c55671f48c31ff5aa2990
+    disabled: true
+  - package: oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-bitbucket-server@sha256:81561dc07faa321c9bc080af87106cb5b351e3d26d5f97c01bfd804aa252a740
+    disabled: true
   - package: oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-gerrit@sha256:07ad779bcf55b67e91c1057929209a6915b9df9389ed7d34a0cc00012c614598
     disabled: true
     pluginConfig:
@@ -1164,6 +1474,131 @@ plugins:
     pluginConfig:
       bulkImport:
         importAPI: open-pull-requests
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-dynamic-home-page@sha256:06af1022a2958de51498a95f9d477eea5d29c8acc2e9fe000af25fac924d35fd
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          red-hat-developer-hub.backstage-plugin-dynamic-home-page:
+            dynamicRoutes:
+              - path: /
+                importName: DynamicHomePage
+            mountPoints:
+              - mountPoint: application/listener
+                importName: VisitListener
+              # the default cards
+              - mountPoint: home.page/cards
+                importName: OnboardingSection
+                config:
+                  id: rhdh-onboarding-section
+                  title: Red Hat Developer Hub - Onboarding
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  layouts:
+                    xl: {w: 12, h: 6}
+                    lg: {w: 12, h: 6}
+                    md: {w: 12, h: 7}
+                    sm: {w: 12, h: 8}
+                    xs: {w: 12, h: 9}
+                    xxs: {w: 12, h: 14}
+              - mountPoint: home.page/cards
+                importName: EntitySection
+                config:
+                  id: rhdh-entity-section
+                  title: Red Hat Developer Hub - Software Catalog
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  layouts:
+                    xl: {w: 12, h: 7}
+                    lg: {w: 12, h: 7}
+                    md: {w: 12, h: 8}
+                    sm: {w: 12, h: 9}
+                    xs: {w: 12, h: 11}
+                    xxs: {w: 12, h: 15}
+              - mountPoint: home.page/cards
+                importName: TemplateSection
+                config:
+                  id: rhdh-template-section
+                  title: Red Hat Developer Hub - Explore templates
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 2
+                      maxRows: 12
+                      defaultRows: 4
+                  layouts:
+                    xl: {w: 12, h: 5}
+                    lg: {w: 12, h: 5}
+                    md: {w: 12, h: 5}
+                    sm: {w: 12, h: 5}
+                    xs: {w: 12, h: 7.5}
+                    xxs: {w: 12, h: 13.5}
+              # additional available cards when the 'customizable' feature is enabled
+              - mountPoint: home.page/cards
+                importName: QuickAccessCard
+                config:
+                  id: quickaccess-card
+                  title: Quick Access Card
+              - mountPoint: home.page/cards
+                importName: SearchBar
+                config:
+                  id: searchbar
+                  title: Search
+                  cardLayout:
+                    width:
+                      minColumns: 4
+                      maxColumns: 12
+                      defaultColumns: 12
+                    height:
+                      minRows: 1
+                      maxRows: 2
+                      defaultRows: 2
+              - mountPoint: home.page/cards
+                importName: CatalogStarredEntitiesCard
+                config:
+                  id: catalog-starred-entities-card
+                  title: Starred catalog entities
+              - mountPoint: home.page/cards
+                importName: RecentlyVisitedCard
+                config:
+                  id: recently-visited-card
+                  title: Recently visited
+              - mountPoint: home.page/cards
+                importName: TopVisitedCard
+                config:
+                  id: top-visited-card
+                  title: Top visited
+              - mountPoint: home.page/cards
+                importName: FeaturedDocsCard
+                config:
+                  id: featured-docs-card
+                  title: Featured docs
+              - mountPoint: home.page/cards
+                importName: JokeCard
+                config:
+                  id: joke-card
+                  title: Random joke
+            translationResources:
+              - importName: homepageTranslations
+                ref: homepageTranslationRef
+                module: Alpha
   - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions@sha256:227ec05736e1a1fcd3432327f33be23bfee6f87e4cc503f823e61791f67bcbc5
     disabled: true
     pluginConfig:
@@ -1851,6 +2286,17 @@ plugins:
             description: Kong Gateway (Admin API)
             defaultTags:
               - devportal-managed
+  - package: oci://quay.io/veecode/veecode-platform-backstage-plugin-scaffolder-field-catalog-prefill@sha256:5feec9b732c186052484773772f04ac5dab14d57776c79e8a46f6d13c870ab0f
+    disabled: true
+    pluginConfig:
+      dynamicPlugins:
+        frontend:
+          veecode-platform.backstage-plugin-scaffolder-field-catalog-prefill:
+            scaffolderFieldExtensions:
+              - importName: CatalogEntityPrefillExtension
+            translationResources:
+              - importName: catalogEntityPrefillTranslations
+                ref: catalogEntityPrefillTranslationRef
   - package: oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:c6d8d7f41213dfdc99e1e77a10b0b64c426dd0415355b95f07cbf2a9dd22b8b7
     disabled: true
     pluginConfig:

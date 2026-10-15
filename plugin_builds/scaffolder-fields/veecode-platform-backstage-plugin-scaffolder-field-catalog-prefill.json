@@ -1,0 +1,9 @@
+{
+  "veecode-platform-backstage-plugin-scaffolder-field-catalog-prefill": {
+    "workspacePath": "scaffolder-fields/plugins/scaffolder-field-catalog-prefill",
+    "registryReference": "quay.io/veecode/veecode-platform-backstage-plugin-scaffolder-field-catalog-prefill:bs_1.54.9__0.1.0",
+    "digest": "sha256:5feec9b732c186052484773772f04ac5dab14d57776c79e8a46f6d13c870ab0f",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3sidmVlY29kZS1wbGF0Zm9ybS1iYWNrc3RhZ2UtcGx1Z2luLXNjYWZmb2xkZXItZmllbGQtY2F0YWxvZy1wcmVmaWxsIjp7Im5hbWUiOiJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLXNjYWZmb2xkZXItZmllbGQtY2F0YWxvZy1wcmVmaWxsLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4xLjAiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImZyb250ZW5kLXBsdWdpbiIsInBsdWdpbklkIjoic2NhZmZvbGRlci1maWVsZC1jYXRhbG9nLXByZWZpbGwiLCJwbHVnaW5QYWNrYWdlcyI6WyJAdmVlY29kZS1wbGF0Zm9ybS9iYWNrc3RhZ2UtcGx1Z2luLXNjYWZmb2xkZXItZmllbGQtY2F0YWxvZy1wcmVmaWxsIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTQuOSJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+  }
+}

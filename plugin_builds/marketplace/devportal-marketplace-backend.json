@@ -1,0 +1,9 @@
+{
+  "devportal-marketplace-backend": {
+    "workspacePath": "marketplace/plugins/devportal-marketplace-backend",
+    "registryReference": "quay.io/veecode/devportal-marketplace-backend:bs_1.54.9__0.3.1",
+    "digest": "sha256:7948f276b6404448555adbdb6a0ded08e60e68b6b2ef42580ff81a07da5fb9f0",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siZGV2cG9ydGFsLW1hcmtldHBsYWNlLWJhY2tlbmQiOnsibmFtZSI6ImRldnBvcnRhbC1tYXJrZXRwbGFjZS1iYWNrZW5kLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4zLjEiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImJhY2tlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJleHRlbnNpb25zIiwicGx1Z2luUGFja2FnZXMiOlsiZGV2cG9ydGFsLW1hcmtldHBsYWNlLWJhY2tlbmQiXSwic3VwcG9ydGVkLXZlcnNpb25zIjoiMS41NC45In0sImxpY2Vuc2UiOiJBcGFjaGUtMi4wIn19XQ=="
+  }
+}

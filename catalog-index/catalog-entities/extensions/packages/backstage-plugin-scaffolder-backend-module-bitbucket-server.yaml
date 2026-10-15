@@ -17,7 +17,8 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage/plugin-scaffolder-backend-module-bitbucket-server"
-  dynamicArtifact: oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-bitbucket-server:bs_1.54.9__0.2.25!backstage-plugin-scaffolder-backend-module-bitbucket-server
+  # Tag: bs_1.54.9__0.2.25
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-bitbucket-server@sha256:81561dc07faa321c9bc080af87106cb5b351e3d26d5f97c01bfd804aa252a740"
   version: 0.2.25
   backstage:
     role: backend-plugin-module

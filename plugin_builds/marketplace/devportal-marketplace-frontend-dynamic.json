@@ -1,0 +1,9 @@
+{
+  "devportal-marketplace-frontend-dynamic": {
+    "workspacePath": "marketplace/plugins/devportal-marketplace-frontend-dynamic",
+    "registryReference": "quay.io/veecode/devportal-marketplace-frontend-dynamic:bs_1.54.9__0.3.2",
+    "digest": "sha256:aa9e50d1b28278bf24ccc78396e3e39438a4be718d3e80259f297713ddc60d31",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siZGV2cG9ydGFsLW1hcmtldHBsYWNlLWZyb250ZW5kLWR5bmFtaWMiOnsibmFtZSI6ImRldnBvcnRhbC1tYXJrZXRwbGFjZS1mcm9udGVuZC1keW5hbWljLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4zLjIiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImZyb250ZW5kLXBsdWdpbiIsInBsdWdpbklkIjoiZXh0ZW5zaW9ucyIsInBsdWdpblBhY2thZ2VzIjpbImRldnBvcnRhbC1tYXJrZXRwbGFjZS1mcm9udGVuZCIsImRldnBvcnRhbC1tYXJrZXRwbGFjZS1mcm9udGVuZC1keW5hbWljIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTQuOSJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCJ9fV0="
+  }
+}

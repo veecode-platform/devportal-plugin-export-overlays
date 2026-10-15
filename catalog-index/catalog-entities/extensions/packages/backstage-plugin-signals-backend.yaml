@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-signals-backend"
-  dynamicArtifact: oci://quay.io/veecode/backstage-plugin-signals-backend:bs_1.54.9__0.3.18!backstage-plugin-signals-backend
+  # Tag: bs_1.54.9__0.3.18
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-signals-backend@sha256:fba0c367d0fa243ebf5d97e7db0ee75500d7995d8e57a21c915b5609fedea82a"
   version: 0.3.18
   backstage:
     role: backend-plugin

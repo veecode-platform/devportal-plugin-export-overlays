@@ -17,7 +17,8 @@ metadata:
     - software-catalog
 spec:
   packageName: "@backstage/plugin-catalog-backend-module-bitbucket-server"
-  dynamicArtifact: oci://quay.io/veecode/backstage-plugin-catalog-backend-module-bitbucket-server:bs_1.54.9__0.5.14!backstage-plugin-catalog-backend-module-bitbucket-server
+  # Tag: bs_1.54.9__0.5.14
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-catalog-backend-module-bitbucket-server@sha256:50ede2e8961a60fbd972784896b6f274087e24a07f4012632322d1728e545926"
   version: 0.5.14
   backstage:
     role: backend-plugin-module

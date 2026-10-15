@@ -16,7 +16,8 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-signals"
-  dynamicArtifact: oci://quay.io/veecode/backstage-plugin-signals:bs_1.54.9__0.0.34!backstage-plugin-signals
+  # Tag: bs_1.54.9__0.0.34
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-signals@sha256:5386b0ef4af65fb9ea67189ce3136811eccc0f2e6251cb369b38572b9ffa0248"
   version: 0.0.34
   backstage:
     role: frontend-plugin
@@ -26,9 +27,6 @@ spec:
   lifecycle: active
   partOf:
     - signals-frontend
-  appConfigExamples:
-    - title: Default configuration (Signals registers the client API; no routes)
-      content:
-        dynamicPlugins:
-          frontend:
-            backstage.plugin-signals: {}
+  # The factory default carries no config for this package; the portal registers it in app-config.dynamic-plugins.yaml.
+  appConfigNotRequired: true
+  appConfigExamples: []
