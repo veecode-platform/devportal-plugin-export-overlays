@@ -1,0 +1,6 @@
+{
+  "name": "backstage-community.plugin-analytics-provider-segment",
+  "exposedModules": {
+    "PluginRoot": "./src/legacy.ts"
+  }
+}

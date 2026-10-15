@@ -1,0 +1,8 @@
+{
+  "name": "red-hat-developer-hub.backstage-plugin-adoption-insights",
+  "exposedModules": {
+    "PluginRoot": "./src/legacy.ts",
+    "Legacy": "./src/legacy.ts",
+    "Alpha": "./src/alpha.ts"
+  }
+}

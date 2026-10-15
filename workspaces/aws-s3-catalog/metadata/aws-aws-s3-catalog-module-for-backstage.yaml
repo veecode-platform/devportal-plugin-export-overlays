@@ -16,11 +16,11 @@ metadata:
   tags: []
 spec:
   packageName: "@aws/aws-s3-catalog-module-for-backstage"
-  dynamicArtifact: oci://quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.52.0__0.3.0
+  dynamicArtifact: oci://quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.54.9__0.3.0
   version: 0.3.0
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: AWS
   support: community
   lifecycle: active

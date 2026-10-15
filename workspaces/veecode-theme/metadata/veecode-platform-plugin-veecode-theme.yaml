@@ -12,11 +12,11 @@ metadata:
   tags: []
 spec:
   packageName: "veecode-platform-plugin-veecode-theme"
-  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-veecode-theme:bs_1.52.0__0.1.0
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-veecode-theme:bs_1.54.9__0.1.0
   version: 0.1.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

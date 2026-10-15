@@ -16,11 +16,11 @@ metadata:
   tags: []
 spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-global-floating-action-button'
-  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-floating-action-button:bs_1.52.0__1.9.3
+  dynamicArtifact: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-floating-action-button:bs_1.54.9__1.9.3
   version: 1.9.3
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

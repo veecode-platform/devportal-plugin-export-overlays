@@ -1,0 +1,7 @@
+{
+  "name": "backstage-community.plugin-rbac",
+  "exposedModules": {
+    "PluginRoot": "./src/legacy/index.ts",
+    "Alpha": "./src/alpha/translations/index.ts"
+  }
+}

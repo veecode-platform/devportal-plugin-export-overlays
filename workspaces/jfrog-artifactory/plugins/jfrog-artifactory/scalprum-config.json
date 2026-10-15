@@ -1,0 +1,8 @@
+{
+  "name": "backstage-community.plugin-jfrog-artifactory",
+  "exposedModules": {
+    "PluginRoot": "./src/legacy.ts",
+    "Legacy": "./src/legacy.ts",
+    "Alpha": "./src/alpha.ts"
+  }
+}

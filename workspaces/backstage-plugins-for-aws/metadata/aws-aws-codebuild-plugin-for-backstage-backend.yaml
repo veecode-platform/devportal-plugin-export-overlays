@@ -17,11 +17,11 @@ metadata:
   tags: []
 spec:
   packageName: "@aws/aws-codebuild-plugin-for-backstage-backend"
-  dynamicArtifact: oci://quay.io/veecode/aws-aws-codebuild-plugin-for-backstage-backend:bs_1.52.0__0.10.0
+  dynamicArtifact: oci://quay.io/veecode/aws-aws-codebuild-plugin-for-backstage-backend:bs_1.54.9__0.10.0
   version: 0.10.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: AWS
   support: community
   lifecycle: active

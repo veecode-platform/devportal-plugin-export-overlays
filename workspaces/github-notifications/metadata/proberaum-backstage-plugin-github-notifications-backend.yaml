@@ -14,11 +14,11 @@ metadata:
   tags: []
 spec:
   packageName: "@proberaum/backstage-plugin-github-notifications-backend"
-  dynamicArtifact: oci://quay.io/veecode/proberaum-backstage-plugin-github-notifications-backend:bs_1.52.0__0.12.0
+  dynamicArtifact: oci://quay.io/veecode/proberaum-backstage-plugin-github-notifications-backend:bs_1.54.9__0.12.0
   version: 0.12.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Proberaum
   support: community
   lifecycle: active

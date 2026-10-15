@@ -16,11 +16,11 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-acr"
-  dynamicArtifact: ./dynamic-plugins/dist/backstage-community-plugin-acr
-  version: 1.24.1
+  dynamicArtifact: oci://quay.io/veecode/backstage-community-plugin-acr:bs_1.54.9__1.28.1
+  version: 1.28.1
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: tech-preview
   lifecycle: active

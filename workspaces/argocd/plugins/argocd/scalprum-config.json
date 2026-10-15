@@ -1,0 +1,8 @@
+{
+  "name": "backstage-community.plugin-argocd",
+  "exposedModules": {
+    "PluginRoot": "./src/legacy.ts",
+    "Legacy": "./src/legacy.ts",
+    "Alpha": "./src/translations/index.ts"
+  }
+}
