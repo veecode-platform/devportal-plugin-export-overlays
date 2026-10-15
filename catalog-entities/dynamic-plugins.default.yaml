@@ -14,8 +14,9 @@
 # generates the real index from workspaces/*/metadata/*.yaml and
 # default.packages.yaml into a separate catalog-index/ output tree that the
 # publish-catalog-index CI job packages into the image — this committed stub
-# is never overwritten in place and stays what ships outside CI. Plugin
-# enablement is still the operator's job, done in the deployment's own
-# dynamic-plugins.yaml via `includes:`; every generated entry carries
-# `disabled: true` for exactly that reason.
+# is never overwritten in place and stays what ships outside CI. The generated
+# index enables the factory plugins listed under `packages.enabled` in
+# default.packages.yaml (ADR-015) and carries `disabled: true` on every other
+# entry; enabling those stays the operator's job, in the deployment's own
+# dynamic-plugins.yaml.
 plugins: []

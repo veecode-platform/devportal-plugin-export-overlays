@@ -223,11 +223,12 @@ build_plugin_entry() {
   local entry
   # FORK PATCH (WS-2a / ADR-008): emit `disabled:` instead of upstream's
   # `enabled:`. This fork's DPDY consumer contract (RHDH 1.10 installer +
-  # catalog-entities/Containerfile, ADR-005/ADR-006) requires the literal
-  # `disabled: true` key on every entry — every plugin here declares a
-  # canonical version only, enabling stays the tenant/operator's job in
-  # their own dynamic-plugins.yaml. Inverted boolean, same enabled/$enabled
-  # input from default.packages.yaml's enabled/disabled list membership.
+  # catalog-entities/Containerfile) requires an explicit `disabled:` boolean
+  # on every entry: `disabled: false` for the factory plugins in
+  # default.packages.yaml's enabled list (ADR-015), `disabled: true` for every
+  # other package, whose enabling stays the operator's job in their own
+  # dynamic-plugins.yaml. Inverted boolean, same enabled/$enabled input from
+  # default.packages.yaml's enabled/disabled list membership.
   if [[ "${YQ_IS_MIKE_FARAH:-0}" -eq 1 ]]; then
     # Preserve nested scalar quoting (pluginConfig); pass package/enabled via env — mikefarah has no jq --arg on eval.
     export MF_PKG="$package_value"
