@@ -15,11 +15,12 @@ metadata:
     backstage.io/source-location: url:https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/quickstart
 spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-quickstart'
-  dynamicArtifact: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-quickstart
-  version: 1.9.6
+  # Tag: bs_1.54.9__2.2.0
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-quickstart@sha256:f7fe2773e4bf1cfcb623b6b0201c0754694ab6b879a22c4b508f613ccf300bdb"
+  version: 2.2.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

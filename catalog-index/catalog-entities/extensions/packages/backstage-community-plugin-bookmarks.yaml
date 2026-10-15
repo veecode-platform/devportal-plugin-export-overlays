@@ -14,12 +14,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-bookmarks"
-  # Tag: bs_1.52.0__0.9.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-bookmarks@sha256:9bf6dd9a6d7f5cbd5416849bc0adf503f4e0e17e883a64ae21c3ffb20b2c5168"
+  # Tag: bs_1.54.9__0.9.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-bookmarks@sha256:03e92b76a35261079c98d1e501ece11738adca60c6cc0de13ded015689ef7aa9"
   version: 0.9.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

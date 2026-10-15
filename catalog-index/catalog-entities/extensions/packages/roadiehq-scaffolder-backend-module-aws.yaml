@@ -18,12 +18,12 @@ metadata:
     - aws
 spec:
   packageName: "@roadiehq/scaffolder-backend-module-aws"
-  # Tag: bs_1.52.0__2.8.2
-  dynamicArtifact: "oci://quay.io/veecode/roadiehq-scaffolder-backend-module-aws@sha256:fdbd59bbe0d5c48ff17dd0c3c24b30423c74233db25f5baa299de4caa8033e39"
+  # Tag: bs_1.54.9__2.8.2
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-scaffolder-backend-module-aws@sha256:1387c3d6d47d67a6695a21b2088bf35983e13fa03bca750f7ffad175dda37ac4"
   version: 2.8.2
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Roadie
   support: community
   lifecycle: active

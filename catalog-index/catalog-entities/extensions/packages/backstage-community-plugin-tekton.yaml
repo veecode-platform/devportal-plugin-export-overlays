@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-tekton'
-  # Tag: bs_1.52.0__3.37.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tekton@sha256:7a2607b5d522c090e2127d8847d58657d027a246cf4df1b970429eeba6a12c76"
-  version: 3.37.0
+  # Tag: bs_1.54.9__4.0.5
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tekton@sha256:26c3acb2b3417f0d5eb9f1034d2e1219328089df01952f6f44aa898d7bd67b2d"
+  version: 4.0.5
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: community
   lifecycle: active
@@ -36,6 +36,7 @@ spec:
               translationResources:
                 - importName: tektonTranslations
                   ref: tektonTranslationRef
+                  module: Alpha
               mountPoints:
                 - mountPoint: entity.page.ci/cards
                   importName: TektonCI

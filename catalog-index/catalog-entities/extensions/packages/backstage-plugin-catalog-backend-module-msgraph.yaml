@@ -17,12 +17,12 @@ metadata:
     - software-catalog
 spec:
   packageName: "@backstage/plugin-catalog-backend-module-msgraph"
-  # Tag: bs_1.52.0__0.10.3
-  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-catalog-backend-module-msgraph@sha256:4e35f3c39026325949be60af2a9b0e04938de87a3e1e8d6caff8a0bc9ccb80b2"
-  version: 0.10.3
+  # Tag: bs_1.54.9__0.10.5
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-catalog-backend-module-msgraph@sha256:695772a7f87596852acd1dea76f7929fb24481a424ecb45d8efbd91d9fd78370"
+  version: 0.10.5
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

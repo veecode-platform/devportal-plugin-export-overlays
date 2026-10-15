@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-announcements-backend"
-  # Tag: bs_1.52.0__0.26.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-announcements-backend@sha256:d50068f8fd6c638987f40b560fe458b124d14ac3779c13a5540d7dcc2b00d58b"
-  version: 0.26.0
+  # Tag: bs_1.54.9__0.28.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-announcements-backend@sha256:3110b35520235313781338b11bfbb440d0f4a759cee774d603bd472a634dca64"
+  version: 0.28.1
   backstage:
     role: backend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

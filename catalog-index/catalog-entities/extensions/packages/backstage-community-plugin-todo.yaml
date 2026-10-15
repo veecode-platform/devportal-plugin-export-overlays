@@ -15,12 +15,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-todo"
-  # Tag: bs_1.52.0__0.22.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-todo@sha256:bb04131c8390091ae966e625fdad7be1002894d8b8983ae27acce56464a1880b"
-  version: 0.22.0
+  # Tag: bs_1.54.9__0.24.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-todo@sha256:015d1a3f0652625a5ea3944574ed68a147c76c83ea7461908403c842dc2c8b49"
+  version: 0.24.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

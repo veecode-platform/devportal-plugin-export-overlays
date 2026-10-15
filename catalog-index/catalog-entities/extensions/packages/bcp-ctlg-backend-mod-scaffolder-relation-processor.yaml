@@ -17,11 +17,12 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor"
-  dynamicArtifact: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor-dynamic
-  version: 2.14.2
+  # Tag: bs_1.54.9__2.17.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor@sha256:8c2f536e268c6995703ef108ae6bab54bf16fe508f4afc4e149470aeac1733f0"
+  version: 2.17.1
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: tech-preview
   lifecycle: active

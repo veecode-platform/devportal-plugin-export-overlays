@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-github-discussions"
-  # Tag: bs_1.52.0__0.10.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-github-discussions@sha256:0e7f30341e71c6474389604f621fb340d6a4bc913584b1b4f4a139c86fcb2fba"
-  version: 0.10.0
+  # Tag: bs_1.54.9__1.4.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-github-discussions@sha256:f9c4fa25114fa366168a03e04f83d161e1e15122882b838a522dda4b59d99803"
+  version: 1.4.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: community
   lifecycle: active

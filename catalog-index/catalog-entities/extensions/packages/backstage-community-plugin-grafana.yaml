@@ -17,12 +17,12 @@ metadata:
     - observability
 spec:
   packageName: "@backstage-community/plugin-grafana"
-  # Tag: bs_1.52.0__0.17.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-grafana@sha256:f532f66d796de182d32cbe5f0eb7f0829cc31e61dac09f6cfed646ef6f8bcad3"
+  # Tag: bs_1.54.9__0.17.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-grafana@sha256:27e84e524b188b84bc46d35783e628c01d63d11293ec86454b34e08a333deceb"
   version: 0.17.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   support: community
   lifecycle: active
   partOf:

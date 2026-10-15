@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-azure-devops-backend"
-  # Tag: bs_1.52.0__0.27.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-azure-devops-backend@sha256:6e33292432cbeaa38b2913acf34cda9b819c84373675bb4fbdc62b9c1242cbc6"
-  version: 0.27.0
+  # Tag: bs_1.54.9__0.32.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-azure-devops-backend@sha256:771e225017ab8fde3292a63d76bb48ed666ee3fed9c067fe7f7db91602c7a164"
+  version: 0.32.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: community
   lifecycle: active
@@ -34,3 +34,7 @@ spec:
           host: dev.azure.com
           token: ${AZURE_TOKEN}
           organization: ${AZURE_ORG}
+          pullRequestDashboard:
+            organizations:
+              - organization: ${AZURE_ORG}
+                host: dev.azure.com

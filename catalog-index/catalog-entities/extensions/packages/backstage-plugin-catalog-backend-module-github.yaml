@@ -17,12 +17,12 @@ metadata:
     - software-catalog
 spec:
   packageName: "@backstage/plugin-catalog-backend-module-github"
-  # Tag: bs_1.52.0__0.13.3
-  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-catalog-backend-module-github@sha256:d7d3a1f0bfdea4ede1b2410a293c680c7604e9b1de18906f536d4746ae0b3b20"
-  version: 0.13.3
+  # Tag: bs_1.54.9__0.13.5
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-catalog-backend-module-github@sha256:1249d5b36dbe6574f02aa6fc04a208655daf1d7121ab02c7246785b40790febe"
+  version: 0.13.5
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

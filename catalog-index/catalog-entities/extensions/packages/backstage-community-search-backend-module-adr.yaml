@@ -14,12 +14,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/search-backend-module-adr"
-  # Tag: bs_1.52.0__0.20.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-search-backend-module-adr@sha256:8e8252c816ed00ac662f4e2eb24076213c06221333e183a0d7badabe1549301d"
-  version: 0.20.0
+  # Tag: bs_1.54.9__0.22.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-search-backend-module-adr@sha256:5202f62ec4836a68573160b30eeab26a7a82aca18a0e06be2ec8ba2f99bcf726"
+  version: 0.22.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

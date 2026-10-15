@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-search-backend-module-github-discussions"
-  # Tag: bs_1.52.0__0.11.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions@sha256:b08462ce1254cab05d1d65018cbe317bcf4fb9bcf3d76e0bee1bdd8518597a16"
-  version: 0.11.0
+  # Tag: bs_1.54.9__0.16.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions@sha256:11238017a0e35ab42eda4bcdcd27f66565b1aeb7c32aa37d2d6b8e007a6edc98"
+  version: 0.16.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: community
   lifecycle: active

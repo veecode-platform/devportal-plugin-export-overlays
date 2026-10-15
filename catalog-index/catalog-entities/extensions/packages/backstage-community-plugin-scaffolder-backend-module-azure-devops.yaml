@@ -17,12 +17,12 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage-community/plugin-scaffolder-backend-module-azure-devops"
-  # Tag: bs_1.52.0__0.23.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-azure-devops@sha256:8ef564e378570034704548315e25fb13fe5671f5b665d3fc4db78bb3e01aa415"
-  version: 0.23.0
+  # Tag: bs_1.54.9__0.27.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-azure-devops@sha256:7a7289ac165ac476a363f4e7f60521617bfa1713519736d42c54bcf36cb470cd"
+  version: 0.27.0
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

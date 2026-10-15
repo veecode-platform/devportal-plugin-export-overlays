@@ -17,12 +17,12 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage/plugin-scaffolder-backend-module-gerrit"
-  # Tag: bs_1.52.0__0.2.22
-  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-gerrit@sha256:f137c953b0da61fdbc1f1ee37718e06888ba15426afa1a9898fbc41afab3165b"
-  version: 0.2.22
+  # Tag: bs_1.54.9__0.2.24
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-gerrit@sha256:07ad779bcf55b67e91c1057929209a6915b9df9389ed7d34a0cc00012c614598"
+  version: 0.2.24
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

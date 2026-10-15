@@ -17,11 +17,12 @@ metadata:
     - software-catalog
 spec:
   packageName: "@backstage-community/plugin-catalog-backend-module-keycloak"
-  dynamicArtifact: ./dynamic-plugins/dist/backstage-community-plugin-catalog-backend-module-keycloak-dynamic
-  version: 3.19.2
+  # Tag: bs_1.54.9__3.23.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-catalog-backend-module-keycloak@sha256:ed92926ccd13c9346c4905fef71b8151420b9e76717e4994f73cdb19b009b0bd"
+  version: 3.23.1
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: '@red-hat-developer-hub/backstage-plugin-extensions'
-  # Tag: bs_1.52.0__0.18.0
-  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions@sha256:9bef416a1f7f44c94f9f2c07a62b867efdb64ce4478f93b6dd9e726724a392f4"
+  # Tag: bs_1.54.9__0.18.0
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions@sha256:227ec05736e1a1fcd3432327f33be23bfee6f87e4cc503f823e61791f67bcbc5"
   version: 0.18.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: tech-preview
   lifecycle: active

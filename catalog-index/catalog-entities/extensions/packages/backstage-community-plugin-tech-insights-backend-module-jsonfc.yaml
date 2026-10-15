@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-tech-insights-backend-module-jsonfc'
-  # Tag: bs_1.52.0__0.7.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend-module-jsonfc@sha256:1fdc2fed4c693a48c00700ade59f3105058dfae5eb4334f4ad26bd772d0a51f6"
-  version: 0.7.0
+  # Tag: bs_1.54.9__0.10.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend-module-jsonfc@sha256:9c05c8ceb7f50cd7833f9863ac61480e088d1bba7487e04d87d36c157112707c"
+  version: 0.10.0
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.47.2
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

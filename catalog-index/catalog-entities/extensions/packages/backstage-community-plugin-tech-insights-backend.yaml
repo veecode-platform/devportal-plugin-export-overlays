@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-tech-insights-backend'
-  # Tag: bs_1.52.0__2.5.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend@sha256:1a2dd0fcabcd9ae20511fd89552533d847f58d887bba15e9fb5a941dc9dab88b"
-  version: 2.5.0
+  # Tag: bs_1.54.9__3.1.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-tech-insights-backend@sha256:0d7727eb226be45895ae460df1f49539cb920119021cefa3fdff67782ee48322"
+  version: 3.1.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.47.2
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

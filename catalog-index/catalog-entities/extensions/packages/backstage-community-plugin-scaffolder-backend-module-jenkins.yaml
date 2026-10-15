@@ -17,12 +17,12 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage-community/plugin-scaffolder-backend-module-jenkins"
-  # Tag: bs_1.52.0__0.20.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-jenkins@sha256:aa8aa1f4ca8df4db2fb8218eea4ba9b3069ef7b6ff5a04bfe35f32997602f398"
-  version: 0.20.0
+  # Tag: bs_1.54.9__0.24.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-jenkins@sha256:33fa238651f802f9e4d0340e32cd1ad73234a03e04b332280dff045535cd43ef"
+  version: 0.24.0
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-nexus-repository-manager"
-  # Tag: bs_1.52.0__1.23.2
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-nexus-repository-manager@sha256:a96498a8da63a04b4d405e79937761e55a6ebc2e9070bbcdf1b274adaceb99d8"
-  version: 1.23.2
+  # Tag: bs_1.54.9__1.27.4
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-nexus-repository-manager@sha256:949c13162e6579697d16690c1af523dcda5e5611ba2cd908e3e63d3a412ea2c8"
+  version: 1.27.4
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: community
   lifecycle: active

@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-sonarqube-backend"
-  # Tag: bs_1.52.0__1.1.1
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-sonarqube-backend@sha256:bdf9d45d8c73c03be632174a1918c472806cf4bc52966fb3cbe8f98363abd0c5"
-  version: 1.1.1
+  # Tag: bs_1.54.9__1.2.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-sonarqube-backend@sha256:2ad11a712d8c7183334efff1c72185c683971702067fa357966c339ce644b7ad"
+  version: 1.2.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: community
   lifecycle: active

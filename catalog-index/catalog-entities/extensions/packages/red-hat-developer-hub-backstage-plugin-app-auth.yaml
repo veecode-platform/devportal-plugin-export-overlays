@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-app-auth"
-  # Tag: bs_1.52.0__0.0.2
-  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-auth@sha256:fbe26478a0ed00a4c0da30b121befd0263705fd3d7c9a2b1e5848f7420ec92e4"
+  # Tag: bs_1.54.9__0.0.2
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-auth@sha256:e8845c98b94a27b2dacf87c481a598a3dbb2239d4988bfc6d3539462c53981a4"
   version: 0.0.2
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: dev-preview
   lifecycle: active

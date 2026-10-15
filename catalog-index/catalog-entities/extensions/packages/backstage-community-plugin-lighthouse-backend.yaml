@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-lighthouse-backend'
-  # Tag: bs_1.52.0__0.25.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-lighthouse-backend@sha256:ca06de50b619ea14189775a835498efb62d147e1c5f74c69bcacc8d7244dfcc1"
-  version: 0.25.0
+  # Tag: bs_1.54.9__0.27.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-lighthouse-backend@sha256:b066f7fe9052bd1463dd5b1296a84c7b2df34646fd84c40b29d084ed0bfaa1b6"
+  version: 0.27.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

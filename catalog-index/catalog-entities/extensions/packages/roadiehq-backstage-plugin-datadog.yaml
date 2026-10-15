@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@roadiehq/backstage-plugin-datadog"
-  # Tag: bs_1.52.0__2.7.2
-  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-datadog@sha256:7d020e3cbfde88457d946c19a0d4a367db4b3b925bcb4d2371755a2fad25ff1d"
+  # Tag: bs_1.54.9__2.7.2
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-datadog@sha256:86dce58892a2af1960504d811e707b18ff165f31286cc2130d463f1f61f25e7b"
   version: 2.7.2
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Roadie
   support: community
   lifecycle: active

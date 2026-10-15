@@ -12,12 +12,12 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/plugin-aws-cost-insights"
-  # Tag: bs_1.52.0__0.3.0
-  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:1965166f48d4bfd25e29708c48bffb1f466f72dd3635068ca31bf3da144f72c4"
+  # Tag: bs_1.54.9__0.3.0
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-plugin-aws-cost-insights@sha256:c6d8d7f41213dfdc99e1e77a10b0b64c426dd0415355b95f07cbf2a9dd22b8b7"
   version: 0.3.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

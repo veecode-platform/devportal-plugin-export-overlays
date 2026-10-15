@@ -14,12 +14,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-npm"
-  # Tag: bs_1.52.0__1.20.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-npm@sha256:ff44d50c6cffd4e7d314e0dc4aec03bdce1f6ec85c3c917dbfa23d6dbcb74e95"
+  # Tag: bs_1.54.9__1.20.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-npm@sha256:3d6f560bd88787d484ff2e6f908a7aad5d58455c470f6b12b1c62d16404c9ebe"
   version: 1.20.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

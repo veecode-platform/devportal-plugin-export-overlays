@@ -16,12 +16,12 @@ metadata:
     - embed
 spec:
   packageName: "@roadiehq/backstage-plugin-iframe"
-  # Tag: bs_1.52.0__1.6.1
-  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-iframe@sha256:3b4f6d7bfea26b10205f3ca953a75e814a99157f34232caef3d5bba7a4edd915"
+  # Tag: bs_1.54.9__1.6.1
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-iframe@sha256:cae89c8ad51ab32958d1192f2f148d007af474008604d930c8d38f4af5a29ba7"
   version: 1.6.1
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.44.2
+    supportedVersions: 1.54.9
   support: community
   lifecycle: active
   partOf:

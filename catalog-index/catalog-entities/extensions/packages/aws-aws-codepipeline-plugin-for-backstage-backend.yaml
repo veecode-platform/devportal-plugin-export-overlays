@@ -17,12 +17,12 @@ metadata:
   tags: []
 spec:
   packageName: "@aws/aws-codepipeline-plugin-for-backstage-backend"
-  # Tag: bs_1.52.0__0.11.0
-  dynamicArtifact: "oci://quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage-backend@sha256:032f3893d2701e89d7504014715e4aa143a543dceea3809258714ae643b64e59"
+  # Tag: bs_1.54.9__0.11.0
+  dynamicArtifact: "oci://quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage-backend@sha256:79d37cd2c0a8341dd92e6b3a900b454edac22d3a5be7ff159482b457d8e3f4ba"
   version: 0.11.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: AWS
   support: community
   lifecycle: active

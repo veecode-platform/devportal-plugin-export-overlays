@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-jenkins"
-  # Tag: bs_1.52.0__0.30.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-jenkins@sha256:bbed7a06c0b758213e58b9bb0427e22c83895b199530bb56984ea7e5caa1d193"
-  version: 0.30.0
+  # Tag: bs_1.54.9__0.34.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-jenkins@sha256:cc5cb5d0f18551618dcce9b674547f9012a91ee43a53b807be87e74c92abc205"
+  version: 0.34.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: community
   lifecycle: active

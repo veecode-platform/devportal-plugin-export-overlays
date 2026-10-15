@@ -5,11 +5,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-adr-backend:bs_1.52.0__0.23.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-adr-backend:bs_1.54.9__0.25.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:ed655aa08ef3dc98c23b03bb35fb0405d886f74cce53592140e1c256f06eba44"
+          "digest": "sha256:425489c66fcf32554524b28e3ccd7f1dc7edf88186adbf683794a8dbd3c239b6"
         },
         "dpdy": {
           "status": "pass"
@@ -19,7 +19,7 @@
         }
       },
       "package": "@backstage-community/plugin-adr-backend",
-      "version": "0.23.0",
+      "version": "0.25.1",
       "workspace": "adr",
       "overall": "pass"
     },
@@ -27,11 +27,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-adr:bs_1.52.0__0.26.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-adr:bs_1.54.9__0.29.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:9792d027df44d3f89b5a968f92c26187dc96e7d840ac88d0d3579d95e076bb8e"
+          "digest": "sha256:9ccd7563ea50935c2c1353f14037d8eae9c9507fd9637059b10a8ca7bf333382"
         },
         "dpdy": {
           "status": "pass"
@@ -41,7 +41,7 @@
         }
       },
       "package": "@backstage-community/plugin-adr",
-      "version": "0.26.0",
+      "version": "0.29.0",
       "workspace": "adr",
       "overall": "pass"
     },
@@ -49,11 +49,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-search-backend-module-adr:bs_1.52.0__0.20.0"
+          "oci_ref": "quay.io/veecode/backstage-community-search-backend-module-adr:bs_1.54.9__0.22.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:8e8252c816ed00ac662f4e2eb24076213c06221333e183a0d7badabe1549301d"
+          "digest": "sha256:5202f62ec4836a68573160b30eeab26a7a82aca18a0e06be2ec8ba2f99bcf726"
         },
         "dpdy": {
           "status": "pass"
@@ -63,7 +63,7 @@
         }
       },
       "package": "@backstage-community/search-backend-module-adr",
-      "version": "0.20.0",
+      "version": "0.22.0",
       "workspace": "adr",
       "overall": "pass"
     },
@@ -71,11 +71,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-catalog-backend-module-ai-resources:bs_1.52.0__0.1.0"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-catalog-backend-module-ai-resources:bs_1.54.9__0.1.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:c7603b3f918d27f60847ca4640fbe2a191b511213d37f7b75999138bb4089d7b"
+          "digest": "sha256:86a2ecc55168a3cb713bf691a50075fd08e39e90a1ff2e46272886ae52e5a592"
         },
         "dpdy": {
           "status": "pass"
@@ -93,11 +93,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-ga4:bs_1.52.0__0.18.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-ga4:bs_1.54.9__0.22.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:40305e9872bb64e39c4cc328b2fdb797d1ea30dd45d977a4a3a0f652f20d4602"
+          "digest": "sha256:bb08d866c4697cf7f559663c911bbe80c308502c009241b2ef451c0945a46d1b"
         },
         "dpdy": {
           "status": "pass"
@@ -107,7 +107,7 @@
         }
       },
       "package": "@backstage-community/plugin-analytics-module-ga4",
-      "version": "0.18.0",
+      "version": "0.22.1",
       "workspace": "analytics",
       "overall": "pass"
     },
@@ -115,11 +115,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-matomo:bs_1.52.0__1.27.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-matomo:bs_1.54.9__1.31.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:d0d2dcd20024d0a304441f5ac271a2acc0be4be8278a2101c11e38b4994b55b3"
+          "digest": "sha256:b997693b5567d437bce216d5ea12e1e7f2ea9674bc2adb0e449ec644ab8ada15"
         },
         "dpdy": {
           "status": "pass"
@@ -129,7 +129,7 @@
         }
       },
       "package": "@backstage-community/plugin-analytics-module-matomo",
-      "version": "1.27.0",
+      "version": "1.31.1",
       "workspace": "analytics",
       "overall": "pass"
     },
@@ -137,11 +137,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-newrelic-browser:bs_1.52.0__0.18.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-module-newrelic-browser:bs_1.54.9__0.22.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:8b800879770794e0574afdb77181037c26e149e5ff3b014dddf8e13a92b3f34d"
+          "digest": "sha256:5ceed8acb1d6d99959da43e2044f260b3d7b93e4585c6f91071f9ecdfd4d96bd"
         },
         "dpdy": {
           "status": "pass"
@@ -151,7 +151,7 @@
         }
       },
       "package": "@backstage-community/plugin-analytics-module-newrelic-browser",
-      "version": "0.18.0",
+      "version": "0.22.1",
       "workspace": "analytics",
       "overall": "pass"
     },
@@ -159,11 +159,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-provider-segment:bs_1.52.0__1.27.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-analytics-provider-segment:bs_1.54.9__2.0.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:57b16eb798646257ef041802e89268c78054d5a073474ffef56e254081407707"
+          "digest": "sha256:2014969414709d58ff356f0f7dd77bad77246d698dd393fac0b70ad6fefbb357"
         },
         "dpdy": {
           "status": "pass"
@@ -173,7 +173,7 @@
         }
       },
       "package": "@backstage-community/plugin-analytics-provider-segment",
-      "version": "1.27.0",
+      "version": "2.0.0",
       "workspace": "analytics",
       "overall": "pass"
     },
@@ -181,11 +181,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-announcements-backend:bs_1.52.0__0.26.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-announcements-backend:bs_1.54.9__0.28.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:d50068f8fd6c638987f40b560fe458b124d14ac3779c13a5540d7dcc2b00d58b"
+          "digest": "sha256:3110b35520235313781338b11bfbb440d0f4a759cee774d603bd472a634dca64"
         },
         "dpdy": {
           "status": "pass"
@@ -195,7 +195,7 @@
         }
       },
       "package": "@backstage-community/plugin-announcements-backend",
-      "version": "0.26.0",
+      "version": "0.28.1",
       "workspace": "announcements",
       "overall": "pass"
     },
@@ -203,11 +203,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-announcements:bs_1.52.0__2.11.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-announcements:bs_1.54.9__2.13.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:79d53f3c754c6ec52f564ecbd1aed408b60bbd04f9e33fc4b774f08f198bb8b3"
+          "digest": "sha256:414782573070eb845b03546b3b6bf85fbc199135a6315fbff11379a794429410"
         },
         "dpdy": {
           "status": "pass"
@@ -217,7 +217,7 @@
         }
       },
       "package": "@backstage-community/plugin-announcements",
-      "version": "2.11.0",
+      "version": "2.13.0",
       "workspace": "announcements",
       "overall": "pass"
     },
@@ -225,11 +225,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-announcements:bs_1.52.0__0.19.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-announcements:bs_1.54.9__0.22.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:56879fdd248694f0b6d17cc3079fc8b0426fd9945a59cee8a34d19dcd231f5d0"
+          "digest": "sha256:36321f8717f1d63728775513da4703cdd73b4ee17fadb1af65661a579d5bb2f5"
         },
         "dpdy": {
           "status": "pass"
@@ -239,7 +239,7 @@
         }
       },
       "package": "@backstage-community/plugin-search-backend-module-announcements",
-      "version": "0.19.0",
+      "version": "0.22.0",
       "workspace": "announcements",
       "overall": "pass"
     },
@@ -247,11 +247,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-auth:bs_1.52.0__0.0.2"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-auth:bs_1.54.9__0.0.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:fbe26478a0ed00a4c0da30b121befd0263705fd3d7c9a2b1e5848f7420ec92e4"
+          "digest": "sha256:e8845c98b94a27b2dacf87c481a598a3dbb2239d4988bfc6d3539462c53981a4"
         },
         "dpdy": {
           "status": "pass"
@@ -269,11 +269,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-integrations:bs_1.52.0__0.0.2"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-integrations:bs_1.54.9__0.0.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:e41aa4d40dec95856e5845c9a65f4614332e3e817ed00c0b2495ba4cbd5a2f3c"
+          "digest": "sha256:792eeca1b7ea3e7170311b786297694d8cf3e25e764193dc9dfa37d983f6643a"
         },
         "dpdy": {
           "status": "pass"
@@ -291,11 +291,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-argocd-backend:bs_1.52.0__1.4.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-argocd-backend:bs_1.54.9__1.7.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:43cda540c9c41c85adff0220afb889f04030286415b359f2fff3c161ba5d69a3"
+          "digest": "sha256:e8750f6392fe625bd1c1e77af22d13436b1ec2551a5040051f5e4853733edee2"
         },
         "dpdy": {
           "status": "pass"
@@ -305,7 +305,7 @@
         }
       },
       "package": "@backstage-community/plugin-argocd-backend",
-      "version": "1.4.0",
+      "version": "1.7.2",
       "workspace": "argocd",
       "overall": "pass"
     },
@@ -313,11 +313,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-argocd:bs_1.52.0__2.8.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-argocd:bs_1.54.9__3.1.3"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:e3c9e8fe52e51510cdf57bb8a8a4794066f49f8b441c820f35fc3b100f1bb2e8"
+          "digest": "sha256:4ccc9635dfb5ffeac1fa8e0a70a1d3f6a48f24e580ece03a6cbd0d5c5b31f9b1"
         },
         "dpdy": {
           "status": "pass"
@@ -327,7 +327,7 @@
         }
       },
       "package": "@backstage-community/plugin-argocd",
-      "version": "2.8.0",
+      "version": "3.1.3",
       "workspace": "argocd",
       "overall": "pass"
     },
@@ -335,11 +335,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend:bs_1.52.0__0.10.0"
+          "oci_ref": "quay.io/veecode/aws-amazon-ecs-plugin-for-backstage-backend:bs_1.54.9__0.10.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:31fb6a6e42b00d1d2f1cc978c86be512405f4338d8e924987b599f15cfff8577"
+          "digest": "sha256:23780d91616df99175a22ce955709320850186e17caea2b43bab04779bec8688"
         },
         "dpdy": {
           "status": "pass"
@@ -357,11 +357,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-amazon-ecs-plugin-for-backstage:bs_1.52.0__0.7.0"
+          "oci_ref": "quay.io/veecode/aws-amazon-ecs-plugin-for-backstage:bs_1.54.9__0.7.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:7e20acb07eb8ad7858e15345bea1ce6ce828462f7f6c5acccf89df6e4b72a1fa"
+          "digest": "sha256:c09a6058dbaac59330d9dd01c235ed5ac14cd58bcd36e8f663e5d304e3bf4564"
         },
         "dpdy": {
           "status": "pass"
@@ -379,11 +379,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-azure-devops-backend:bs_1.52.0__0.27.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-azure-devops-backend:bs_1.54.9__0.32.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:6e33292432cbeaa38b2913acf34cda9b819c84373675bb4fbdc62b9c1242cbc6"
+          "digest": "sha256:771e225017ab8fde3292a63d76bb48ed666ee3fed9c067fe7f7db91602c7a164"
         },
         "dpdy": {
           "status": "pass"
@@ -393,7 +393,7 @@
         }
       },
       "package": "@backstage-community/plugin-azure-devops-backend",
-      "version": "0.27.0",
+      "version": "0.32.0",
       "workspace": "azure-devops",
       "overall": "pass"
     },
@@ -401,11 +401,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-azure-devops:bs_1.52.0__0.29.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-azure-devops:bs_1.54.9__0.34.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:4bc7e55b6a0b7b02235d8a764908a0ab294561017b576364057349b4bef468c2"
+          "digest": "sha256:407e7163c738a259726aa2f9b7274121927e320d1c9b17be25078201d8fde037"
         },
         "dpdy": {
           "status": "pass"
@@ -415,7 +415,7 @@
         }
       },
       "package": "@backstage-community/plugin-azure-devops",
-      "version": "0.29.0",
+      "version": "0.34.0",
       "workspace": "azure-devops",
       "overall": "pass"
     },
@@ -423,11 +423,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-catalog-backend-module-azure-devops-annotator-processor:bs_1.52.0__0.18.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-catalog-backend-module-azure-devops-annotator-processor:bs_1.54.9__0.22.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:682987d5c14e5f8f42cc5d320ba46b960ab3b00cf5aa9b9eabb89f69a4685d71"
+          "digest": "sha256:e8198db422a1a30527e45e72a9e6654bb24c76f228cb7cdc79be3377800431dc"
         },
         "dpdy": {
           "status": "pass"
@@ -437,7 +437,7 @@
         }
       },
       "package": "@backstage-community/plugin-catalog-backend-module-azure-devops-annotator-processor",
-      "version": "0.18.0",
+      "version": "0.22.0",
       "workspace": "azure-devops",
       "overall": "pass"
     },
@@ -445,11 +445,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-azure-devops:bs_1.52.0__0.23.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-azure-devops:bs_1.54.9__0.27.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:8ef564e378570034704548315e25fb13fe5671f5b665d3fc4db78bb3e01aa415"
+          "digest": "sha256:7a7289ac165ac476a363f4e7f60521617bfa1713519736d42c54bcf36cb470cd"
         },
         "dpdy": {
           "status": "pass"
@@ -459,7 +459,7 @@
         }
       },
       "package": "@backstage-community/plugin-scaffolder-backend-module-azure-devops",
-      "version": "0.23.0",
+      "version": "0.27.0",
       "workspace": "azure-devops",
       "overall": "pass"
     },
@@ -467,11 +467,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet:bs_1.52.0__0.13.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet:bs_1.54.9__0.17.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:114e0f6cab92a28ed6c3d13a32404a20291a4a5ec5062269f7fe47d24de08d5a"
+          "digest": "sha256:4405341815fa075400db15ba347f65df7e891d5a48ed623478b0d0cb2fa0b129"
         },
         "dpdy": {
           "status": "pass"
@@ -481,7 +481,7 @@
         }
       },
       "package": "@backstage-community/plugin-scaffolder-backend-module-dotnet",
-      "version": "0.13.0",
+      "version": "0.17.1",
       "workspace": "azure-devops",
       "overall": "pass"
     },
@@ -489,11 +489,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-azure-devops:bs_1.52.0__0.5.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-azure-devops:bs_1.54.9__0.10.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:d7e8524315f5c5853beee293ba15ba639b19a7d1019c72305d37ed55319c1a3d"
+          "digest": "sha256:6d9559fb727f0431ad402de7d0e18c5f884758990cadb13e57de144408c6d420"
         },
         "dpdy": {
           "status": "pass"
@@ -503,7 +503,7 @@
         }
       },
       "package": "@backstage-community/plugin-search-backend-module-azure-devops",
-      "version": "0.5.0",
+      "version": "0.10.0",
       "workspace": "azure-devops",
       "overall": "pass"
     },
@@ -511,11 +511,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-auth:bs_1.52.0__0.1.9"
+          "oci_ref": "quay.io/veecode/backstage-plugin-auth:bs_1.54.9__0.1.11"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:324596731ac7571f8a58f4fe82b449b97372a8f66c6e1a443b24273463d21597"
+          "digest": "sha256:5ecac362a72a098301130273fedb81039fd6cca99ab4ce8fdad435396d0a3069"
         },
         "dpdy": {
           "status": "pass"
@@ -525,7 +525,7 @@
         }
       },
       "package": "@backstage/plugin-auth",
-      "version": "0.1.9",
+      "version": "0.1.11",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -533,11 +533,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-events-backend-module-gitlab:bs_1.52.0__0.3.13"
+          "oci_ref": "quay.io/veecode/backstage-plugin-events-backend-module-gitlab:bs_1.54.9__0.3.15"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:2f45814248ac78def78f9e0ceb624a8b4aae1eb1450bc57a6c1fdb0a32ed5189"
+          "digest": "sha256:f98a8f8d2d10bebca2f9eda7d2d85ec550bed19e49e7d009877bf63d7d642c16"
         },
         "dpdy": {
           "status": "pass"
@@ -547,7 +547,7 @@
         }
       },
       "package": "@backstage/plugin-events-backend-module-gitlab",
-      "version": "0.3.13",
+      "version": "0.3.15",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -555,11 +555,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-mcp-actions-backend:bs_1.52.0__0.1.14"
+          "oci_ref": "quay.io/veecode/backstage-plugin-mcp-actions-backend:bs_1.54.9__0.2.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:d4d24e08d7630eb352fa7e6dc1da797ebc4e667aba347575dd94d4bcde82e8e2"
+          "digest": "sha256:8a639aecbdf5c77f42976da1eb81db7de4d1a0f0558c4cb08fee73202e70431a"
         },
         "dpdy": {
           "status": "pass"
@@ -569,7 +569,7 @@
         }
       },
       "package": "@backstage/plugin-mcp-actions-backend",
-      "version": "0.1.14",
+      "version": "0.2.1",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -577,11 +577,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-notifications-backend-module-email:bs_1.52.0__0.3.22"
+          "oci_ref": "quay.io/veecode/backstage-plugin-notifications-backend-module-email:bs_1.54.9__0.3.24"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:24b8c2382d7f90268e0f32dc0c088d61fd26c349b9de86514aada9bd1bb6a6ee"
+          "digest": "sha256:9259b011ed5201007c268dd3e646e567011ba385d1e9a1007c2c7c86ea120899"
         },
         "dpdy": {
           "status": "pass"
@@ -591,7 +591,7 @@
         }
       },
       "package": "@backstage/plugin-notifications-backend-module-email",
-      "version": "0.3.22",
+      "version": "0.3.24",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -599,11 +599,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-scaffolder-backend-module-gerrit:bs_1.52.0__0.2.22"
+          "oci_ref": "quay.io/veecode/backstage-plugin-scaffolder-backend-module-gerrit:bs_1.54.9__0.2.24"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:f137c953b0da61fdbc1f1ee37718e06888ba15426afa1a9898fbc41afab3165b"
+          "digest": "sha256:07ad779bcf55b67e91c1057929209a6915b9df9389ed7d34a0cc00012c614598"
         },
         "dpdy": {
           "status": "pass"
@@ -613,7 +613,7 @@
         }
       },
       "package": "@backstage/plugin-scaffolder-backend-module-gerrit",
-      "version": "0.2.22",
+      "version": "0.2.24",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -621,11 +621,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-aws-codebuild-plugin-for-backstage-backend:bs_1.52.0__0.10.0"
+          "oci_ref": "quay.io/veecode/aws-aws-codebuild-plugin-for-backstage-backend:bs_1.54.9__0.10.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:e4c22fd372c5394a2d30e811112f6dff95e6bf9693d3343965b88ecbca8d4dab"
+          "digest": "sha256:f03cea8bda41f4b35e811f6d31b68a6793585b977a188adb5cefcf7af8cee423"
         },
         "dpdy": {
           "status": "pass"
@@ -643,11 +643,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-aws-codebuild-plugin-for-backstage:bs_1.52.0__0.8.0"
+          "oci_ref": "quay.io/veecode/aws-aws-codebuild-plugin-for-backstage:bs_1.54.9__0.8.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:7ff8b781f09cf0ae4d4f347fa2e720c531d1060da3fbddb63dd6dae506aef11b"
+          "digest": "sha256:52f24cf5c739925567d96d369c45ac8e242825f1aba5f7d665395b7d4747a0b8"
         },
         "dpdy": {
           "status": "pass"
@@ -665,11 +665,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage-backend:bs_1.52.0__0.11.0"
+          "oci_ref": "quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage-backend:bs_1.54.9__0.11.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:032f3893d2701e89d7504014715e4aa143a543dceea3809258714ae643b64e59"
+          "digest": "sha256:79d37cd2c0a8341dd92e6b3a900b454edac22d3a5be7ff159482b457d8e3f4ba"
         },
         "dpdy": {
           "status": "pass"
@@ -687,11 +687,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage:bs_1.52.0__0.9.0"
+          "oci_ref": "quay.io/veecode/aws-aws-codepipeline-plugin-for-backstage:bs_1.54.9__0.9.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:907f513da3abff32b120c7fd2998c70284f8928f16b7aab758a79500b5f67a4a"
+          "digest": "sha256:5cb98d4ff201797a0850dd6c564c72c3e5a86221252e7e90191482c016242482"
         },
         "dpdy": {
           "status": "pass"
@@ -709,11 +709,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.52.0__0.3.0"
+          "oci_ref": "quay.io/veecode/aws-aws-s3-catalog-module-for-backstage:bs_1.54.9__0.3.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:c0be44abffcf3380dae4b315807867cf92d0d6c316abcb73ee967ed55b53165c"
+          "digest": "sha256:c3b4abd41eb580f4eba65fd5873d80d43ca45dd6497b88cb885eb8d4811e5d0f"
         },
         "dpdy": {
           "status": "pass"
@@ -731,11 +731,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-bookmarks:bs_1.52.0__0.9.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-bookmarks:bs_1.54.9__0.9.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:9bf6dd9a6d7f5cbd5416849bc0adf503f4e0e17e883a64ae21c3ffb20b2c5168"
+          "digest": "sha256:03e92b76a35261079c98d1e501ece11738adca60c6cc0de13ded015689ef7aa9"
         },
         "dpdy": {
           "status": "pass"
@@ -753,11 +753,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions:bs_1.52.0__0.18.0"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-extensions:bs_1.54.9__0.18.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:9bef416a1f7f44c94f9f2c07a62b867efdb64ce4478f93b6dd9e726724a392f4"
+          "digest": "sha256:227ec05736e1a1fcd3432327f33be23bfee6f87e4cc503f823e61791f67bcbc5"
         },
         "dpdy": {
           "status": "pass"
@@ -775,11 +775,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-actions:bs_1.52.0__0.22.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-actions:bs_1.54.9__1.4.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:fe9cea3a11097339f85bab0bf095ecf1dc95b972194d41e4c9ca0e34c85ecebd"
+          "digest": "sha256:2b4ffde7809fced57ee77f1153d029bbdce1580f1cff926d8be4dafed25b4a72"
         },
         "dpdy": {
           "status": "pass"
@@ -789,7 +789,7 @@
         }
       },
       "package": "@backstage-community/plugin-github-actions",
-      "version": "0.22.0",
+      "version": "1.4.0",
       "workspace": "github",
       "overall": "pass"
     },
@@ -797,11 +797,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-deployments:bs_1.52.0__0.18.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-deployments:bs_1.54.9__1.4.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:d16c6a9a70dfc305031f445dc5c529408627bad6b6f5badca78ed2fbb5b91dd7"
+          "digest": "sha256:8342056ac669b8ffb7ad25b32f6de978295d3d79f9450ca5bd05a35273736bed"
         },
         "dpdy": {
           "status": "pass"
@@ -811,7 +811,7 @@
         }
       },
       "package": "@backstage-community/plugin-github-deployments",
-      "version": "0.18.0",
+      "version": "1.4.0",
       "workspace": "github",
       "overall": "pass"
     },
@@ -819,11 +819,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-discussions:bs_1.52.0__0.10.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-discussions:bs_1.54.9__1.4.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:0e7f30341e71c6474389604f621fb340d6a4bc913584b1b4f4a139c86fcb2fba"
+          "digest": "sha256:f9c4fa25114fa366168a03e04f83d161e1e15122882b838a522dda4b59d99803"
         },
         "dpdy": {
           "status": "pass"
@@ -833,7 +833,7 @@
         }
       },
       "package": "@backstage-community/plugin-github-discussions",
-      "version": "0.10.0",
+      "version": "1.4.0",
       "workspace": "github",
       "overall": "pass"
     },
@@ -841,11 +841,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-pull-requests-board:bs_1.52.0__0.16.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-pull-requests-board:bs_1.54.9__1.4.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:2bc3b7f46233e2721a1072ce44c9d326a32b2300a906d42cf65d850652e888d3"
+          "digest": "sha256:9d1ed1cbf44643560b9bf2d0695a3dcfcd699ccf338ff895f7a86055ff2f07e5"
         },
         "dpdy": {
           "status": "pass"
@@ -855,7 +855,7 @@
         }
       },
       "package": "@backstage-community/plugin-github-pull-requests-board",
-      "version": "0.16.0",
+      "version": "1.4.0",
       "workspace": "github",
       "overall": "pass"
     },
@@ -863,11 +863,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions:bs_1.52.0__0.11.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions:bs_1.54.9__0.16.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:b08462ce1254cab05d1d65018cbe317bcf4fb9bcf3d76e0bee1bdd8518597a16"
+          "digest": "sha256:11238017a0e35ab42eda4bcdcd27f66565b1aeb7c32aa37d2d6b8e007a6edc98"
         },
         "dpdy": {
           "status": "pass"
@@ -877,7 +877,7 @@
         }
       },
       "package": "@backstage-community/plugin-search-backend-module-github-discussions",
-      "version": "0.11.0",
+      "version": "0.16.0",
       "workspace": "github",
       "overall": "pass"
     },
@@ -885,11 +885,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-issues:bs_1.52.0__1.2.1"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-github-issues:bs_1.54.9__1.2.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:48ce70d694d86243562931b1529c0b6ca5f54aeff15ccbd0631a46a049a0cc6a"
+          "digest": "sha256:39f00cca07d151b23502e654555a45ee570c940fc9bf1e42ef3e9a0385878a18"
         },
         "dpdy": {
           "status": "pass"
@@ -907,11 +907,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/proberaum-backstage-plugin-github-notifications-backend:bs_1.52.0__0.12.0"
+          "oci_ref": "quay.io/veecode/proberaum-backstage-plugin-github-notifications-backend:bs_1.54.9__0.12.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:7c890c9240670dcf08213cf2d6abd0c00f807bce1f18170eff097bbe1711e76d"
+          "digest": "sha256:5400536e673ca1c859e44b9ecbdf475d72a96b5989c0330c11e3191181de179c"
         },
         "dpdy": {
           "status": "pass"
@@ -929,11 +929,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-github-workflows-backend:bs_1.52.0__1.3.7"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-github-workflows-backend:bs_1.54.9__1.3.7"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:f7f824e5af6777af901438d085fd6606eaac9050fb6404f194f3b812a6b13856"
+          "digest": "sha256:81441a54e74e17876f1dc84831e60aa931a35abcc9a21a638ddf7de8f7adfd3b"
         },
         "dpdy": {
           "status": "pass"
@@ -951,11 +951,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-github-workflows:bs_1.52.0__1.3.7"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-github-workflows:bs_1.54.9__1.3.7"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:db84ae0a758bda91657154346be2c510149cb1955ced2960329b124e04f65c44"
+          "digest": "sha256:f38b1150e8f6734abb943c55c395e0c1082abfb85559f6db184d22d4c1ec66c4"
         },
         "dpdy": {
           "status": "pass"
@@ -973,11 +973,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab-backend:bs_1.52.0__7.0.0"
+          "oci_ref": "quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab-backend:bs_1.54.9__7.0.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:b1bbe7274759b17455c02c2903267adf83e48803367735109e24a14b6b1f1e3f"
+          "digest": "sha256:2cf47312854ba534c512ade64793164aeac65c1bcf5e41bf1a5441127a6d6555"
         },
         "dpdy": {
           "status": "pass"
@@ -995,11 +995,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab:bs_1.52.0__7.0.0"
+          "oci_ref": "quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab:bs_1.54.9__7.0.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:54df61fe65be6aac92843ea70cf1217c0df88551f6afa8176a0fdc28228edaa6"
+          "digest": "sha256:a3994f0c6bc2699b2d91ac9c8cccb0a34f60f0042e1efffb7d4569880d588e77"
         },
         "dpdy": {
           "status": "pass"
@@ -1017,11 +1017,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-floating-action-button:bs_1.52.0__1.9.3"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-global-floating-action-button:bs_1.54.9__1.9.3"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:b795e6d608c472fb1bccd26ebeceee31a37328c6353c16631559c854cca214bc"
+          "digest": "sha256:2921ca67f81bb129601641e86237c9d50575afad10ec13ead8e332531b2b7721"
         },
         "dpdy": {
           "status": "pass"
@@ -1039,11 +1039,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-grafana:bs_1.52.0__0.17.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-grafana:bs_1.54.9__0.17.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:f532f66d796de182d32cbe5f0eb7f0829cc31e61dac09f6cfed646ef6f8bcad3"
+          "digest": "sha256:27e84e524b188b84bc46d35783e628c01d63d11293ec86454b34e08a333deceb"
         },
         "dpdy": {
           "status": "pass"
@@ -1061,11 +1061,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-homepage-backend:bs_1.52.0__0.1.3"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-homepage-backend:bs_1.54.9__0.1.3"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:4861291d3d17843a8dad6b05b58248b8367ce1fcdea0b160b091e6c98d2b81e3"
+          "digest": "sha256:2db5f6c44a2a1431a78f4864531facb012fcc55f5542101c58b821e5719afdfe"
         },
         "dpdy": {
           "status": "pass"
@@ -1083,11 +1083,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-jenkins-backend:bs_1.52.0__0.27.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-jenkins-backend:bs_1.54.9__0.31.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:dc043d5b0302f8e4f42d1f0599a050463082f08a214fc5991709f32471d536cb"
+          "digest": "sha256:70b9387f4a7924386a84a678454d0ea2e4388a2fae3eeedd4229aa3dbc900ccf"
         },
         "dpdy": {
           "status": "pass"
@@ -1097,7 +1097,7 @@
         }
       },
       "package": "@backstage-community/plugin-jenkins-backend",
-      "version": "0.27.0",
+      "version": "0.31.0",
       "workspace": "jenkins",
       "overall": "pass"
     },
@@ -1105,11 +1105,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-jenkins:bs_1.52.0__0.30.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-jenkins:bs_1.54.9__0.34.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:bbed7a06c0b758213e58b9bb0427e22c83895b199530bb56984ea7e5caa1d193"
+          "digest": "sha256:cc5cb5d0f18551618dcce9b674547f9012a91ee43a53b807be87e74c92abc205"
         },
         "dpdy": {
           "status": "pass"
@@ -1119,7 +1119,7 @@
         }
       },
       "package": "@backstage-community/plugin-jenkins",
-      "version": "0.30.0",
+      "version": "0.34.0",
       "workspace": "jenkins",
       "overall": "pass"
     },
@@ -1127,11 +1127,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-jenkins:bs_1.52.0__0.20.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-jenkins:bs_1.54.9__0.24.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:aa8aa1f4ca8df4db2fb8218eea4ba9b3069ef7b6ff5a04bfe35f32997602f398"
+          "digest": "sha256:33fa238651f802f9e4d0340e32cd1ad73234a03e04b332280dff045535cd43ef"
         },
         "dpdy": {
           "status": "pass"
@@ -1141,7 +1141,7 @@
         }
       },
       "package": "@backstage-community/plugin-scaffolder-backend-module-jenkins",
-      "version": "0.20.0",
+      "version": "0.24.0",
       "workspace": "jenkins",
       "overall": "pass"
     },
@@ -1149,11 +1149,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-jfrog-artifactory:bs_1.52.0__1.30.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-jfrog-artifactory:bs_1.54.9__2.0.3"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:66abf666b74f6c149e7e111fd46f3be2512475169e07b17007cd6a5e1ea44086"
+          "digest": "sha256:c55adeb722a007f93f856be5710ba19645058fca64c3c6c76a9b09cc97aeb377"
         },
         "dpdy": {
           "status": "pass"
@@ -1163,7 +1163,7 @@
         }
       },
       "package": "@backstage-community/plugin-jfrog-artifactory",
-      "version": "1.30.0",
+      "version": "2.0.3",
       "workspace": "jfrog-artifactory",
       "overall": "pass"
     },
@@ -1171,11 +1171,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux-backend:bs_1.52.0__0.1.8"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux-backend:bs_1.54.9__0.2.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:7f139af75184460fee403c2f9c6b2ab2acc7cdd3f61ef706d6cbff3a195081a8"
+          "digest": "sha256:f6ab61a8db0c6f6633bfe9f68d34e932e0744bb357362f3750be892ba00e6040"
         },
         "dpdy": {
           "status": "pass"
@@ -1185,7 +1185,7 @@
         }
       },
       "package": "@red-hat-developer-hub/backstage-plugin-konflux-backend",
-      "version": "0.1.8",
+      "version": "0.2.1",
       "workspace": "konflux",
       "overall": "pass"
     },
@@ -1193,11 +1193,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux:bs_1.52.0__0.1.8"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-konflux:bs_1.54.9__0.2.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:35d712874fd90bccd3b8dcbb9cae1804d6f6016682deeb30031961a89e018890"
+          "digest": "sha256:d1fdd8420b309190a5b65277bf3cde75aa78c5ad9cb6d7a224eb6a366bd7dbdc"
         },
         "dpdy": {
           "status": "pass"
@@ -1207,7 +1207,7 @@
         }
       },
       "package": "@red-hat-developer-hub/backstage-plugin-konflux",
-      "version": "0.1.8",
+      "version": "0.2.1",
       "workspace": "konflux",
       "overall": "pass"
     },
@@ -1215,11 +1215,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-lighthouse-backend:bs_1.52.0__0.25.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-lighthouse-backend:bs_1.54.9__0.27.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:ca06de50b619ea14189775a835498efb62d147e1c5f74c69bcacc8d7244dfcc1"
+          "digest": "sha256:b066f7fe9052bd1463dd5b1296a84c7b2df34646fd84c40b29d084ed0bfaa1b6"
         },
         "dpdy": {
           "status": "pass"
@@ -1229,7 +1229,7 @@
         }
       },
       "package": "@backstage-community/plugin-lighthouse-backend",
-      "version": "0.25.0",
+      "version": "0.27.0",
       "workspace": "lighthouse",
       "overall": "pass"
     },
@@ -1237,11 +1237,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-lighthouse:bs_1.52.0__0.24.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-lighthouse:bs_1.54.9__0.26.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:070969a15509b876990a67c5d68265795e277e135c77ed4f59b1410e8b2e28b2"
+          "digest": "sha256:3f1bb1056e018255caafdc77899ae476cf60e3673d43adf503704a2922a36eea"
         },
         "dpdy": {
           "status": "pass"
@@ -1251,7 +1251,7 @@
         }
       },
       "package": "@backstage-community/plugin-lighthouse",
-      "version": "0.24.0",
+      "version": "0.26.0",
       "workspace": "lighthouse",
       "overall": "pass"
     },
@@ -1259,11 +1259,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-mcp-chat-backend:bs_1.52.0__0.8.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-mcp-chat-backend:bs_1.54.9__0.8.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:bae55d291f54a07bf7af3cd649dd22ee7889f59fa5f9aa2cb0ea41a63aff97e0"
+          "digest": "sha256:07927e6221277890ba83c1586f0af39b9a6da364e3e4ae278bf0bcdc0ba2f279"
         },
         "dpdy": {
           "status": "pass"
@@ -1281,11 +1281,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-mcp-chat:bs_1.52.0__0.6.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-mcp-chat:bs_1.54.9__0.6.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:8800ded282080fec3de8d04d8d1b0ee789140ad88ffd2f31a92132d5394f090b"
+          "digest": "sha256:85c442b8ba065b78860106bd295b907ad0837cfc2e782a448e251a5879fb5648"
         },
         "dpdy": {
           "status": "pass"
@@ -1303,11 +1303,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras:bs_1.52.0__0.4.4"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras:bs_1.54.9__0.4.4"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:43bed3ca2ed9f8b737d8c4a58f99260a35fc853013183969140e55cc3af62098"
+          "digest": "sha256:0ac11211a86119e206eadb9bd5bb893e4cc1425541f0fc0e4105d1ff5ddcc349"
         },
         "dpdy": {
           "status": "pass"
@@ -1325,11 +1325,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras:bs_1.52.0__0.2.5"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-software-catalog-mcp-extras:bs_1.54.9__0.2.5"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:908e807eb7733d34cd5c1bb2061df41905ac8565c17ba46c7eea63c94c02ca5d"
+          "digest": "sha256:0a9d228ff84c663c138c1332cff1d459aaad6f46036a37e0e39d894bf69f5c24"
         },
         "dpdy": {
           "status": "pass"
@@ -1347,11 +1347,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.52.0__0.2.7-veecode.1"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.54.9__0.2.7-veecode.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:f8ddd8242bab97849548c5acdb212c98bd979b19948279122fc116d40f910947"
+          "digest": "sha256:8bdd72510a964ceee190ebd77d9028e314c743ab2cc2eac4277717b2a8bc0be2"
         },
         "dpdy": {
           "status": "pass"
@@ -1369,11 +1369,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-multi-source-security-viewer-backend:bs_1.52.0__0.4.1"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-multi-source-security-viewer-backend:bs_1.54.9__0.7.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:3c92cda3bbc9842471e00c8ebb404fce032786b1e280027d9bcdf2d29944825b"
+          "digest": "sha256:2dcbe81252d7a3df68cbd9c70ebb26a057ef44964c7047d008652d7dab66b552"
         },
         "dpdy": {
           "status": "pass"
@@ -1383,7 +1383,7 @@
         }
       },
       "package": "@backstage-community/plugin-multi-source-security-viewer-backend",
-      "version": "0.4.1",
+      "version": "0.7.0",
       "workspace": "multi-source-security-viewer",
       "overall": "pass"
     },
@@ -1391,11 +1391,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-multi-source-security-viewer:bs_1.52.0__0.15.2"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-multi-source-security-viewer:bs_1.54.9__1.0.3"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:3808cf4cef112ce68a04a47f4303e14334065c65b987cfaade4dee8d706c7266"
+          "digest": "sha256:f60453a70fe73f4332c1ddd7c33faeb87659f10855c53413936b4547694a5198"
         },
         "dpdy": {
           "status": "pass"
@@ -1405,7 +1405,7 @@
         }
       },
       "package": "@backstage-community/plugin-multi-source-security-viewer",
-      "version": "0.15.2",
+      "version": "1.0.3",
       "workspace": "multi-source-security-viewer",
       "overall": "pass"
     },
@@ -1413,11 +1413,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-nexus-repository-manager:bs_1.52.0__1.23.2"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-nexus-repository-manager:bs_1.54.9__1.27.4"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:a96498a8da63a04b4d405e79937761e55a6ebc2e9070bbcdf1b274adaceb99d8"
+          "digest": "sha256:949c13162e6579697d16690c1af523dcda5e5611ba2cd908e3e63d3a412ea2c8"
         },
         "dpdy": {
           "status": "pass"
@@ -1427,7 +1427,7 @@
         }
       },
       "package": "@backstage-community/plugin-nexus-repository-manager",
-      "version": "1.23.2",
+      "version": "1.27.4",
       "workspace": "nexus-repository-manager",
       "overall": "pass"
     },
@@ -1435,11 +1435,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-npm-backend:bs_1.52.0__1.20.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-npm-backend:bs_1.54.9__1.20.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:81bce3dab049ea639f52916173004c30d2fb713f597db39f0e5dbcc619705273"
+          "digest": "sha256:38621465dec0f33ec8b9cc54db5fb665dcba7d37915e95315d1ebccf2b0387c6"
         },
         "dpdy": {
           "status": "pass"
@@ -1457,11 +1457,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-npm:bs_1.52.0__1.20.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-npm:bs_1.54.9__1.20.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:ff44d50c6cffd4e7d314e0dc4aec03bdce1f6ec85c3c917dbfa23d6dbcb74e95"
+          "digest": "sha256:3d6f560bd88787d484ff2e6f908a7aad5d58455c470f6b12b1c62d16404c9ebe"
         },
         "dpdy": {
           "status": "pass"
@@ -1479,11 +1479,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-argo-cd-backend:bs_1.52.0__4.8.0"
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-argo-cd-backend:bs_1.54.9__4.8.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:eff2afa63cb7ab7793395824d6047f9b2d0201acbf5586f0638711699776d909"
+          "digest": "sha256:ed805960a8012006a73a990be450a4aae5118c56e6bb9cbb91b7e2a37fd97b9b"
         },
         "dpdy": {
           "status": "pass"
@@ -1501,11 +1501,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-argo-cd:bs_1.52.0__2.12.5"
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-argo-cd:bs_1.54.9__2.12.5"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:eb8aa6de7fd869ed43cefa6fdd3948966fb40c10c778aa4873fcf88a5e465495"
+          "digest": "sha256:de641a2b7c60cd81f2b65b2255f45c1fc891c937799043397660b436212ffd8b"
         },
         "dpdy": {
           "status": "pass"
@@ -1523,11 +1523,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-datadog:bs_1.52.0__2.7.2"
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-datadog:bs_1.54.9__2.7.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:7d020e3cbfde88457d946c19a0d4a367db4b3b925bcb4d2371755a2fad25ff1d"
+          "digest": "sha256:86dce58892a2af1960504d811e707b18ff165f31286cc2130d463f1f61f25e7b"
         },
         "dpdy": {
           "status": "pass"
@@ -1545,11 +1545,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-github-insights:bs_1.52.0__3.5.0"
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-github-insights:bs_1.54.9__3.5.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:b6478705ef8e3088f4e6d1d7c01b5368ec4ac4ff5a67471055ec8dbcfda26466"
+          "digest": "sha256:abdb496e0ee6946bae8f61db4de837e81cd831e448918a320f42aaae0ff3d204"
         },
         "dpdy": {
           "status": "pass"
@@ -1567,11 +1567,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-github-pull-requests:bs_1.52.0__3.7.0"
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-github-pull-requests:bs_1.54.9__3.7.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:e08a9e697eae52272a5ded281a9648d09718b7e5ca6e9f51a1399a9482d5606e"
+          "digest": "sha256:ebccb7ce346c0fa015adf422200cc46356068e41d384c8bafe53a4a97bef69af"
         },
         "dpdy": {
           "status": "pass"
@@ -1589,11 +1589,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-iframe:bs_1.52.0__1.6.1"
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-iframe:bs_1.54.9__1.6.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:3b4f6d7bfea26b10205f3ca953a75e814a99157f34232caef3d5bba7a4edd915"
+          "digest": "sha256:cae89c8ad51ab32958d1192f2f148d007af474008604d930c8d38f4af5a29ba7"
         },
         "dpdy": {
           "status": "pass"
@@ -1611,11 +1611,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-jira:bs_1.52.0__2.14.0"
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-jira:bs_1.54.9__2.14.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:9c895a8f123340778b085e2a28984cc554f5e643451f33b15a0d3979bb3fc3df"
+          "digest": "sha256:afb4b0999eb7eb2c124be26bbf8b33ba1b8a4a799297be3e103d9ebcbbf5cec7"
         },
         "dpdy": {
           "status": "pass"
@@ -1633,11 +1633,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-security-insights:bs_1.52.0__3.3.1"
+          "oci_ref": "quay.io/veecode/roadiehq-backstage-plugin-security-insights:bs_1.54.9__3.3.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:f24a4412d3b5f79a2ddf11a56ac75d6688c032e3b7165cf8ddf108d11c13a878"
+          "digest": "sha256:86be442d6c92968b3a0cfe20255acd61258f718c49a7f3b310ff109f04e52a8d"
         },
         "dpdy": {
           "status": "pass"
@@ -1655,11 +1655,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-argocd:bs_1.52.0__1.8.1"
+          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-argocd:bs_1.54.9__1.8.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:ea8a0dcbaa5b7653679011268f544475077b31c97c91933d7fe9aa7205f54fd7"
+          "digest": "sha256:a39cda97eb9728232446e131053d23792beae07c2c549b80ed0f0a0b46073fbd"
         },
         "dpdy": {
           "status": "pass"
@@ -1677,11 +1677,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-aws:bs_1.52.0__2.8.2"
+          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-aws:bs_1.54.9__2.8.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:fdbd59bbe0d5c48ff17dd0c3c24b30423c74233db25f5baa299de4caa8033e39"
+          "digest": "sha256:1387c3d6d47d67a6695a21b2088bf35983e13fa03bca750f7ffad175dda37ac4"
         },
         "dpdy": {
           "status": "pass"
@@ -1699,11 +1699,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-http-request:bs_1.52.0__5.6.0"
+          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-http-request:bs_1.54.9__5.6.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:f97ccbf39855e16b1eaedbd580990f8b9e3725f041598641c5c2fca25538c627"
+          "digest": "sha256:f27b7387eb8a81dae5291f1ceef3efc379b80d5ae6d16f1b51f5881462341068"
         },
         "dpdy": {
           "status": "pass"
@@ -1721,11 +1721,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-utils:bs_1.52.0__4.1.2"
+          "oci_ref": "quay.io/veecode/roadiehq-scaffolder-backend-module-utils:bs_1.54.9__4.1.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:53830b1917cdd1e955639c896ec4afac85fe3b41b92419ee350f10928927badf"
+          "digest": "sha256:1a03b8b918662344f89a9453f43623d9f897ec659df9ce3c58f8724751ed3d39"
         },
         "dpdy": {
           "status": "pass"
@@ -1743,11 +1743,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-kubernetes:bs_1.52.0__2.17.1"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-kubernetes:bs_1.54.9__2.21.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:e1bc6269337140c10eede5abe4308883c831b14d7985753dfd5a02a849c786fc"
+          "digest": "sha256:d9ba2d421fafc2beef3b58648b65f5c1f00a311d04f67d0358959fe9881cdb8d"
         },
         "dpdy": {
           "status": "pass"
@@ -1757,7 +1757,7 @@
         }
       },
       "package": "@backstage-community/plugin-scaffolder-backend-module-kubernetes",
-      "version": "2.17.1",
+      "version": "2.21.0",
       "workspace": "scaffolder-backend-module-kubernetes",
       "overall": "pass"
     },
@@ -1765,11 +1765,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-regex:bs_1.52.0__2.15.1"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-regex:bs_1.54.9__2.18.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:e0f3e1f69cb6c1bccd538f8ed80e6b16b85f2540b8866c636225903bb76a0e35"
+          "digest": "sha256:3b19c142968ab34c6180332156ba345e9bebbffd2ff79bef14d3d645b8f6c05d"
         },
         "dpdy": {
           "status": "pass"
@@ -1779,7 +1779,7 @@
         }
       },
       "package": "@backstage-community/plugin-scaffolder-backend-module-regex",
-      "version": "2.15.1",
+      "version": "2.18.0",
       "workspace": "scaffolder-backend-module-regex",
       "overall": "pass"
     },
@@ -1787,11 +1787,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-sonarqube:bs_1.52.0__2.15.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-sonarqube:bs_1.54.9__2.17.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:ae19e47677c08b8439aface4a37d88b2d475f07bbddd814074d70322d8e61647"
+          "digest": "sha256:eeab43bc491b7726b513df6bef9c4b88e2c06679df75feca9d4b5557fb950539"
         },
         "dpdy": {
           "status": "pass"
@@ -1801,7 +1801,7 @@
         }
       },
       "package": "@backstage-community/plugin-scaffolder-backend-module-sonarqube",
-      "version": "2.15.0",
+      "version": "2.17.0",
       "workspace": "scaffolder-backend-module-sonarqube",
       "overall": "pass"
     },
@@ -1809,11 +1809,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-sonarqube-backend:bs_1.52.0__1.1.1"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-sonarqube-backend:bs_1.54.9__1.2.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:bdf9d45d8c73c03be632174a1918c472806cf4bc52966fb3cbe8f98363abd0c5"
+          "digest": "sha256:2ad11a712d8c7183334efff1c72185c683971702067fa357966c339ce644b7ad"
         },
         "dpdy": {
           "status": "pass"
@@ -1823,7 +1823,7 @@
         }
       },
       "package": "@backstage-community/plugin-sonarqube-backend",
-      "version": "1.1.1",
+      "version": "1.2.0",
       "workspace": "sonarqube",
       "overall": "pass"
     },
@@ -1831,11 +1831,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-sonarqube:bs_1.52.0__1.1.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-sonarqube:bs_1.54.9__1.2.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:8473d9a47b6d198b3a1101a5eacc84434cb4af2134e77e4f2bca8ed08d03acc3"
+          "digest": "sha256:a5eeb1c0634799cde872ff9619d7ea80512288bc964d054c6e91cc45014817af"
         },
         "dpdy": {
           "status": "pass"
@@ -1845,7 +1845,7 @@
         }
       },
       "package": "@backstage-community/plugin-sonarqube",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "workspace": "sonarqube",
       "overall": "pass"
     },
@@ -1853,11 +1853,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-backend-module-jsonfc:bs_1.52.0__0.7.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-backend-module-jsonfc:bs_1.54.9__0.10.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:1fdc2fed4c693a48c00700ade59f3105058dfae5eb4334f4ad26bd772d0a51f6"
+          "digest": "sha256:9c05c8ceb7f50cd7833f9863ac61480e088d1bba7487e04d87d36c157112707c"
         },
         "dpdy": {
           "status": "pass"
@@ -1867,7 +1867,7 @@
         }
       },
       "package": "@backstage-community/plugin-tech-insights-backend-module-jsonfc",
-      "version": "0.7.0",
+      "version": "0.10.0",
       "workspace": "tech-insights",
       "overall": "pass"
     },
@@ -1875,11 +1875,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-backend:bs_1.52.0__2.5.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-backend:bs_1.54.9__3.1.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:1a2dd0fcabcd9ae20511fd89552533d847f58d887bba15e9fb5a941dc9dab88b"
+          "digest": "sha256:0d7727eb226be45895ae460df1f49539cb920119021cefa3fdff67782ee48322"
         },
         "dpdy": {
           "status": "pass"
@@ -1889,7 +1889,7 @@
         }
       },
       "package": "@backstage-community/plugin-tech-insights-backend",
-      "version": "2.5.0",
+      "version": "3.1.0",
       "workspace": "tech-insights",
       "overall": "pass"
     },
@@ -1897,11 +1897,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-maturity:bs_1.52.0__0.6.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights-maturity:bs_1.54.9__0.10.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:9af29e94bc27096c5cf8fcee4ea77f77f53b9a46f382fc41e21140a4b6416f04"
+          "digest": "sha256:6035f1eab0f5f4abcba6d355f44b9ee0c5dbed8b58c85306acbfa4484513c76a"
         },
         "dpdy": {
           "status": "pass"
@@ -1911,7 +1911,7 @@
         }
       },
       "package": "@backstage-community/plugin-tech-insights-maturity",
-      "version": "0.6.0",
+      "version": "0.10.0",
       "workspace": "tech-insights",
       "overall": "pass"
     },
@@ -1919,11 +1919,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights:bs_1.52.0__1.0.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tech-insights:bs_1.54.9__1.5.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:dec6fee0227110e2e29fefe34e61a4036c575f85ee58158516a2ad4ce2e7c7a9"
+          "digest": "sha256:4354d2b5e786d274499d44a5481ffb6fd3681bc589b32251774e0d424f8fb40e"
         },
         "dpdy": {
           "status": "pass"
@@ -1933,7 +1933,7 @@
         }
       },
       "package": "@backstage-community/plugin-tech-insights",
-      "version": "1.0.0",
+      "version": "1.5.0",
       "workspace": "tech-insights",
       "overall": "pass"
     },
@@ -1941,11 +1941,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-tekton:bs_1.52.0__3.37.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-tekton:bs_1.54.9__4.0.5"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:7a2607b5d522c090e2127d8847d58657d027a246cf4df1b970429eeba6a12c76"
+          "digest": "sha256:26c3acb2b3417f0d5eb9f1034d2e1219328089df01952f6f44aa898d7bd67b2d"
         },
         "dpdy": {
           "status": "pass"
@@ -1955,7 +1955,7 @@
         }
       },
       "package": "@backstage-community/plugin-tekton",
-      "version": "3.37.0",
+      "version": "4.0.5",
       "workspace": "tekton",
       "overall": "pass"
     },
@@ -1963,11 +1963,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-todo-backend:bs_1.52.0__0.23.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-todo-backend:bs_1.54.9__0.25.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:349488264edc88c97e83749c07835515d4782a9542c5624b129a60128dbe7cd5"
+          "digest": "sha256:accfb4d61313d99023271dfac6424724266c340e446c3beab338ffda29ff78ba"
         },
         "dpdy": {
           "status": "pass"
@@ -1977,7 +1977,7 @@
         }
       },
       "package": "@backstage-community/plugin-todo-backend",
-      "version": "0.23.0",
+      "version": "0.25.0",
       "workspace": "todo",
       "overall": "pass"
     },
@@ -1985,11 +1985,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-todo:bs_1.52.0__0.22.0"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-todo:bs_1.54.9__0.24.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:bb04131c8390091ae966e625fdad7be1002894d8b8983ae27acce56464a1880b"
+          "digest": "sha256:015d1a3f0652625a5ea3944574ed68a147c76c83ea7461908403c842dc2c8b49"
         },
         "dpdy": {
           "status": "pass"
@@ -1999,7 +1999,7 @@
         }
       },
       "package": "@backstage-community/plugin-todo",
-      "version": "0.22.0",
+      "version": "0.24.0",
       "workspace": "todo",
       "overall": "pass"
     },
@@ -2007,11 +2007,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/vertigo-platform-plugin-vertigo-theme:bs_1.52.0__0.1.0"
+          "oci_ref": "quay.io/veecode/vertigo-platform-plugin-vertigo-theme:bs_1.54.9__0.1.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:bb82ffd613fc07004ee0c1a77c7bfde5d2920cb28dfd5e93b8bedf24be49a31f"
+          "digest": "sha256:cef50115cd198997bed9c853496bfa20399e7bd0a06119c0074b9c1f9e84e57d"
         },
         "dpdy": {
           "status": "pass"
@@ -2029,11 +2029,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras:bs_1.52.0__0.2.0"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras:bs_1.54.9__0.2.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:1a75f47882b587fca47c5fb509814115c89ef6fcafa7f50e027e4abb041bbc4f"
+          "digest": "sha256:8e024953af9d5cccb84a5879979669c71aa4dffc53d8ec8bc595c5715288a5ac"
         },
         "dpdy": {
           "status": "pass"
@@ -2051,11 +2051,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend:bs_1.52.0__1.1.1"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines-backend:bs_1.54.9__1.1.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:6ce933e588c208d8a5a96bf05a261c265b647d362841818f980779f3f26979a3"
+          "digest": "sha256:7c9083dcdd57be2cdebbf8eb6146b2a2b56b985de3982392d6c7ddf38c095864"
         },
         "dpdy": {
           "status": "pass"
@@ -2073,11 +2073,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.52.0__1.1.1"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-gitlab-pipelines:bs_1.54.9__1.1.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:6e1f46bd0b3452b2375ddd407694801f891ba60006a3d9b1cf8f7db570e8286c"
+          "digest": "sha256:257dfc0334bb275818cc6985d1ed36edea2f2b61a9cc70406eb0608d670421ef"
         },
         "dpdy": {
           "status": "pass"
@@ -2095,11 +2095,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.52.0__0.3.0"
+          "oci_ref": "quay.io/veecode/veecode-platform-plugin-aws-cost-insights:bs_1.54.9__0.3.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:1965166f48d4bfd25e29708c48bffb1f466f72dd3635068ca31bf3da144f72c4"
+          "digest": "sha256:c6d8d7f41213dfdc99e1e77a10b0b64c426dd0415355b95f07cbf2a9dd22b8b7"
         },
         "dpdy": {
           "status": "pass"
@@ -2117,11 +2117,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.52.0__0.11.0"
+          "oci_ref": "quay.io/veecode/aws-cost-insights-plugin-for-backstage-backend:bs_1.54.9__0.11.0"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:bd379b06bdd790ad4dac60d2be8ba2743f542c313da034580867047a513f7fe2"
+          "digest": "sha256:0efe7a7b1337ac08e453daf355d088483ca0fc5ac65cce29765a658ad2684ffe"
         },
         "dpdy": {
           "status": "pass"
@@ -2139,11 +2139,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend:bs_1.52.0__1.5.3"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager-backend:bs_1.54.9__1.5.3"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:60ecb6704fce27f4d6318df4103e73d4625492c7f1cfef73166f1c0848169513"
+          "digest": "sha256:999adf5297a494fedb41d0b54a1ad4ef72991b8398de36d325663b5caf263c24"
         },
         "dpdy": {
           "status": "pass"
@@ -2161,11 +2161,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager:bs_1.52.0__1.5.3"
+          "oci_ref": "quay.io/veecode/veecode-platform-backstage-plugin-kong-service-manager:bs_1.54.9__1.5.3"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:734c146c35ca54229d7898fedebdf53d938fb9361ff35726fe459809a684716a"
+          "digest": "sha256:cc2c85c02a0958c3a7a154f9d50c7903ea735874d1dfaf6536459ccffb6f45c2"
         },
         "dpdy": {
           "status": "pass"
@@ -2183,11 +2183,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-github-org:bs_1.52.0__0.3.23"
+          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-github-org:bs_1.54.9__0.3.25"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:0e61273f85ba64ea304d262f84f884a915a9f783946dea96928adb67935345d8"
+          "digest": "sha256:3e980a39bd99c79203f263a5c5fec41714479bf728aab0676eb86f6c4f40e598"
         },
         "dpdy": {
           "status": "pass"
@@ -2197,7 +2197,7 @@
         }
       },
       "package": "@backstage/plugin-catalog-backend-module-github-org",
-      "version": "0.3.23",
+      "version": "0.3.25",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2205,11 +2205,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-github:bs_1.52.0__0.13.3"
+          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-github:bs_1.54.9__0.13.5"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:d7d3a1f0bfdea4ede1b2410a293c680c7604e9b1de18906f536d4746ae0b3b20"
+          "digest": "sha256:1249d5b36dbe6574f02aa6fc04a208655daf1d7121ab02c7246785b40790febe"
         },
         "dpdy": {
           "status": "pass"
@@ -2219,7 +2219,7 @@
         }
       },
       "package": "@backstage/plugin-catalog-backend-module-github",
-      "version": "0.13.3",
+      "version": "0.13.5",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2227,11 +2227,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-gitlab-org:bs_1.52.0__0.2.22"
+          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-gitlab-org:bs_1.54.9__0.2.24"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:1bd009a2bca08356ee46eddc9738ba2137fe7762e54fc17c5c2d923b64ad4664"
+          "digest": "sha256:e5995046978afa18ff64f4f293703af603fd2e1eacbc81dac6bd70715050f2d3"
         },
         "dpdy": {
           "status": "pass"
@@ -2241,7 +2241,7 @@
         }
       },
       "package": "@backstage/plugin-catalog-backend-module-gitlab-org",
-      "version": "0.2.22",
+      "version": "0.2.24",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2249,11 +2249,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-gitlab:bs_1.52.0__0.8.4"
+          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-gitlab:bs_1.54.9__0.8.7"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:8c6ba7d7b7f016d7ea08633ede1dfdad54073a623b3d08ede8e6227609d703e9"
+          "digest": "sha256:d51fd2e9173699f531af2e3c7c83f939310432797839f8fe6e9bd53526d248e3"
         },
         "dpdy": {
           "status": "pass"
@@ -2263,7 +2263,7 @@
         }
       },
       "package": "@backstage/plugin-catalog-backend-module-gitlab",
-      "version": "0.8.4",
+      "version": "0.8.7",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2271,11 +2271,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-ldap:bs_1.52.0__0.12.6"
+          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-ldap:bs_1.54.9__0.12.8"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:47c85ef8d6433137d3ecce2606f3630832e1d72db608987f826f9971b154919a"
+          "digest": "sha256:ddec6c63c29b5fc9e25c6d79790417d4d379b62fce4d6112c277aec2ed579711"
         },
         "dpdy": {
           "status": "pass"
@@ -2285,7 +2285,7 @@
         }
       },
       "package": "@backstage/plugin-catalog-backend-module-ldap",
-      "version": "0.12.6",
+      "version": "0.12.8",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2293,11 +2293,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-msgraph:bs_1.52.0__0.10.3"
+          "oci_ref": "quay.io/veecode/backstage-plugin-catalog-backend-module-msgraph:bs_1.54.9__0.10.5"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:4e35f3c39026325949be60af2a9b0e04938de87a3e1e8d6caff8a0bc9ccb80b2"
+          "digest": "sha256:695772a7f87596852acd1dea76f7929fb24481a424ecb45d8efbd91d9fd78370"
         },
         "dpdy": {
           "status": "pass"
@@ -2307,7 +2307,7 @@
         }
       },
       "package": "@backstage/plugin-catalog-backend-module-msgraph",
-      "version": "0.10.3",
+      "version": "0.10.5",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2315,11 +2315,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-kubernetes-backend:bs_1.52.0__0.21.5"
+          "oci_ref": "quay.io/veecode/backstage-plugin-kubernetes-backend:bs_1.54.9__0.21.10"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:c563ab12540e2e37bfcbb2dce83668f990234a5685bbce81924a6dbbca814d6f"
+          "digest": "sha256:4293fe16f7cce4b56b0db2cffb840bfba614328443d2eee778435421d1d57861"
         },
         "dpdy": {
           "status": "pass"
@@ -2329,7 +2329,7 @@
         }
       },
       "package": "@backstage/plugin-kubernetes-backend",
-      "version": "0.21.5",
+      "version": "0.21.10",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2337,11 +2337,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-kubernetes:bs_1.52.0__0.12.20"
+          "oci_ref": "quay.io/veecode/backstage-plugin-kubernetes:bs_1.54.9__0.12.22"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:fd94026e0650a4992ecc8ff0cdaf1f515c644fc1b6373b7bff812243e81fd76f"
+          "digest": "sha256:647e4cb12de473714b6ba876e1192b201ed9346e809cea4fac3f1d1142974259"
         },
         "dpdy": {
           "status": "pass"
@@ -2351,7 +2351,7 @@
         }
       },
       "package": "@backstage/plugin-kubernetes",
-      "version": "0.12.20",
+      "version": "0.12.22",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2359,11 +2359,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-scaffolder-backend-module-github:bs_1.52.0__0.9.10"
+          "oci_ref": "quay.io/veecode/backstage-plugin-scaffolder-backend-module-github:bs_1.54.9__0.9.13"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:07d86f89b7ee985e2ea793710de444866197e2daad46213c999a5e05157b7b48"
+          "digest": "sha256:bb3f9763b14b6bd524b99b58e209a3b89d7fdf9ccadcb6d957f8d365c1d5a719"
         },
         "dpdy": {
           "status": "pass"
@@ -2373,7 +2373,7 @@
         }
       },
       "package": "@backstage/plugin-scaffolder-backend-module-github",
-      "version": "0.9.10",
+      "version": "0.9.13",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -2381,11 +2381,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-scaffolder-backend-module-gitlab:bs_1.52.0__0.11.7"
+          "oci_ref": "quay.io/veecode/backstage-plugin-scaffolder-backend-module-gitlab:bs_1.54.9__0.11.10"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:c142adb08677629ba00982502c59bf2113f352ccd644f984bc6f6231f87f0cbd"
+          "digest": "sha256:cbdd9c61fc45bc950ad9b332c8afe2e06afe0264d3ea1be47d6ba12794254450"
         },
         "dpdy": {
           "status": "pass"
@@ -2395,14 +2395,256 @@
         }
       },
       "package": "@backstage/plugin-scaffolder-backend-module-gitlab",
-      "version": "0.11.7",
+      "version": "0.11.10",
       "workspace": "backstage",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-acr": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-acr:bs_1.54.9__1.28.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:f87c30098d5ade11034d2cbf1a3b1cdacbe86488b36f9f5d4d44c9961d283d89"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-acr",
+      "version": "1.28.1",
+      "workspace": "acr",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-adoption-insights-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-adoption-insights-backend:bs_1.54.9__1.0.4"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:c130e31b14e99911d556a56fcd0d6644ca855fb4a2a81e88736c9fc22156bd24"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-adoption-insights-backend",
+      "version": "1.0.4",
+      "workspace": "adoption-insights",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-adoption-insights": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-adoption-insights:bs_1.54.9__1.0.4"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:f2808b21da340a56d7d8b9b48bb8e8411a3f761d69e6e6e186e919f530c2ff0a"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-adoption-insights",
+      "version": "1.0.4",
+      "workspace": "adoption-insights",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-analytics-module-adoption-insights": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-analytics-module-adoption-insights:bs_1.54.9__1.0.4"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:62039ddca58c3a8971efdacaa4d0258f068de1f72f09b7ff821cda65594f5251"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-analytics-module-adoption-insights",
+      "version": "1.0.4",
+      "workspace": "adoption-insights",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-bulk-import-backend": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-bulk-import-backend:bs_1.54.9__9.1.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:7203de6e4329c66b05cd4f6db3941480e694567574f34527beafa74ed54e7da0"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-bulk-import-backend",
+      "version": "9.1.1",
+      "workspace": "bulk-import",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-bulk-import": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-bulk-import:bs_1.54.9__9.1.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:95f89d74846f345deb7e42e93769c51824814a62e389453c587cb009dde19bf7"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-bulk-import",
+      "version": "9.1.1",
+      "workspace": "bulk-import",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-catalog-backend-module-keycloak": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-catalog-backend-module-keycloak:bs_1.54.9__3.23.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:ed92926ccd13c9346c4905fef71b8151420b9e76717e4994f73cdb19b009b0bd"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-catalog-backend-module-keycloak",
+      "version": "3.23.1",
+      "workspace": "keycloak",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-catalog-backend-module-pingidentity": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-catalog-backend-module-pingidentity:bs_1.54.9__0.15.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:5b50bd7fe0efd09b819941d64b0c7db2096f92fa63e0c555bccc4a10c1820617"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-catalog-backend-module-pingidentity",
+      "version": "0.15.0",
+      "workspace": "pingidentity",
+      "overall": "pass"
+    },
+    "red-hat-developer-hub-backstage-plugin-quickstart": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-quickstart:bs_1.54.9__2.2.0"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:f7fe2773e4bf1cfcb623b6b0201c0754694ab6b879a22c4b508f613ccf300bdb"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@red-hat-developer-hub/backstage-plugin-quickstart",
+      "version": "2.2.0",
+      "workspace": "quickstart",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-catalog-backend-module-scaffolder-relation-processor:bs_1.54.9__2.17.1"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:8c2f536e268c6995703ef108ae6bab54bf16fe508f4afc4e149470aeac1733f0"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-catalog-backend-module-scaffolder-relation-processor",
+      "version": "2.17.1",
+      "workspace": "scaffolder-relation-processor",
+      "overall": "pass"
+    },
+    "backstage-community-plugin-topology": {
+      "stages": {
+        "bootstrap": {
+          "status": "pass",
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-topology:bs_1.54.9__3.0.7"
+        },
+        "image-metadata-fetch": {
+          "status": "pass",
+          "digest": "sha256:0e2a62bfeeaaf9925d6069e0303acca30f192f99638b464fa4c95b39232e2484"
+        },
+        "dpdy": {
+          "status": "pass"
+        },
+        "catalog-index": {
+          "status": "pass"
+        }
+      },
+      "package": "@backstage-community/plugin-topology",
+      "version": "3.0.7",
+      "workspace": "topology",
       "overall": "pass"
     }
   },
   "summary": {
-    "total": 109,
-    "succeeded": 109,
+    "total": 120,
+    "succeeded": 120,
     "failed": 0
   },
   "status": "success"

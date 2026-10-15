@@ -17,12 +17,12 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage/plugin-scaffolder-backend-module-gitlab"
-  # Tag: bs_1.52.0__0.11.7
-  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-gitlab@sha256:c142adb08677629ba00982502c59bf2113f352ccd644f984bc6f6231f87f0cbd"
-  version: 0.11.7
+  # Tag: bs_1.54.9__0.11.10
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-gitlab@sha256:cbdd9c61fc45bc950ad9b332c8afe2e06afe0264d3ea1be47d6ba12794254450"
+  version: 0.11.10
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Red Hat
   support: tech-preview
   lifecycle: active

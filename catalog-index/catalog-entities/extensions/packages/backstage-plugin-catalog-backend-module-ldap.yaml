@@ -17,12 +17,12 @@ metadata:
     - software-catalog
 spec:
   packageName: "@backstage/plugin-catalog-backend-module-ldap"
-  # Tag: bs_1.52.0__0.12.6
-  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-catalog-backend-module-ldap@sha256:47c85ef8d6433137d3ecce2606f3630832e1d72db608987f826f9971b154919a"
-  version: 0.12.6
+  # Tag: bs_1.54.9__0.12.8
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-catalog-backend-module-ldap@sha256:ddec6c63c29b5fc9e25c6d79790417d4d379b62fce4d6112c277aec2ed579711"
+  version: 0.12.8
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

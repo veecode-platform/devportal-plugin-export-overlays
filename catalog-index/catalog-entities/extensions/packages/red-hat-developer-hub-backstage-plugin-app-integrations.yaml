@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-app-integrations"
-  # Tag: bs_1.52.0__0.0.2
-  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-integrations@sha256:e41aa4d40dec95856e5845c9a65f4614332e3e817ed00c0b2495ba4cbd5a2f3c"
+  # Tag: bs_1.54.9__0.0.2
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-app-integrations@sha256:792eeca1b7ea3e7170311b786297694d8cf3e25e764193dc9dfa37d983f6643a"
   version: 0.0.2
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: dev-preview
   lifecycle: active

@@ -14,12 +14,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-multi-source-security-viewer-backend"
-  # Tag: bs_1.52.0__0.4.1
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-multi-source-security-viewer-backend@sha256:3c92cda3bbc9842471e00c8ebb404fce032786b1e280027d9bcdf2d29944825b"
-  version: 0.4.1
+  # Tag: bs_1.54.9__0.7.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-multi-source-security-viewer-backend@sha256:2dcbe81252d7a3df68cbd9c70ebb26a057ef44964c7047d008652d7dab66b552"
+  version: 0.7.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

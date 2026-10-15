@@ -16,11 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: '@backstage-community/plugin-topology'
-  dynamicArtifact: ./dynamic-plugins/dist/backstage-community-plugin-topology
-  version: 2.12.3
+  # Tag: bs_1.54.9__3.0.7
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-topology@sha256:0e2a62bfeeaaf9925d6069e0303acca30f192f99638b464fa4c95b39232e2484"
+  version: 3.0.7
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

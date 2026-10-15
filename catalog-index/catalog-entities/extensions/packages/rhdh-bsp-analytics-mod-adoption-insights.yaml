@@ -16,11 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-analytics-module-adoption-insights"
-  dynamicArtifact: ./dynamic-plugins/dist/red-hat-developer-hub-backstage-plugin-analytics-module-adoption-insights-dynamic
-  version: 0.8.2
+  # Tag: bs_1.54.9__1.0.4
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-analytics-module-adoption-insights@sha256:62039ddca58c3a8971efdacaa4d0258f068de1f72f09b7ff821cda65594f5251"
+  version: 1.0.4
   backstage:
     role: frontend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

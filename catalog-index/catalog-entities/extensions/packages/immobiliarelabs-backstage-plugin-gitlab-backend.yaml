@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@immobiliarelabs/backstage-plugin-gitlab-backend"
-  # Tag: bs_1.52.0__7.0.0
-  dynamicArtifact: "oci://quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab-backend@sha256:b1bbe7274759b17455c02c2903267adf83e48803367735109e24a14b6b1f1e3f"
+  # Tag: bs_1.54.9__7.0.0
+  dynamicArtifact: "oci://quay.io/veecode/immobiliarelabs-backstage-plugin-gitlab-backend@sha256:2cf47312854ba534c512ade64793164aeac65c1bcf5e41bf1a5441127a6d6555"
   version: 7.0.0
   backstage:
     role: backend-plugin
-    supportedVersions: 1.42.5
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

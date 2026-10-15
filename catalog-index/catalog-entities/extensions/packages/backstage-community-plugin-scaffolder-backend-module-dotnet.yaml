@@ -17,12 +17,12 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage-community/plugin-scaffolder-backend-module-dotnet"
-  # Tag: bs_1.52.0__0.13.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet@sha256:114e0f6cab92a28ed6c3d13a32404a20291a4a5ec5062269f7fe47d24de08d5a"
-  version: 0.13.0
+  # Tag: bs_1.54.9__0.17.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet@sha256:4405341815fa075400db15ba347f65df7e891d5a48ed623478b0d0cb2fa0b129"
+  version: 0.17.1
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

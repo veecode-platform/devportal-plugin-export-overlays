@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-kubernetes"
-  # Tag: bs_1.52.0__0.12.20
-  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-kubernetes@sha256:fd94026e0650a4992ecc8ff0cdaf1f515c644fc1b6373b7bff812243e81fd76f"
-  version: 0.12.20
+  # Tag: bs_1.54.9__0.12.22
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-kubernetes@sha256:647e4cb12de473714b6ba876e1192b201ed9346e809cea4fac3f1d1142974259"
+  version: 0.12.22
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-analytics-module-ga4"
-  # Tag: bs_1.52.0__0.18.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-analytics-module-ga4@sha256:40305e9872bb64e39c4cc328b2fdb797d1ea30dd45d977a4a3a0f652f20d4602"
-  version: 0.18.0
+  # Tag: bs_1.54.9__0.22.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-analytics-module-ga4@sha256:bb08d866c4697cf7f559663c911bbe80c308502c009241b2ef451c0945a46d1b"
+  version: 0.22.1
   backstage:
     role: frontend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: The Backstage Community
   support: community
   lifecycle: active

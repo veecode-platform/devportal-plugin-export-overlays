@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-analytics-module-newrelic-browser"
-  # Tag: bs_1.52.0__0.18.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-analytics-module-newrelic-browser@sha256:8b800879770794e0574afdb77181037c26e149e5ff3b014dddf8e13a92b3f34d"
-  version: 0.18.0
+  # Tag: bs_1.54.9__0.22.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-analytics-module-newrelic-browser@sha256:5ceed8acb1d6d99959da43e2044f260b3d7b93e4585c6f91071f9ecdfd4d96bd"
+  version: 0.22.1
   backstage:
     role: frontend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: The Backstage Community
   support: community
   lifecycle: active

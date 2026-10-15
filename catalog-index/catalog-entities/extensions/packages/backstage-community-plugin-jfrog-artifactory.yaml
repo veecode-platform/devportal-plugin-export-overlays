@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-jfrog-artifactory"
-  # Tag: bs_1.52.0__1.30.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-jfrog-artifactory@sha256:66abf666b74f6c149e7e111fd46f3be2512475169e07b17007cd6a5e1ea44086"
-  version: 1.30.0
+  # Tag: bs_1.54.9__2.0.3
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-jfrog-artifactory@sha256:c55adeb722a007f93f856be5710ba19645058fca64c3c6c76a9b09cc97aeb377"
+  version: 2.0.3
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: Red Hat
   support: community
   lifecycle: active

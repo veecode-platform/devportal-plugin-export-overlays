@@ -12,8 +12,8 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-github-workflows"
-  # Tag: bs_1.52.0__1.3.7
-  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-github-workflows@sha256:db84ae0a758bda91657154346be2c510149cb1955ced2960329b124e04f65c44"
+  # Tag: bs_1.54.9__1.3.7
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-backstage-plugin-github-workflows@sha256:f38b1150e8f6734abb943c55c395e0c1082abfb85559f6db184d22d4c1ec66c4"
   nfs:
     entrypoint: ./alpha
     exposedModules:
@@ -40,7 +40,7 @@ spec:
   version: 1.3.7
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

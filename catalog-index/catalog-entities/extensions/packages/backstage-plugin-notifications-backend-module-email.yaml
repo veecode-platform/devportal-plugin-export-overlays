@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-notifications-backend-module-email"
-  # Tag: bs_1.52.0__0.3.22
-  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-notifications-backend-module-email@sha256:24b8c2382d7f90268e0f32dc0c088d61fd26c349b9de86514aada9bd1bb6a6ee"
-  version: 0.3.22
+  # Tag: bs_1.54.9__0.3.24
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-notifications-backend-module-email@sha256:9259b011ed5201007c268dd3e646e567011ba385d1e9a1007c2c7c86ea120899"
+  version: 0.3.24
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: VeeCode
   support: tech-preview
   lifecycle: active

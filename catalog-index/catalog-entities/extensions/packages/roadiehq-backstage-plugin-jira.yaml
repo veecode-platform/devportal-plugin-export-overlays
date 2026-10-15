@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@roadiehq/backstage-plugin-jira"
-  # Tag: bs_1.52.0__2.14.0
-  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-jira@sha256:9c895a8f123340778b085e2a28984cc554f5e643451f33b15a0d3979bb3fc3df"
+  # Tag: bs_1.54.9__2.14.0
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-jira@sha256:afb4b0999eb7eb2c124be26bbf8b33ba1b8a4a799297be3e103d9ebcbbf5cec7"
   version: 2.14.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Roadie
   support: community
   lifecycle: active

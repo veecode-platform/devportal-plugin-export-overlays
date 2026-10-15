@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@roadiehq/backstage-plugin-security-insights"
-  # Tag: bs_1.52.0__3.3.1
-  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-security-insights@sha256:f24a4412d3b5f79a2ddf11a56ac75d6688c032e3b7165cf8ddf108d11c13a878"
+  # Tag: bs_1.54.9__3.3.1
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-security-insights@sha256:86be442d6c92968b3a0cfe20255acd61258f718c49a7f3b310ff109f04e52a8d"
   version: 3.3.1
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Roadie
   support: community
   lifecycle: active

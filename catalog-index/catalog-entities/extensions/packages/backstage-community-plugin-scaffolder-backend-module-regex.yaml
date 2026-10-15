@@ -17,12 +17,12 @@ metadata:
     - software-templates
 spec:
   packageName: "@backstage-community/plugin-scaffolder-backend-module-regex"
-  # Tag: bs_1.52.0__2.15.1
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-regex@sha256:e0f3e1f69cb6c1bccd538f8ed80e6b16b85f2540b8866c636225903bb76a0e35"
-  version: 2.15.1
+  # Tag: bs_1.54.9__2.18.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-regex@sha256:3b19c142968ab34c6180332156ba345e9bebbffd2ff79bef14d3d645b8f6c05d"
+  version: 2.18.0
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

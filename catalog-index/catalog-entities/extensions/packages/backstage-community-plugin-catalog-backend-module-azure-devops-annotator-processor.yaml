@@ -18,12 +18,12 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-catalog-backend-module-azure-devops-a\
     nnotator-processor"
-  # Tag: bs_1.52.0__0.18.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-catalog-backend-module-azure-devops-annotator-processor@sha256:682987d5c14e5f8f42cc5d320ba46b960ab3b00cf5aa9b9eabb89f69a4685d71"
-  version: 0.18.0
+  # Tag: bs_1.54.9__0.22.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-catalog-backend-module-azure-devops-annotator-processor@sha256:e8198db422a1a30527e45e72a9e6654bb24c76f228cb7cdc79be3377800431dc"
+  version: 0.22.0
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Backstage Community
   support: community
   lifecycle: active

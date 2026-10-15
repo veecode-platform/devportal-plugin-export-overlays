@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@roadiehq/backstage-plugin-argo-cd"
-  # Tag: bs_1.52.0__2.12.5
-  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-argo-cd@sha256:eb8aa6de7fd869ed43cefa6fdd3948966fb40c10c778aa4873fcf88a5e465495"
+  # Tag: bs_1.54.9__2.12.5
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-argo-cd@sha256:de641a2b7c60cd81f2b65b2255f45c1fc891c937799043397660b436212ffd8b"
   version: 2.12.5
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Roadie
   support: community
   lifecycle: active

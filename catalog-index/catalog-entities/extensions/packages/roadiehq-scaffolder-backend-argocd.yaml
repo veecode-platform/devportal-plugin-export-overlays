@@ -17,12 +17,12 @@ metadata:
     - software-templates
 spec:
   packageName: "@roadiehq/scaffolder-backend-argocd"
-  # Tag: bs_1.52.0__1.8.1
-  dynamicArtifact: "oci://quay.io/veecode/roadiehq-scaffolder-backend-argocd@sha256:ea8a0dcbaa5b7653679011268f544475077b31c97c91933d7fe9aa7205f54fd7"
+  # Tag: bs_1.54.9__1.8.1
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-scaffolder-backend-argocd@sha256:a39cda97eb9728232446e131053d23792beae07c2c549b80ed0f0a0b46073fbd"
   version: 1.8.1
   backstage:
     role: backend-plugin-module
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Roadie
   support: community
   lifecycle: active

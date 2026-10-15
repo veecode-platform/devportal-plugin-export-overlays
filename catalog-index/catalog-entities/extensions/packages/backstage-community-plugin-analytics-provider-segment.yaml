@@ -16,12 +16,12 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage-community/plugin-analytics-provider-segment"
-  # Tag: bs_1.52.0__1.27.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-analytics-provider-segment@sha256:57b16eb798646257ef041802e89268c78054d5a073474ffef56e254081407707"
-  version: 1.27.0
+  # Tag: bs_1.54.9__2.0.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-analytics-provider-segment@sha256:2014969414709d58ff356f0f7dd77bad77246d698dd393fac0b70ad6fefbb357"
+  version: 2.0.0
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: Red Hat
   support: generally-available
   lifecycle: active

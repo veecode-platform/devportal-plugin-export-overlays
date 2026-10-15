@@ -14,14 +14,14 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-about-backend"
-  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-about-backend:bs_1.52.0__1.2.0
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-about-backend:bs_1.54.9__1.2.0
   version: 1.2.0
   # Reads host and version facts at runtime; it takes no app-config.
   appConfigNotRequired: true
   appConfigExamples: []
   backstage:
     role: backend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active
