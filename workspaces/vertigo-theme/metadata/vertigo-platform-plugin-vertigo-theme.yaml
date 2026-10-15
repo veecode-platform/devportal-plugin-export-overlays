@@ -15,7 +15,7 @@ metadata:
   tags: []
 spec:
   packageName: "vertigo-platform-plugin-vertigo-theme"
-  dynamicArtifact: oci://quay.io/veecode/vertigo-platform-plugin-vertigo-theme:bs_1.52.0__0.1.0
+  dynamicArtifact: oci://quay.io/veecode/vertigo-platform-plugin-vertigo-theme:bs_1.54.9__0.1.0
   version: 0.1.0
   # A theme carries no app-config; it is driven entirely by the dynamic-plugins
   # `themes:` / `mountPoints:` config. Opt out of the appConfigExamples check.
@@ -23,7 +23,7 @@ spec:
   appConfigExamples: []
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.49.4
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

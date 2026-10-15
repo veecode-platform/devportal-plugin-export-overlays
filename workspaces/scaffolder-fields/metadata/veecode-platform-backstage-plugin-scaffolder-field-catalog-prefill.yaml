@@ -14,7 +14,7 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/backstage-plugin-scaffolder-field-catalog-prefill"
-  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-scaffolder-field-catalog-prefill:bs_1.52.0__0.1.0
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-backstage-plugin-scaffolder-field-catalog-prefill:bs_1.54.9__0.1.0
   version: 0.1.0
   appConfigExamples:
     - title: Default configuration
@@ -29,7 +29,7 @@ spec:
                   ref: catalogEntityPrefillTranslationRef
   backstage:
     role: frontend-plugin
-    supportedVersions: 1.52.0
+    supportedVersions: 1.54.9
   author: VeeCode
   support: community
   lifecycle: active

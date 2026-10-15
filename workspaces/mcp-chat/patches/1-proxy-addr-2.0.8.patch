@@ -5,10 +5,10 @@
 #
 --- yarn.lock
 +++ yarn.lock
-@@ -28286,12 +28286,12 @@
+@@ -22388,12 +22388,12 @@
    linkType: hard
  
- "proxy-addr@npm:~2.0.7":
+ "proxy-addr@npm:^2.0.7, proxy-addr@npm:~2.0.7":
 -  version: 2.0.7
 -  resolution: "proxy-addr@npm:2.0.7"
 +  version: 2.0.8

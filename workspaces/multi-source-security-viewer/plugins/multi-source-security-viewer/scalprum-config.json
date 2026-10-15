@@ -1,0 +1,6 @@
+{
+  "name": "backstage-community.plugin-multi-source-security-viewer",
+  "exposedModules": {
+    "PluginRoot": "./src/legacy.ts"
+  }
+}

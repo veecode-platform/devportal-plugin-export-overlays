@@ -1,0 +1,7 @@
+{
+  "name": "backstage-community.plugin-topology",
+  "exposedModules": {
+    "PluginRoot": "./src/legacy.ts",
+    "Alpha": "./src/translations/index.ts"
+  }
+}

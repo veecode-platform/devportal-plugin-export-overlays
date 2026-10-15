@@ -1,6 +1,8 @@
 {
   "name": "red-hat-developer-hub.backstage-plugin-bulk-import",
   "exposedModules": {
-    "PluginRoot": "./src/index.ts"
+    "PluginRoot": "./src/legacyExports.ts",
+    "Legacy": "./src/legacyExports.ts",
+    "Alpha": "./src/alpha.ts"
   }
 }
