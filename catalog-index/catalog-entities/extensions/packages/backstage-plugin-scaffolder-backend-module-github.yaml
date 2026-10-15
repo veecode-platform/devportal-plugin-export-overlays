@@ -1,0 +1,32 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-plugin-scaffolder-backend-module-github
+  namespace: rhdh
+  title: "Scaffolder Backend Module GitHub"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/backstage/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/backstage/tree/master/plugins/scaffolder-backend-module-github
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/scaffolder-backend-module-github
+  tags:
+    - software-templates
+spec:
+  packageName: "@backstage/plugin-scaffolder-backend-module-github"
+  # Tag: bs_1.54.9__0.9.13
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-github@sha256:bb3f9763b14b6bd524b99b58e209a3b89d7fdf9ccadcb6d957f8d365c1d5a719"
+  version: 0.9.13
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.54.9
+  author: Red Hat
+  support: generally-available
+  lifecycle: active
+  partOf:
+    - github-scaffolder-actions
+  appConfigNotRequired: true
+  appConfigExamples: []

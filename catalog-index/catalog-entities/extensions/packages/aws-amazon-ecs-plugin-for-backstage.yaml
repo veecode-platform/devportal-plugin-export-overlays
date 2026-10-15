@@ -1,0 +1,53 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: aws-amazon-ecs-plugin-for-backstage
+  namespace: community
+  title: "@aws/amazon-ecs-plugin-for-backstage"
+  links:
+    - url: https://github.com/awslabs/backstage-plugins-for-aws
+      title: Homepage
+    - url: https://github.com/awslabs/backstage-plugins-for-aws/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/ecs/frontend
+  annotations:
+    backstage.io/source-location: url:https://github.com/awslabs/backstage-plugins-for-aws/tree/main/plugins/ecs/frontend
+  tags: []
+spec:
+  packageName: "@aws/amazon-ecs-plugin-for-backstage"
+  # Tag: bs_1.54.9__0.7.0
+  dynamicArtifact: "oci://quay.io/veecode/aws-amazon-ecs-plugin-for-backstage@sha256:c09a6058dbaac59330d9dd01c235ed5ac14cd58bcd36e8f663e5d304e3bf4564"
+  version: 0.7.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.54.9
+  author: AWS
+  support: community
+  lifecycle: active
+  partOf:
+    - backstage-plugins-for-aws
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            aws.amazon-ecs-plugin-for-backstage:
+              # Entity tab for ECS services (main plugin functionality)
+              entityTabs:
+                - path: /amazon-ecs
+                  title: Amazon ECS
+                  mountPoint: entity.page.amazon-ecs
+              # ECS services content in the entity tab
+              mountPoints:
+                - mountPoint: entity.page.amazon-ecs/cards
+                  importName: EntityAmazonEcsServicesContent
+                  config:
+                    layout:
+                      gridColumn: "1 / -1"
+                    if:
+                      anyOf:
+                        # Show for entities with ECS service tags
+                        - hasAnnotation: aws.amazon.com/amazon-ecs-service-tags
+                        # Show for entities with specific ECS service ARN
+                        - hasAnnotation: aws.amazon.com/amazon-ecs-service-arn

@@ -1,0 +1,39 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-plugin-scaffolder-backend-module-gerrit
+  namespace: rhdh
+  title: "Scaffolder Backend Module Gerrit"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/backstage/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/backstage/tree/master/plugins/scaffolder-backend-module-gerrit
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/scaffolder-backend-module-gerrit
+  tags:
+    - software-templates
+spec:
+  packageName: "@backstage/plugin-scaffolder-backend-module-gerrit"
+  # Tag: bs_1.54.9__0.2.24
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-scaffolder-backend-module-gerrit@sha256:07ad779bcf55b67e91c1057929209a6915b9df9389ed7d34a0cc00012c614598"
+  version: 0.2.24
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.54.9
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - gerrit-scaffolder-actions
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        integrations:
+          gerrit:
+            - host: ${GERRIT_HOST}
+              gitilesBaseUrl: ${GERRIT_GITILES_BASE_URL}
+              username: ${GERRIT_USERNAME}
+              password: ${GERRIT_PASSWORD}

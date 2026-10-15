@@ -1,0 +1,39 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-plugin-mcp-actions-backend
+  namespace: rhdh
+  title: "@backstage/plugin-mcp-actions-backend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://issues.redhat.com/browse/RHDHBUGS
+      title: "Report issues here. Note: Customers of Red Hat Developer Hub should raise a Red Hat support case instead."
+    - title: Source Code
+      url: https://github.com/backstage/backstage/tree/master/plugins/mcp-actions-backend
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/mcp-actions-backend
+  tags: []
+spec:
+  packageName: "@backstage/plugin-mcp-actions-backend"
+  # Tag: bs_1.54.9__0.2.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-mcp-actions-backend@sha256:8a639aecbdf5c77f42976da1eb81db7de4d1a0f0558c4cb08fee73202e70431a"
+  version: 0.2.1
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.54.9
+  author: Backstage
+  support: dev-preview
+  lifecycle: active
+  partOf:
+    - mcp-actions-backend
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        backend:
+          auth:
+            externalAccess:
+              - type: static
+                options:
+                  token: ${MCP_TOKEN}
+                  subject: mcp-clients

@@ -1,0 +1,9 @@
+{
+  "backstage-plugin-auth": {
+    "workspacePath": "backstage/plugins/auth",
+    "registryReference": "quay.io/veecode/backstage-plugin-auth:bs_1.54.9__0.1.11",
+    "digest": "sha256:5ecac362a72a098301130273fedb81039fd6cca99ab4ce8fdad435396d0a3069",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLXBsdWdpbi1hdXRoIjp7Im5hbWUiOiJAYmFja3N0YWdlL3BsdWdpbi1hdXRoLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4xLjExIiwiYmFja3N0YWdlIjp7InJvbGUiOiJmcm9udGVuZC1wbHVnaW4iLCJwbHVnaW5JZCI6ImF1dGgiLCJwbHVnaW5QYWNrYWdlcyI6WyJAYmFja3N0YWdlL3BsdWdpbi1hdXRoIiwiQGJhY2tzdGFnZS9wbHVnaW4tYXV0aC1iYWNrZW5kIiwiQGJhY2tzdGFnZS9wbHVnaW4tYXV0aC1ub2RlIiwiQGJhY2tzdGFnZS9wbHVnaW4tYXV0aC1yZWFjdCJdLCJzdXBwb3J0ZWQtdmVyc2lvbnMiOiIxLjU0LjkifSwicmVwb3NpdG9yeSI6eyJ0eXBlIjoiZ2l0IiwidXJsIjoiaHR0cHM6Ly9naXRodWIuY29tL2JhY2tzdGFnZS9iYWNrc3RhZ2UiLCJkaXJlY3RvcnkiOiJwbHVnaW5zL2F1dGgifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

@@ -1,0 +1,50 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-topology
+  namespace: rhdh
+  title: Topology
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://issues.redhat.com/browse/RHIDP
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/topology
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/topology
+  tags: []
+spec:
+  packageName: '@backstage-community/plugin-topology'
+  # Tag: bs_1.54.9__3.0.7
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-topology@sha256:0e2a62bfeeaaf9925d6069e0303acca30f192f99638b464fa4c95b39232e2484"
+  version: 3.0.7
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.54.9
+  author: Red Hat
+  support: generally-available
+  lifecycle: active
+  partOf:
+    - topology
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-topology:
+              translationResources:
+                - importName: topologyTranslations
+                  ref: topologyTranslationRef
+                  module: Alpha
+              mountPoints:
+                - mountPoint: entity.page.topology/cards
+                  importName: TopologyPage
+                  config:
+                    layout:
+                      gridColumn: 1 / -1
+                      height: 75vh
+                    if:
+                      anyOf:
+                        - hasAnnotation: backstage.io/kubernetes-id
+                        - hasAnnotation: backstage.io/kubernetes-namespace

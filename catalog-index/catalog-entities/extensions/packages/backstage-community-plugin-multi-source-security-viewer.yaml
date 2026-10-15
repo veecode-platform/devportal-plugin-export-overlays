@@ -1,0 +1,27 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-multi-source-security-viewer
+  namespace: community
+  title: Multi Source Security Viewer
+  links:
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/multi-source-security-viewer
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/multi-source-security-viewer
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-multi-source-security-viewer"
+  # Tag: bs_1.54.9__1.0.3
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-multi-source-security-viewer@sha256:f60453a70fe73f4332c1ddd7c33faeb87659f10855c53413936b4547694a5198"
+  version: 1.0.3
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.54.9
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigNotRequired: true
+  appConfigExamples: []

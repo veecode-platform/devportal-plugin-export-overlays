@@ -1,0 +1,27 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: proberaum-backstage-plugin-github-notifications-backend
+  namespace: rhdh
+  title: GitHub Notifications Backend
+  links:
+    - url: https://github.com/proberaum/backstage-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/proberaum/backstage-plugins/tree/main/workspaces/github-notifications
+  annotations:
+    backstage.io/source-location: url:https://github.com/proberaum/backstage-plugins/tree/main/workspaces/github-notifications
+  tags: []
+spec:
+  packageName: "@proberaum/backstage-plugin-github-notifications-backend"
+  # Tag: bs_1.54.9__0.12.0
+  dynamicArtifact: "oci://quay.io/veecode/proberaum-backstage-plugin-github-notifications-backend@sha256:5400536e673ca1c859e44b9ecbdf475d72a96b5989c0330c11e3191181de179c"
+  version: 0.12.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.54.9
+  author: Proberaum
+  support: community
+  lifecycle: active
+  appConfigNotRequired: true
+  appConfigExamples: []

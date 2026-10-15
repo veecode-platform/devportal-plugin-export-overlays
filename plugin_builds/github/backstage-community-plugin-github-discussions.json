@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-github-discussions": {
+    "workspacePath": "github/plugins/github-discussions",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-github-discussions:bs_1.54.9__1.4.0",
+    "digest": "sha256:f9c4fa25114fa366168a03e04f83d161e1e15122882b838a522dda4b59d99803",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tZ2l0aHViLWRpc2N1c3Npb25zIjp7Im5hbWUiOiJAYmFja3N0YWdlLWNvbW11bml0eS9wbHVnaW4tZ2l0aHViLWRpc2N1c3Npb25zLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMS40LjAiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImZyb250ZW5kLXBsdWdpbiIsInBsdWdpbklkIjoiZ2l0aHViLWRpc2N1c3Npb25zIiwicGx1Z2luUGFja2FnZXMiOlsiQGJhY2tzdGFnZS1jb21tdW5pdHkvcGx1Z2luLWdpdGh1Yi1kaXNjdXNzaW9ucyIsIkBiYWNrc3RhZ2UtY29tbXVuaXR5L3BsdWdpbi1naXRodWItZGlzY3Vzc2lvbnMtY29tbW9uIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTQuOSJ9LCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vYmFja3N0YWdlL2NvbW11bml0eS1wbHVnaW5zIiwiZGlyZWN0b3J5Ijoid29ya3NwYWNlcy9naXRodWIvcGx1Z2lucy9naXRodWItZGlzY3Vzc2lvbnMifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

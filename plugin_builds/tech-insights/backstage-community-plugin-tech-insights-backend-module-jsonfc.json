@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-tech-insights-backend-module-jsonfc": {
+    "workspacePath": "tech-insights/plugins/tech-insights-backend-module-jsonfc",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-tech-insights-backend-module-jsonfc:bs_1.54.9__0.10.0",
+    "digest": "sha256:9c05c8ceb7f50cd7833f9863ac61480e088d1bba7487e04d87d36c157112707c",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tdGVjaC1pbnNpZ2h0cy1iYWNrZW5kLW1vZHVsZS1qc29uZmMiOnsibmFtZSI6IkBiYWNrc3RhZ2UtY29tbXVuaXR5L3BsdWdpbi10ZWNoLWluc2lnaHRzLWJhY2tlbmQtbW9kdWxlLWpzb25mYy1keW5hbWljIiwidmVyc2lvbiI6IjAuMTAuMCIsImJhY2tzdGFnZSI6eyJyb2xlIjoiYmFja2VuZC1wbHVnaW4tbW9kdWxlIiwicGx1Z2luSWQiOiJ0ZWNoLWluc2lnaHRzIiwicGx1Z2luUGFja2FnZSI6IkBiYWNrc3RhZ2UtY29tbXVuaXR5L3BsdWdpbi10ZWNoLWluc2lnaHRzLWJhY2tlbmQiLCJzdXBwb3J0ZWQtdmVyc2lvbnMiOiIxLjU0LjkifSwiaG9tZXBhZ2UiOiJodHRwczovL2JhY2tzdGFnZS5pbyIsInJlcG9zaXRvcnkiOnsidHlwZSI6ImdpdCIsInVybCI6Imh0dHBzOi8vZ2l0aHViLmNvbS9iYWNrc3RhZ2UvY29tbXVuaXR5LXBsdWdpbnMiLCJkaXJlY3RvcnkiOiJ3b3Jrc3BhY2VzL3RlY2gtaW5zaWdodHMvcGx1Z2lucy90ZWNoLWluc2lnaHRzLWJhY2tlbmQtbW9kdWxlLWpzb25mYyJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCIsImtleXdvcmRzIjpbImJhY2tzdGFnZSIsInRlY2gtaW5zaWdodHMiLCJzY29yZWNhcmQiXX19XQ=="
+  }
+}

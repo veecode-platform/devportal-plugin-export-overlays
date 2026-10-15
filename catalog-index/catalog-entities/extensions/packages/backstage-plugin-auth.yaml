@@ -1,0 +1,38 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-plugin-auth
+  namespace: rhdh
+  title: "Auth Frontend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/backstage/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/backstage/tree/master/plugins/auth
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/auth
+  tags: []
+spec:
+  packageName: "@backstage/plugin-auth"
+  # Tag: bs_1.54.9__0.1.11
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-auth@sha256:5ecac362a72a098301130273fedb81039fd6cca99ab4ce8fdad435396d0a3069"
+  version: 0.1.11
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.54.9
+  author: Backstage
+  support: community
+  lifecycle: active
+  partOf:
+    - auth
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage.plugin-auth:
+              dynamicRoutes:
+                - path: /oauth2/*
+                  importName: Router

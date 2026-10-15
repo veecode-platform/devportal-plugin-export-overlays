@@ -1,0 +1,32 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  namespace: rhdh
+  name: bcp-scaffolder-backend-mod-dotnet
+  title: "Scaffolder Backend Module DotNet"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/azure-devops/plugins/scaffolder-backend-module-dotnet
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/azure-devops/plugins/scaffolder-backend-module-dotnet
+  tags:
+    - software-templates
+spec:
+  packageName: "@backstage-community/plugin-scaffolder-backend-module-dotnet"
+  # Tag: bs_1.54.9__0.17.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-dotnet@sha256:4405341815fa075400db15ba347f65df7e891d5a48ed623478b0d0cb2fa0b129"
+  version: 0.17.1
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.54.9
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  partOf:
+    - azure-devops
+  appConfigNotRequired: true
+  appConfigExamples: []

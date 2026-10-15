@@ -1,0 +1,38 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-search-backend-module-adr
+  namespace: rhdh
+  title: ADR Search Backend Module
+  links:
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/adr
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/adr
+  tags: []
+spec:
+  packageName: "@backstage-community/search-backend-module-adr"
+  # Tag: bs_1.54.9__0.22.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-search-backend-module-adr@sha256:5202f62ec4836a68573160b30eeab26a7a82aca18a0e06be2ec8ba2f99bcf726"
+  version: 0.22.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.54.9
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigExamples:
+    - title: Optional collator schedule
+      content:
+        search:
+          collators:
+            adr:
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  seconds: 30
+                timeout:
+                  minutes: 3

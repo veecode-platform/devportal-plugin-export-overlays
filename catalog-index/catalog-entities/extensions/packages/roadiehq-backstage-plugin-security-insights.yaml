@@ -1,0 +1,47 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: roadiehq-backstage-plugin-security-insights
+  namespace: rhdh
+  title: "Security Insights"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/RoadieHQ/roadie-backstage-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-security-insights
+  annotations:
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-security-insights
+  tags: []
+spec:
+  packageName: "@roadiehq/backstage-plugin-security-insights"
+  # Tag: bs_1.54.9__3.3.1
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-security-insights@sha256:86be442d6c92968b3a0cfe20255acd61258f718c49a7f3b310ff109f04e52a8d"
+  version: 3.3.1
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.54.9
+  author: Roadie
+  support: community
+  lifecycle: active
+  partOf:
+    - security-insights
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            roadiehq.backstage-plugin-security-insights:
+              mountPoints:
+                - mountPoint: entity.page.overview/cards
+                  importName: EntityDependabotAlertsCard
+                  config:
+                    layout:
+                      gridColumnEnd:
+                        lg: span 4
+                        md: span 6
+                        xs: span 12
+                    if:
+                      allOf:
+                        - isSecurityInsightsAvailable

@@ -1,0 +1,46 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-catalog-backend-module-pingidentity
+  namespace: rhdh
+  title: "Catalog Backend Module PingIdentity"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/pingidentity
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/pingidentity
+  tags:
+    - software-catalog
+spec:
+  packageName: "@backstage-community/plugin-catalog-backend-module-pingidentity"
+  # Tag: bs_1.54.9__0.15.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-catalog-backend-module-pingidentity@sha256:5b50bd7fe0efd09b819941d64b0c7db2096f92fa63e0c555bccc4a10c1820617"
+  version: 0.15.0
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.54.9
+  author: Red Hat
+  support: tech-preview
+  lifecycle: active
+  partOf:
+    - pingidentity
+  appConfigExamples:
+    - title: PingOne org provider (regional API/auth URLs)
+      content:
+        catalog:
+          providers:
+            pingIdentityOrg:
+              default:
+                apiPath: ${PING_IDENTITY_API_BASE_URL}
+                authPath: ${PING_IDENTITY_AUTH_BASE_URL}
+                envId: ${PING_IDENTITY_ENV_ID}
+                clientId: ${PING_IDENTITY_CLIENT_ID}
+                clientSecret: ${PING_IDENTITY_CLIENT_SECRET}
+                schedule:
+                  frequency: { minutes: 30 }
+                  timeout: { minutes: 10 }
+                  initialDelay: { seconds: 15 }

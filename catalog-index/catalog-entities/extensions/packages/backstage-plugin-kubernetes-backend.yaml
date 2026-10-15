@@ -1,0 +1,38 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-plugin-kubernetes-backend
+  namespace: rhdh
+  title: "Kubernetes Backend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/backstage/tree/master/plugins/kubernetes-backend
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/backstage/tree/master/plugins/kubernetes-backend
+  tags: []
+spec:
+  packageName: "@backstage/plugin-kubernetes-backend"
+  # Tag: bs_1.54.9__0.21.10
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-kubernetes-backend@sha256:4293fe16f7cce4b56b0db2cffb840bfba614328443d2eee778435421d1d57861"
+  version: 0.21.10
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.54.9
+  author: Red Hat
+  support: generally-available
+  lifecycle: active
+  partOf:
+    - kubernetes
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        kubernetes:
+          serviceLocatorMethod:
+            type: multiTenant
+          clusterLocatorMethods:
+            - type: config
+              clusters: []

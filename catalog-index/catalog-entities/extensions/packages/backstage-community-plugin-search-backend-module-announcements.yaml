@@ -1,0 +1,38 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-search-backend-module-announcements
+  namespace: rhdh
+  title: Announcements Search Backend Module
+  links:
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/announcements
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-search-backend-module-announcements"
+  # Tag: bs_1.54.9__0.22.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-search-backend-module-announcements@sha256:36321f8717f1d63728775513da4703cdd73b4ee17fadb1af65661a579d5bb2f5"
+  version: 0.22.0
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.54.9
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigExamples:
+    - title: Optional collator schedule
+      content:
+        search:
+          collators:
+            announcements:
+              schedule:
+                frequency:
+                  minutes: 30
+                initialDelay:
+                  seconds: 30
+                timeout:
+                  minutes: 3

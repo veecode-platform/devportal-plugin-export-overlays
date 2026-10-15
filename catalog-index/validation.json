@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "strict": false,
+  "stats": {
+    "packages": 120,
+    "oci_refs": 120,
+    "oci_images": 120,
+    "local_refs": 0,
+    "enabled": 0,
+    "plugin_builds": 120,
+    "index_entries": 120
+  },
+  "skippedRules": [],
+  "findings": [],
+  "allowlisted": []
+}

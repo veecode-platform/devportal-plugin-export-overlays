@@ -1,0 +1,9 @@
+{
+  "red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras": {
+    "workspacePath": "mcp-integrations/plugins/kubernetes-mcp-extras",
+    "registryReference": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-kubernetes-mcp-extras:bs_1.54.9__0.2.0",
+    "digest": "sha256:8e024953af9d5cccb84a5879979669c71aa4dffc53d8ec8bc595c5715288a5ac",
+    "support": "dev-preview",
+    "io.backstage.dynamic-packages": "W3sicmVkLWhhdC1kZXZlbG9wZXItaHViLWJhY2tzdGFnZS1wbHVnaW4ta3ViZXJuZXRlcy1tY3AtZXh0cmFzIjp7Im5hbWUiOiJAcmVkLWhhdC1kZXZlbG9wZXItaHViL2JhY2tzdGFnZS1wbHVnaW4ta3ViZXJuZXRlcy1tY3AtZXh0cmFzLWR5bmFtaWMiLCJ2ZXJzaW9uIjoiMC4yLjAiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImJhY2tlbmQtcGx1Z2luIiwicGx1Z2luSWQiOiJrdWJlcm5ldGVzLW1jcC1leHRyYXMiLCJwbHVnaW5QYWNrYWdlcyI6WyJAcmVkLWhhdC1kZXZlbG9wZXItaHViL2JhY2tzdGFnZS1wbHVnaW4ta3ViZXJuZXRlcy1tY3AtZXh0cmFzIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTQuOSJ9LCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vcmVkaGF0LWRldmVsb3Blci9yaGRoLXBsdWdpbnMiLCJkaXJlY3RvcnkiOiJ3b3Jrc3BhY2VzL21jcC1pbnRlZ3JhdGlvbnMvcGx1Z2lucy9rdWJlcm5ldGVzLW1jcC1leHRyYXMifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

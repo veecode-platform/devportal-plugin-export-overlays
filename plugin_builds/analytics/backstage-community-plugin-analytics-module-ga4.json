@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-analytics-module-ga4": {
+    "workspacePath": "analytics/plugins/analytics-module-ga4",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-analytics-module-ga4:bs_1.54.9__0.22.1",
+    "digest": "sha256:bb08d866c4697cf7f559663c911bbe80c308502c009241b2ef451c0945a46d1b",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tYW5hbHl0aWNzLW1vZHVsZS1nYTQiOnsibmFtZSI6IkBiYWNrc3RhZ2UtY29tbXVuaXR5L3BsdWdpbi1hbmFseXRpY3MtbW9kdWxlLWdhNC1keW5hbWljIiwidmVyc2lvbiI6IjAuMjIuMSIsImJhY2tzdGFnZSI6eyJyb2xlIjoiZnJvbnRlbmQtcGx1Z2luLW1vZHVsZSIsInBsdWdpbklkIjoiYXBwIiwicGx1Z2luUGFja2FnZSI6IkBiYWNrc3RhZ2UvcGx1Z2luLWFwcCIsInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTQuOSJ9LCJob21lcGFnZSI6Imh0dHBzOi8vYmFja3N0YWdlLmlvIiwicmVwb3NpdG9yeSI6eyJ0eXBlIjoiZ2l0IiwidXJsIjoiaHR0cHM6Ly9naXRodWIuY29tL2JhY2tzdGFnZS9jb21tdW5pdHktcGx1Z2lucyIsImRpcmVjdG9yeSI6IndvcmtzcGFjZXMvYW5hbHl0aWNzL3BsdWdpbnMvYW5hbHl0aWNzLW1vZHVsZS1nYTQifSwibGljZW5zZSI6IkFwYWNoZS0yLjAifX1d"
+  }
+}

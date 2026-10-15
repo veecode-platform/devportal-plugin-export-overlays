@@ -1,0 +1,34 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: red-hat-developer-hub-backstage-plugin-bulk-import-backend
+  namespace: rhdh
+  title: "Bulk Import Backend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://issues.redhat.com/browse/RHDHBUGS
+      title: "Report issues here. Note: Customers of Red Hat Developer Hub should raise a Red Hat support case instead."
+    - title: Source Code
+      url: https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/bulk-import
+  annotations:
+    backstage.io/source-location: url:https://github.com/redhat-developer/rhdh-plugins/tree/main/workspaces/bulk-import
+  tags: []
+spec:
+  packageName: "@red-hat-developer-hub/backstage-plugin-bulk-import-backend"
+  # Tag: bs_1.54.9__9.1.1
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-bulk-import-backend@sha256:7203de6e4329c66b05cd4f6db3941480e694567574f34527beafa74ed54e7da0"
+  version: 9.1.1
+  backstage:
+    role: backend-plugin
+    supportedVersions: 1.54.9
+  author: Red Hat
+  support: tech-preview
+  lifecycle: active
+  appConfigExamples:
+    - title: Default PR-based import workflow
+      content:
+        bulkImport:
+          importAPI: open-pull-requests
+  partOf:
+    - bulk-import

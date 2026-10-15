@@ -1,0 +1,44 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-jenkins
+  namespace: rhdh
+  title: "Jenkins Frontend"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/jenkins
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/jenkins
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-jenkins"
+  # Tag: bs_1.54.9__0.34.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-jenkins@sha256:cc5cb5d0f18551618dcce9b674547f9012a91ee43a53b807be87e74c92abc205"
+  version: 0.34.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.54.9
+  author: Red Hat
+  support: community
+  lifecycle: active
+  partOf:
+    - jenkins
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-jenkins:
+              mountPoints:
+                - mountPoint: entity.page.ci/cards
+                  importName: EntityJenkinsContent
+                  config:
+                    layout:
+                      gridColumn: 1 / -1
+                    if:
+                      allOf:
+                        - isJenkinsAvailable

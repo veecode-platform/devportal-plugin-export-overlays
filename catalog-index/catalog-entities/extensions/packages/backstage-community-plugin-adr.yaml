@@ -1,0 +1,39 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-adr
+  namespace: rhdh
+  title: ADR
+  links:
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/adr
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/adr
+  tags: []
+spec:
+  packageName: "@backstage-community/plugin-adr"
+  # Tag: bs_1.54.9__0.29.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-adr@sha256:9ccd7563ea50935c2c1353f14037d8eae9c9507fd9637059b10a8ca7bf333382"
+  version: 0.29.0
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.54.9
+  author: Backstage Community
+  support: community
+  lifecycle: active
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            backstage-community.plugin-adr:
+              entityTabs:
+                - mountPoint: entity.page.adrs
+                  path: /adrs
+                  title: ADRs
+                  config:
+                    if:
+                      allOf:
+                        - isAdrAvailable

@@ -1,0 +1,9 @@
+{
+  "backstage-community-plugin-grafana": {
+    "workspacePath": "grafana/plugins/grafana",
+    "registryReference": "quay.io/veecode/backstage-community-plugin-grafana:bs_1.54.9__0.17.0",
+    "digest": "sha256:27e84e524b188b84bc46d35783e628c01d63d11293ec86454b34e08a333deceb",
+    "support": "community",
+    "io.backstage.dynamic-packages": "W3siYmFja3N0YWdlLWNvbW11bml0eS1wbHVnaW4tZ3JhZmFuYSI6eyJuYW1lIjoiQGJhY2tzdGFnZS1jb21tdW5pdHkvcGx1Z2luLWdyYWZhbmEtZHluYW1pYyIsInZlcnNpb24iOiIwLjE3LjAiLCJkZXNjcmlwdGlvbiI6IkEgQmFja3N0YWdlIGJhY2tlbmQgcGx1Z2luIHRoYXQgaW50ZWdyYXRlcyB0b3dhcmRzIEdyYWZhbmEiLCJiYWNrc3RhZ2UiOnsicm9sZSI6ImZyb250ZW5kLXBsdWdpbiIsInBsdWdpbklkIjoiZ3JhZmFuYSIsInBsdWdpblBhY2thZ2VzIjpbIkBiYWNrc3RhZ2UtY29tbXVuaXR5L3BsdWdpbi1ncmFmYW5hIl0sInN1cHBvcnRlZC12ZXJzaW9ucyI6IjEuNTQuOSJ9LCJyZXBvc2l0b3J5Ijp7InR5cGUiOiJnaXQiLCJ1cmwiOiJodHRwczovL2dpdGh1Yi5jb20vYmFja3N0YWdlL2NvbW11bml0eS1wbHVnaW5zIiwiZGlyZWN0b3J5Ijoid29ya3NwYWNlcy9ncmFmYW5hL3BsdWdpbnMvZ3JhZmFuYSJ9LCJsaWNlbnNlIjoiQXBhY2hlLTIuMCIsImtleXdvcmRzIjpbImJhY2tzdGFnZSIsImdyYWZhbmEiXX19XQ=="
+  }
+}

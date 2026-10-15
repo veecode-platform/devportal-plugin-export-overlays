@@ -1,0 +1,44 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: roadiehq-backstage-plugin-datadog
+  namespace: rhdh
+  title: "Datadog"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/RoadieHQ/roadie-backstage-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-datadog
+  annotations:
+    backstage.io/source-location: url:https://github.com/RoadieHQ/roadie-backstage-plugins/tree/main/plugins/frontend/backstage-plugin-datadog
+  tags: []
+spec:
+  packageName: "@roadiehq/backstage-plugin-datadog"
+  # Tag: bs_1.54.9__2.7.2
+  dynamicArtifact: "oci://quay.io/veecode/roadiehq-backstage-plugin-datadog@sha256:86dce58892a2af1960504d811e707b18ff165f31286cc2130d463f1f61f25e7b"
+  version: 2.7.2
+  backstage:
+    role: frontend-plugin
+    supportedVersions: 1.54.9
+  author: Roadie
+  support: community
+  lifecycle: active
+  partOf:
+    - datadog
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        dynamicPlugins:
+          frontend:
+            roadiehq.backstage-plugin-datadog:
+              mountPoints:
+                - mountPoint: entity.page.monitoring/cards
+                  importName: EntityDatadogContent
+                  config:
+                    layout:
+                      gridColumn: 1 / -1
+                    if:
+                      allOf:
+                        - isDatadogAvailable

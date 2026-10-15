@@ -1,0 +1,32 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: backstage-community-plugin-scaffolder-backend-module-kubernetes
+  namespace: rhdh
+  title: "Scaffolder Backend Module Kubernetes"
+  links:
+    - url: https://red.ht/rhdh
+      title: Homepage
+    - url: https://github.com/backstage/community-plugins/issues
+      title: Bugs
+    - title: Source Code
+      url: https://github.com/backstage/community-plugins/tree/main/workspaces/scaffolder-backend-module-kubernetes
+  annotations:
+    backstage.io/source-location: url:https://github.com/backstage/community-plugins/tree/main/workspaces/scaffolder-backend-module-kubernetes
+  tags:
+    - software-templates
+spec:
+  packageName: "@backstage-community/plugin-scaffolder-backend-module-kubernetes"
+  # Tag: bs_1.54.9__2.21.0
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-scaffolder-backend-module-kubernetes@sha256:d9ba2d421fafc2beef3b58648b65f5c1f00a311d04f67d0358959fe9881cdb8d"
+  version: 2.21.0
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.54.9
+  author: Red Hat
+  support: generally-available
+  lifecycle: active
+  partOf:
+    - kubernetes-scaffolder-actions
+  appConfigNotRequired: true
+  appConfigExamples: []
