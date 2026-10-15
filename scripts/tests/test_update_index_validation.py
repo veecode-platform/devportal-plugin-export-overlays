@@ -11,6 +11,7 @@ and the `catalog-index/` and `plugin_builds/` trees are written directly, as if 
 steps had produced them. Only Step 5 runs for real.
 """
 
+import base64
 import json
 import os
 import subprocess
@@ -171,11 +172,17 @@ def run_update_index(root, *args, bindir=None):
     )
 
 
+READABLE_ANNOTATION = base64.b64encode(
+    json.dumps([{"plugin-a": {"name": "plugin-a"}}]).encode()
+).decode()
+
+
 def resolved(image, digest=DIGEST, **extra):
     return {
         "workspacePath": f"ws/plugins/{image}",
         "registryReference": f"{REGISTRY}/{image}@{digest}",
         "digest": digest,
+        "io.backstage.dynamic-packages": READABLE_ANNOTATION,
         **extra,
     }
 
