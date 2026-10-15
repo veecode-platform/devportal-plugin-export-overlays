@@ -6,42 +6,8 @@
 # exports and publishes it). Regenerate this list when a workspace is
 # enabled/disabled or a package is added/removed from an active workspace.
 #
-# Everything below is intentionally listed under `disabled:` (patched into
-# scripts/generateDynamicPluginsDefaultYaml.sh -- upstream's build_plugin_entry
-# emits `enabled:`, this fork's DPDY consumer contract requires the literal
-# `disabled: true` key, see ADR-005/ADR-006 and catalog-entities/Containerfile).
-# This index only declares canonical plugin versions for {{inherit}} to
-# resolve from CATALOG_INDEX_IMAGE; enabling a plugin for a given
-# tenant/operator stays their job, in their own dynamic-plugins.yaml.
-#
-# FACE-OWNED packages are deliberately excluded (not just disabled): the
-# VeeCode product face ships them baked into the devportal-core image
-# (dynamic-plugins.veecode.yaml), which is their canonical version source
-# (ADR-005/ADR-006 -- "face out of the index"). A same-level duplicate plugin
-# key between that baked file and this DPDY is a fatal InstallException at
-# RHDH 1.10 installer merge time regardless of disabled state, and a
-# selector-less disabled entry here silently drops the face entry instead.
-# Excluded workspaces: marketplace, veecode-homepage, veecode-theme (matches the
-# FACE_OWNED_IMAGES list this file replaces from the retired
-# scripts/generate-dpdy-index.sh). Excluded packages of other workspaces, 13 in
-# all, named by their quay.io/veecode repository:
-#   backstage-plugin-techdocs, backstage-plugin-techdocs-backend,
-#   backstage-plugin-techdocs-module-addons-contrib,
-#   backstage-plugin-notifications, backstage-plugin-notifications-backend,
-#   backstage-plugin-signals, backstage-plugin-signals-backend,
-#   backstage-community-plugin-rbac, backstage-community-plugin-tech-radar,
-#   backstage-community-plugin-tech-radar-backend,
-#   red-hat-developer-hub-backstage-plugin-global-header,
-#   red-hat-developer-hub-backstage-plugin-catalog-backend-module-extensions,
-#   red-hat-developer-hub-backstage-plugin-dynamic-home-page.
-# A package left out of this file gets no plugin_builds entry, so the generator
-# never rewrites its metadata: its tag-form dynamicArtifact (with upstream's
-# !selector) and its spec.version are typed by hand and must match a tag that
-# exists. scripts/tests/test_face_owned_packages.py fails when one of the 13
-# comes back here. Their Package *entities* are NOT excluded
-# here -- generateCatalogIndex.py copies workspaces/*/metadata/*.yaml into
-# catalog-entities/extensions/packages/ unfiltered, so the marketplace UI
-# still sees them; only their DPDY membership is withheld.
+# This index declares the canonical version of each plugin for {{inherit}} to
+# resolve from CATALOG_INDEX_IMAGE.
 #
 # vertigo-theme is intentionally NOT excluded, despite looking structurally
 # identical to veecode-theme (a tenant-specific baked theme plugin): the
@@ -51,7 +17,25 @@
 # theme version resolution in prod. Confirmed with the repo owner; this is
 # not an oversight, don't "fix" it later without checking that dependency.
 packages:
-  enabled: []
+  enabled:
+    - package: "@backstage-community/plugin-rbac"
+    - package: "@backstage-community/plugin-tech-radar"
+    - package: "@backstage-community/plugin-tech-radar-backend"
+    - package: "@backstage/plugin-notifications"
+    - package: "@backstage/plugin-notifications-backend"
+    - package: "@backstage/plugin-signals"
+    - package: "@backstage/plugin-signals-backend"
+    - package: "@backstage/plugin-techdocs"
+    - package: "@backstage/plugin-techdocs-backend"
+    - package: "@backstage/plugin-techdocs-module-addons-contrib"
+    - package: "@red-hat-developer-hub/backstage-plugin-catalog-backend-module-extensions"
+    - package: "@red-hat-developer-hub/backstage-plugin-global-header"
+    - package: "@veecode-platform/backstage-plugin-about"
+    - package: "@veecode-platform/backstage-plugin-about-backend"
+    - package: "@veecode-platform/plugin-veecode-homepage"
+    - package: "devportal-marketplace-backend"
+    - package: "devportal-marketplace-frontend-dynamic"
+    - package: "devportal-pending-changes-dynamic"
   disabled:
     - package: "@aws/amazon-ecs-plugin-for-backstage"
     - package: "@aws/amazon-ecs-plugin-for-backstage-backend"
@@ -118,6 +102,8 @@ packages:
     - package: "@backstage-community/plugin-topology"
     - package: "@backstage-community/search-backend-module-adr"
     - package: "@backstage/plugin-auth"
+    - package: "@backstage/plugin-catalog-backend-module-bitbucket-cloud"
+    - package: "@backstage/plugin-catalog-backend-module-bitbucket-server"
     - package: "@backstage/plugin-catalog-backend-module-github"
     - package: "@backstage/plugin-catalog-backend-module-github-org"
     - package: "@backstage/plugin-catalog-backend-module-gitlab"
@@ -129,6 +115,8 @@ packages:
     - package: "@backstage/plugin-kubernetes-backend"
     - package: "@backstage/plugin-mcp-actions-backend"
     - package: "@backstage/plugin-notifications-backend-module-email"
+    - package: "@backstage/plugin-scaffolder-backend-module-bitbucket-cloud"
+    - package: "@backstage/plugin-scaffolder-backend-module-bitbucket-server"
     - package: "@backstage/plugin-scaffolder-backend-module-gerrit"
     - package: "@backstage/plugin-scaffolder-backend-module-github"
     - package: "@backstage/plugin-scaffolder-backend-module-gitlab"
@@ -142,6 +130,7 @@ packages:
     - package: "@red-hat-developer-hub/backstage-plugin-app-integrations"
     - package: "@red-hat-developer-hub/backstage-plugin-bulk-import"
     - package: "@red-hat-developer-hub/backstage-plugin-bulk-import-backend"
+    - package: "@red-hat-developer-hub/backstage-plugin-dynamic-home-page"
     - package: "@red-hat-developer-hub/backstage-plugin-extensions"
     - package: "@red-hat-developer-hub/backstage-plugin-global-floating-action-button"
     - package: "@red-hat-developer-hub/backstage-plugin-homepage-backend"
@@ -171,5 +160,6 @@ packages:
     - package: "@veecode-platform/backstage-plugin-gitlab-pipelines-backend"
     - package: "@veecode-platform/backstage-plugin-kong-service-manager"
     - package: "@veecode-platform/backstage-plugin-kong-service-manager-backend"
+    - package: "@veecode-platform/backstage-plugin-scaffolder-field-catalog-prefill"
     - package: "@veecode-platform/plugin-aws-cost-insights"
     - package: "vertigo-platform-plugin-vertigo-theme"
