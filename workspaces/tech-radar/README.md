@@ -35,4 +35,4 @@ The workspace applies one patch, `patches/1-proxy-addr-2.0.8.patch`.
 
 ## Known gap
 
-The metadata's `apiFactories` names `TechRadarApi`. At this ref, `src/api.ts:41` exports `TechRadarApi` only as a TypeScript interface. Compilation erases it, so the built `PluginRoot` chunk has no runtime binding for it, and the portal cannot resolve the `apiFactories` entry. This workspace does not fix the gap.
+The default configuration no longer names `apiFactories`, because the face does not carry it. At this ref, `src/api.ts:41` exports `TechRadarApi` only as a TypeScript interface. Compilation erases it, so the built `PluginRoot` chunk has no runtime binding for it, and a configuration that names `TechRadarApi` in `apiFactories` cannot resolve it. This workspace does not fix the gap.

@@ -34,6 +34,8 @@ git merge upstream/main
 #       (see user-guide/05-version-updates.md for what these fields mean)
 #   - plugins-regexps: keep our scope list
 #   - .github/workflows/*: keep our org/registry references
+#   - scripts/validateCatalogIndex.py: keep the local decode_dynamic_packages. Upstream imports
+#     it from generatePluginBuildInfo.py, which needs requests; the sanity workflow installs only PyYAML.
 #   - workspaces/: new workspaces will appear — categorize as KEEP or DISABLE
 git push origin main
 ```

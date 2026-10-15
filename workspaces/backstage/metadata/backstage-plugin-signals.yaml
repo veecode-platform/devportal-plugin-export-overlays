@@ -26,9 +26,6 @@ spec:
   lifecycle: active
   partOf:
     - signals-frontend
-  appConfigExamples:
-    - title: Default configuration (Signals registers the client API; no routes)
-      content:
-        dynamicPlugins:
-          frontend:
-            backstage.plugin-signals: {}
+  # The factory default carries no config for this package; the portal registers it in app-config.dynamic-plugins.yaml.
+  appConfigNotRequired: true
+  appConfigExamples: []

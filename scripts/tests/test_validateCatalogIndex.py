@@ -7,6 +7,7 @@ reports everything is as useless as one that reports nothing, and only the negat
 tests catch the over-broad rule.
 """
 
+import base64
 import json
 import re
 from pathlib import Path
@@ -80,12 +81,18 @@ def write_index(
     return output_dir, plugin_builds_dir
 
 
+READABLE_ANNOTATION = base64.b64encode(
+    json.dumps([{"plugin-a": {"name": "plugin-a"}}]).encode()
+).decode()
+
+
 def resolved(image, digest=DIGEST, **extra):
     """A plugin_builds entry for an image whose registry lookup succeeded."""
     return {
         "workspacePath": f"ws/plugins/{image}",
         "registryReference": f"{REGISTRY}/{image}@{digest}",
         "digest": digest,
+        "io.backstage.dynamic-packages": READABLE_ANNOTATION,
         **extra,
     }
 
@@ -382,6 +389,31 @@ class TestRules:
             tmp_path, [{"package": f"oci://{REGISTRY}/plugin-a@{DIGEST}"}], builds={}
         )
         assert rules_of(result) == ["unknown-image"]
+
+    @pytest.mark.parametrize(
+        "annotation",
+        [
+            None,
+            base64.b64encode(b"[]").decode(),
+            "not base64 at all!",
+        ],
+        ids=["missing", "encoded-empty-list", "unreadable"],
+    )
+    def test_an_annotation_that_declares_no_packages_is_reported(
+        self, tmp_path, annotation
+    ):
+        """An image like this installs as a no-op, so it must fail the build."""
+        build = resolved("plugin-a")
+        if annotation is None:
+            del build["io.backstage.dynamic-packages"]
+        else:
+            build["io.backstage.dynamic-packages"] = annotation
+        result = run(
+            tmp_path,
+            [{"package": f"oci://{REGISTRY}/plugin-a@{DIGEST}"}],
+            builds={"plugin-a": build},
+        )
+        assert rules_of(result) == ["missing-annotation"]
 
     def test_the_ref_only_rules_fire_even_when_the_image_is_unknown(self, tmp_path):
         """Registry and pinning are properties of the REF, so they never depend on

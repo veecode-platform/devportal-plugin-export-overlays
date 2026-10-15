@@ -446,12 +446,47 @@ jobs:
             exit 1
           fi
 
-          DISABLED_COUNT=$(grep -c '^\s*disabled: true\s*$' "$DPDY" || true)
-          echo "Found $DISABLED_COUNT 'disabled: true' entries"
-          if [ "$DISABLED_COUNT" -ne "$PACKAGE_COUNT" ]; then
-            echo "ERROR: disabled:true count ($DISABLED_COUNT) does not match package count ($PACKAGE_COUNT)"
-            exit 1
-          fi
+          python3 - "$DPDY" default.packages.yaml <<'PY'
+          import glob
+          import re
+          import sys
+
+          import yaml
+
+          dpdy_path, packages_path = sys.argv[1], sys.argv[2]
+          repo_re = re.compile(r"^oci://quay\.io/veecode/([^:!@]+)")
+
+
+          def repo_of(ref):
+              match = repo_re.match(ref or "")
+              if not match:
+                  sys.exit(f"ERROR: not a quay.io/veecode reference: {ref!r}")
+              return match.group(1)
+
+
+          with open(packages_path, encoding="utf-8") as f:
+              packages = yaml.safe_load(f)["packages"]
+          enabled_names = [e["package"] for e in (packages.get("enabled") or [])]
+          expected = {}
+          for path in glob.glob("workspaces/*/metadata/*.yaml"):
+              with open(path, encoding="utf-8") as f:
+                  spec = (yaml.safe_load(f) or {}).get("spec") or {}
+              if spec.get("packageName") in enabled_names:
+                  expected[spec["packageName"]] = repo_of(spec.get("dynamicArtifact"))
+          unresolved = sorted(set(enabled_names) - set(expected))
+          if unresolved:
+              sys.exit(f"ERROR: packages.enabled entries without metadata: {unresolved}")
+
+          with open(dpdy_path, encoding="utf-8") as f:
+              plugins = yaml.safe_load(f)["plugins"]
+          no_flag = [p.get("package") for p in plugins if not isinstance(p.get("disabled"), bool)]
+          if no_flag:
+              sys.exit(f"ERROR: {len(no_flag)} entries have no boolean disabled key, first: {no_flag[0]}")
+          enabled = {repo_of(p["package"]) for p in plugins if p["disabled"] is False}
+          if enabled != set(expected.values()):
+              sys.exit(f"ERROR: disabled: false entries {sorted(enabled)} differ from packages.enabled {sorted(expected.values())}")
+          print(f"OK: {len(enabled)} enabled entries match packages.enabled; {len(plugins) - len(enabled)} entries are disabled: true")
+          PY
 
           # Fail-loud on unresolvable images: this is the exact guarantee the
           # retired generate-dpdy-index.sh enforced (its skopeo digest

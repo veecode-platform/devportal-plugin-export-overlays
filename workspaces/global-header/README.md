@@ -7,7 +7,7 @@ to the 3.x portal.
 
 | Module | Source file | Used by |
 | --- | --- | --- |
-| `PluginRoot` | `src/legacy.ts` | `mountPoints`: `GlobalHeader`, `CompanyLogo`, `SearchComponent`, `Spacer`, `HeaderIconButton`, `StarredDropdown`, `ApplicationLauncherDropdown`, `MenuItemLink`, `HelpDropdown`, `SupportButton`, `NotificationButton`, `Divider`, `ProfileDropdown`, `LogoutButton`; `translationResources`: `globalHeaderTranslations`, `globalHeaderTranslationRef` |
+| `PluginRoot` | `src/legacy.ts` | `mountPoints`: `GlobalHeader`, `SearchComponent`, `Spacer`, `HeaderIconButton`, `StarredDropdown`, `ApplicationLauncherDropdown`, `MenuItemLink`, `HelpDropdown`, `SupportButton`, `NotificationButton`, `Divider`, `ProfileDropdown`, `LogoutButton`; `translationResources`: `globalHeaderTranslations`, `globalHeaderTranslationRef` |
 
 The metadata names only `PluginRoot`, and `package.json` at this ref has no
 `scalprum` key, so the overlay has no `Legacy` or `Alpha` module.
