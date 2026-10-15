@@ -867,7 +867,7 @@
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:11238017a0e35ab42eda4bcdcd27f66565b1aeb7c32aa37d2d6b8e007a6edc98"
+          "digest": "sha256:94c72fc94259a3e4d58741a282b1745a0d2242755b346316e5ae11c4ee321026"
         },
         "dpdy": {
           "status": "pass"

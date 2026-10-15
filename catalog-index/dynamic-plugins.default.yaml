@@ -705,7 +705,7 @@ plugins:
                 seconds: 30
               timeout:
                 minutes: 10
-  - package: oci://quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions@sha256:11238017a0e35ab42eda4bcdcd27f66565b1aeb7c32aa37d2d6b8e007a6edc98
+  - package: oci://quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions@sha256:94c72fc94259a3e4d58741a282b1745a0d2242755b346316e5ae11c4ee321026
     disabled: true
     pluginConfig:
       integrations:

@@ -17,7 +17,7 @@ metadata:
 spec:
   packageName: "@backstage-community/plugin-search-backend-module-github-discussions"
   # Tag: bs_1.54.9__0.16.0
-  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions@sha256:11238017a0e35ab42eda4bcdcd27f66565b1aeb7c32aa37d2d6b8e007a6edc98"
+  dynamicArtifact: "oci://quay.io/veecode/backstage-community-plugin-search-backend-module-github-discussions@sha256:94c72fc94259a3e4d58741a282b1745a0d2242755b346316e5ae11c4ee321026"
   version: 0.16.0
   backstage:
     role: backend-plugin
