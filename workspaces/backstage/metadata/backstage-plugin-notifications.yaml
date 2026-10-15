@@ -33,11 +33,11 @@ spec:
           frontend:
             backstage.plugin-notifications:
               dynamicRoutes:
-                - importName: NotificationsPage
+                - path: /notifications
+                  importName: NotificationsPage
                   menuItem:
-                    config:
-                      props:
-                        titleCounterEnabled: true
-                        webNotificationsEnabled: false
-                    importName: NotificationsSidebarItem
-                  path: /notifications
+                    icon: notifications
+                    text: Notifications
+              menuItems:
+                notifications:
+                  priority: 80

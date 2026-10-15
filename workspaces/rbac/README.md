@@ -6,7 +6,7 @@
 | Module | Source file | Used by |
 | --- | --- | --- |
 | `PluginRoot` | `src/legacy/index.ts` | `appIcons`: `RbacIcon`; `dynamicRoutes`: `RbacPage` |
-| `Alpha` | `src/alpha/translations/index.ts` | `translationResources`: `rbacTranslations`, `rbacTranslationRef` |
+| `Alpha` | `src/alpha/translations/index.ts` | none in the default configuration (the face does not carry `translationResources`) |
 
 ## Why it exists
 

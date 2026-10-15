@@ -41,3 +41,4 @@ spec:
                 marketplace:
                   title: Marketplace
                   icon: pluginsIcon
+                  priority: 72

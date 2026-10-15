@@ -24,10 +24,8 @@ spec:
   author: Red Hat
   support: tech-preview
   lifecycle: active
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        notifications:
-          concurrencyLimit: 10
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []
   partOf:
     - notifications
