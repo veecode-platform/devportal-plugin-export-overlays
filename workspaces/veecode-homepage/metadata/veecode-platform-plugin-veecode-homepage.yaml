@@ -25,6 +25,9 @@ spec:
         dynamicPlugins:
           frontend:
             veecode-platform.plugin-veecode-homepage:
+              translationResources:
+                - importName: homepageTranslations
+                  ref: homepageTranslationRef
               dynamicRoutes:
                 - path: /
                   importName: VeecodeHomepagePage
