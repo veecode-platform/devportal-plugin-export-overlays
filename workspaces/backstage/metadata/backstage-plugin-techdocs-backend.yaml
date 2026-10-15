@@ -26,12 +26,6 @@ spec:
   lifecycle: active
   partOf:
     - techdocs
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        techdocs:
-          builder: local
-          generator:
-            runIn: local
-          publisher:
-            type: local
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []

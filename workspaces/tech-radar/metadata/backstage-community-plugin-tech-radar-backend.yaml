@@ -26,8 +26,6 @@ spec:
   lifecycle: active
   partOf:
     - tech-radar
-  appConfigExamples:
-    - title: Default configuration
-      content:
-        techRadar:
-          url: ${TECH_RADAR_DATA_URL}
+  # The factory default carries no config for this package.
+  appConfigNotRequired: true
+  appConfigExamples: []
