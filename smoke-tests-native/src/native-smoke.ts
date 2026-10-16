@@ -63,6 +63,7 @@ import { setTimeout } from "node:timers/promises";
 import { parseArgs } from "node:util";
 import { createRequire } from "node:module";
 import { startTestBackend, mockServices } from "@backstage/backend-test-utils";
+import { dynamicPluginsFeatureLoader } from "@backstage/backend-dynamic-feature-service";
 import catalogPlugin from "@backstage/plugin-catalog-backend";
 import scaffolderPlugin from "@backstage/plugin-scaffolder-backend";
 import searchPlugin from "@backstage/plugin-search-backend";
@@ -148,7 +149,13 @@ const CLI_BIN = join(
 // mock already passed below — the earlier note here said otherwise, and booting it proved
 // that wrong. Without it, a module attaching to the catalog's extension points cannot be
 // loaded at all, so a wiring failure in one shipped as "installed, artifact valid".
-const coreFeatures = [catalogPlugin, scaffolderPlugin, searchPlugin];
+const coreFeatures = [
+  catalogPlugin,
+  scaffolderPlugin,
+  searchPlugin,
+  // DevPortal registers this service loader for dynamic plugins that depend on core.dynamicplugins.
+  dynamicPluginsFeatureLoader(),
+];
 
 // execFileSync (args array, no shell) so workspace names / OCI refs can never be
 // interpolated into a shell command as this grows beyond a single fixed plugin.
@@ -672,7 +679,10 @@ async function main(): Promise<number> {
         `  ${record.packageName}: boot excluded by ${record.patternSource} (${record.ticket})`,
       );
     }
-    const { loaded, errors: loadErrors } = loadBackendPlugins(bootable);
+    const { loaded, errors: loadErrors } = await loadBackendPlugins(bootable, [
+      ...manifest.backend,
+      ...manifest.frontend,
+    ]);
     const start = await startBackend(loaded, appConfig);
     const backendBundles = validateBackends(manifest.backend);
     const frontend = validateFrontends(manifest.frontend);

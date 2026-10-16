@@ -10,11 +10,13 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import {
+  loadBackendPlugins,
   validateBackendBundle,
   validateFrontendBundle,
   type PluginEntry,
 } from "./loader";
-import { describeNfsShortfall } from "./harness-logic";
+import { computeStatus, describeNfsShortfall } from "./harness-logic";
+import { patchModuleResolution } from "./module-resolution";
 import { tempDir } from "./test-support";
 
 // Build a fake extracted-plugin dir with the given bundle artifacts. `contents`
@@ -39,6 +41,121 @@ function makePlugin(
     role,
   };
 }
+
+function makeBackendPlugin(
+  root: string,
+  dirName: string,
+  name: string,
+  entryPoint: string,
+  dependencies: Record<string, string> = {},
+): PluginEntry {
+  const dir = join(root, dirName);
+  mkdirSync(join(dir, "dist"), { recursive: true });
+  writeFileSync(
+    join(dir, "package.json"),
+    JSON.stringify({
+      name,
+      version: "1.0.0",
+      main: "dist/index.cjs.js",
+      backstage: { role: "backend-plugin" },
+      dependencies,
+    }),
+  );
+  writeFileSync(join(dir, "dist/index.cjs.js"), entryPoint);
+  return { name, version: "1.0.0", dirName, path: dir, role: "backend" };
+}
+
+test("wrapped package resolution works and a real missing module stays fail-load", async () => {
+  const root = tempDir(join(tmpdir(), "dynamic-loader-"));
+  const dynamic = makeBackendPlugin(
+    root,
+    "dynamic-wrapper",
+    "@test/static-plugin-dynamic",
+    [
+      'const { resolvePackagePath } = require("@backstage/backend-plugin-api");',
+      'module.exports.default = { packagePath: resolvePackagePath("@test/static-plugin") };',
+    ].join("\n"),
+    { "@test/static-plugin": "1.0.0" },
+  );
+
+  const custom = makeBackendPlugin(
+    root,
+    "custom-wrapper",
+    "@test/static-plugin-wrapper",
+    [
+      'const { resolvePackagePath } = require("@backstage/backend-plugin-api");',
+      'module.exports.default = { packagePath: resolvePackagePath("@test/custom-static-plugin") };',
+    ].join("\n"),
+    { "@test/custom-static-plugin": "1.0.0" },
+  );
+  const dynamicPackagePath = join(
+    dynamic.path,
+    "node_modules",
+    "@test",
+    "static-plugin",
+  );
+  mkdirSync(dynamicPackagePath, { recursive: true });
+  writeFileSync(
+    join(dynamicPackagePath, "package.json"),
+    JSON.stringify({ name: "@test/static-plugin", version: "1.0.0" }),
+  );
+  const customPackagePath = join(
+    custom.path,
+    "node_modules",
+    "@test",
+    "custom-static-plugin",
+  );
+  mkdirSync(customPackagePath, { recursive: true });
+  writeFileSync(
+    join(customPackagePath, "package.json"),
+    JSON.stringify({ name: "@test/custom-static-plugin", version: "1.0.0" }),
+  );
+  const broken = makeBackendPlugin(
+    root,
+    "broken",
+    "@test/missing-host-dependency-dynamic",
+    'require("@luna-sanity/missing-host-module"); module.exports.default = {};',
+  );
+
+  patchModuleResolution(join(process.cwd(), "node_modules"));
+  const { loaded, errors } = await loadBackendPlugins([
+    dynamic,
+    custom,
+    broken,
+  ]);
+  assert.deepEqual(
+    loaded.map(({ plugin }) => plugin.name),
+    [dynamic.name, custom.name],
+  );
+  assert.equal(
+    (loaded[0].feature as unknown as { packagePath: string }).packagePath,
+    dynamic.path,
+  );
+  assert.equal(
+    (loaded[1].feature as unknown as { packagePath: string }).packagePath,
+    customPackagePath,
+  );
+  assert.deepEqual(
+    errors.map(({ plugin }) => plugin.name),
+    [broken.name],
+  );
+  assert.match(errors[0].error, /@luna-sanity\/missing-host-module/);
+
+  const status = computeStatus(errors, true, loaded.length, [], 0);
+  assert.equal(status, "fail-load");
+  const report = {
+    mode: "injected-loader-fixture",
+    status,
+    backend: {
+      total: 3,
+      loaded: loaded.map(({ plugin }) => plugin.name),
+      skipped: [],
+      errors: errors.map(({ plugin, error }) => ({ name: plugin.name, error })),
+    },
+  };
+  const reportPath = process.env.P3_LUNA_INJECTED_REPORT;
+  if (reportPath) writeFileSync(reportPath, JSON.stringify(report, null, 2));
+});
 
 // The shape the remotes router requires, as observed on a real published artifact
 // (backstage-community-plugin-acr:bs_1.52.0__1.27.0).
