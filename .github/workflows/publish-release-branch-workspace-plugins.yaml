@@ -183,7 +183,7 @@ jobs:
     # as the bundle export already does. `bs_<version>` stays untouched until a real
     # release publishes it, and a candidate index is coherent by construction: it is
     # assembled from `catalog-entities/` at the very commit under test.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Publish Catalog Index
     needs:
       - export
