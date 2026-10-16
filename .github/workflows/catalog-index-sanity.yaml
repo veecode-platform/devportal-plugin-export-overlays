@@ -36,7 +36,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   # Never cancel one already pulling — a manual dispatch would kill an in-flight
-  # nightly and lose its artifacts. Matches community-plugin-sweep.yaml.
+  # nightly and lose its artifacts.
   cancel-in-progress: false
 
 permissions:
