@@ -119,6 +119,7 @@ The packages under `packages.enabled` in `default.packages.yaml` are the factory
 
 - Each factory plugin's `pluginConfig` comes from its package metadata (`spec.appConfigExamples[0].content`), so the plugin and its configuration ship together.
 - The `Validate catalog index` step of `publish-catalog-index` (in `.github/workflows/publish-release-branch-workspace-plugins.yaml`) fails unless the `disabled: false` entries are exactly the `packages.enabled` list, each resolved to its `quay.io/veecode` repository, and every other entry is `disabled: true`.
+- The `Check face contract of enabled packages` step that follows it fails unless each enabled entry is a pathless digest ref (`oci://quay.io/veecode/<repo>@sha256:<digest>`, no `!path`), `skopeo inspect --raw` can read that digest, and its `io.backstage.dynamic-packages` annotation lists exactly one plugin path. It is `validateCatalogIndex.py --face-contract` (rules `face-ref-form`, `face-unresolved`, `face-annotation`). It runs before the image is built or pushed.
 - The product image must not also declare a factory plugin. RHDH's installer fails with `Duplicate plugin configuration` when an enabled pathless index entry and an image entry name the same plugin. ADR-015 describes the image side.
 
 ADR-015, "Factory plugins ship enabled in the plugin catalog index", is a proposal. It lives at `docs/adr/015-factory-plugins-enabled-in-the-catalog-index.md` in `veecode-platform/devportal-planning`, on branch `adr/face-in-index`, and is not yet on that repository's `main`.
