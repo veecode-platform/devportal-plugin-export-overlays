@@ -6,8 +6,11 @@
 #
 # Reads what update-index.sh just wrote — dynamic-plugins.default.yaml, index.json,
 # plugin_builds/ — and makes NO network calls, so it is cheap enough to gate every
-# generation. The expensive install-and-boot half is the catalog-index sanity check
-# (`yarn smoke --catalog-index`), which only runs on a schedule.
+# generation. The one exception is --face-contract, which inspects each enabled digest
+# with skopeo (ADR-015 C5); the publish gate passes it, the generator does not. Upstream
+# rhdh-plugin-export-overlays has no face contract and stays offline, so that is the one
+# divergence from it. The expensive install-and-boot half is the catalog-index sanity
+# check (`yarn smoke --catalog-index`), which only runs on a schedule.
 #
 # It exists because the generator is forgiving: when a plugin's image is not found it
 # logs a warning and carries on, so the index can ship an oci:// ref that was never
@@ -21,7 +24,10 @@ import argparse
 import base64
 import json
 import re
+import subprocess
 import sys
+import time
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import NamedTuple
@@ -56,6 +62,9 @@ class Rule(NamedTuple):
     #: was skipped wholesale, including a rule that needs no build metadata at all,
     #: and the skipped list never said so.
     needs_builds: bool = False
+    #: True when the rule runs only under --face-contract, the one mode that asks the
+    #: registry. Off by default so a normal run keeps reporting exactly the rules it always did.
+    needs_face_contract: bool = False
 
 
 # Every rule this validator can report. Severities live in one table so `--list-rules`
@@ -124,6 +133,25 @@ RULES: dict[str, Rule] = {
         "annotation (missing, empty, or unreadable); always fails the build",
         needs_builds=True,
     ),
+    "face-ref-form": Rule(
+        ERROR,
+        "an enabled entry is not a pathless digest ref, oci://quay.io/veecode/<repo>"
+        "@sha256:<64 hex> (ADR-015 C5): a !path selector or a tag fails every boot "
+        "that reads the index",
+        needs_face_contract=True,
+    ),
+    "face-unresolved": Rule(
+        ERROR,
+        "an enabled entry's digest cannot be read as one image manifest with "
+        "skopeo inspect --raw (ADR-015 C5)",
+        needs_face_contract=True,
+    ),
+    "face-annotation": Rule(
+        ERROR,
+        "an enabled entry's io.backstage.dynamic-packages annotation does not list "
+        "exactly one plugin path (ADR-015 C5): zero or several fail the install",
+        needs_face_contract=True,
+    ),
 }
 
 #: The rules `--no-build-metadata` cannot run, derived rather than listed.
@@ -137,6 +165,15 @@ DYNAMIC_PACKAGES_ANNOTATION = "io.backstage.dynamic-packages"
 # because `not-digest-pinned` and `digest-mismatch` both key off `ref.digest`: a
 # truncated or malformed digest must not read as "pinned".
 DIGEST_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
+
+# ADR-015 C5 face contract. Anchored on the whole string, and matched before any `!path`
+# is stripped, so a selector or a tag cannot slip through as a pinned ref.
+FACE_REF_RE = re.compile(r"^oci://quay\.io/veecode/[^:!@/]+@sha256:[0-9a-f]{64}$")
+
+#: Manifest annotations of `repo@digest`, or None when that manifest cannot be read.
+FaceInspector = Callable[[str], dict[str, str] | None]
+
+SKOPEO_RETRY_WAITS = (5, 15)
 
 # A ticket-bearing comment opening an allowlist block, e.g.
 # `# TODO(RHDHBUGS-3515): image is not published yet`. Mirrors the grammar of
@@ -732,17 +769,131 @@ def _check_index_entry(
     ]
 
 
+def face_plugin_paths(annotation: str | None) -> list[str] | None:
+    """The plugin paths an io.backstage.dynamic-packages annotation lists, or None if unreadable.
+
+    The annotation decodes to a JSON list of objects keyed by plugin path, so the paths are
+    the keys across those objects. `W10=` decodes to `[]`: zero paths, not unreadable.
+    """
+    packages = decode_dynamic_packages(annotation)
+    if packages is None or not all(isinstance(package, dict) for package in packages):
+        return None
+    return [path for package in packages for path in package]
+
+
+def skopeo_manifest_annotations(
+    reference: str, sleep: Callable[[float], None] = time.sleep
+) -> dict[str, str] | None:
+    """Manifest annotations of `reference`, read anonymously with skopeo, or None.
+
+    The annotation sits on the manifest, not in the image config Labels, so `inspect`
+    without `--raw` never shows it. An image index has no single manifest to read, so it
+    is None, the same as a failed read.
+    """
+    for wait in (0, *SKOPEO_RETRY_WAITS):
+        if wait:
+            sleep(wait)
+        try:
+            proc = subprocess.run(
+                ["skopeo", "--command-timeout", "60s", "inspect", "--raw", "--no-creds",
+                 f"docker://{reference}"],
+                capture_output=True, text=True, timeout=90, check=False,
+            )
+        except subprocess.TimeoutExpired:
+            continue
+        except OSError:
+            return None
+        if proc.returncode != 0:
+            continue
+        try:
+            manifest = json.loads(proc.stdout)
+        except json.JSONDecodeError:
+            return None
+        if not isinstance(manifest, dict) or "manifests" in manifest:
+            return None
+        annotations = manifest.get("annotations") or {}
+        return annotations if isinstance(annotations, dict) else None
+    return None
+
+
+def check_face_contract(entries: list[DpdyEntry], inspect: FaceInspector) -> list[Finding]:
+    """ADR-015 C5 for every enabled entry: a pathless digest ref whose image lists one path.
+
+    Disabled entries are not held to the contract, because they never reach path detection.
+    The ref form is judged on the string as written, before parse_oci_ref strips `!path`,
+    or the selector would be invisible here.
+    """
+    findings: list[Finding] = []
+    for entry in entries:
+        if not entry.enabled:
+            continue
+        image = _image_of(entry.package)
+        if not FACE_REF_RE.match(entry.package):
+            findings.append(
+                Finding(
+                    rule="face-ref-form",
+                    message=(
+                        f"plugins[{entry.position}]: '{entry.package}' is not a pathless "
+                        f"digest ref (expected {OCI_PREFIX}quay.io/veecode/<repo>"
+                        f"@sha256:<64 hex>)"
+                    ),
+                    image=image,
+                )
+            )
+            continue
+        reference = entry.package.removeprefix(OCI_PREFIX)
+        annotations = inspect(reference)
+        if annotations is None:
+            findings.append(
+                Finding(
+                    rule="face-unresolved",
+                    message=(
+                        f"'{image}': skopeo could not read {reference} as one image manifest"
+                    ),
+                    image=image,
+                )
+            )
+            continue
+        paths = face_plugin_paths(annotations.get(DYNAMIC_PACKAGES_ANNOTATION))
+        if paths is None:
+            findings.append(
+                Finding(
+                    rule="face-annotation",
+                    message=(
+                        f"'{image}' has an unreadable {DYNAMIC_PACKAGES_ANNOTATION} annotation"
+                    ),
+                    image=image,
+                )
+            )
+        elif len(paths) != 1:
+            findings.append(
+                Finding(
+                    rule="face-annotation",
+                    message=(
+                        f"'{image}' lists {len(paths)} plugin path(s) in "
+                        f"{DYNAMIC_PACKAGES_ANNOTATION}, expected exactly 1"
+                    ),
+                    image=image,
+                )
+            )
+    return findings
+
+
 def validate(
     output_dir: Path,
     plugin_builds_dir: Path,
     allowed_registries: set[str],
     allowlist: list[AllowlistEntry],
     has_build_metadata: bool,
+    face_inspect: FaceInspector | None = None,
 ) -> ValidationResult:
     """Run every rule and return the surviving findings plus run statistics.
 
     `has_build_metadata=False` drops the rules RULES_NEEDING_BUILDS names, for a published
     index that ships without the plugin_builds/ tree that produced it.
+
+    `face_inspect` switches on the ADR-015 C5 face contract for the enabled entries. Left as
+    None, the run makes no registry call and the face rules do not fire.
     """
     entries = load_dpdy_entries(output_dir / "dynamic-plugins.default.yaml")
     builds = load_plugin_builds(plugin_builds_dir) if has_build_metadata else {}
@@ -752,6 +903,8 @@ def validate(
         entries, builds, allowed_registries, has_build_metadata
     )
     findings.extend(check_index_json(index, by_image, builds, has_build_metadata))
+    if face_inspect is not None:
+        findings.extend(check_face_contract(entries, face_inspect))
 
     kept, suppressed = apply_allowlist(findings, allowlist)
 
@@ -921,7 +1074,7 @@ Usage: python3 validateCatalogIndex.py \\
     -r|--registry BASE \\
     [-cr|--community-registry BASE] \\
     [-a|--allowlist FILE] \\
-    [--report-file FILE] [--json FILE] [--strict] [--list-rules] [--debug]
+    [--report-file FILE] [--json FILE] [--strict] [--face-contract] [--list-rules] [--debug]
 
 Examples:
 
@@ -944,6 +1097,14 @@ Examples:
         --output-dir /tmp/published \\
         --registry quay.io/rhdh \\
         --no-build-metadata
+
+    # Publish gate: the ADR-015 C5 face contract on every enabled entry (inspects the
+    # registry with skopeo, so it is not part of the offline generator run)
+    python3 validateCatalogIndex.py \\
+        --output-dir catalog-index \\
+        --plugin-builds-dir plugin_builds \\
+        --registry quay.io/veecode \\
+        --face-contract
 """
 
     parser = argparse.ArgumentParser(
@@ -997,6 +1158,12 @@ Examples:
              "metadata that produced it.",
     )
     parser.add_argument(
+        "--face-contract", action="store_true",
+        help="Check the ADR-015 C5 face contract on every enabled entry: a pathless digest "
+             "ref, readable with skopeo, whose image lists exactly one plugin path. "
+             "Inspects the registry, so only the publish gate passes it.",
+    )
+    parser.add_argument(
         "--list-rules", action="store_true",
         help="Print every rule id with its severity and meaning, then exit",
     )
@@ -1008,6 +1175,8 @@ Examples:
     if args.list_rules:
         for rule, spec in sorted(RULES.items()):
             needs = " (needs plugin_builds/)" if spec.needs_builds else ""
+            if spec.needs_face_contract:
+                needs = " (needs --face-contract)"
             print(f"{rule:24} {spec.severity:8} {spec.description}{needs}")
         return 0
 
@@ -1039,6 +1208,7 @@ Examples:
             allowed,
             allowlist,
             has_build_metadata=not args.no_build_metadata,
+            face_inspect=skopeo_manifest_annotations if args.face_contract else None,
         )
     except (ValueError, OSError, yaml.YAMLError) as exc:
         log_error(f"Catalog index validation could not run: {exc}")

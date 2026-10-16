@@ -9,7 +9,10 @@ tests catch the over-broad rule.
 
 import base64
 import json
+import os
 import re
+import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -23,6 +26,7 @@ from validateCatalogIndex import (
     AllowlistEntry,
     Finding,
     apply_allowlist,
+    face_plugin_paths,
     load_allowlist,
     load_dpdy_entries,
     load_plugin_builds,
@@ -30,6 +34,7 @@ from validateCatalogIndex import (
     parse_oci_ref,
     record_in_report,
     render,
+    skopeo_manifest_annotations,
     to_json,
     validate,
     ValidationResult,
@@ -918,6 +923,255 @@ class TestRecordInReport:
         )
         assert not report_file.exists()
         assert list(tmp_path.iterdir()) == []
+
+
+# ---------------------------------------------------------------------------
+# ADR-015 C5 face contract (--face-contract)
+# ---------------------------------------------------------------------------
+FACE_IMAGE = "quay.io/veecode/plugin-a"
+FACE_REFERENCE = f"{FACE_IMAGE}@{DIGEST}"
+
+
+def annotation_of(*paths):
+    """A dynamic-packages annotation with one object per path, as the registry stores it."""
+    listed = [{path: {"name": path}} for path in paths]
+    return base64.b64encode(json.dumps(listed).encode()).decode()
+
+
+def enabled(package):
+    return {"package": package, "disabled": False}
+
+
+def fake_inspector(answers):
+    """A FaceInspector that answers from `answers` and records each reference it is asked."""
+    asked = []
+
+    def inspect(reference):
+        asked.append(reference)
+        return answers.get(reference)
+
+    return inspect, asked
+
+
+def run_face(tmp_path, packages, inspect):
+    """The face contract alone: no build metadata, so only the face rules can fire."""
+    output_dir, plugin_builds_dir = write_index(tmp_path, packages)
+    return validate(
+        output_dir,
+        plugin_builds_dir,
+        {"quay.io/veecode", "quay.io/rhdh"},
+        [],
+        has_build_metadata=False,
+        face_inspect=inspect,
+    )
+
+
+class TestFacePluginPaths:
+    @pytest.mark.parametrize(
+        "annotation, paths",
+        [
+            (annotation_of("plugin-a"), ["plugin-a"]),
+            (annotation_of("plugin-a", "plugin-b"), ["plugin-a", "plugin-b"]),
+            ("W10=", []),
+            (None, []),
+            ("not base64!", None),
+            (base64.b64encode(b'{"plugin-a": {}}').decode(), None),
+            (base64.b64encode(b'["plugin-a"]').decode(), None),
+        ],
+    )
+    def test_counts_the_keys_across_the_listed_objects(self, annotation, paths):
+        assert face_plugin_paths(annotation) == paths
+
+
+class TestFaceContract:
+    """ADR-015 C5: each enabled entry is a pathless digest ref, readable, listing one path.
+
+    Every clause has a passing case and a failing case. The inspector is a fake, so no test
+    reaches the registry.
+    """
+
+    def test_a_conforming_entry_passes(self, tmp_path):
+        inspect, asked = fake_inspector(
+            {FACE_REFERENCE: {"io.backstage.dynamic-packages": annotation_of("plugin-a")}}
+        )
+        result = run_face(tmp_path, [enabled(f"oci://{FACE_REFERENCE}")], inspect)
+        assert rules_of(result) == []
+        assert asked == [FACE_REFERENCE]
+
+    @pytest.mark.parametrize(
+        "package",
+        [
+            f"oci://{FACE_REFERENCE}!plugin-a",
+            f"oci://{FACE_IMAGE}:1.0.0",
+            f"oci://{FACE_IMAGE}:1.0.0@{DIGEST}",
+            f"oci://quay.io/rhdh/plugin-a@{DIGEST}",
+            "./dynamic-plugins/dist/plugin-a",
+        ],
+    )
+    def test_a_ref_that_is_not_a_pathless_digest_fails_and_is_never_inspected(
+        self, tmp_path, package
+    ):
+        inspect, asked = fake_inspector({})
+        result = run_face(tmp_path, [enabled(package)], inspect)
+        assert "face-ref-form" in rules_of(result)
+        assert asked == []
+
+    def test_a_digest_skopeo_cannot_read_is_unresolved(self, tmp_path):
+        inspect, asked = fake_inspector({})
+        result = run_face(tmp_path, [enabled(f"oci://{FACE_REFERENCE}")], inspect)
+        assert rules_of(result) == ["face-unresolved"]
+        assert asked == [FACE_REFERENCE]
+
+    @pytest.mark.parametrize(
+        "annotations",
+        [
+            {},
+            {"io.backstage.dynamic-packages": "W10="},
+            {"io.backstage.dynamic-packages": annotation_of("plugin-a", "plugin-b")},
+            {
+                "io.backstage.dynamic-packages": base64.b64encode(
+                    json.dumps([{"plugin-a": {}, "plugin-b": {}}]).encode()
+                ).decode()
+            },
+            {"io.backstage.dynamic-packages": "not base64!"},
+            {"io.backstage.dynamic-packages": base64.b64encode(b'{"plugin-a": {}}').decode()},
+        ],
+    )
+    def test_an_annotation_that_does_not_list_exactly_one_path_fails(self, tmp_path, annotations):
+        inspect, _ = fake_inspector({FACE_REFERENCE: annotations})
+        result = run_face(tmp_path, [enabled(f"oci://{FACE_REFERENCE}")], inspect)
+        assert rules_of(result) == ["face-annotation"]
+
+    def test_a_disabled_entry_is_not_held_to_the_contract(self, tmp_path):
+        inspect, asked = fake_inspector({})
+        result = run_face(
+            tmp_path, [{"package": f"oci://{FACE_REFERENCE}!plugin-a", "disabled": True}], inspect
+        )
+        assert rules_of(result) == []
+        assert asked == []
+
+    def test_without_face_inspect_the_contract_does_not_run(self, tmp_path):
+        output_dir, plugin_builds_dir = write_index(
+            tmp_path, [enabled(f"oci://{FACE_REFERENCE}!plugin-a")]
+        )
+        result = validate(
+            output_dir, plugin_builds_dir, {"quay.io/veecode"}, [], has_build_metadata=False
+        )
+        assert not {"face-ref-form", "face-unresolved", "face-annotation"} & set(rules_of(result))
+
+
+@pytest.fixture
+def skopeo_stub(tmp_path, monkeypatch):
+    """Puts a skopeo stand-in first on PATH. Call it with the answer text and exit code.
+
+    The stand-in logs its arguments to the returned file, so a test can check the exact
+    command the wrapper runs.
+    """
+    log = tmp_path / "skopeo.log"
+    answer = tmp_path / "skopeo.answer"
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    script = bin_dir / "skopeo"
+    script.write_text(
+        "#!/bin/sh\n"
+        'echo "$@" >> "$SKOPEO_LOG"\n'
+        'cat "$SKOPEO_ANSWER"\n'
+        'exit "$(cat "$SKOPEO_ANSWER.exit")"\n'
+    )
+    script.chmod(script.stat().st_mode | stat.S_IEXEC)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    monkeypatch.setenv("SKOPEO_LOG", str(log))
+    monkeypatch.setenv("SKOPEO_ANSWER", str(answer))
+
+    def answer_with(text, exit_code=0):
+        answer.write_text(text)
+        (tmp_path / "skopeo.answer.exit").write_text(str(exit_code))
+        return log
+
+    return answer_with
+
+
+def no_wait(seconds):
+    pass
+
+
+class TestSkopeoManifestAnnotations:
+    def test_reads_the_manifest_annotations_with_an_anonymous_raw_inspect(self, skopeo_stub):
+        manifest = {"annotations": {"io.backstage.dynamic-packages": annotation_of("plugin-a")}}
+        log = skopeo_stub(json.dumps(manifest))
+        assert skopeo_manifest_annotations(FACE_REFERENCE) == manifest["annotations"]
+        assert log.read_text().strip() == (
+            f"--command-timeout 60s inspect --raw --no-creds docker://{FACE_REFERENCE}"
+        )
+
+    def test_a_manifest_without_annotations_reads_as_none(self, skopeo_stub):
+        skopeo_stub(json.dumps({"schemaVersion": 2}))
+        assert skopeo_manifest_annotations(FACE_REFERENCE) == {}
+
+    def test_an_image_index_is_unreadable(self, skopeo_stub):
+        skopeo_stub(json.dumps({"manifests": [{"digest": DIGEST}]}))
+        assert skopeo_manifest_annotations(FACE_REFERENCE) is None
+
+    def test_a_failed_inspect_is_unreadable(self, skopeo_stub):
+        skopeo_stub("", exit_code=1)
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=no_wait) is None
+
+    def test_a_transient_failure_then_success_returns_the_annotations(self, skopeo_stub):
+        manifest = {"annotations": {"io.backstage.dynamic-packages": annotation_of("plugin-a")}}
+        log = skopeo_stub("", exit_code=1)
+
+        def registry_recovers_during_the_wait(seconds):
+            skopeo_stub(json.dumps(manifest))
+
+        annotations = skopeo_manifest_annotations(
+            FACE_REFERENCE, sleep=registry_recovers_during_the_wait
+        )
+        assert annotations == manifest["annotations"]
+        assert len(log.read_text().splitlines()) == 2
+
+    def test_three_failures_are_unreadable_after_three_reads_with_backoff(self, skopeo_stub):
+        log = skopeo_stub("", exit_code=1)
+        waits = []
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=waits.append) is None
+        assert len(log.read_text().splitlines()) == 3
+        assert waits == [5, 15]
+
+    def test_a_timeout_is_retried_like_a_failed_inspect(self, monkeypatch):
+        calls = []
+
+        def hangs(*args, **kwargs):
+            calls.append(args)
+            raise subprocess.TimeoutExpired(args[0], kwargs["timeout"])
+
+        monkeypatch.setattr(subprocess, "run", hangs)
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=no_wait) is None
+        assert len(calls) == 3
+
+    def test_a_manifest_of_the_wrong_shape_is_not_retried(self, skopeo_stub):
+        log = skopeo_stub(json.dumps({"manifests": [{"digest": DIGEST}]}))
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=no_wait) is None
+        assert len(log.read_text().splitlines()) == 1
+
+    def test_an_answer_that_is_not_json_is_unreadable(self, skopeo_stub):
+        skopeo_stub("not json")
+        assert skopeo_manifest_annotations(FACE_REFERENCE) is None
+
+    def test_a_missing_skopeo_is_unreadable(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("PATH", str(tmp_path))
+        assert skopeo_manifest_annotations(FACE_REFERENCE) is None
+
+    def test_a_missing_skopeo_is_not_retried(self, monkeypatch):
+        calls = []
+
+        def missing(*args, **kwargs):
+            calls.append(args)
+            raise FileNotFoundError("skopeo")
+
+        monkeypatch.setattr(subprocess, "run", missing)
+        waits = []
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=waits.append) is None
+        assert len(calls) == 1
+        assert waits == []
 
 
 # ---------------------------------------------------------------------------

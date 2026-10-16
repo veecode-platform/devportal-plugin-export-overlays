@@ -511,6 +511,19 @@ jobs:
             fi
           fi
 
+      - name: Check face contract of enabled packages
+        # ADR-015 C5: each enabled entry must be a pathless digest ref whose image lists exactly
+        # one plugin path. Any other shape fails every boot that reads the index. The check
+        # inspects each enabled digest with skopeo, so it runs here, before the image is built
+        # or anything is pushed. The build-metadata rules already ran in "Generate catalog
+        # index" on this same tree, so this step runs the face rules alone.
+        run: |
+          python3 scripts/validateCatalogIndex.py \
+            --output-dir catalog-index \
+            --registry quay.io/veecode \
+            --no-build-metadata \
+            --face-contract
+
       - name: Build OCI image
         run: |
           podman build -t plugin-catalog-index -f catalog-entities/Containerfile catalog-index
