@@ -369,7 +369,7 @@ image).
 | --------------------------------- | -------------------------------------------------------------------------------- |
 | All community packages            | OCI install + dynamic-plugin layout validation                                   |
 | Community backend packages        | real boot via `startTestBackend`                                                 |
-| Catalog-extending backend modules | install + bundle layout, no boot — see `plugin-sweep-excludes.txt` (RHIDP-16017) |
+| Catalog-extending backend modules | install + bundle layout; a boot exclusion, when one is needed, goes in `plugin-sweep-excludes.txt` |
 | Community frontend packages       | bundle-layout validation only                                                    |
 
 **This is breadth, not depth.** Frontend plugins get no UI render — that is RHIDP-16009,
@@ -382,9 +382,8 @@ valid.
 
 Every run records which system each frontend bundle ships (`frontend.bundles[].systems`),
 and `yarn aggregate` rolls that up into legacy-only / new-frontend-system-only / dual
-counts. Run on a schedule, that gives the NFS migration a continuously refreshed view
-across the community frontend packages — data the migration has no other automated source
-for today.
+counts. Run on a schedule, that would give the NFS migration a continuously refreshed view
+across the community frontend packages; no workflow in this repo schedules it today.
 
 **Read the new-frontend-system count with its qualifier.** `systems` gains
 `new-frontend-system` from the presence of `dist/mf-manifest.json` — module-federation
@@ -406,7 +405,7 @@ any that failed to read are "we could not look", which is a different problem.
 
 #### Tracked exclusions
 
-`plugin-sweep-excludes.txt` lists packages the sweep skips, following the discipline of
+`plugin-sweep-excludes.txt` lists packages the sweep skips (empty today), following the discipline of
 RHDH's `e2e-tests/local-harness/plugin-sanity-excludes.txt` (PR #4967): **every entry
 carries a `TODO(TICKET)`, and a pattern with no ticket is a parse error.** The goal is to
 delete entries, not accumulate them.
@@ -463,8 +462,8 @@ touches `smoke-tests-native/**` or the workflow itself. It installs with
 No workflow in this repo runs `yarn sweep`. The scheduled run of `yarn smoke` is
 `.github/workflows/catalog-index-sanity.yaml`, described under Catalog-index mode above.
 
-Exit code `0` = pass; non-zero with `results.json` detailing `fail-load` / `fail-start` /
-`fail-bundle`.
+`yarn smoke` and `yarn sweep` exit `0` on pass; non-zero with `results.json` detailing
+`fail-load` / `fail-start` / `fail-bundle`.
 
 ## Best fit (from the 64-workspace analysis, RHIDP-15076)
 
