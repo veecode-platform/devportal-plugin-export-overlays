@@ -14,15 +14,21 @@
  */
 
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { dirname, join, relative } from "node:path";
 import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 import type { BackendFeature } from "@backstage/backend-plugin-api";
+import {
+  CommonJSModuleLoader,
+  type ScannedPluginManifest,
+} from "@backstage/backend-dynamic-feature-service";
 import { resolveContained } from "./paths";
 import { errorMessage } from "./util";
 
 // The package is ESM ("type": "module"), so the global `require` is undefined.
 // createRequire gives us a CommonJS require to load the extracted (CJS) plugins.
 const require = createRequire(import.meta.url);
+const HARNESS_ROOT = dirname(dirname(fileURLToPath(import.meta.url)));
 
 export type PluginRole = "backend" | "frontend";
 
@@ -112,17 +118,78 @@ function resolveEntryPoint(pluginPath: string): string {
   );
 }
 
-/** require() each backend plugin and verify it exposes a default BackendFeature. */
-export function loadBackendPlugins(plugins: PluginEntry[]): {
+/** Load backend plugins with the same module resolution used by DevPortal. */
+export async function loadBackendPlugins(
+  plugins: PluginEntry[],
+  scannedPlugins: PluginEntry[] = plugins,
+): Promise<{
   loaded: LoadedPlugin[];
   errors: PluginError[];
-} {
+}> {
   const loaded: LoadedPlugin[] = [];
   const errors: PluginError[] = [];
+
+  if (plugins.length === 0) return { loaded, errors };
+
+  const scannedPluginManifests = new Map<string, ScannedPluginManifest>();
+  for (const plugin of scannedPlugins) {
+    const manifest = JSON.parse(
+      readFileSync(join(plugin.path, "package.json"), "utf8"),
+    ) as ScannedPluginManifest;
+    scannedPluginManifests.set(plugin.path, manifest);
+  }
+
+  // Per-package paths preserve each plugin's own node_modules in the loader search path.
+  const dynamicPluginPaths = [
+    ...new Set(scannedPlugins.map((plugin) => plugin.path)),
+  ];
+  const logger = {
+    debug() {},
+    info() {},
+    error(message: string, err?: Error) {
+      console.error(message, err);
+    },
+  } as unknown as ConstructorParameters<
+    typeof CommonJSModuleLoader
+  >[0]["logger"];
+  const moduleLoader = new CommonJSModuleLoader({
+    logger,
+    customResolveDynamicPackage(logger, searchedPackageName, manifests) {
+      for (const [realPath, manifest] of manifests.entries()) {
+        if (
+          Object.keys(manifest.dependencies ?? {}).includes(searchedPackageName)
+        ) {
+          const searchPath = join(realPath, "node_modules");
+          try {
+            const resolvedPath = require.resolve(
+              `${searchedPackageName}/package.json`,
+              { paths: [searchPath] },
+            );
+            logger.info(`Resolved '${searchedPackageName}' at ${resolvedPath}`);
+            return resolvedPath;
+          } catch (err) {
+            logger.error(
+              `Error when resolving '${searchedPackageName}' with search path: '[${searchPath}]'`,
+              err instanceof Error ? err : undefined,
+            );
+          }
+        }
+      }
+      return undefined;
+    },
+  });
+  await moduleLoader.bootstrap(
+    HARNESS_ROOT,
+    dynamicPluginPaths,
+    scannedPluginManifests,
+  );
+
   for (const plugin of plugins) {
     try {
       const entryPoint = resolveEntryPoint(plugin.path);
-      const mod = require(entryPoint) as { default?: BackendFeature };
+      const mod = (await moduleLoader.load(entryPoint)) as {
+        default?: BackendFeature;
+      };
       if (!mod.default) {
         errors.push({ plugin, error: "No default export" });
         continue;
