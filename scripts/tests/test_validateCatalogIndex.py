@@ -12,6 +12,7 @@ import json
 import os
 import re
 import stat
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -1090,6 +1091,10 @@ def skopeo_stub(tmp_path, monkeypatch):
     return answer_with
 
 
+def no_wait(seconds):
+    pass
+
+
 class TestSkopeoManifestAnnotations:
     def test_reads_the_manifest_annotations_with_an_anonymous_raw_inspect(self, skopeo_stub):
         manifest = {"annotations": {"io.backstage.dynamic-packages": annotation_of("plugin-a")}}
@@ -1109,7 +1114,43 @@ class TestSkopeoManifestAnnotations:
 
     def test_a_failed_inspect_is_unreadable(self, skopeo_stub):
         skopeo_stub("", exit_code=1)
-        assert skopeo_manifest_annotations(FACE_REFERENCE) is None
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=no_wait) is None
+
+    def test_a_transient_failure_then_success_returns_the_annotations(self, skopeo_stub):
+        manifest = {"annotations": {"io.backstage.dynamic-packages": annotation_of("plugin-a")}}
+        log = skopeo_stub("", exit_code=1)
+
+        def registry_recovers_during_the_wait(seconds):
+            skopeo_stub(json.dumps(manifest))
+
+        annotations = skopeo_manifest_annotations(
+            FACE_REFERENCE, sleep=registry_recovers_during_the_wait
+        )
+        assert annotations == manifest["annotations"]
+        assert len(log.read_text().splitlines()) == 2
+
+    def test_three_failures_are_unreadable_after_three_reads_with_backoff(self, skopeo_stub):
+        log = skopeo_stub("", exit_code=1)
+        waits = []
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=waits.append) is None
+        assert len(log.read_text().splitlines()) == 3
+        assert waits == [5, 15]
+
+    def test_a_timeout_is_retried_like_a_failed_inspect(self, monkeypatch):
+        calls = []
+
+        def hangs(*args, **kwargs):
+            calls.append(args)
+            raise subprocess.TimeoutExpired(args[0], kwargs["timeout"])
+
+        monkeypatch.setattr(subprocess, "run", hangs)
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=no_wait) is None
+        assert len(calls) == 3
+
+    def test_a_manifest_of_the_wrong_shape_is_not_retried(self, skopeo_stub):
+        log = skopeo_stub(json.dumps({"manifests": [{"digest": DIGEST}]}))
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=no_wait) is None
+        assert len(log.read_text().splitlines()) == 1
 
     def test_an_answer_that_is_not_json_is_unreadable(self, skopeo_stub):
         skopeo_stub("not json")
@@ -1118,6 +1159,19 @@ class TestSkopeoManifestAnnotations:
     def test_a_missing_skopeo_is_unreadable(self, tmp_path, monkeypatch):
         monkeypatch.setenv("PATH", str(tmp_path))
         assert skopeo_manifest_annotations(FACE_REFERENCE) is None
+
+    def test_a_missing_skopeo_is_not_retried(self, monkeypatch):
+        calls = []
+
+        def missing(*args, **kwargs):
+            calls.append(args)
+            raise FileNotFoundError("skopeo")
+
+        monkeypatch.setattr(subprocess, "run", missing)
+        waits = []
+        assert skopeo_manifest_annotations(FACE_REFERENCE, sleep=waits.append) is None
+        assert len(calls) == 1
+        assert waits == []
 
 
 # ---------------------------------------------------------------------------

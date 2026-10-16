@@ -26,6 +26,7 @@ import json
 import re
 import subprocess
 import sys
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -171,6 +172,8 @@ FACE_REF_RE = re.compile(r"^oci://quay\.io/veecode/[^:!@/]+@sha256:[0-9a-f]{64}$
 
 #: Manifest annotations of `repo@digest`, or None when that manifest cannot be read.
 FaceInspector = Callable[[str], dict[str, str] | None]
+
+SKOPEO_RETRY_WAITS = (5, 15)
 
 # A ticket-bearing comment opening an allowlist block, e.g.
 # `# TODO(RHDHBUGS-3515): image is not published yet`. Mirrors the grammar of
@@ -778,31 +781,39 @@ def face_plugin_paths(annotation: str | None) -> list[str] | None:
     return [path for package in packages for path in package]
 
 
-def skopeo_manifest_annotations(reference: str) -> dict[str, str] | None:
+def skopeo_manifest_annotations(
+    reference: str, sleep: Callable[[float], None] = time.sleep
+) -> dict[str, str] | None:
     """Manifest annotations of `reference`, read anonymously with skopeo, or None.
 
     The annotation sits on the manifest, not in the image config Labels, so `inspect`
     without `--raw` never shows it. An image index has no single manifest to read, so it
     is None, the same as a failed read.
     """
-    try:
-        proc = subprocess.run(
-            ["skopeo", "--command-timeout", "60s", "inspect", "--raw", "--no-creds",
-             f"docker://{reference}"],
-            capture_output=True, text=True, timeout=90, check=False,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return None
-    if proc.returncode != 0:
-        return None
-    try:
-        manifest = json.loads(proc.stdout)
-    except json.JSONDecodeError:
-        return None
-    if not isinstance(manifest, dict) or "manifests" in manifest:
-        return None
-    annotations = manifest.get("annotations") or {}
-    return annotations if isinstance(annotations, dict) else None
+    for wait in (0, *SKOPEO_RETRY_WAITS):
+        if wait:
+            sleep(wait)
+        try:
+            proc = subprocess.run(
+                ["skopeo", "--command-timeout", "60s", "inspect", "--raw", "--no-creds",
+                 f"docker://{reference}"],
+                capture_output=True, text=True, timeout=90, check=False,
+            )
+        except subprocess.TimeoutExpired:
+            continue
+        except OSError:
+            return None
+        if proc.returncode != 0:
+            continue
+        try:
+            manifest = json.loads(proc.stdout)
+        except json.JSONDecodeError:
+            return None
+        if not isinstance(manifest, dict) or "manifests" in manifest:
+            return None
+        annotations = manifest.get("annotations") or {}
+        return annotations if isinstance(annotations, dict) else None
+    return None
 
 
 def check_face_contract(entries: list[DpdyEntry], inspect: FaceInspector) -> list[Finding]:
