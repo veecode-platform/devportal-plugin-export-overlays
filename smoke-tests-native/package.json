@@ -14,7 +14,7 @@
     "smoke": "yarn build && node dist/native-smoke.mjs",
     "sweep": "yarn build && node dist/sweep.mjs",
     "aggregate": "yarn build && node dist/aggregate.mjs",
-    "test": "esbuild src/*.test.ts --bundle --platform=node --format=esm --packages=external --outdir=dist-tests --out-extension:.js=.mjs && node --test \"dist-tests/*.test.mjs\"",
+    "test": "rm -rf dist-tests && esbuild src/*.test.ts --bundle --platform=node --format=esm --packages=external --outdir=dist-tests --out-extension:.js=.mjs && node --test \"dist-tests/*.test.mjs\"",
     "tsc:check": "tsc --noEmit",
     "check": "yarn tsc:check && yarn lint:check && yarn prettier:check && yarn test",
     "lint:check": "eslint .",
