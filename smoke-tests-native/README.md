@@ -456,25 +456,12 @@ be imported by a test, so anything living there is untestable by construction. T
 
 ### CI
 
-`.github/workflows/native-smoke.yaml` runs the harness two ways:
+`.github/workflows/smoke-tests-native-unit.yaml` runs `yarn test` on every pull request that
+touches `smoke-tests-native/**` or the workflow itself. It installs with
+`yarn install --immutable --mode=skip-build` and fails the job when any unit test fails.
 
-- **`pull_request`** (paths `smoke-tests-native/**`): validates the harness itself on every
-  change here, against a known-good pure-backend plugin.
-- **`workflow_dispatch`**: Actions → "Native Smoke Harness" → Run workflow, with an optional
-  `plugin_ref` (single ref) or `workspace` (all of a workspace's published plugins)
-  to validate on demand.
-
-It installs skopeo, builds, runs `yarn smoke`, uploads `results.json`, and fails the job on
-a non-passing plugin.
-
-`.github/workflows/community-plugin-sweep.yaml` runs one support tier per nightly cron,
-largest tier first, and on demand with a `support` / `shards` choice. The cron-to-tier
-mapping lives in that workflow's `SUPPORT` block; `src/sweep-schedule.test.ts` asserts it
-stays in step with `SUPPORT_LEVELS`. Three jobs: `plan` resolves the shard matrix
-from metadata and pulls nothing, `sweep` runs the shards with `fail-fast: false` so one bad
-plugin cannot hide the verdict on the rest, and `aggregate` merges the shard summaries into
-one step summary — it runs unless the run was cancelled (`!cancelled()`), since the aggregate report is
-most useful exactly when shards failed — but a cancelled sweep is not a failed one.
+No workflow in this repo runs `yarn sweep`. The scheduled run of `yarn smoke` is
+`.github/workflows/catalog-index-sanity.yaml`, described under Catalog-index mode above.
 
 Exit code `0` = pass; non-zero with `results.json` detailing `fail-load` / `fail-start` /
 `fail-bundle`.

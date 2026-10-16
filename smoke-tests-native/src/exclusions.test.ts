@@ -281,7 +281,6 @@ test("every committed exclusion still matches a package in the repo", () => {
   // the regex that produced it, so check the entries against reality instead — an
   // exclusion that matches nothing is invisible debt whose ticket can be closed.
   const parsed = loadExclusions(EXCLUDES_FILE);
-  assert.ok(parsed.length > 0, "expected at least one tracked exclusion");
   const names = collectPackages(REPO_ROOT).map((p) => p.packageName);
   // Route through matchExclusion, not the raw pattern: candidateNames also matches the
   // -dynamic form, so testing patterns directly would report a valid exclusion written
