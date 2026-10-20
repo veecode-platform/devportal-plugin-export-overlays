@@ -181,11 +181,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-community-plugin-announcements-backend:bs_1.54.9__0.28.1"
+          "oci_ref": "quay.io/veecode/backstage-community-plugin-announcements-backend:bs_1.54.9__0.28.2-veecode.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:3110b35520235313781338b11bfbb440d0f4a759cee774d603bd472a634dca64"
+          "digest": "sha256:242b491d47680e49f2c1d59e99d6bb6a1af7f691acd7c150d29c3fc096932a3a"
         },
         "dpdy": {
           "status": "pass"
@@ -195,7 +195,7 @@
         }
       },
       "package": "@backstage-community/plugin-announcements-backend",
-      "version": "0.28.1",
+      "version": "0.28.2-veecode.1",
       "workspace": "announcements",
       "overall": "pass"
     },
@@ -1303,11 +1303,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras:bs_1.54.9__0.4.4"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras:bs_1.54.9__0.4.5-veecode.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:0ac11211a86119e206eadb9bd5bb893e4cc1425541f0fc0e4105d1ff5ddcc349"
+          "digest": "sha256:6237c8094841ce52498bc5581deac9ddeeb0d71d99eef0ef8bfc86e3d6324e15"
         },
         "dpdy": {
           "status": "pass"
@@ -1317,7 +1317,7 @@
         }
       },
       "package": "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras",
-      "version": "0.4.4",
+      "version": "0.4.5-veecode.1",
       "workspace": "mcp-integrations",
       "overall": "pass"
     },
@@ -1347,11 +1347,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.54.9__0.2.7-veecode.1"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.54.9__0.2.7-veecode.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:8bdd72510a964ceee190ebd77d9028e314c743ab2cc2eac4277717b2a8bc0be2"
+          "digest": "sha256:be5c4e494c871980db85146b48ab6742a02a8dc39c81fce69026a68d3a166a52"
         },
         "dpdy": {
           "status": "pass"
@@ -1361,7 +1361,7 @@
         }
       },
       "package": "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras",
-      "version": "0.2.7-veecode.1",
+      "version": "0.2.7-veecode.2",
       "workspace": "mcp-integrations",
       "overall": "pass"
     },

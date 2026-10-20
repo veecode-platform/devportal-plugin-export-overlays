@@ -16,9 +16,9 @@ metadata:
   tags: []
 spec:
   packageName: "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras"
-  # Tag: bs_1.54.9__0.4.4
-  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:0ac11211a86119e206eadb9bd5bb893e4cc1425541f0fc0e4105d1ff5ddcc349"
-  version: 0.4.4
+  # Tag: bs_1.54.9__0.4.5-veecode.1
+  dynamicArtifact: "oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:6237c8094841ce52498bc5581deac9ddeeb0d71d99eef0ef8bfc86e3d6324e15"
+  version: 0.4.5-veecode.1
   backstage:
     role: backend-plugin
     supportedVersions: 1.54.9

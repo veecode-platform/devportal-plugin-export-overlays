@@ -507,7 +507,7 @@ plugins:
                       xs: span 12
                   props:
                     max: 5
-  - package: oci://quay.io/veecode/backstage-community-plugin-announcements-backend@sha256:3110b35520235313781338b11bfbb440d0f4a759cee774d603bd472a634dca64
+  - package: oci://quay.io/veecode/backstage-community-plugin-announcements-backend@sha256:242b491d47680e49f2c1d59e99d6bb6a1af7f691acd7c150d29c3fc096932a3a
     disabled: true
   - package: oci://quay.io/veecode/backstage-community-plugin-argocd@sha256:4ccc9635dfb5ffeac1fa8e0a70a1d3f6a48f24e580ece03a6cbd0d5c5b31f9b1
     disabled: true
@@ -1866,7 +1866,7 @@ plugins:
                 importName: QuickstartButton
                 config:
                   priority: 100
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:0ac11211a86119e206eadb9bd5bb893e4cc1425541f0fc0e4105d1ff5ddcc349
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:6237c8094841ce52498bc5581deac9ddeeb0d71d99eef0ef8bfc86e3d6324e15
     disabled: true
     pluginConfig:
       backend:
@@ -1906,7 +1906,7 @@ plugins:
             - 'catalog'
             - 'scaffolder'
             - 'announcements'
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras@sha256:8bdd72510a964ceee190ebd77d9028e314c743ab2cc2eac4277717b2a8bc0be2
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras@sha256:be5c4e494c871980db85146b48ab6742a02a8dc39c81fce69026a68d3a166a52
     disabled: true
     pluginConfig:
       backend:
