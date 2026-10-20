@@ -183,7 +183,7 @@ jobs:
     # as the bundle export already does. `bs_<version>` stays untouched until a real
     # release publishes it, and a candidate index is coherent by construction: it is
     # assembled from `catalog-entities/` at the very commit under test.
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Publish Catalog Index
     needs:
       - export
@@ -510,6 +510,19 @@ jobs:
               exit 1
             fi
           fi
+
+      - name: Check face contract of enabled packages
+        # ADR-015 C5: each enabled entry must be a pathless digest ref whose image lists exactly
+        # one plugin path. Any other shape fails every boot that reads the index. The check
+        # inspects each enabled digest with skopeo, so it runs here, before the image is built
+        # or anything is pushed. The build-metadata rules already ran in "Generate catalog
+        # index" on this same tree, so this step runs the face rules alone.
+        run: |
+          python3 scripts/validateCatalogIndex.py \
+            --output-dir catalog-index \
+            --registry quay.io/veecode \
+            --no-build-metadata \
+            --face-contract
 
       - name: Build OCI image
         run: |

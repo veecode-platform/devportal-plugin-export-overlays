@@ -36,7 +36,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   # Never cancel one already pulling — a manual dispatch would kill an in-flight
-  # nightly and lose its artifacts. Matches community-plugin-sweep.yaml.
+  # nightly and lose its artifacts.
   cancel-in-progress: false
 
 permissions:
@@ -44,7 +44,7 @@ permissions:
 
 jobs:
   sanity:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # ~100 packages on one runner. A timeout cancels the job, and upload is
     # `!cancelled()`, so under-budgeting loses the artifacts too.
     timeout-minutes: 60

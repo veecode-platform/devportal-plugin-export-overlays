@@ -37,6 +37,10 @@ git merge upstream/main
 #   - scripts/validateCatalogIndex.py: keep the local decode_dynamic_packages. Upstream imports
 #     it from generatePluginBuildInfo.py, which needs requests; the sanity workflow installs only PyYAML.
 #   - workspaces/: new workspaces will appear — categorize as KEEP or DISABLE
+#   - smoke-tests-native/: upstream still carries sweep-schedule.test.ts, community-plugin-sweep.yaml,
+#     native-smoke.yaml and a non-empty plugin-sweep-excludes.txt; we dropped the sweep contract and
+#     the pagerduty exclusion (no such workflows or package here). Keep OURS in exclusions.test.ts,
+#     plugin-sweep-excludes.txt and the README's CI section; take upstream's harness code changes.
 git push origin main
 ```
 

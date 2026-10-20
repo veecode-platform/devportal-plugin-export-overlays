@@ -275,7 +275,7 @@ describe('TechDocsService', () => {
         site_name: 'Service with Docs',
         site_description: 'Documentation for service with docs',
         etag: 'abc123',
-        build_timestamp: 1609459200,
+        build_timestamp: 1609459200000,
         files: ['index.html'],
       };
 
@@ -306,12 +306,37 @@ describe('TechDocsService', () => {
           'http://localhost:7007/api/catalog/entities/by-name/component/default/service-with-docs',
         metadata: {
           lastUpdated: '2021-01-01T00:00:00.000Z',
-          buildTimestamp: 1609459200,
+          buildTimestamp: 1609459200000,
           siteName: 'Service with Docs',
           siteDescription: 'Documentation for service with docs',
           etag: 'abc123',
           files: 'index.html',
         },
+      });
+    });
+
+    it('should read build_timestamp as milliseconds for lastUpdated', async () => {
+      const entityWithDocs = createMockEntity(
+        'service-with-ms-timestamp',
+        'Component',
+        true,
+      );
+      const mockCatalog = catalogServiceMock({
+        entities: [entityWithDocs],
+      });
+
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: jest.fn().mockResolvedValue({
+          build_timestamp: 1792520320352,
+        }),
+      });
+
+      const result = await service.listTechDocs({}, mockAuth, mockCatalog);
+
+      expect(result.entities[0].metadata).toMatchObject({
+        lastUpdated: '2026-10-20T18:18:40.352Z',
+        buildTimestamp: 1792520320352,
       });
     });
 
@@ -749,7 +774,7 @@ describe('TechDocsService', () => {
           json: jest.fn().mockResolvedValue({
             site_name: 'Test Service Docs',
             site_description: 'Documentation for test service',
-            build_timestamp: 1705313400,
+            build_timestamp: 1705313400000,
           }),
         });
 
@@ -773,7 +798,7 @@ describe('TechDocsService', () => {
         lastModified: '2024-01-15T10:10:00.000Z',
         metadata: {
           lastUpdated: '2024-01-15T10:10:00.000Z',
-          buildTimestamp: 1705313400,
+          buildTimestamp: 1705313400000,
           siteName: 'Test Service Docs',
           siteDescription: 'Documentation for test service',
         },
@@ -787,6 +812,44 @@ describe('TechDocsService', () => {
           },
         },
       );
+    });
+
+    it('should read build_timestamp as milliseconds for lastModified', async () => {
+      const mockEntity = createMockEntity('test-service', 'Component', true);
+      const mockCatalog = {
+        getEntityByRef: jest.fn().mockResolvedValue(mockEntity),
+      };
+
+      mockFetch
+        .mockResolvedValueOnce({
+          ok: true,
+          text: jest.fn().mockResolvedValue('event: finish\ndata: {}\n\n'),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          text: jest.fn().mockResolvedValue('# Test Service\n\nWelcome.'),
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: jest.fn().mockResolvedValue({
+            build_timestamp: 1792520320352,
+          }),
+        });
+
+      const result = await service.retrieveTechDocsContent(
+        'component:default/test-service',
+        'docs/guide.md',
+        mockAuth,
+        mockCatalog as any,
+      );
+
+      expect(result).toMatchObject({
+        lastModified: '2026-10-20T18:18:40.352Z',
+        metadata: {
+          lastUpdated: '2026-10-20T18:18:40.352Z',
+          buildTimestamp: 1792520320352,
+        },
+      });
     });
 
     it('should handle markdown content type', async () => {

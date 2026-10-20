@@ -18,7 +18,7 @@ on:
 
 jobs:
   promote:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Requires a human approval configured in repo Settings > Environments.
     environment: catalog-latest-promotion
     steps:

@@ -1,6 +1,6 @@
 {
   "name": "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras",
-  "version": "0.2.7-veecode.1",
+  "version": "0.2.7-veecode.2",
   "license": "Apache-2.0",
   "main": "src/index.ts",
   "types": "src/index.ts",

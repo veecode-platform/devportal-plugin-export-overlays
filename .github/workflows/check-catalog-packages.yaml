@@ -76,7 +76,7 @@ jobs:
       always() &&
       (needs.detect_package_check_paths.result != 'success' ||
        needs.detect_package_check_paths.outputs.should_check == 'true')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     permissions:
       contents: read
