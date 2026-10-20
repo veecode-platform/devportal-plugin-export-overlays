@@ -478,12 +478,12 @@ export class TechDocsService {
         path: targetPath,
         contentType,
         lastModified: metadata?.build_timestamp
-          ? new Date(metadata.build_timestamp * 1000).toISOString()
+          ? new Date(metadata.build_timestamp).toISOString()
           : undefined,
         metadata: metadata
           ? {
               lastUpdated: metadata.build_timestamp
-                ? new Date(metadata.build_timestamp * 1000).toISOString()
+                ? new Date(metadata.build_timestamp).toISOString()
                 : undefined,
               buildTimestamp: metadata.build_timestamp,
               siteName: metadata.site_name,
@@ -650,9 +650,7 @@ export class TechDocsService {
             ? undefined
             : {
                 lastUpdated: techDocsMetadata.build_timestamp
-                  ? new Date(
-                      techDocsMetadata.build_timestamp * 1000,
-                    ).toISOString()
+                  ? new Date(techDocsMetadata.build_timestamp).toISOString()
                   : undefined,
                 buildTimestamp: techDocsMetadata.build_timestamp,
                 siteName: techDocsMetadata.site_name,
