@@ -67,10 +67,12 @@ export const createScaffolderActions = (options: {
     createListScaffolderActionsAction({
       actionsRegistry: options.actionsRegistry,
       scaffolderClient: options.scaffolderClient,
+      auth: options.auth,
     });
     createDryRunTemplateAction({
       actionsRegistry: options.actionsRegistry,
       scaffolderClient: options.scaffolderClient,
+      auth: options.auth,
     });
     createExecuteTemplateAction({
       actionsRegistry: options.actionsRegistry,
