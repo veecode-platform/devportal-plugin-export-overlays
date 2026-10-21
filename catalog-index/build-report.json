@@ -3151,11 +3151,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/veecode-platform-plugin-veecode-homepage:bs_1.54.9__1.0.3"
+          "oci_ref": "quay.io/veecode/veecode-platform-plugin-veecode-homepage:bs_1.54.9__1.0.4"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:fe312abc6c239d770ed77d20eb63b9016e629f3a7c68d27261ec8beec4732c23"
+          "digest": "sha256:5d3d244e9ad3c887b2d9149a80a5cc236243a348a96d94146a9cf9082dcec2e3"
         },
         "dpdy": {
           "status": "pass"
@@ -3165,7 +3165,7 @@
         }
       },
       "package": "@veecode-platform/plugin-veecode-homepage",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "workspace": "veecode-homepage",
       "overall": "pass"
     }

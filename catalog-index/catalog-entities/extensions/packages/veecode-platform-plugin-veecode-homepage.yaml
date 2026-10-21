@@ -17,9 +17,9 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/plugin-veecode-homepage"
-  # Tag: bs_1.54.9__1.0.3
-  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-plugin-veecode-homepage@sha256:fe312abc6c239d770ed77d20eb63b9016e629f3a7c68d27261ec8beec4732c23"
-  version: 1.0.3
+  # Tag: bs_1.54.9__1.0.4
+  dynamicArtifact: "oci://quay.io/veecode/veecode-platform-plugin-veecode-homepage@sha256:5d3d244e9ad3c887b2d9149a80a5cc236243a348a96d94146a9cf9082dcec2e3"
+  version: 1.0.4
   appConfigExamples:
     - title: Default configuration
       content:
