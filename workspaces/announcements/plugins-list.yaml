@@ -1,3 +1,4 @@
 plugins/announcements:
 plugins/announcements-backend: --embed-package @backstage-community/plugin-search-backend-module-announcements --embed-package @backstage/plugin-signals-node  --embed-package @backstage/plugin-notifications-node
 plugins/search-backend-module-announcements: --embed-package @backstage-community/plugin-announcements-common --embed-package @backstage-community/plugin-announcements-node
+# touched to force publish 2026-10-22 (announcements bundle bs_1.54.9 rebuilt without dist-scalprum on 2026-10-20)
