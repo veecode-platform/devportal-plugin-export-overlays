@@ -1,0 +1,33 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-scaffolder-backend-mod-template-update
+  namespace: veecode
+  title: "Scaffolder Backend Module Template Update"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/template-updates
+  tags:
+    - software-templates
+spec:
+  packageName: "@veecode-platform/plugin-scaffolder-backend-module-template-update"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-scaffolder-backend-module-template-update:bs_1.52.0__0.1.0
+  version: 0.1.0
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.52.0
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - template-updates
+  appConfigExamples:
+    - title: GitLab integration (server-held token)
+      content:
+        integrations:
+          gitlab:
+            - host: ${GITLAB_HOST}
+              token: ${GITLAB_TOKEN}
+              apiBaseUrl: https://${GITLAB_HOST}/api/v4
