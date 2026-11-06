@@ -78,6 +78,7 @@ export const createScaffolderActions = (options: {
       actionsRegistry: options.actionsRegistry,
       scaffolderClient: options.scaffolderClient,
       auth: options.auth,
+      discovery: options.discovery,
     });
   }
 };
