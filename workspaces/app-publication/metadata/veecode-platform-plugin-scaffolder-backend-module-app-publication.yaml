@@ -1,0 +1,31 @@
+apiVersion: extensions.backstage.io/v1alpha1
+kind: Package
+metadata:
+  name: veecode-platform-plgn-scaffolder-backend-mod-app-publication
+  namespace: veecode
+  title: "App Publication (scaffolder module)"
+  links:
+    - url: https://github.com/veecode-platform/devportal-plugins
+      title: Source Repository
+  annotations:
+    backstage.io/source-location: url:https://github.com/veecode-platform/devportal-plugins/tree/main/workspaces/app-publication/plugins/scaffolder-backend-module-app-publication
+  tags: []
+spec:
+  packageName: "@veecode-platform/plugin-scaffolder-backend-module-app-publication"
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-scaffolder-backend-module-app-publication:bs_1.54.9__0.1.0
+  version: 0.1.0
+  appConfigExamples:
+    - title: Default configuration
+      content:
+        appPublication:
+          projectPathPrefix: example-org/apps
+          environments:
+            - dev
+  backstage:
+    role: backend-plugin-module
+    supportedVersions: 1.54.9
+  author: VeeCode
+  support: community
+  lifecycle: active
+  partOf:
+    - app-publication
