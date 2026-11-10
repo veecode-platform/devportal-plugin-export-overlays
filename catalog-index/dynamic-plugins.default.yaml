@@ -1906,7 +1906,7 @@ plugins:
             - 'catalog'
             - 'scaffolder'
             - 'announcements'
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras@sha256:be5c4e494c871980db85146b48ab6742a02a8dc39c81fce69026a68d3a166a52
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras@sha256:ce83de0547e61e8e1cbe5a0b538399a287a0b32ccb97d0d3d001d284329bc925
     disabled: true
     pluginConfig:
       backend:

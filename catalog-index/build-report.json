@@ -1347,11 +1347,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.54.9__0.2.7-veecode.2"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-techdocs-mcp-extras:bs_1.54.9__0.2.7-veecode.3"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:be5c4e494c871980db85146b48ab6742a02a8dc39c81fce69026a68d3a166a52"
+          "digest": "sha256:ce83de0547e61e8e1cbe5a0b538399a287a0b32ccb97d0d3d001d284329bc925"
         },
         "dpdy": {
           "status": "pass"
@@ -1361,7 +1361,7 @@
         }
       },
       "package": "@red-hat-developer-hub/backstage-plugin-techdocs-mcp-extras",
-      "version": "0.2.7-veecode.2",
+      "version": "0.2.7-veecode.3",
       "workspace": "mcp-integrations",
       "overall": "pass"
     },
