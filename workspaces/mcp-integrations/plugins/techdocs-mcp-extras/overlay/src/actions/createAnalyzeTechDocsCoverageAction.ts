@@ -22,14 +22,12 @@ import { TechDocsService } from '../service';
 export const createAnalyzeTechDocsCoverageAction = ({
   actionsRegistry,
   catalog,
-  auth,
   logger,
   config,
   discovery,
 }: {
   actionsRegistry: ActionsRegistryService;
   catalog: CatalogService;
-  auth: any;
   logger: LoggerService;
   config: Config;
   discovery: DiscoveryService;
@@ -101,7 +99,6 @@ export const createAnalyzeTechDocsCoverageAction = ({
         const techDocsService = new TechDocsService(config, logger, discovery);
         const result = await techDocsService.analyzeCoverage(
           input,
-          auth,
           catalog,
           credentials,
         );

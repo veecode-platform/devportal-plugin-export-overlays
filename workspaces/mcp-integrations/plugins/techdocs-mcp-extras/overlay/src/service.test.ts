@@ -644,7 +644,6 @@ describe('TechDocsService', () => {
 
       const result = await service.analyzeCoverage(
         {},
-        mockAuth,
         mockCatalog,
         callerCredentials,
       );
@@ -666,7 +665,6 @@ describe('TechDocsService', () => {
 
       const result = await service.analyzeCoverage(
         {},
-        mockAuth,
         mockCatalog,
         callerCredentials,
       );
@@ -688,7 +686,6 @@ describe('TechDocsService', () => {
 
       const result = await service.analyzeCoverage(
         {},
-        mockAuth,
         mockCatalog,
         callerCredentials,
       );
@@ -705,7 +702,6 @@ describe('TechDocsService', () => {
 
       const result = await service.analyzeCoverage(
         {},
-        mockAuth,
         mockCatalog,
         callerCredentials,
       );
@@ -728,7 +724,6 @@ describe('TechDocsService', () => {
 
       const result = await service.analyzeCoverage(
         {},
-        mockAuth,
         mockCatalog,
         callerCredentials,
       );
@@ -760,7 +755,6 @@ describe('TechDocsService', () => {
           entityType: 'Component',
           namespace: 'production',
         },
-        mockAuth,
         mockCatalog,
         callerCredentials,
       );
@@ -784,12 +778,7 @@ describe('TechDocsService', () => {
 
       const mockCatalog = catalogServiceMock({ entities });
 
-      await service.analyzeCoverage(
-        {},
-        mockAuth,
-        mockCatalog,
-        callerCredentials,
-      );
+      await service.analyzeCoverage({}, mockCatalog, callerCredentials);
 
       expect(mockLogger.info).toHaveBeenCalledWith(
         'Analyzing TechDocs coverage...',
@@ -826,12 +815,7 @@ describe('TechDocsService', () => {
       };
 
       await expect(
-        service.analyzeCoverage(
-          {},
-          mockAuth,
-          mockCatalog as any,
-          callerCredentials,
-        ),
+        service.analyzeCoverage({}, mockCatalog as any, callerCredentials),
       ).rejects.toThrow('Catalog service error');
     });
   });
@@ -1528,18 +1512,15 @@ describe('TechDocsService', () => {
 
     describe('analyzeCoverage', () => {
       it('counts only the entities the catalog returns for the caller', async () => {
-        const auth = createAuth();
         const catalog = createCatalog();
 
         const asAlice = await service.analyzeCoverage(
           {},
-          auth,
           catalog as any,
           alice,
         );
         const asAdmin = await service.analyzeCoverage(
           {},
-          createAuth(),
           catalog as any,
           admin,
         );
@@ -1557,7 +1538,9 @@ describe('TechDocsService', () => {
         expect(catalog.getEntities).toHaveBeenCalledWith(expect.anything(), {
           credentials: alice,
         });
-        expect(auth.getOwnServiceCredentials).not.toHaveBeenCalled();
+        expect(catalog.getEntities).toHaveBeenCalledWith(expect.anything(), {
+          credentials: admin,
+        });
       });
     });
 

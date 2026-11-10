@@ -526,7 +526,6 @@ export class TechDocsService {
   // @public
   async analyzeCoverage(
     options: ListTechDocsOptions = {},
-    auth: any,
     catalog: CatalogService,
     credentials: BackstageCredentials,
   ): Promise<TechDocsCoverageResult> {
