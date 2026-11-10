@@ -1,6 +1,6 @@
 {
   "name": "@veecode-platform/plugin-scaffolder-backend-module-app-publication",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "Apache-2.0",
   "private": true,
   "description": "The app-publication module for @backstage/plugin-scaffolder-backend: two actions-registry actions that report whether an app's change is merged, deployed and smoke-checked, for the portal's MCP tools.",
