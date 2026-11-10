@@ -1,0 +1,222 @@
+/*
+ * Copyright 2025 The Backstage Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+import { ActionsRegistryService } from '@backstage/backend-plugin-api/alpha';
+import { AuthService, DiscoveryService } from '@backstage/backend-plugin-api';
+import type { LogEvent } from '@backstage/plugin-scaffolder-common';
+import { abortable } from './waitForScaffolderTask';
+import { CHECK_EARLIER_STEPS } from './taskGuidance';
+
+// The completion event of a successful run carries the template output in its
+// body, and the completion event of a failed run carries the error. The common
+// LogEvent type declares neither.
+type LogEventWithOutput = LogEvent & {
+  body: LogEvent['body'] & {
+    output?: Record<string, unknown>;
+    error?: unknown;
+  };
+};
+
+function runError(
+  error: unknown,
+): { name: string; message: string } | undefined {
+  if (typeof error !== 'object' || error === null) {
+    return undefined;
+  }
+  const { name, message } = error as { name?: unknown; message?: unknown };
+  return typeof name === 'string' && typeof message === 'string'
+    ? { name, message }
+    : undefined;
+}
+
+const EVENTS_TIMEOUT_MS = 20_000;
+
+/**
+ * Overlay changes vs upstream (rhdh-plugins scaffolder-mcp-extras):
+ * - The completion event returns the template output in body.output, and the
+ *   error of a failed run in body.error
+ * - The token exchange, the base URL lookup and the events request all end at
+ *   20 seconds, and the call answers an empty list then
+ *
+ * @public
+ */
+export const createGetScaffolderTaskLogsAction = ({
+  actionsRegistry,
+  auth,
+  discovery,
+}: {
+  actionsRegistry: ActionsRegistryService;
+  auth: AuthService;
+  discovery: DiscoveryService;
+}) => {
+  actionsRegistry.register({
+    name: 'get-scaffolder-task-logs',
+    title: 'Get Scaffolder Task Logs',
+    attributes: {
+      destructive: false,
+      readOnly: true,
+      idempotent: true,
+    },
+    description: `
+Retrieve the log events for a scaffolder task.
+Each log event has a type (log, completion, cancelled, or recovered), a body containing a message and optional step ID and status.
+The completion event of a successful run carries the template output in body.output, with the next steps in text and the links to show in links.
+The completion event of a failed run carries the error in body.error, with its name and message. ${CHECK_EARLIER_STEPS}
+A cancelled run ends with a cancelled event: ask the user whether to run the template again.
+Use the after parameter to fetch only events after a specific event ID for incremental polling.
+    `,
+    schema: {
+      input: z =>
+        z.object({
+          taskId: z
+            .string()
+            .min(1)
+            .refine(
+              val =>
+                !val.includes('..') &&
+                !val.includes('/') &&
+                !val.includes('\\'),
+              { message: 'taskId must be a valid task ID' },
+            )
+            .describe('The ID of the scaffolder task'),
+          after: z
+            .number()
+            .int()
+            .min(0)
+            .optional()
+            .describe(
+              'Return only log events after this event ID for incremental polling',
+            ),
+        }),
+      output: z =>
+        z
+          .object({
+            events: z
+              .array(
+                z.object({
+                  id: z.number().describe('The event ID'),
+                  taskId: z
+                    .string()
+                    .describe('The ID of the task this event belongs to'),
+                  createdAt: z
+                    .string()
+                    .describe('Timestamp when the event was created'),
+                  type: z
+                    .string()
+                    .describe(
+                      'Event type: log, completion, cancelled, or recovered',
+                    ),
+                  body: z
+                    .object({
+                      message: z.string().describe('The log message'),
+                      stepId: z
+                        .string()
+                        .optional()
+                        .describe('The step ID associated with this event'),
+                      status: z
+                        .string()
+                        .optional()
+                        .describe('The task status at the time of this event'),
+                      output: z
+                        .record(z.unknown())
+                        .optional()
+                        .describe(
+                          'The template output, set only on the completion event of a successful run. Next steps are in text, and links to show are in links.',
+                        ),
+                      error: z
+                        .object({
+                          name: z.string().describe('The error name'),
+                          message: z.string().describe('The error message'),
+                        })
+                        .optional()
+                        .describe(
+                          'The error that ended the run, set only on the completion event of a failed run.',
+                        ),
+                    })
+                    .describe('The event body'),
+                }),
+              )
+              .describe('The list of log events for the task'),
+          })
+          .describe('Object containing the events array'),
+    },
+    action: async ({ input, credentials }) => {
+      // The scaffolder holds an idle events request for 30 seconds before it
+      // answers an empty list, so the whole call, from the token exchange to
+      // the events body, ends at 20 seconds.
+      const signal = AbortSignal.timeout(EVENTS_TIMEOUT_MS);
+      let events: LogEventWithOutput[];
+      try {
+        const [{ token }, baseUrl] = await abortable(
+          Promise.all([
+            auth.getPluginRequestToken({
+              onBehalfOf: credentials,
+              targetPluginId: 'scaffolder',
+            }),
+            discovery.getBaseUrl('scaffolder'),
+          ]),
+          signal,
+        );
+        const url = new URL(`v2/tasks/${input.taskId}/events`, `${baseUrl}/`);
+        if (input.after !== undefined) {
+          url.searchParams.set('after', String(input.after));
+        }
+
+        const response = await fetch(url.toString(), {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+          signal,
+        });
+
+        if (!response.ok) {
+          const text = await response.text();
+          throw new Error(
+            `Scaffolder task logs request failed: ${response.status} ${
+              response.statusText
+            }${text ? ` - ${text}` : ''}`,
+          );
+        }
+
+        events = (await response.json()) as LogEventWithOutput[];
+      } catch (error) {
+        if (signal.aborted) {
+          return { output: { events: [] } };
+        }
+        throw error;
+      }
+
+      return {
+        output: {
+          events: events.map(event => ({
+            id: event.id,
+            taskId: event.taskId,
+            createdAt: event.createdAt,
+            type: event.type,
+            body: {
+              message: event.body.message,
+              stepId: event.body.stepId,
+              status: event.body.status,
+              output: event.body.output,
+              error: runError(event.body.error),
+            },
+          })),
+        },
+      };
+    },
+  });
+};

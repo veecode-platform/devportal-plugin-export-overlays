@@ -1,0 +1,94 @@
+# Progress heartbeat for long tool calls.
+# While a tools/call runs and its request carries _meta.progressToken, send
+# notifications/progress every 15 seconds until the call settles. Clients reset
+# their idle wait only on progress. Some HTTP paths in front of an MCP server cut
+# a call that is silent for about 30 seconds, so the beat keeps it alive.
+# Backstage's root HTTP router compresses every response, and the compression
+# holds a beat until the call ends, so each beat also flushes the compressed
+# stream, as the scaffolder task event stream does.
+# Also bumps the version to 0.2.1-veecode.1, in package.json and in the version
+# the server reports to clients: a published tag is immutable, so a changed build
+# needs a new version. The package metadata names the same version and tag.
+# Remove when source.json advances past a Backstage release whose
+# mcp-actions-backend sends progress notifications itself.
+#
+--- plugins/mcp-actions-backend/src/services/McpService.ts
++++ plugins/mcp-actions-backend/src/services/McpService.ts
+@@ -80,7 +80,7 @@
+   return attrs;
+ }
+ 
+-const version = '0.2.1'
++const version = '0.2.1-veecode.1';
+ 
+ export class McpService {
+   private readonly actions: ActionsService;
+@@ -239,7 +239,8 @@
+       }
+     });
+ 
+-    server.setRequestHandler(CallToolRequestSchema, async ({ params }) => {
++    server.setRequestHandler(CallToolRequestSchema, async (request, extra) => {
++      const { params } = request;
+       const startTime = performance.now();
+       let errorType: string | undefined;
+       let isError = false;
+@@ -251,6 +252,40 @@
+         meta: { toolName: params.name },
+       });
+ 
++      // The client resets its idle wait only on progress, so beat while the
++      // action runs. A beat that fails because the client has left must not
++      // fail the call.
++      const progressToken = params._meta?.progressToken;
++      let progress = 0;
++      const heartbeat =
++        progressToken === undefined
++          ? undefined
++          : setInterval(() => {
++              extra
++                .sendNotification({
++                  method: 'notifications/progress',
++                  params: { progressToken, progress: ++progress },
++                })
++                .then(() => {
++                  // The root HTTP router compresses every response, and zlib
++                  // holds the beat until the call ends. Flush it, as the
++                  // scaffolder task event stream does (scaffolder-backend
++                  // router.ts: "res.flush() is only available with the
++                  // compression middleware"). setImmediate lets the transport
++                  // write the frame first.
++                  setImmediate(() => {
++                    (req?.res as { flush?: () => void } | undefined)?.flush?.();
++                  });
++                })
++                .catch(error => {
++                  this.logger?.debug(
++                    `Progress notification failed: ${toError(error).message}`,
++                  );
++                });
++            }, 15_000);
++      // The beat must never keep the process alive.
++      heartbeat?.unref();
++
+       try {
+         return await this.tracingService.startActiveSpan(
+           `tools/call ${params.name}`,
+@@ -344,6 +379,7 @@
+         }
+         throw err;
+       } finally {
++        clearInterval(heartbeat);
+         const durationSeconds = (performance.now() - startTime) / 1000;
+ 
+         // Determine error.type per OTel MCP spec:
+--- plugins/mcp-actions-backend/package.json
++++ plugins/mcp-actions-backend/package.json
+@@ -1,6 +1,6 @@
+ {
+   "name": "@backstage/plugin-mcp-actions-backend",
+-  "version": "0.2.1",
++  "version": "0.2.1-veecode.1",
+   "backstage": {
+     "role": "backend-plugin",
+     "pluginId": "mcp-actions",
