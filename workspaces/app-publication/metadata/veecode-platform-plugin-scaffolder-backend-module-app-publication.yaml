@@ -12,8 +12,8 @@ metadata:
   tags: []
 spec:
   packageName: "@veecode-platform/plugin-scaffolder-backend-module-app-publication"
-  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-scaffolder-backend-module-app-publication:bs_1.54.9__0.1.1
-  version: 0.1.1
+  dynamicArtifact: oci://quay.io/veecode/veecode-platform-plugin-scaffolder-backend-module-app-publication:bs_1.54.9__0.1.2
+  version: 0.1.2
   appConfigExamples:
     - title: Default configuration
       content:
