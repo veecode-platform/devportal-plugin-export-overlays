@@ -8,7 +8,7 @@
 # stream, as the scaffolder task event stream does.
 # Also bumps the version to 0.2.1-veecode.1, in package.json and in the version
 # the server reports to clients: a published tag is immutable, so a changed build
-# needs a new version. The metadata keeps 0.2.1 until that tag is published.
+# needs a new version. The package metadata names the same version and tag.
 # Remove when source.json advances past a Backstage release whose
 # mcp-actions-backend sends progress notifications itself.
 #
