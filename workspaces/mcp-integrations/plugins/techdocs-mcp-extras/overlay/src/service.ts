@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-import { LoggerService, DiscoveryService } from '@backstage/backend-plugin-api';
+import {
+  BackstageCredentials,
+  LoggerService,
+  DiscoveryService,
+} from '@backstage/backend-plugin-api';
 import type { Config } from '@backstage/config';
 import { CatalogService } from '@backstage/plugin-catalog-node';
 import { Entity, parseEntityRef } from '@backstage/catalog-model';
@@ -24,6 +28,21 @@ const ENTITY_REF_BAD = /\.\.|\/\/|%|\\/;
 const ENTITY_REF_ERROR =
   'entityRef must be a valid entity reference (e.g. kind:namespace/name)';
 const PAGE_PATH_ERROR = 'pagePath must be a valid documentation path';
+const CALLER_CREDENTIALS_ERROR =
+  'The credentials of the caller are required to read TechDocs';
+
+// requireCredentials:: every catalog read and TechDocs request runs with the
+// credentials of the user who called the action. There is deliberately no
+// fallback to the plugin's own service credentials, which would let any caller
+// read what only the plugin is allowed to read.
+function requireCredentials(
+  credentials?: BackstageCredentials,
+): BackstageCredentials {
+  if (!credentials) {
+    throw new Error(CALLER_CREDENTIALS_ERROR);
+  }
+  return credentials;
+}
 
 /**
  * TechDocsMetadata
@@ -187,10 +206,27 @@ export class TechDocsService {
     };
   }
 
+  // getTechDocsHeaders:: the TechDocs backend token is minted on behalf of the
+  // caller, so the backend applies the caller's permissions to the request
+  private async getTechDocsHeaders(
+    auth: any,
+    credentials?: BackstageCredentials,
+  ): Promise<Record<string, string>> {
+    if (!auth) {
+      return {};
+    }
+    const { token } = await auth.getPluginRequestToken({
+      onBehalfOf: requireCredentials(credentials),
+      targetPluginId: 'techdocs',
+    });
+    return { Authorization: `Bearer ${token}` };
+  }
+
   // fetchTechDocsMetadata:: fetches all metadata for given entity
   async fetchTechDocsMetadata(
     entity: Entity,
     auth?: any,
+    credentials?: BackstageCredentials,
   ): Promise<TechDocsMetadata> {
     try {
       const { namespace = 'default', name } = entity.metadata;
@@ -202,15 +238,7 @@ export class TechDocsService {
       this.logger.debug(`Fetching metadata from URL: ${metadataUrl}`);
       const fetch = this.fetchFunction || (await import('node-fetch')).default;
 
-      const headers: Record<string, string> = {};
-
-      if (auth) {
-        const { token } = await auth.getPluginRequestToken({
-          onBehalfOf: await auth.getOwnServiceCredentials(),
-          targetPluginId: 'techdocs',
-        });
-        headers.Authorization = `Bearer ${token}`;
-      }
+      const headers = await this.getTechDocsHeaders(auth, credentials);
 
       const response = await fetch(metadataUrl, { headers });
 
@@ -251,6 +279,7 @@ export class TechDocsService {
     kind: string,
     name: string,
     auth?: any,
+    credentials?: BackstageCredentials,
   ): Promise<void> {
     let timer: ReturnType<typeof setTimeout> | undefined;
     try {
@@ -259,14 +288,7 @@ export class TechDocsService {
       this.logger.debug(`Requesting TechDocs sync at URL: ${syncUrl}`);
       const fetch = this.fetchFunction || (await import('node-fetch')).default;
 
-      const headers: Record<string, string> = {};
-      if (auth) {
-        const { token } = await auth.getPluginRequestToken({
-          onBehalfOf: await auth.getOwnServiceCredentials(),
-          targetPluginId: 'techdocs',
-        });
-        headers.Authorization = `Bearer ${token}`;
-      }
+      const headers = await this.getTechDocsHeaders(auth, credentials);
 
       const response = await fetch(syncUrl, { headers });
       if (!response.ok) {
@@ -303,6 +325,7 @@ export class TechDocsService {
     pagePath?: string,
     auth?: any,
     catalog?: CatalogService,
+    credentials?: BackstageCredentials,
   ): Promise<TechDocsContentResult> {
     if (ENTITY_REF_BAD.test(entityRef)) {
       this.logger.error(ENTITY_REF_ERROR);
@@ -344,11 +367,10 @@ export class TechDocsService {
       let entity: Entity | undefined;
 
       // get entity
-      if (catalog && auth) {
-        const credentials = await auth.getOwnServiceCredentials();
+      if (catalog) {
         const entityResponse = await catalog.getEntityByRef(
           { kind, namespace, name },
-          { credentials },
+          { credentials: requireCredentials(credentials) },
         );
         entity = entityResponse || undefined;
       }
@@ -394,22 +416,14 @@ export class TechDocsService {
 
       // Build-on-read: trigger the same sync a human visit would, so agents
       // never hit a portal whose docs were simply never built (M18 E2).
-      await this.syncTechDocs(namespace, kind, name, auth);
+      await this.syncTechDocs(namespace, kind, name, auth, credentials);
 
       const techdocsBaseUrl = await this.discovery.getBaseUrl('techdocs');
       const contentUrl = `${techdocsBaseUrl}/static/docs/${namespace}/${kind.toLowerCase()}/${name}/${targetPath}`;
 
       this.logger.debug(`Fetching content from URL: ${contentUrl}`);
       const fetch = this.fetchFunction || (await import('node-fetch')).default;
-      const headers: Record<string, string> = {};
-
-      if (auth) {
-        const { token } = await auth.getPluginRequestToken({
-          onBehalfOf: await auth.getOwnServiceCredentials(),
-          targetPluginId: 'techdocs',
-        });
-        headers.Authorization = `Bearer ${token}`;
-      }
+      const headers = await this.getTechDocsHeaders(auth, credentials);
 
       const response = await fetch(contentUrl, { headers });
 
@@ -446,6 +460,7 @@ export class TechDocsService {
             metadata: { name, namespace },
           } as Entity),
         auth,
+        credentials,
       );
 
       // try to convert any type to raw text
@@ -511,8 +526,8 @@ export class TechDocsService {
   // @public
   async analyzeCoverage(
     options: ListTechDocsOptions = {},
-    auth: any,
     catalog: CatalogService,
+    credentials: BackstageCredentials,
   ): Promise<TechDocsCoverageResult> {
     const {
       entityType,
@@ -522,7 +537,6 @@ export class TechDocsService {
       tags,
       limit = 500,
     } = options;
-    const credentials = await auth.getOwnServiceCredentials();
 
     this.logger.info('Analyzing TechDocs coverage...');
 
@@ -582,6 +596,7 @@ export class TechDocsService {
     options: ListTechDocsOptions = {},
     auth: any,
     catalog: CatalogService,
+    credentials: BackstageCredentials,
   ): Promise<{ entities: TechDocsEntityWithMetadata[] }> {
     const {
       entityType,
@@ -591,7 +606,6 @@ export class TechDocsService {
       tags,
       limit = 500,
     } = options;
-    const credentials = await auth.getOwnServiceCredentials();
 
     this.logger.info('Fetching entities from catalog...');
     const filters: Record<string, string | string[]> = {};
@@ -643,7 +657,11 @@ export class TechDocsService {
     const entities = await Promise.all(
       entitiesWithTechDocs.map(async entity => {
         const urls = await this.generateTechDocsUrls(entity);
-        const techDocsMetadata = await this.fetchTechDocsMetadata(entity, auth);
+        const techDocsMetadata = await this.fetchTechDocsMetadata(
+          entity,
+          auth,
+          credentials,
+        );
 
         const metadata =
           techDocsMetadata.error || !techDocsMetadata.build_timestamp

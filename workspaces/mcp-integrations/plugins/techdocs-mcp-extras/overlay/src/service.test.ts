@@ -18,7 +18,12 @@ import { ConfigReader } from '@backstage/config';
 import { TechDocsService, TechDocsMetadata } from './service';
 import { Entity } from '@backstage/catalog-model';
 import { catalogServiceMock } from '@backstage/plugin-catalog-node/testUtils';
-import { LoggerService, DiscoveryService } from '@backstage/backend-plugin-api';
+import { mockCredentials } from '@backstage/backend-test-utils';
+import {
+  BackstageCredentials,
+  LoggerService,
+  DiscoveryService,
+} from '@backstage/backend-plugin-api';
 
 describe('TechDocsService', () => {
   const mockLogger = {
@@ -53,14 +58,17 @@ describe('TechDocsService', () => {
   });
 
   const mockAuth = {
-    getOwnServiceCredentials: jest.fn().mockResolvedValue({
-      token: 'mock-service-token',
-      principal: { subject: 'user:default/test' },
-    }),
+    getOwnServiceCredentials: jest
+      .fn()
+      .mockRejectedValue(
+        new Error('the own service credentials must not be used'),
+      ),
     getPluginRequestToken: jest.fn().mockResolvedValue({
       token: 'mock-plugin-token',
     }),
   };
+
+  const callerCredentials = mockCredentials.user('user:default/test');
 
   const createMockEntity = (
     name: string,
@@ -257,7 +265,12 @@ describe('TechDocsService', () => {
         status: 404,
       });
 
-      const result = await service.listTechDocs({}, mockAuth, mockCatalog);
+      const result = await service.listTechDocs(
+        {},
+        mockAuth,
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result.entities).toHaveLength(2);
       expect(result.entities.map(e => e.name)).toContain('service-1');
@@ -288,7 +301,12 @@ describe('TechDocsService', () => {
         json: jest.fn().mockResolvedValue(mockMetadata),
       });
 
-      const result = await service.listTechDocs({}, mockAuth, mockCatalog);
+      const result = await service.listTechDocs(
+        {},
+        mockAuth,
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result.entities).toHaveLength(1);
       expect(result.entities[0]).toEqual({
@@ -332,7 +350,12 @@ describe('TechDocsService', () => {
         }),
       });
 
-      const result = await service.listTechDocs({}, mockAuth, mockCatalog);
+      const result = await service.listTechDocs(
+        {},
+        mockAuth,
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result.entities[0].metadata).toMatchObject({
         lastUpdated: '2026-10-20T18:18:40.352Z',
@@ -352,7 +375,12 @@ describe('TechDocsService', () => {
 
       mockFetch.mockResolvedValue({ ok: false, status: 404 });
 
-      const result = await service.listTechDocs({}, mockAuth, mockCatalog);
+      const result = await service.listTechDocs(
+        {},
+        mockAuth,
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result.entities).toHaveLength(1);
       expect(result.entities[0]).toEqual({
@@ -376,7 +404,12 @@ describe('TechDocsService', () => {
       const mockCatalog = catalogServiceMock({ entities: [] });
       mockFetch.mockResolvedValue({ ok: false, status: 404 });
 
-      const result = await service.listTechDocs({}, mockAuth, mockCatalog);
+      const result = await service.listTechDocs(
+        {},
+        mockAuth,
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result.entities).toHaveLength(0);
     });
@@ -396,6 +429,7 @@ describe('TechDocsService', () => {
         { entityType: 'Component' },
         mockAuth,
         mockCatalog,
+        callerCredentials,
       );
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
@@ -424,6 +458,7 @@ describe('TechDocsService', () => {
         { namespace: 'production' },
         mockAuth,
         mockCatalog,
+        callerCredentials,
       );
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
@@ -448,7 +483,12 @@ describe('TechDocsService', () => {
       jest.spyOn(mockCatalog, 'getEntities');
       mockFetch.mockResolvedValue({ ok: false, status: 404 });
 
-      await service.listTechDocs({ owner: 'team-a' }, mockAuth, mockCatalog);
+      await service.listTechDocs(
+        { owner: 'team-a' },
+        mockAuth,
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -476,6 +516,7 @@ describe('TechDocsService', () => {
         { lifecycle: 'production' },
         mockAuth,
         mockCatalog,
+        callerCredentials,
       );
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
@@ -500,7 +541,12 @@ describe('TechDocsService', () => {
       jest.spyOn(mockCatalog, 'getEntities');
       mockFetch.mockResolvedValue({ ok: false, status: 404 });
 
-      await service.listTechDocs({ tags: 'frontend' }, mockAuth, mockCatalog);
+      await service.listTechDocs(
+        { tags: 'frontend' },
+        mockAuth,
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -531,6 +577,7 @@ describe('TechDocsService', () => {
         },
         mockAuth,
         mockCatalog,
+        callerCredentials,
       );
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
@@ -552,7 +599,12 @@ describe('TechDocsService', () => {
       jest.spyOn(mockCatalog, 'getEntities');
       mockFetch.mockResolvedValue({ ok: false, status: 404 });
 
-      await service.listTechDocs({ limit: 100 }, mockAuth, mockCatalog);
+      await service.listTechDocs(
+        { limit: 100 },
+        mockAuth,
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -568,7 +620,7 @@ describe('TechDocsService', () => {
       jest.spyOn(mockCatalog, 'getEntities');
       mockFetch.mockResolvedValue({ ok: false, status: 404 });
 
-      await service.listTechDocs({}, mockAuth, mockCatalog);
+      await service.listTechDocs({}, mockAuth, mockCatalog, callerCredentials);
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -590,7 +642,11 @@ describe('TechDocsService', () => {
 
       const mockCatalog = catalogServiceMock({ entities });
 
-      const result = await service.analyzeCoverage({}, mockAuth, mockCatalog);
+      const result = await service.analyzeCoverage(
+        {},
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result).toEqual({
         totalEntities: 4,
@@ -607,7 +663,11 @@ describe('TechDocsService', () => {
 
       const mockCatalog = catalogServiceMock({ entities });
 
-      const result = await service.analyzeCoverage({}, mockAuth, mockCatalog);
+      const result = await service.analyzeCoverage(
+        {},
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result).toEqual({
         totalEntities: 2,
@@ -624,7 +684,11 @@ describe('TechDocsService', () => {
 
       const mockCatalog = catalogServiceMock({ entities });
 
-      const result = await service.analyzeCoverage({}, mockAuth, mockCatalog);
+      const result = await service.analyzeCoverage(
+        {},
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result).toEqual({
         totalEntities: 2,
@@ -636,7 +700,11 @@ describe('TechDocsService', () => {
     it('should handle empty catalog', async () => {
       const mockCatalog = catalogServiceMock({ entities: [] });
 
-      const result = await service.analyzeCoverage({}, mockAuth, mockCatalog);
+      const result = await service.analyzeCoverage(
+        {},
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result).toEqual({
         totalEntities: 0,
@@ -654,7 +722,11 @@ describe('TechDocsService', () => {
 
       const mockCatalog = catalogServiceMock({ entities });
 
-      const result = await service.analyzeCoverage({}, mockAuth, mockCatalog);
+      const result = await service.analyzeCoverage(
+        {},
+        mockCatalog,
+        callerCredentials,
+      );
 
       expect(result.coveragePercentage).toBe(33.3);
     });
@@ -683,8 +755,8 @@ describe('TechDocsService', () => {
           entityType: 'Component',
           namespace: 'production',
         },
-        mockAuth,
         mockCatalog,
+        callerCredentials,
       );
 
       expect(mockCatalog.getEntities).toHaveBeenCalledWith(
@@ -706,7 +778,7 @@ describe('TechDocsService', () => {
 
       const mockCatalog = catalogServiceMock({ entities });
 
-      await service.analyzeCoverage({}, mockAuth, mockCatalog);
+      await service.analyzeCoverage({}, mockCatalog, callerCredentials);
 
       expect(mockLogger.info).toHaveBeenCalledWith(
         'Analyzing TechDocs coverage...',
@@ -726,7 +798,12 @@ describe('TechDocsService', () => {
       };
 
       await expect(
-        service.listTechDocs({}, mockAuth, mockCatalog as any),
+        service.listTechDocs(
+          {},
+          mockAuth,
+          mockCatalog as any,
+          callerCredentials,
+        ),
       ).rejects.toThrow('Catalog service error');
     });
 
@@ -738,7 +815,7 @@ describe('TechDocsService', () => {
       };
 
       await expect(
-        service.analyzeCoverage({}, mockAuth, mockCatalog as any),
+        service.analyzeCoverage({}, mockCatalog as any, callerCredentials),
       ).rejects.toThrow('Catalog service error');
     });
   });
@@ -783,6 +860,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result).toEqual({
@@ -841,6 +919,7 @@ describe('TechDocsService', () => {
         'docs/guide.md',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result).toMatchObject({
@@ -879,6 +958,7 @@ describe('TechDocsService', () => {
         'docs/guide.md',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result?.contentType).toBe('markdown');
@@ -911,6 +991,7 @@ describe('TechDocsService', () => {
         undefined,
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(mockFetch).toHaveBeenCalledWith(
@@ -934,6 +1015,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result.error).toBeDefined();
@@ -957,6 +1039,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result.error).toBeDefined();
@@ -982,6 +1065,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result.error).toBeDefined();
@@ -1007,6 +1091,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result.error).toBeDefined();
@@ -1024,6 +1109,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         {} as any,
+        callerCredentials,
       );
 
       expect(result.error).toBeDefined();
@@ -1059,6 +1145,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(mockFetch).toHaveBeenCalledWith(
@@ -1135,6 +1222,7 @@ describe('TechDocsService', () => {
           path,
           mockAuth,
           mockCatalog as any,
+          callerCredentials,
         );
         expect(result.error).toBeDefined();
         expect(result.error).toContain('valid documentation path');
@@ -1172,6 +1260,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(mockFetch.mock.calls[0]).toEqual([
@@ -1212,6 +1301,7 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result.content).toBeTruthy();
@@ -1245,10 +1335,340 @@ describe('TechDocsService', () => {
         'index.html',
         mockAuth,
         mockCatalog as any,
+        callerCredentials,
       );
 
       expect(result.content).toBeTruthy();
       expect(result.error).toBeUndefined();
+    });
+  });
+
+  describe('caller credentials', () => {
+    const alice = mockCredentials.user('user:default/alice');
+    const admin = mockCredentials.user('user:default/admin');
+    const pluginService = mockCredentials.service('plugin-techdocs-mcp-extras');
+
+    const publicDocs = createMockEntity('public-service', 'Component', true);
+    const plainService = createMockEntity('plain-service', 'Component', false);
+    const restrictedDocs = createMockEntity(
+      'restricted-service',
+      'Component',
+      true,
+    );
+    const entities = [publicDocs, plainService, restrictedDocs];
+
+    const callerOf = (credentials?: BackstageCredentials): string => {
+      const principal = (credentials as any)?.principal;
+      return principal?.userEntityRef ?? `service:${principal?.subject}`;
+    };
+
+    // the admin and the plugin's own service credentials can read everything
+    const canReadAll = (credentials?: BackstageCredentials) =>
+      [callerOf(admin), callerOf(pluginService)].includes(
+        callerOf(credentials),
+      );
+
+    // the catalog hides the restricted entity from everyone else
+    const createCatalog = () => {
+      const visibleTo = (credentials?: BackstageCredentials) =>
+        entities.filter(
+          entity => entity !== restrictedDocs || canReadAll(credentials),
+        );
+      return {
+        getEntities: jest.fn(
+          async (_request: unknown, options?: { credentials?: any }) => ({
+            items: visibleTo(options?.credentials),
+          }),
+        ),
+        getEntityByRef: jest.fn(
+          async (
+            ref: { kind: string; namespace: string; name: string },
+            options?: { credentials?: any },
+          ) =>
+            visibleTo(options?.credentials).find(
+              entity =>
+                entity.kind.toLowerCase() === ref.kind.toLowerCase() &&
+                entity.metadata.namespace === ref.namespace &&
+                entity.metadata.name === ref.name,
+            ),
+        ),
+      };
+    };
+
+    // the auth service mints a token that names the principal it is minted for
+    const createAuth = (ownCredentials?: BackstageCredentials) => ({
+      getOwnServiceCredentials: ownCredentials
+        ? jest.fn().mockResolvedValue(ownCredentials)
+        : jest
+            .fn()
+            .mockRejectedValue(
+              new Error('the own service credentials must not be used'),
+            ),
+      getPluginRequestToken: jest.fn(
+        async (options: { onBehalfOf: any; targetPluginId: string }) => {
+          const caller = callerOf(options.onBehalfOf);
+          return { token: `${options.targetPluginId}-token-for-${caller}` };
+        },
+      ),
+    });
+
+    const bearerOf = (callerRef: string) =>
+      `Bearer techdocs-token-for-${callerRef}`;
+
+    // the TechDocs backend answers 404 for an unknown entity, and for the
+    // restricted entity unless the request carries a token that can read all
+    const serveTechDocs = async (
+      url: string,
+      init?: { headers?: Record<string, string> },
+    ) => {
+      const name = url.match(
+        /\/(?:sync|static\/docs)\/[^/]+\/[^/]+\/([^/]+)/,
+      )?.[1];
+      const known = entities.some(entity => entity.metadata.name === name);
+      const canRead = [callerOf(admin), callerOf(pluginService)].some(
+        ref => init?.headers?.Authorization === bearerOf(ref),
+      );
+      if (!known || (name === 'restricted-service' && !canRead)) {
+        return { ok: false, status: 404, statusText: 'Not Found' };
+      }
+      if (url.includes('/sync/')) {
+        return {
+          ok: true,
+          text: async () => 'event: finish\ndata: {}\n\n',
+        };
+      }
+      if (url.endsWith('/techdocs_metadata.json')) {
+        return {
+          ok: true,
+          json: async () => ({
+            site_name: 'Docs',
+            build_timestamp: 1705313400000,
+          }),
+        };
+      }
+      return {
+        ok: true,
+        text: async () => '# Welcome\n\nThe documentation.',
+      };
+    };
+
+    beforeEach(() => {
+      mockFetch.mockImplementation(serveTechDocs);
+      mockDiscovery.getBaseUrl = jest
+        .fn()
+        .mockResolvedValue('http://localhost:7007/api/techdocs');
+    });
+
+    describe('listTechDocs', () => {
+      it('reads the catalog and the TechDocs backend as the caller', async () => {
+        const auth = createAuth();
+        const catalog = createCatalog();
+
+        const result = await service.listTechDocs(
+          {},
+          auth,
+          catalog as any,
+          alice,
+        );
+
+        expect(result.entities.map(e => e.name)).toEqual(['public-service']);
+        expect(catalog.getEntities).toHaveBeenCalledWith(expect.anything(), {
+          credentials: alice,
+        });
+        expect(auth.getPluginRequestToken).toHaveBeenCalledWith({
+          onBehalfOf: alice,
+          targetPluginId: 'techdocs',
+        });
+        expect(auth.getOwnServiceCredentials).not.toHaveBeenCalled();
+        expect(mockFetch).toHaveBeenCalledWith(
+          'http://localhost:7007/api/techdocs/static/docs/default/component/public-service/techdocs_metadata.json',
+          { headers: { Authorization: bearerOf('user:default/alice') } },
+        );
+      });
+
+      it('does not list an entity the catalog hides from the caller', async () => {
+        const catalog = createCatalog();
+
+        const asAlice = await service.listTechDocs(
+          {},
+          createAuth(),
+          catalog as any,
+          alice,
+        );
+        const asAdmin = await service.listTechDocs(
+          {},
+          createAuth(),
+          catalog as any,
+          admin,
+        );
+
+        expect(asAlice.entities.map(e => e.name)).toEqual(['public-service']);
+        expect(asAdmin.entities.map(e => e.name).sort()).toEqual([
+          'public-service',
+          'restricted-service',
+        ]);
+      });
+    });
+
+    describe('analyzeCoverage', () => {
+      it('counts only the entities the catalog returns for the caller', async () => {
+        const catalog = createCatalog();
+
+        const asAlice = await service.analyzeCoverage(
+          {},
+          catalog as any,
+          alice,
+        );
+        const asAdmin = await service.analyzeCoverage(
+          {},
+          catalog as any,
+          admin,
+        );
+
+        expect(asAlice).toEqual({
+          totalEntities: 2,
+          entitiesWithDocs: 1,
+          coveragePercentage: 50,
+        });
+        expect(asAdmin).toEqual({
+          totalEntities: 3,
+          entitiesWithDocs: 2,
+          coveragePercentage: 66.7,
+        });
+        expect(catalog.getEntities).toHaveBeenCalledWith(expect.anything(), {
+          credentials: alice,
+        });
+        expect(catalog.getEntities).toHaveBeenCalledWith(expect.anything(), {
+          credentials: admin,
+        });
+      });
+    });
+
+    describe('fetchTechDocsMetadata', () => {
+      it('mints the TechDocs token on behalf of the caller', async () => {
+        const auth = createAuth();
+
+        await service.fetchTechDocsMetadata(publicDocs, auth, alice);
+
+        expect(auth.getPluginRequestToken).toHaveBeenCalledWith({
+          onBehalfOf: alice,
+          targetPluginId: 'techdocs',
+        });
+        expect(auth.getOwnServiceCredentials).not.toHaveBeenCalled();
+        expect(mockFetch).toHaveBeenCalledWith(expect.any(String), {
+          headers: { Authorization: bearerOf('user:default/alice') },
+        });
+      });
+    });
+
+    describe('retrieveTechDocsContent', () => {
+      it('reads the entity, the sync, the content and the metadata as the caller', async () => {
+        const auth = createAuth();
+        const catalog = createCatalog();
+
+        const result = await service.retrieveTechDocsContent(
+          'component:default/public-service',
+          'docs/guide.md',
+          auth,
+          catalog as any,
+          alice,
+        );
+
+        expect(result.error).toBeUndefined();
+        expect(result.content).toBe('# Welcome\n\nThe documentation.');
+        expect(catalog.getEntityByRef).toHaveBeenCalledWith(
+          {
+            kind: 'component',
+            namespace: 'default',
+            name: 'public-service',
+          },
+          { credentials: alice },
+        );
+        expect(auth.getPluginRequestToken.mock.calls).toEqual(
+          Array(3).fill([{ onBehalfOf: alice, targetPluginId: 'techdocs' }]),
+        );
+        expect(auth.getOwnServiceCredentials).not.toHaveBeenCalled();
+        expect(mockFetch.mock.calls.map(([url]) => url)).toEqual([
+          'http://localhost:7007/api/techdocs/sync/default/component/public-service',
+          'http://localhost:7007/api/techdocs/static/docs/default/component/public-service/docs/guide.md',
+          'http://localhost:7007/api/techdocs/static/docs/default/component/public-service/techdocs_metadata.json',
+        ]);
+        for (const [, init] of mockFetch.mock.calls) {
+          expect(init).toEqual({
+            headers: { Authorization: bearerOf('user:default/alice') },
+          });
+        }
+      });
+
+      it('answers for an entity hidden from the caller as for a missing entity', async () => {
+        const catalog = createCatalog();
+        const retrieve = (entityRef: string, credentials: any) =>
+          service.retrieveTechDocsContent(
+            entityRef,
+            'guide.md',
+            createAuth(),
+            catalog as any,
+            credentials,
+          );
+        const normalize = (value: unknown, name: string) =>
+          JSON.parse(JSON.stringify(value).split(name).join('<name>'));
+
+        const hidden = await retrieve(
+          'component:default/restricted-service',
+          alice,
+        );
+        const missing = await retrieve(
+          'component:default/missing-service',
+          alice,
+        );
+        const visibleToAdmin = await retrieve(
+          'component:default/restricted-service',
+          admin,
+        );
+
+        expect(hidden.content).toBe('');
+        expect(hidden.error).toContain('TechDocs content not found');
+        expect(normalize(hidden, 'restricted-service')).toEqual(
+          normalize(missing, 'missing-service'),
+        );
+        expect(visibleToAdmin.error).toBeUndefined();
+        expect(visibleToAdmin.content).toBe('# Welcome\n\nThe documentation.');
+      });
+
+      it('does not fall back to the service credentials for a hidden entity', async () => {
+        const auth = createAuth(pluginService);
+
+        const result = await service.retrieveTechDocsContent(
+          'component:default/restricted-service',
+          'guide.md',
+          auth,
+          createCatalog() as any,
+          alice,
+        );
+
+        expect(result.content).toBe('');
+        expect(result.error).toContain('TechDocs content not found');
+        expect(auth.getOwnServiceCredentials).not.toHaveBeenCalled();
+      });
+
+      it('reads nothing when the caller credentials are missing', async () => {
+        const auth = createAuth();
+        const catalog = createCatalog();
+
+        const result = await service.retrieveTechDocsContent(
+          'component:default/public-service',
+          'index.html',
+          auth,
+          catalog as any,
+        );
+
+        expect(result.content).toBe('');
+        expect(result.error).toContain('credentials of the caller');
+        expect(catalog.getEntityByRef).not.toHaveBeenCalled();
+        expect(auth.getPluginRequestToken).not.toHaveBeenCalled();
+        expect(auth.getOwnServiceCredentials).not.toHaveBeenCalled();
+        expect(mockFetch).not.toHaveBeenCalled();
+      });
     });
   });
 });
