@@ -1309,7 +1309,7 @@ plugins:
         clusterLocatorMethods:
           - type: config
             clusters: []
-  - package: oci://quay.io/veecode/backstage-plugin-mcp-actions-backend@sha256:8a639aecbdf5c77f42976da1eb81db7de4d1a0f0558c4cb08fee73202e70431a
+  - package: oci://quay.io/veecode/backstage-plugin-mcp-actions-backend@sha256:ac441eb87da34c80e798be6e4427ea43f7f52cbad1e2e071ac2bff93806de8c3
     disabled: true
     pluginConfig:
       backend:
@@ -1866,7 +1866,7 @@ plugins:
                 importName: QuickstartButton
                 config:
                   priority: 100
-  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:6237c8094841ce52498bc5581deac9ddeeb0d71d99eef0ef8bfc86e3d6324e15
+  - package: oci://quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras@sha256:de297abd0b3a3428e515b3cdeaf823fda1a28c572d2bc27450f779d3ecb91bb0
     disabled: true
     pluginConfig:
       backend:

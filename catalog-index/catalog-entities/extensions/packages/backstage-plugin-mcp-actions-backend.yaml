@@ -16,9 +16,9 @@ metadata:
   tags: []
 spec:
   packageName: "@backstage/plugin-mcp-actions-backend"
-  # Tag: bs_1.54.9__0.2.1
-  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-mcp-actions-backend@sha256:8a639aecbdf5c77f42976da1eb81db7de4d1a0f0558c4cb08fee73202e70431a"
-  version: 0.2.1
+  # Tag: bs_1.54.9__0.2.1-veecode.1
+  dynamicArtifact: "oci://quay.io/veecode/backstage-plugin-mcp-actions-backend@sha256:ac441eb87da34c80e798be6e4427ea43f7f52cbad1e2e071ac2bff93806de8c3"
+  version: 0.2.1-veecode.1
   backstage:
     role: backend-plugin
     supportedVersions: 1.54.9

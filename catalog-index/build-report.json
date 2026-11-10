@@ -555,11 +555,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/backstage-plugin-mcp-actions-backend:bs_1.54.9__0.2.1"
+          "oci_ref": "quay.io/veecode/backstage-plugin-mcp-actions-backend:bs_1.54.9__0.2.1-veecode.1"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:8a639aecbdf5c77f42976da1eb81db7de4d1a0f0558c4cb08fee73202e70431a"
+          "digest": "sha256:ac441eb87da34c80e798be6e4427ea43f7f52cbad1e2e071ac2bff93806de8c3"
         },
         "dpdy": {
           "status": "pass"
@@ -569,7 +569,7 @@
         }
       },
       "package": "@backstage/plugin-mcp-actions-backend",
-      "version": "0.2.1",
+      "version": "0.2.1-veecode.1",
       "workspace": "backstage",
       "overall": "pass"
     },
@@ -1303,11 +1303,11 @@
       "stages": {
         "bootstrap": {
           "status": "pass",
-          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras:bs_1.54.9__0.4.5-veecode.1"
+          "oci_ref": "quay.io/veecode/red-hat-developer-hub-backstage-plugin-scaffolder-mcp-extras:bs_1.54.9__0.4.5-veecode.2"
         },
         "image-metadata-fetch": {
           "status": "pass",
-          "digest": "sha256:6237c8094841ce52498bc5581deac9ddeeb0d71d99eef0ef8bfc86e3d6324e15"
+          "digest": "sha256:de297abd0b3a3428e515b3cdeaf823fda1a28c572d2bc27450f779d3ecb91bb0"
         },
         "dpdy": {
           "status": "pass"
@@ -1317,7 +1317,7 @@
         }
       },
       "package": "@red-hat-developer-hub/backstage-plugin-scaffolder-mcp-extras",
-      "version": "0.4.5-veecode.1",
+      "version": "0.4.5-veecode.2",
       "workspace": "mcp-integrations",
       "overall": "pass"
     },
