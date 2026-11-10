@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import type { ActionsRegistryService } from '@backstage/backend-plugin-api/alpha';
 import { actionsRegistryServiceMock } from '@backstage/backend-test-utils/alpha';
 import { mockServices } from '@backstage/backend-test-utils';
 import type { LogEvent } from '@backstage/plugin-scaffolder-common';
@@ -362,5 +363,149 @@ describe('createGetScaffolderTaskLogsAction', () => {
         input: { taskId: 'task-5' },
       }),
     ).rejects.toThrow('Unexpected end of JSON input');
+  });
+
+  describe('failure details and bounds', () => {
+    let mockAuth: ReturnType<typeof mockServices.auth.mock>;
+    let mockDiscovery: ReturnType<typeof mockServices.discovery.mock>;
+
+    beforeEach(() => {
+      mockAuth = mockServices.auth.mock();
+      mockAuth.getPluginRequestToken.mockResolvedValue({ token: mockToken });
+      mockDiscovery = mockServices.discovery.mock();
+      mockDiscovery.getBaseUrl.mockResolvedValue(mockBaseUrl);
+    });
+
+    function invokeLogs(input: { taskId: string; after?: number }) {
+      const mockActionsRegistry = actionsRegistryServiceMock();
+      createGetScaffolderTaskLogsAction({
+        actionsRegistry: mockActionsRegistry,
+        auth: mockAuth,
+        discovery: mockDiscovery,
+      });
+      return mockActionsRegistry.invoke({
+        id: 'test:get-scaffolder-task-logs',
+        input,
+      });
+    }
+
+    function completionWith(body: Record<string, unknown>) {
+      return {
+        ok: true,
+        json: async () => [
+          {
+            id: 9,
+            taskId: 'task-1',
+            createdAt: '2025-01-01T00:00:09Z',
+            type: 'completion',
+            body: { message: 'Run completed with status: failed', ...body },
+          },
+        ],
+      };
+    }
+
+    it('should return the error on the completion event of a failed run', async () => {
+      mockFetch.mockResolvedValue(
+        completionWith({
+          error: { name: 'InputError', message: 'repoUrl is not valid' },
+        }),
+      );
+
+      const result = await invokeLogs({ taskId: 'task-1' });
+
+      expect(result.output).toEqual({
+        events: [
+          {
+            id: 9,
+            taskId: 'task-1',
+            createdAt: '2025-01-01T00:00:09Z',
+            type: 'completion',
+            body: {
+              message: 'Run completed with status: failed',
+              error: { name: 'InputError', message: 'repoUrl is not valid' },
+            },
+          },
+        ],
+      });
+    });
+
+    it('should leave out an error that is not a name and a message', async () => {
+      mockFetch.mockResolvedValue(completionWith({ error: 'boom' }));
+
+      const result = await invokeLogs({ taskId: 'task-1' });
+
+      expect(result.output).toEqual({
+        events: [
+          {
+            id: 9,
+            taskId: 'task-1',
+            createdAt: '2025-01-01T00:00:09Z',
+            type: 'completion',
+            body: { message: 'Run completed with status: failed' },
+          },
+        ],
+      });
+    });
+
+    it('should describe what to do after a failed or cancelled run', () => {
+      const register = jest.fn();
+      createGetScaffolderTaskLogsAction({
+        actionsRegistry: { register } as unknown as ActionsRegistryService,
+        auth: mockAuth,
+        discovery: mockDiscovery,
+      });
+
+      const { description } = register.mock.calls[0][0];
+
+      expect(description).toContain('body.error');
+      expect(description).toContain(
+        "Earlier steps may already have made changes, such as creating the repository. Look for what they created with the portal's catalog tools; if you cannot, ask the user before you run the template again.",
+      );
+      expect(description).toContain(
+        'A cancelled run ends with a cancelled event: ask the user whether to run the template again.',
+      );
+    });
+
+    it('should return no events when the token exchange runs past 20 seconds', async () => {
+      const expired = new AbortController();
+      const timeoutSpy = jest
+        .spyOn(AbortSignal, 'timeout')
+        .mockReturnValue(expired.signal);
+      mockAuth.getPluginRequestToken.mockImplementation(() => {
+        expired.abort();
+        return new Promise<never>(() => {});
+      });
+
+      const result = await invokeLogs({ taskId: 'task-6' });
+
+      expect(timeoutSpy).toHaveBeenCalledWith(20_000);
+      expect(result.output).toEqual({ events: [] });
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it('should return no events when the base URL lookup runs past 20 seconds', async () => {
+      const expired = new AbortController();
+      jest.spyOn(AbortSignal, 'timeout').mockReturnValue(expired.signal);
+      mockDiscovery.getBaseUrl.mockImplementation(() => {
+        expired.abort();
+        return new Promise<never>(() => {});
+      });
+
+      const result = await invokeLogs({ taskId: 'task-7' });
+
+      expect(result.output).toEqual({ events: [] });
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
+
+    it('should still throw when the token exchange fails before the limit', async () => {
+      mockAuth.getPluginRequestToken.mockRejectedValue(
+        new Error('Token exchange failed'),
+      );
+
+      await expect(invokeLogs({ taskId: 'task-8' })).rejects.toThrow(
+        'Token exchange failed',
+      );
+      expect(mockFetch).not.toHaveBeenCalled();
+    });
   });
 });
