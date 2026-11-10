@@ -16,18 +16,39 @@
 import { ActionsRegistryService } from '@backstage/backend-plugin-api/alpha';
 import { AuthService, DiscoveryService } from '@backstage/backend-plugin-api';
 import type { LogEvent } from '@backstage/plugin-scaffolder-common';
+import { abortable } from './waitForScaffolderTask';
+import { CHECK_EARLIER_STEPS } from './taskGuidance';
 
 // The completion event of a successful run carries the template output in its
-// body. The common LogEvent type does not declare it.
+// body, and the completion event of a failed run carries the error. The common
+// LogEvent type declares neither.
 type LogEventWithOutput = LogEvent & {
-  body: LogEvent['body'] & { output?: Record<string, unknown> };
+  body: LogEvent['body'] & {
+    output?: Record<string, unknown>;
+    error?: unknown;
+  };
 };
+
+function runError(
+  error: unknown,
+): { name: string; message: string } | undefined {
+  if (typeof error !== 'object' || error === null) {
+    return undefined;
+  }
+  const { name, message } = error as { name?: unknown; message?: unknown };
+  return typeof name === 'string' && typeof message === 'string'
+    ? { name, message }
+    : undefined;
+}
 
 const EVENTS_TIMEOUT_MS = 20_000;
 
 /**
  * Overlay changes vs upstream (rhdh-plugins scaffolder-mcp-extras):
- * - The completion event returns the template output in body.output
+ * - The completion event returns the template output in body.output, and the
+ *   error of a failed run in body.error
+ * - The token exchange, the base URL lookup and the events request all end at
+ *   20 seconds, and the call answers an empty list then
  *
  * @public
  */
@@ -52,6 +73,8 @@ export const createGetScaffolderTaskLogsAction = ({
 Retrieve the log events for a scaffolder task.
 Each log event has a type (log, completion, cancelled, or recovered), a body containing a message and optional step ID and status.
 The completion event of a successful run carries the template output in body.output, with the next steps in text and the links to show in links.
+The completion event of a failed run carries the error in body.error, with its name and message. ${CHECK_EARLIER_STEPS}
+A cancelled run ends with a cancelled event: ask the user whether to run the template again.
 Use the after parameter to fetch only events after a specific event ID for incremental polling.
     `,
     schema: {
@@ -112,6 +135,15 @@ Use the after parameter to fetch only events after a specific event ID for incre
                         .describe(
                           'The template output, set only on the completion event of a successful run. Next steps are in text, and links to show are in links.',
                         ),
+                      error: z
+                        .object({
+                          name: z.string().describe('The error name'),
+                          message: z.string().describe('The error message'),
+                        })
+                        .optional()
+                        .describe(
+                          'The error that ended the run, set only on the completion event of a failed run.',
+                        ),
                     })
                     .describe('The event body'),
                 }),
@@ -121,22 +153,27 @@ Use the after parameter to fetch only events after a specific event ID for incre
           .describe('Object containing the events array'),
     },
     action: async ({ input, credentials }) => {
-      const { token } = await auth.getPluginRequestToken({
-        onBehalfOf: credentials,
-        targetPluginId: 'scaffolder',
-      });
-
-      const baseUrl = await discovery.getBaseUrl('scaffolder');
-      const url = new URL(`v2/tasks/${input.taskId}/events`, `${baseUrl}/`);
-      if (input.after !== undefined) {
-        url.searchParams.set('after', String(input.after));
-      }
-
       // The scaffolder holds an idle events request for 30 seconds before it
-      // answers an empty list, so this request ends at 20 seconds.
+      // answers an empty list, so the whole call, from the token exchange to
+      // the events body, ends at 20 seconds.
       const signal = AbortSignal.timeout(EVENTS_TIMEOUT_MS);
       let events: LogEventWithOutput[];
       try {
+        const [{ token }, baseUrl] = await abortable(
+          Promise.all([
+            auth.getPluginRequestToken({
+              onBehalfOf: credentials,
+              targetPluginId: 'scaffolder',
+            }),
+            discovery.getBaseUrl('scaffolder'),
+          ]),
+          signal,
+        );
+        const url = new URL(`v2/tasks/${input.taskId}/events`, `${baseUrl}/`);
+        if (input.after !== undefined) {
+          url.searchParams.set('after', String(input.after));
+        }
+
         const response = await fetch(url.toString(), {
           method: 'GET',
           headers: {
@@ -175,6 +212,7 @@ Use the after parameter to fetch only events after a specific event ID for incre
               stepId: event.body.stepId,
               status: event.body.status,
               output: event.body.output,
+              error: runError(event.body.error),
             },
           })),
         },

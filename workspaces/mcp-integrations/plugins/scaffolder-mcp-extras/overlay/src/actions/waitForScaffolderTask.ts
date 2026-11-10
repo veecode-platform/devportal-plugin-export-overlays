@@ -49,6 +49,11 @@ const NAME_BY_STATUS: Partial<Record<number, string>> = {
 
 const SCAFFOLD_STATUS = /^Backend request failed, (\d{3}) /;
 
+// The events endpoint holds an idle request, but a proxy or another backend can
+// answer an empty list at once. Each poll takes at least this long, so an empty
+// answer cannot turn the loop into a request flood.
+const MIN_POLL_INTERVAL_MS = 1_000;
+
 /**
  * Polls the task's events until a completion or cancellation event arrives, or
  * until the deadline passes. The events endpoint long-polls for up to 30
@@ -64,7 +69,8 @@ export async function waitForScaffolderTask(options: {
   let failedStepId: string | undefined;
 
   for (;;) {
-    const left = options.deadline - Date.now();
+    const startedAt = Date.now();
+    const left = options.deadline - startedAt;
     if (left <= 0) {
       return { kind: 'still-running', lastEventId };
     }
@@ -104,14 +110,21 @@ export async function waitForScaffolderTask(options: {
       };
     }
 
+    if (events.length === 0) {
+      await pauseBeforeNextPoll(startedAt, options.deadline);
+    }
+
     for (const event of events) {
       lastEventId = Math.max(lastEventId, event.id);
+      // The run's error belongs to the first failed step: a step that runs
+      // after a failure, such as one guarded by failure() or always(), can fail
+      // too.
       if (
         event.type === 'log' &&
         event.body.status === 'failed' &&
         typeof event.body.stepId === 'string'
       ) {
-        failedStepId = event.body.stepId;
+        failedStepId ??= event.body.stepId;
       }
       if (event.type === 'cancelled') {
         return { kind: 'cancelled', lastEventId };
@@ -121,6 +134,20 @@ export async function waitForScaffolderTask(options: {
       }
     }
   }
+}
+
+function pauseBeforeNextPoll(
+  startedAt: number,
+  deadline: number,
+): Promise<void> {
+  const pause = Math.min(
+    MIN_POLL_INTERVAL_MS - (Date.now() - startedAt),
+    deadline - Date.now(),
+  );
+  if (pause <= 0) {
+    return Promise.resolve();
+  }
+  return new Promise<void>(resolve => setTimeout(resolve, pause));
 }
 
 export function abortable<T>(
