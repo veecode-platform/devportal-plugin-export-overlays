@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import { createServer, Server } from 'http';
-import { AddressInfo } from 'net';
 import { mockCredentials } from '@backstage/backend-test-utils';
 import { actionsRegistryServiceMock } from '@backstage/backend-test-utils/alpha';
 import {
@@ -27,9 +25,29 @@ import { Entity } from '@backstage/catalog-model';
 import { ConfigReader } from '@backstage/config';
 import { createTechDocsActions } from './index';
 
+const mockTechDocsBackend = jest.fn();
+
+// The actions build their own TechDocsService, which falls back to a dynamic
+// import of node-fetch that Jest cannot run. The service gets the stand-in
+// for the TechDocs backend as its fetch function instead.
+jest.mock('../service', () => {
+  const actual = jest.requireActual('../service');
+  return {
+    ...actual,
+    TechDocsService: class extends actual.TechDocsService {
+      constructor(config: unknown, logger: unknown, discovery: unknown) {
+        super(config, logger, discovery, (...args: unknown[]) =>
+          mockTechDocsBackend(...args),
+        );
+      }
+    },
+  };
+});
+
 const alice = mockCredentials.user('user:default/alice');
 const admin = mockCredentials.user('user:default/admin');
 const pluginService = mockCredentials.service('plugin-techdocs-mcp-extras');
+const techdocsBaseUrl = 'http://localhost:7007/api/techdocs';
 
 const createMockEntity = (name: string, hasTechDocs: boolean): Entity => ({
   apiVersion: 'backstage.io/v1alpha1',
@@ -107,58 +125,49 @@ const createAuth = (ownCredentials?: BackstageCredentials) => ({
 });
 
 describe('TechDocs actions run as the caller', () => {
-  let techdocsBackend: Server;
-  let techdocsBaseUrl: string;
-  let backendRequests: { path: string; authorization?: string }[];
+  let backendRequests: { url: string; authorization?: string }[];
 
-  // a local stand-in for the TechDocs backend: it answers 404 for an unknown
-  // entity, and for the restricted entity unless the request carries a token
-  // that can read all
-  beforeAll(async () => {
-    techdocsBackend = createServer((req, res) => {
-      const path = req.url ?? '';
-      backendRequests.push({ path, authorization: req.headers.authorization });
-      const name = path.match(
-        /\/(?:sync|static\/docs)\/[^/]+\/[^/]+\/([^/]+)/,
-      )?.[1];
-      const known = entities.some(entity => entity.metadata.name === name);
-      const canRead = [callerOf(admin), callerOf(pluginService)].some(
-        ref => req.headers.authorization === bearerOf(ref),
-      );
-      if (!known || (name === 'restricted-service' && !canRead)) {
-        res.statusCode = 404;
-        res.end();
-        return;
-      }
-      if (path.includes('/sync/')) {
-        res.end('event: finish\ndata: {}\n\n');
-      } else if (path.endsWith('/techdocs_metadata.json')) {
-        res.setHeader('Content-Type', 'application/json');
-        res.end(
-          JSON.stringify({
-            site_name: 'Docs',
-            build_timestamp: 1705313400000,
-          }),
-        );
-      } else {
-        res.end('# Welcome\n\nThe documentation.');
-      }
-    });
-    await new Promise<void>(resolve => {
-      techdocsBackend.listen(0, '127.0.0.1', resolve);
-    });
-    const { port } = techdocsBackend.address() as AddressInfo;
-    techdocsBaseUrl = `http://127.0.0.1:${port}/api/techdocs`;
-  });
-
-  afterAll(async () => {
-    await new Promise<void>(resolve => {
-      techdocsBackend.close(() => resolve());
-    });
-  });
+  // the TechDocs backend answers 404 for an unknown entity, and for the
+  // restricted entity unless the request carries a token that can read all
+  const serveTechDocs = async (
+    url: string,
+    init?: { headers?: Record<string, string> },
+  ) => {
+    backendRequests.push({ url, authorization: init?.headers?.Authorization });
+    const name = url.match(
+      /\/(?:sync|static\/docs)\/[^/]+\/[^/]+\/([^/]+)/,
+    )?.[1];
+    const known = entities.some(entity => entity.metadata.name === name);
+    const canRead = [callerOf(admin), callerOf(pluginService)].some(
+      ref => init?.headers?.Authorization === bearerOf(ref),
+    );
+    if (!known || (name === 'restricted-service' && !canRead)) {
+      return { ok: false, status: 404, statusText: 'Not Found' };
+    }
+    if (url.includes('/sync/')) {
+      return {
+        ok: true,
+        text: async () => 'event: finish\ndata: {}\n\n',
+      };
+    }
+    if (url.endsWith('/techdocs_metadata.json')) {
+      return {
+        ok: true,
+        json: async () => ({
+          site_name: 'Docs',
+          build_timestamp: 1705313400000,
+        }),
+      };
+    }
+    return {
+      ok: true,
+      text: async () => '# Welcome\n\nThe documentation.',
+    };
+  };
 
   beforeEach(() => {
     backendRequests = [];
+    mockTechDocsBackend.mockImplementation(serveTechDocs);
   });
 
   const setup = (ownCredentials?: BackstageCredentials) => {
@@ -264,15 +273,15 @@ describe('TechDocs actions run as the caller', () => {
     expect(auth.getOwnServiceCredentials).not.toHaveBeenCalled();
     expect(backendRequests).toEqual([
       {
-        path: '/api/techdocs/sync/default/component/public-service',
+        url: `${techdocsBaseUrl}/sync/default/component/public-service`,
         authorization: bearerOf('user:default/alice'),
       },
       {
-        path: '/api/techdocs/static/docs/default/component/public-service/guide.md',
+        url: `${techdocsBaseUrl}/static/docs/default/component/public-service/guide.md`,
         authorization: bearerOf('user:default/alice'),
       },
       {
-        path: '/api/techdocs/static/docs/default/component/public-service/techdocs_metadata.json',
+        url: `${techdocsBaseUrl}/static/docs/default/component/public-service/techdocs_metadata.json`,
         authorization: bearerOf('user:default/alice'),
       },
     ]);
