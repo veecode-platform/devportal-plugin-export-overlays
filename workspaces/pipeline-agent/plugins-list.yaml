@@ -1,0 +1,2 @@
+plugins/pipeline-agent: --embed-package @veecode-platform/backstage-plugin-pipeline-agent-common
+plugins/pipeline-agent-backend: --embed-package @veecode-platform/backstage-plugin-pipeline-agent-common
